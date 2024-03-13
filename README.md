@@ -1,6 +1,10 @@
-* Project Description: EOLF Trading Sales and Inventory System 2024
+# Project Description: EOLF Trading Sales and Inventory System 2024
+
 DevTime: 3-4 months
+
 Date: 13-Mar-2024
+
+
 [Library assets](https://drive.google.com/drive/folders/1YQFwJKJAOsyqeei3FZ_5CjWtQgmQa3cA?usp=drive_link)
 
 

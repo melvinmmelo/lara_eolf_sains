@@ -1,0 +1,5 @@
+[13-Mar-2024 06:36:24 UTC] PHP Fatal error:  Uncaught ReflectionException: Class "Spark\Http\Middleware\VerifyBillableIsSubscribed" does not exist in Command line code:1
+Stack trace:
+#0 Command line code(1): ReflectionMethod->__construct('Spark\\Http\\Midd...', 'handle')
+#1 {main}
+  thrown in Command line code on line 1
