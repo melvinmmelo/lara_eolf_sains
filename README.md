@@ -6,6 +6,7 @@ Date: 13-Mar-2024
 
 
 [Library assets](https://drive.google.com/drive/folders/1YQFwJKJAOsyqeei3FZ_5CjWtQgmQa3cA?usp=drive_link)
+Download and extract to public directory
 
 
 How to setup? Follow the instructions.
