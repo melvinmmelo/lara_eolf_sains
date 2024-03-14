@@ -3,7 +3,7 @@
     <!-- Brand Logo -->
 
     <a href="index3.html" class="brand-link">
-      <img src="dist/img/eolf_heart_logo.png" alt="EOLF Logo" class="brand-image" style="opacity: .8">
+      <img src="{{ asset('img/eolf_heart_logo.png') }}" alt="EOLF Logo" class="brand-image" style="opacity: .8">
       <span class="brand-text text-primary">EOLF Food Trading</span>
     </a>
 
@@ -11,11 +11,9 @@
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-        </div>
+        
         <div class="info">
-          <a href="#" class="d-block">Froilan Andal</a>
+          <a href="#" class="d-block">Username</a>
         </div>
       </div>
 
@@ -31,7 +29,23 @@
         </div>
       </div>
 
+      <!-- Sidebar Menu Color -->
+      <style>
+/* Normal state */
+.nav-sidebar li a {
+    color: #5a5a5a !important;
+}
+
+/* Active state */
+.nav-sidebar  li.active a,
+.nav-sidebar  li a:focus {
+    color: white !important;
+}
+</style>
+      
+
       <!-- Sidebar Menu -->
+
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
