@@ -13,6 +13,8 @@
 
   <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
 
+  {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+
 </head>
 <body class="hold-transition sidebar-mini">
 <!-- Site wrapper -->
