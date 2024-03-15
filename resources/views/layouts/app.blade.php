@@ -1,36 +1,101 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home Page</title>
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+  <!-- Theme style -->
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
+  <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }} ">
 
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
+  <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
-    </body>
+  <!-- Include SweetAlert and Toast CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.1.2/sweetalert2.min.css">
+  <!-- Include AdminLTE JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"></script>
+  <!-- Include SweetAlert and Toast JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.1.2/sweetalert2.min.js"></script>
+
+<!-- Forms label CSS Style -->
+  <style>
+    .form-label {
+        font-weight: normal !important;
+        color: #5a5a5a;
+        transition: color 0.3s; /* Adding transition for smooth color change */
+    }
+
+    .form-control:hover, {
+        background-color: #f0f0f0;
+    }
+
+</style>
+
+<!-- Modal Scrollbar and backdrop -->
+
+<style>
+    /* Add custom CSS to control modal content height and scrollbar */
+    .modal-body {
+      max-height: calc(100vh - 200px); /* Adjust as needed */
+      overflow-y: auto;
+    }
+    .modal-backdrop {
+      background-color: rgba(0, 0, 0, 0.1) !important; /* 5% opacity black */
+    }
+ 
+  </style>
+
+<style>
+    /* Style for dotted horizontal rule */
+    .dotted-hr {
+      border-top: 2px dotted #ccc; /* Change color and thickness as needed */
+      margin: 20px 0; /* Adjust spacing as needed */
+    }
+  </style>
+
+</head>
+
+
+
+<body class="hold-transition sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+  <!-- Navbar -->
+  @include('layouts.nav')
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  @include('layouts.aside')
+  <!-- Main Sidebar Container -->
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    @yield('contents')
+  </div>
+  <!-- /.content-wrapper -->
+
+  @include('layouts.footer')
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+
+<!-- jQuery -->
+<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+<!-- Bootstrap 4 -->
+<script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
+<!-- SweetAlert2 -->
+<script src="../../plugins/sweetalert2/sweetalert2.min.js"></script>
+
+</body>
 </html>
