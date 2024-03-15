@@ -29,19 +29,7 @@
         </div>
       </div>
 
-      <!-- Sidebar Menu Color -->
-      <style>
-/* Normal state */
-.nav-sidebar li a {
-    color: #5a5a5a !important;
-}
-
-/* Active state */
-.nav-sidebar  li.active a,
-.nav-sidebar  li a:focus {
-    color: white !important;
-}
-</style>
+      
       
 
       <!-- Sidebar Menu -->
@@ -168,7 +156,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link" data-content="cust_entry.php">
+                <a href="#" class="nav-link" data-toggle="modal" data-target="#customerModal">
                   <i class="fas fa-user-plus nav-icon"></i>
                   <p>Entry</p>
                 </a>
