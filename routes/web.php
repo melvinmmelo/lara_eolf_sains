@@ -39,7 +39,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/delivery-person', [CustomersController::class, 'index'])->name('branch');
     Route::get('/edit-delivery-person/{id}', [CustomersController::class, 'edit'])->name('branch.edit');
-
 });
 
 require __DIR__.'/auth.php';
