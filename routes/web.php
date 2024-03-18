@@ -36,7 +36,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit-branch/{id}', [BranchesController::class, 'edit'])->name('branch.edit');
 
     Route::get('/customers', [CustomersController::class, 'index'])->name('customers');
-    Route::get('/edit-customer/{id}', [CustomersController::class, 'edit'])->name('customer.edit');
+    // Route::get('/edit-customer/{id}', [CustomersController::class, 'edit'])->name('customer.edit');
+    Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customer.edit');
+    Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
+    Route::post('/customers/store', [CustomersController::class, 'store']);
+    Route::put('/customers/{id}', [CustomersController::class, 'update']);
+    Route::delete('/customers/{id}', [CustomerController::class, 'destroy'])->name('customer.destroy');
 
     Route::get('/vehicles', [CustomersController::class, 'index'])->name('vehicles');
     Route::get('/edit-vehicle/{id}', [CustomersController::class, 'edit'])->name('vehicle.edit');

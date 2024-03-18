@@ -21,7 +21,22 @@
 
 <!-- Main content -->
 <section class="content">
-aasdasd
+<table id="customerTable" class="table table-bordered table-striped" >
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>JR Andal</td>
+        <td>mario.andal.jr@ub.edu.ph</td>
+        <td>&nbsp;</td>
+      </tr>
+    </tbody>
+</table>
 
 
 
@@ -42,33 +57,41 @@ aasdasd
                         <div class="container-fluid">
                             <!-- Your existing form -->
                             <div class="form-group">
-<div class="row mb-3">
-          <div class="col-sm-6">
-    <label class="form-label" for="cust_dist">Distributor</label>
-    <select class="form-control d-block" id="cust_dist" onfocus="changeColor('cust_dist')" onblur="resetColor('cust_dist')">
-        <option>option 1</option>
-        <option>option 2</option>
-        <option>option 3</option>
-        <option>option 4</option>
-        <option>option 5</option>
-    </select>
-</div>
-</div>
+
+
+@if(session('success'))
+    <div>{{ session('success') }}</div>
+@endif
+                            
+<form method="POST" action="/customers/store">
+@csrf
+        <div class="row mb-3">
+                  <div class="col-sm-6">
+            <label class="form-label" for="cust_dist">Distributor</label>
+            <select name="distributor" class="form-control d-block" id="cust_dist" onfocus="changeColor('cust_dist')" onblur="resetColor('cust_dist')">
+                <option>option 1</option>
+                <option>option 2</option>
+                <option>option 3</option>
+                <option>option 4</option>
+                <option>option 5</option>
+            </select>
+        </div>
+        </div>
 
 
       <div class="form-group">
         <div class="row mb-3">
           <div class="col-sm-4">
             <label class="form-label" for="cust_lname">Last Name:</label>
-            <input type="text" class="form-control" id="cust_lname">
+            <input type="text" class="form-control" id="cust_lname" name="lastname">
           </div>
           <div class="col-sm-4">
             <label class="form-label" for="cust_fname">First Name:</label>
-            <input type="text" class="form-control" id="cust_fname">
+            <input type="text" class="form-control" id="cust_fname" name="firstname">
           </div>
           <div class="col-sm-4">
             <label class="form-label" for="cust_mname">Middle Name:</label>
-            <input type="text" class="form-control" id="cust_mname">
+            <input type="text" class="form-control" id="cust_mname" name="middlename">
           </div>
         </div>
       </div>
@@ -78,15 +101,15 @@ aasdasd
         <div class="row mb-3">
         <div class="col-sm-4">
             <label class="form-label" for="cust_contact">Contact No.:</label>
-            <input type="text" class="form-control" id="cust_contact">
+            <input type="text" class="form-control" id="cust_contact" name="contact_no">
           </div>
           <div class="col-sm-4">
             <label class="form-label" for="cust_comp">Company Name:</label>
-            <input type="text" class="form-control" id="cust_comp">
+            <input type="text" class="form-control" id="cust_comp" name="companyname">
           </div>
           <div class="col-sm-4">
             <label class="form-label" for="cust_tin">TIN:</label>
-            <input type="text" class="form-control" id="cust_tin">
+            <input type="text" class="form-control" id="cust_tin" name="tin">
           </div>
         </div>
       </div>
@@ -99,7 +122,7 @@ aasdasd
         <div class="row mb-2">
           <div class="col-sm-3">
             <label class="form-label" for="cust_region">Region</label>
-            <select class="form-control" id="cust_region">
+            <select class="form-control" id="cust_region" name="region">
               <option>option 1</option>
               <option>option 2</option>
               <option>option 3</option>
@@ -109,7 +132,7 @@ aasdasd
           </div>
           <div class="col-sm-6">
             <label class="form-label" for="cust_prov">Province</label>
-            <select class="form-control" id="cust_prov">
+            <select class="form-control" id="cust_prov" name="province">
               <option>option 1</option>
               <option>option 2</option>
               <option>option 3</option>
@@ -119,7 +142,7 @@ aasdasd
           </div>
           <div class="col-sm-3">
             <label class="form-label" for="cust_city">City</label>
-            <select class="form-control" id="cust_city">
+            <select class="form-control" id="cust_city" name="city">
               <option>option 1</option>
               <option>option 2</option>
               <option>option 3</option>
@@ -135,7 +158,7 @@ aasdasd
         <div class="row mb-2">
         <div class="col-sm-6">
             <label class="form-label" for="cust_brgy">Barangay</label>
-            <select class="form-control" id="cust_brgy">
+            <select class="form-control" id="cust_brgy" name="brgy">
               <option>option 1</option>
               <option>option 2</option>
               <option>option 3</option>
@@ -145,15 +168,15 @@ aasdasd
           </div>
           <div class="col-sm-6">
             <label class="form-label" for="cust_subd">Subdivision:</label>
-            <input type="text" class="form-control" id="cust_subd">
+            <input type="text" class="form-control" id="cust_subd" name="subdivision">
           </div>
           <div class="col-sm-6">
             <label class="form-label" for="cust_lat">Latitude:</label>
-            <input type="text" class="form-control" id="cust_lat">
+            <input type="text" class="form-control" id="cust_lat" name="latitude">
           </div>
           <div class="col-sm-6">
             <label class="form-label" for="cust_long">Longitude:</label>
-            <input type="text" class="form-control" id="cust_long">
+            <input type="text" class="form-control" id="cust_long" name="longitude">
           </div>
         </div>
 
@@ -167,7 +190,7 @@ aasdasd
                 <div class="modal-footer">
                     <!-- Button to open another modal -->
                     <button type="button" class="btn btn-primary" onclick="toggleModal('storeModal')">Store Info</button>
-                    <button type="button" class="btn btn-success swalDefaultSuccess">Save changes</button>
+                    <button type="submit" class="btn btn-success swalDefaultSuccess">Save changes</button>
                 </div>
             </div>
         </div>
