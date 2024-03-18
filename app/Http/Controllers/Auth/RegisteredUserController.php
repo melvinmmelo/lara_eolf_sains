@@ -47,4 +47,11 @@ class RegisteredUserController extends Controller
 
         return redirect(route('dashboard', absolute: false));
     }
+
+
+    public function index(): View
+    {
+        return view('users');
+    }
+
 }

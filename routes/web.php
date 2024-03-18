@@ -4,6 +4,8 @@ use App\Http\Controllers\BranchesController;
 use App\Http\Controllers\CompanyDetailsController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\RegisteredUserController;
+
 use App\Models\CompanyDetails;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +29,8 @@ Route::middleware('auth')->group(function () {
     // views
     Route::get('/company', [CompanyDetailsController::class, 'index'])->name('company');
     Route::get('/edit-company', [CompanyDetailsController::class, 'edit'])->name('company.edit');
+
+    Route::get('/users', [RegisteredUserController::class, 'index'])->name('users');
 
     Route::get('/branch', [BranchesController::class, 'index'])->name('branch');
     Route::get('/edit-branch/{id}', [BranchesController::class, 'edit'])->name('branch.edit');
