@@ -21,26 +21,7 @@
 
 <!-- Main content -->
 <section class="content">
-<!-- <table id="customerTable" class="table table-bordered table-striped" >
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($customers as $customer)
-            <tr>
-                <td>{{ $customer->lastname }}</td>
-                <td>{{ $customer->email }}</td>
-                <td>
-
-                </td>
-            </tr>
-        @endforeach
-    </tbody>
-</table> -->
+aasdasd
 
 
 
