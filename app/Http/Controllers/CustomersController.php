@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Customers as Customer;
 
 class CustomersController extends Controller
 {
@@ -10,28 +11,33 @@ class CustomersController extends Controller
     {
         // Fetch all customers from the database
         $customers = Customer::all();
-        
+        dd($customers);
         // Pass the customers data to the view
         return view('customer.index', compact('customers'));
     }
 
     public function create()
     {
-        return view('customer.create');
+        $customers = Customer::all();
+        // dd($customers);
+        return view('create-customer', compact('customers'));
+    
     }
 
     
     public function store(Request $request)
     {
+
+        // dd($request->all());
         $request->validate([
             'lastname' => 'required',
             'firstname' => 'required',
             'companyname' => 'required',
-            'email' => 'required|email',
+            
             // Add more validation rules as needed
         ]);
 
-        CustomerTest::create([
+        Customer::create([
             'distributor' => $request->distributor,
             'lastname' => $request->lastname,
             'firstname' => $request->firstname,
@@ -44,22 +50,22 @@ class CustomersController extends Controller
             'city' => $request->city,
             'brgy' => $request->brgy,
             'subdivision' => $request->subdivision,
-            'longitute' => $request->longitute,
+            'longitude' => $request->longitude,
             'latitude' => $request->latitude,
             // Add more fields as needed
         ]);
         
-        return redirect('/customer')->with('success', 'Customer added successfully!');
+        return redirect('/customers/create')->with('success', 'Customer added successfully!');
     }
 
     public function edit($id)
     {
-        $customer = CustomerTest::findOrFail($id);
-        return view('customer.edit', compact('customer'));
+        $customer = Customer::findOrFail($id);
+        return view('edit_customer', compact('customer'));
     }
     public function update(Request $request, $id)
     {
-        $customer = CustomerTest::findOrFail($id);
+        $customer = Customer::findOrFail($id);
         
         $request->validate([
             'lastname' => 'required',
@@ -86,14 +92,14 @@ class CustomersController extends Controller
             'latitude' => $request->latitude,
         ]);
     
-        return redirect('/customer')->with('success', 'Customer updated successfully!');
+        return redirect('/customers/create')->with('success', 'Customer updated successfully!');
     }
 
     public function destroy($id)
     {
-        $customer = CustomerTest::findOrFail($id);
+        $customer = Customer::findOrFail($id);
         $customer->delete();
-        return redirect('/customer')->with('deleted', 'Customer deleted successfully!');
+        return redirect('/customers/create')->with('success', 'Customer deleted successfully!');
     }
 
 }
