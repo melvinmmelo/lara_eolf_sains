@@ -45,7 +45,7 @@
     .modal-backdrop {
       background-color: rgba(0, 0, 0, 0.1) !important; /* 5% opacity black */
     }
- 
+
   </style>
 
 <style>
@@ -96,6 +96,8 @@
 <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
 <!-- SweetAlert2 -->
 <script src="../../plugins/sweetalert2/sweetalert2.min.js"></script>
+
+@yield('custom_js')
 
 <!-- Toast script for saving forms -->
 <script>
