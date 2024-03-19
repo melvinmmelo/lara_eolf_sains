@@ -122,3 +122,8 @@ Stack trace:
 #9 Command line code(1): Illuminate\Support\Facades\Facade::__callStatic('abilities', Array)
 #10 {main}
   thrown in G:\eolf-sains-lara\vendor\laravel\framework\src\Illuminate\Container\Container.php on line 1118
+[19-Mar-2024 00:25:13 UTC] PHP Fatal error:  Uncaught ReflectionException: Class "Spark\Http\Middleware\VerifyBillableIsSubscribed" does not exist in Command line code:1
+Stack trace:
+#0 Command line code(1): ReflectionMethod->__construct('Spark\\Http\\Midd...', 'handle')
+#1 {main}
+  thrown in Command line code on line 1

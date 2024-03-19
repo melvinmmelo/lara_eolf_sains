@@ -29,6 +29,8 @@ Route::middleware('auth')->group(function () {
     // views
     Route::get('/company', [CompanyDetailsController::class, 'index'])->name('company');
     Route::get('/edit-company', [CompanyDetailsController::class, 'edit'])->name('company.edit');
+    Route::put('/edit-company/{companyDetails}', [CompanyDetailsController::class, 'update'])->name('company.update');
+
 
     Route::get('/users', [RegisteredUserController::class, 'index'])->name('users');
 
