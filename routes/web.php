@@ -4,18 +4,9 @@ use App\Http\Controllers\BranchesController;
 use App\Http\Controllers\CompanyDetailsController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Auth\RegisteredUserController;
-
+use App\Http\Controllers\UsersController;
 use App\Models\CompanyDetails;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/create-customer', function () {
-    return view('create-customer');
-});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -32,7 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/edit-company/{companyDetails}', [CompanyDetailsController::class, 'update'])->name('company.update');
 
 
-    Route::get('/users', [RegisteredUserController::class, 'index'])->name('users');
+    Route::get('/users', [UsersController::class, 'index'])->name('users');
 
     Route::get('/branch', [BranchesController::class, 'index'])->name('branch');
     Route::get('/edit-branch/{id}', [BranchesController::class, 'edit'])->name('branch.edit');
