@@ -21,4 +21,6 @@ yarn-error.log
 /public/vendor
 /public/plugins
 
+/public/img
+
 php_errors.log
