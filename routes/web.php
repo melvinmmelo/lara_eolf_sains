@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit-branch/{id}', [BranchesController::class, 'edit'])->name('branch.edit');
 
     Route::get('/customers', [CustomersController::class, 'index'])->name('customers');
+    Route::get('/customer/create', [CustomersController::class, 'create'])->name('customer.create');
     Route::get('/edit-customer/{id}', [CustomersController::class, 'edit'])->name('customer.edit');
 
     Route::get('/vehicles', [CustomersController::class, 'index'])->name('vehicles');
