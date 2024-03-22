@@ -69,28 +69,28 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="user" class="nav-link">
+                            <a href="/branch" class="nav-link">
                                 <i class="fas fa-store nav-icon"></i>
                                 <p>Branch</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="users" class="nav-link">
+                            <a href="/users" class="nav-link">
                                 <i class="fas fa-users nav-icon"></i>
                                 <p>User</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="/vehicles" class="nav-link">
                                 <i class="fas fa-truck nav-icon"></i>
                                 <p>Vehicles</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="#"" class="nav-link">
+                            <a href="/delivery-persons" class="nav-link">
                                 <i class="fas fa-biking nav-icon"></i>
                                 <p>Delivery Person</p>
                             </a>
@@ -98,13 +98,27 @@
 
 
                         <li class="nav-item">
-                            <a href="create-customer" class="nav-link">
+                            <a href="customers" class="nav-link">
                                 <i class="fas fa-id-card nav-icon"></i>
                                 <p>Customers</p>
                             </a>
                         </li>
 
                     </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="fas fa-sign-out nav-icon" style="color: #74C0FC;"></i>
+                        <p>
+                            Logout
+                        </p>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    </a>
                 </li>
 
                 {{-- <!-- Inventory Menu -->
