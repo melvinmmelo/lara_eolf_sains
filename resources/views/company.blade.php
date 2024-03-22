@@ -133,7 +133,16 @@
 
         <!-- /.card-footer-->
         </div>
-        <!-- /.card -->
+        <!</div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-users">
+                    Add New
+                </button>
+            </div>
+            <!-- /.card-footer-->
+        </div>
+        <!-- /.card -->-- /.card -->
 
     </section>
     <!-- /.content -->
