@@ -53,7 +53,10 @@
         }
 
         .modal-backdrop {
-            background-color: rgba(0, 0, 0, 0.1) !important;
+            background-color: rgba(255, 255, 255, 0.5) !important;
+            /* Set the background color to white with some transparency */
+            backdrop-filter: blur(10px);
+            /* Apply a blur effect to the backdrop */
             /* 5% opacity black */
         }
     </style>
@@ -122,6 +125,8 @@
     <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+    <script src="{{ asset('plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
+
 
     <!-- Page specific script -->
 
@@ -167,6 +172,13 @@
                 icon: 'success',
                 title: 'Data Added'
             })
+        });
+    </script>
+
+    <script>
+        $(function() {
+            // Initialize Bootstrap Switch
+            $("[data-bootstrap-switch]").bootstrapSwitch();
         });
     </script>
 

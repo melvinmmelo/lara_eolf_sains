@@ -5,6 +5,7 @@ use App\Http\Controllers\CompanyDetailsController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\VehiclesController;
 use App\Models\CompanyDetails;
 use Illuminate\Support\Facades\Route;
 
@@ -38,11 +39,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/customer/create', [CustomersController::class, 'create'])->name('customer.create');
     Route::get('/edit-customer/{id}', [CustomersController::class, 'edit'])->name('customer.edit');
 
-    Route::get('/vehicles', [CustomersController::class, 'index'])->name('vehicles');
+    Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
     Route::get('/edit-vehicle/{id}', [CustomersController::class, 'edit'])->name('vehicle.edit');
 
-    Route::get('/delivery-person', [CustomersController::class, 'index'])->name('branch');
+    Route::get('/delivery-persons', [UsersController::class, 'deliveryPersons'])->name('delivery-persons');
     Route::get('/edit-delivery-person/{id}', [CustomersController::class, 'edit'])->name('branch.edit');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
