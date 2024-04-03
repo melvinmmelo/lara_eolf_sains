@@ -85,7 +85,7 @@
 
     <div class="modal fade" id="modal-product-types">
         <div class="modal-dialog">
-            <form method="POST" action="{{ route('productsType.store') }}">
+            <form method="POST" action="{{ route('productType.store') }}">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">

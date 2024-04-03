@@ -3,6 +3,7 @@
 use App\Http\Controllers\BranchesController;
 use App\Http\Controllers\CompanyDetailsController;
 use App\Http\Controllers\CustomersController;
+use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VehiclesController;
@@ -54,6 +55,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/delivery-persons', [UsersController::class, 'deliveryPersons'])->name('delivery-persons');
     Route::get('/edit-delivery-person/{id}', [CustomersController::class, 'edit'])->name('branch.edit');
 
+
+    Route::get('/product-types', [ProductTypeController::class, 'index'])->name('productType.index');
+    Route::post('/product-types', [ProductTypeController::class, 'store'])->name('productType.store');
 
 });
 
