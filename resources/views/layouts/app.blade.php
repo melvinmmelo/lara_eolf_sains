@@ -44,17 +44,22 @@
 
     <!-- Modal Scrollbar and backdrop -->
 
-<style>
-    /* Add custom CSS to control modal content height and scrollbar */
-    .modal-body {
-      max-height: calc(100vh - 200px); /* Adjust as needed */
-      overflow-y: auto;
-    }
-    .modal-backdrop {
-      background-color: rgba(0, 0, 0, 0.1) !important; /* 5% opacity black */
-    }
+    <style>
+        /* Add custom CSS to control modal content height and scrollbar */
+        .modal-body {
+            max-height: calc(100vh - 200px);
+            /* Adjust as needed */
+            overflow-y: auto;
+        }
 
-  </style>
+        .modal-backdrop {
+            background-color: rgba(255, 255, 255, 0.5) !important;
+            /* Set the background color to white with some transparency */
+            backdrop-filter: blur(10px);
+            /* Apply a blur effect to the backdrop */
+            /* 5% opacity black */
+        }
+    </style>
 
     <style>
         /* Style for dotted horizontal rule */
@@ -120,6 +125,8 @@
     <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+    <script src="{{ asset('plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
+
 
     <!-- Page specific script -->
 
@@ -143,11 +150,11 @@
             });
         });
     </script>
-<script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
-<!-- SweetAlert2 -->
-<script src="../../plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
+    <!-- SweetAlert2 -->
+    <script src="../../plugins/sweetalert2/sweetalert2.min.js"></script>
 
-@yield('custom_js')
+    @yield('custom_js')
 
     <!-- Toast script for saving forms -->
     <script>
@@ -170,6 +177,13 @@
                 icon: 'success',
                 title: 'Data Added'
             })
+        });
+    </script>
+
+    <script>
+        $(function() {
+            // Initialize Bootstrap Switch
+            $("[data-bootstrap-switch]").bootstrapSwitch();
         });
     </script>
 

@@ -134,8 +134,7 @@
                                 <div class="row mb-3">
                                     <div class="col-sm-6">
                                         <label class="form-label" for="cust_dist">Distributor</label>
-                                        <select class="form-control d-block" id="cust_dist"
-                                            onfocus="changeColor('cust_dist')" onblur="resetColor('cust_dist')">
+                                        <select class="form-control d-block" id="cust_dist">
                                             <option>option 1</option>
                                             <option>option 2</option>
                                             <option>option 3</option>

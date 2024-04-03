@@ -104,8 +104,31 @@
                             </a>
                         </li>
 
+                        <li class="nav-item">
+                            <a href="product-types" class="nav-link">
+                                <i class="fas fa-list nav-icon"></i>
+                                <p>Products Type</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="product-types" class="nav-link">
+                                <i class="fas fa-ice-cream nav-icon"></i>
+                                <p>Products</p>
+                            </a>
+                        </li>
+
+
+                        <li class="nav-item">
+                            <a href="product-variants" class="nav-link">
+                                <i class="fas fa-list-ol nav-icon"></i>
+                                <p>Product Variants</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
+
+
 
                 <li class="nav-item">
                     <a href="#" class="nav-link"
