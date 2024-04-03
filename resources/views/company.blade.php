@@ -44,7 +44,8 @@
 
 
                 <div class="modal fade" id="modal-company">
-                    <form action="{{ route('company.update', ['companyDetails' => $company->id]) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('company.update', ['companyDetails' => $company->id]) }}" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="modal-dialog">
@@ -92,8 +93,8 @@
                                                     <label class="form-label" for="logo">Logo</label>
                                                     <div class="input-group">
                                                         <div class="custom-file">
-                                                            <input type="file" class="custom-file-input"
-                                                                id="logo" name="logo">
+                                                            <input type="file" class="custom-file-input" id="logo"
+                                                                name="logo">
                                                             <label class="custom-file-label" for="exampleInputFile">Choose
                                                                 file</label>
                                                         </div>
@@ -133,16 +134,7 @@
 
         <!-- /.card-footer-->
         </div>
-        <!</div>
-            <!-- /.card-body -->
-            <div class="card-footer">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-users">
-                    Add New
-                </button>
-            </div>
-            <!-- /.card-footer-->
-        </div>
-        <!-- /.card -->-- /.card -->
+        <!-- /.card -->
 
     </section>
     <!-- /.content -->
