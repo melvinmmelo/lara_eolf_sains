@@ -41,42 +41,58 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>Last Name</th>
                             <th>First Name</th>
+                            <th>Contact</th>
+                            <th>Address</th>
                             <th>Email</th>
-
+                            <th>Created at</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Trident</td>
-                            <td>Internet
-                                Explorer 4.0
-                            </td>
-                            <td>Win 95+</td>
+                        @foreach ($users as $user)
+                            <tr>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                                        <a href="#" data-toggle="modal" data-target="#editUser" onclick="setToUpdateUser('{{ $user->id }}','{{ $user->last_name }}','{{ $user->first_name }}','{{ $user->contact_no }}','{{ $user->address }}')">
+                                            <button type="button" class="btn btn-secondary">View</button>
+                                        </a>
 
-                        </tr>
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle"
+                                                data-toggle="dropdown" aria-expanded="false">
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editUser" onclick="setToUpdateUser('{{ $user->id }}','{{ $user->last_name }}','{{ $user->first_name }}','{{ $user->contact_no }}','{{ $user->address }}')">Edit</a>
+                                                <a class="dropdown-item" href="#">Reset password</a>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                        <tr>
-                            <td>Trident</td>
-                            <td>Internet
-                                Explorer 4.0
-                            </td>
-                            <td>Win 95+</td>
+                                </td>
+                                <td>{{ $user->last_name }}</td>
+                                <td>{{ $user->first_name }}</td>
+                                <td>{{ $user->contact_no }}</td>
+                                <td>{{ $user->address }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->created_at }}</td>
+                            </tr>
+                        @endforeach
 
-                        </tr>
                     </tbody>
                     <tfoot>
                         <tr>
+                            <th></th>
                             <th>Last Name</th>
                             <th>First Name</th>
+                            <th>Contact</th>
+                            <th>Address</th>
                             <th>Email</th>
-
+                            <th>Created at</th>
                         </tr>
                     </tfoot>
                 </table>
-
-
             </div>
             <!-- /.card-body -->
             <div class="card-footer">
@@ -101,7 +117,6 @@
                             </button>
                         </div>
                         <div class="modal-body">
-
                             <div class="form-group">
                                 <div class="row mb-2">
                                     <div class="col-sm-6">
@@ -114,23 +129,6 @@
                                     </div>
                                 </div>
                             </div>
-                        <div class="form-group">
-                            <div class="row mb-2">
-                                <div class="col-sm-12">
-                                    <label class="form-label" for="name">Last Name</label>
-                                    <input type="text" class="form-control" name="last_name">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="row mb-2">
-                                <div class="col-sm-12">
-                                    <label class="form-label" for="name">First Name</label>
-                                    <input type="text" class="form-control" name="first_name">
-                                </div>
-                            </div>
-                        </div>
 
 
                             <div class="form-group">
@@ -141,14 +139,6 @@
                                     </div>
                                 </div>
                             </div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <label class="form-label" for="email">E-mail</label>
-                                    <input type="text" class="form-control" name="email">
-                                </div>
-                            </div>
-                        </div>
 
                             <div class="form-group">
                                 <div class="row mb-2">
@@ -157,14 +147,9 @@
                                         <input type="password" class="form-control" name="password" value="Eolf@2024">
                                     </div>
                                 </div>
-                        <div class="form-group">
-                            <div class="row mb-2">
-                                <div class="col-sm-12">
-                                    <label class="form-label" for="password">Password</label>
-                                    <input type="password" class="form-control" name="password" value="Eolf@2024">
-                                </div>
                             </div>
 
+                            <div class="form-group">
                                 <div class="row mb-2">
                                     <div class="col-sm-12">
                                         <label class="form-label" for="password">Confirm Password</label>
@@ -172,46 +157,29 @@
                                             value="Eolf@2024">
                                     </div>
                                 </div>
-                            <div class="row mb-2">
-                                <div class="col-sm-12">
-                                    <label class="form-label" for="password">Confirm Password</label>
-                                    <input type="password" name="password_confirmation" class="form-control"
-                                        value="Eolf@2024">
-                                </div>
-                            </div>
-
-
-
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-success">Save
-                                        changes</button>
-                                </div>
                             </div>
                             <!-- /.modal-content -->
+                            <!-- /.modal-dialog -->
                         </div>
-                        <!-- /.modal-dialog -->
-                    </div>
-                    <!-- /.modal -->
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-success">Save changes</button>
-                            </div>
+                        <!-- /.modal -->
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Save changes</button>
                         </div>
-                        <!-- /.modal-content -->
                     </div>
-                    <!-- /.modal-dialog -->
-                </div>
-                <!-- /.modal -->
-
+                    <!-- /.modal-content -->
                 </form>
             </div>
+            <!-- /.modal-dialog -->
         </div>
+        <!-- /.modal -->
+
 
     </section>
 
 
     <!-- /.content -->
-            </form>
-        </div>
+    </form>
+    </div>
     </div>
     {{-- End Adding user modal --}}
 
@@ -221,7 +189,7 @@
         <div class="modal-dialog">
             <form method="POST" action="{{ route('user.update') }}">
                 @csrf
-                @method("PATCH")
+                @method('PATCH')
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Edit User</h4>
@@ -283,18 +251,17 @@
         </div>
     </div>
     {{-- End Editing user modal --}}
-
 @endsection
 
 
-@section("custom_js")
-<script>
-function setToUpdateUser(uid, ln, fn, con, addr){
-    document.getElementById("user_id").value = uid;
-    document.getElementById("e_lname").value = ln;
-    document.getElementById("e_fname").value = fn;
-    document.getElementById("e_cno").value = con;
-    document.getElementById("e_addr").value = addr;
-}
-</script>
+@section('custom_js')
+    <script>
+        function setToUpdateUser(uid, ln, fn, con, addr) {
+            document.getElementById("user_id").value = uid;
+            document.getElementById("e_lname").value = ln;
+            document.getElementById("e_fname").value = fn;
+            document.getElementById("e_cno").value = con;
+            document.getElementById("e_addr").value = addr;
+        }
+    </script>
 @endsection

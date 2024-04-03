@@ -12,9 +12,8 @@ class CustomersController extends Controller
     {
         // Fetch all customers from the database
         $customers = Customer::all();
-        dd($customers);
         // Pass the customers data to the view
-        return view('customer.index', compact('customers'));
+        return view('customers', compact('customers'));
     }
 
     public function create()
@@ -22,10 +21,10 @@ class CustomersController extends Controller
         $customers = Customer::all();
         // dd($customers);
         return view('create-customer', compact('customers'));
-    
+
     }
 
-    
+
     public function store(Request $request)
     {
 
@@ -34,7 +33,7 @@ class CustomersController extends Controller
             'lastname' => 'required',
             'firstname' => 'required',
             'companyname' => 'required',
-            
+
             // Add more validation rules as needed
         ]);
 
@@ -55,7 +54,7 @@ class CustomersController extends Controller
             'latitude' => $request->latitude,
             // Add more fields as needed
         ]);
-        
+
         return redirect('/customers/create')->with('success', 'Customer added successfully!');
     }
 
@@ -67,7 +66,7 @@ class CustomersController extends Controller
     public function update(Request $request, $id)
     {
         $customer = Customer::findOrFail($id);
-        
+
         $request->validate([
             'lastname' => 'required',
             'firstname' => 'required',
@@ -75,7 +74,7 @@ class CustomersController extends Controller
             'email' => 'required|email',
             // Add more validation rules as needed
         ]);
-    
+
         $customer->update([
             'distributor' => $request->distributor,
             'lastname' => $request->lastname,
@@ -92,7 +91,7 @@ class CustomersController extends Controller
             'longitute' => $request->longitute,
             'latitude' => $request->latitude,
         ]);
-    
+
         return redirect('/customers/create')->with('success', 'Customer updated successfully!');
     }
 
