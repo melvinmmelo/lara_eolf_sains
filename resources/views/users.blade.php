@@ -114,6 +114,23 @@
                                     </div>
                                 </div>
                             </div>
+                        <div class="form-group">
+                            <div class="row mb-2">
+                                <div class="col-sm-12">
+                                    <label class="form-label" for="name">Last Name</label>
+                                    <input type="text" class="form-control" name="last_name">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row mb-2">
+                                <div class="col-sm-12">
+                                    <label class="form-label" for="name">First Name</label>
+                                    <input type="text" class="form-control" name="first_name">
+                                </div>
+                            </div>
+                        </div>
 
 
                             <div class="form-group">
@@ -124,6 +141,14 @@
                                     </div>
                                 </div>
                             </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label class="form-label" for="email">E-mail</label>
+                                    <input type="text" class="form-control" name="email">
+                                </div>
+                            </div>
+                        </div>
 
                             <div class="form-group">
                                 <div class="row mb-2">
@@ -132,6 +157,13 @@
                                         <input type="password" class="form-control" name="password" value="Eolf@2024">
                                     </div>
                                 </div>
+                        <div class="form-group">
+                            <div class="row mb-2">
+                                <div class="col-sm-12">
+                                    <label class="form-label" for="password">Password</label>
+                                    <input type="password" class="form-control" name="password" value="Eolf@2024">
+                                </div>
+                            </div>
 
                                 <div class="row mb-2">
                                     <div class="col-sm-12">
@@ -140,6 +172,13 @@
                                             value="Eolf@2024">
                                     </div>
                                 </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-12">
+                                    <label class="form-label" for="password">Confirm Password</label>
+                                    <input type="password" name="password_confirmation" class="form-control"
+                                        value="Eolf@2024">
+                                </div>
+                            </div>
 
 
 
@@ -153,6 +192,15 @@
                         <!-- /.modal-dialog -->
                     </div>
                     <!-- /.modal -->
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Save changes</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
 
                 </form>
             </div>
@@ -162,4 +210,91 @@
 
 
     <!-- /.content -->
+            </form>
+        </div>
+    </div>
+    {{-- End Adding user modal --}}
+
+
+    {{-- Editing user modal --}}
+    <div class="modal fade" id="editUser">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('user.update') }}">
+                @csrf
+                @method("PATCH")
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Edit User</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <input type="hide" class="form-control" name="user_id" id="user_id" required readonly>
+
+                        <div class="form-group">
+                            <div class="row mb-2">
+                                <div class="col-sm-12">
+                                    <label class="form-label" for="e_lname">Last Name</label>
+                                    <input type="text" class="form-control" name="e_lname" id="e_lname">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row mb-2">
+                                <div class="col-sm-12">
+                                    <label class="form-label" for="e_fname">First Name</label>
+                                    <input type="text" class="form-control" name="e_fname" id="e_fname">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row mb-2">
+                                <div class="col-sm-12">
+                                    <label class="form-label" for="e_cno">Contact No</label>
+                                    <input type="text" class="form-control" name="e_cno" id="e_cno">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row mb-2">
+                                <div class="col-sm-12">
+                                    <label class="form-label" for="e_addr">Address</label>
+                                    <input type="text" class="form-control" name="e_address" id="e_addr">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+                <!-- /.modal -->
+
+            </form>
+        </div>
+    </div>
+    {{-- End Editing user modal --}}
+
+@endsection
+
+
+@section("custom_js")
+<script>
+function setToUpdateUser(uid, ln, fn, con, addr){
+    document.getElementById("user_id").value = uid;
+    document.getElementById("e_lname").value = ln;
+    document.getElementById("e_fname").value = fn;
+    document.getElementById("e_cno").value = con;
+    document.getElementById("e_addr").value = addr;
+}
+</script>
 @endsection

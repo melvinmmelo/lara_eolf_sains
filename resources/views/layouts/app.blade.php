@@ -59,9 +59,6 @@
             /* Apply a blur effect to the backdrop */
             /* 5% opacity black */
         }
-    </style>
-
-    <style>
         /* Style for dotted horizontal rule */
         .dotted-hr {
             border-top: 2px dotted #ccc;
@@ -150,6 +147,11 @@
             });
         });
     </script>
+<script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
+<!-- SweetAlert2 -->
+<script src="../../plugins/sweetalert2/sweetalert2.min.js"></script>
+
+@yield('custom_js')
 
     <!-- Toast script for saving forms -->
     <script>

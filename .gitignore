@@ -23,4 +23,6 @@ yarn-error.log
 
 /public/img
 
-php_errors.log
+/php_errors.log
+
+/resources/views/.bladeformatterrc

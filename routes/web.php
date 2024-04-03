@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/users', [UsersController::class, 'index'])->name('users');
+    Route::patch('/users', [UsersController::class, 'update'])->name('user.update');
+
 
     Route::get('/branch', [BranchesController::class, 'index'])->name('branch');
     Route::get('/edit-branch/{id}', [BranchesController::class, 'edit'])->name('branch.edit');
@@ -44,6 +46,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/delivery-persons', [UsersController::class, 'deliveryPersons'])->name('delivery-persons');
     Route::get('/edit-delivery-person/{id}', [CustomersController::class, 'edit'])->name('branch.edit');
+
+
 });
 
 require __DIR__ . '/auth.php';
