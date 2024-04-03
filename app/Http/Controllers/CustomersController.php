@@ -7,6 +7,7 @@ use App\Models\Customers as Customer;
 
 class CustomersController extends Controller
 {
+
     public function index()
     {
         // Fetch all customers from the database
