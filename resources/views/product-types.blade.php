@@ -45,6 +45,7 @@
                         <th>Name</th>
                         <th>Volume</th>
                         <th>Active</th>
+                        <th></th>
 
                     </tr>
                 </thead>
@@ -54,7 +55,8 @@
                             <td>{{ $productType->code }}</td>
                             <td>{{ $productType->name }}</td>
                             <td>{{ $productType->volume }}</td>
-                            <td>{{ $productType->is_active }}</td>
+                            <td>{{ $productType->is_active == 1 ? 'Yes' : 'No' }}</td>
+                             <td><a href="{{ route('productType.toggleStatus', ['id' => $productType->code ]) }}" onclick="return confirmSetInactive();"><button type="submit" class="btn btn-sm {{ $productType->is_active ? 'btn-danger' : 'btn-success' }}">{{ $productType->is_active ? 'Deactive' : 'Activate' }}</button></a></td>
                         </tr>
                     @endforeach
 
@@ -65,6 +67,7 @@
                         <th>Name</th>
                         <th>Volume</th>
                         <th>Active</th>
+                        <th></th>
 
                     </tr>
                 </tfoot>
@@ -104,7 +107,7 @@
                                 </div>
                                 <div class="col-sm-9">
                                     <label class="form-label" for="name">Name</label>
-                                    <input type="text" class="form-control" name="name" value="{{ old('name') }}>
+                                    <input type="text" class="form-control" name="name" value="{{ old('name') }}">
                                 </div>
                             </div>
                         </div>
@@ -114,7 +117,7 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label class="form-label" for="volume">Volume</label>
-                                    <input type="text" class="form-control" name="volume" value="{{ old('volume') }}>
+                                    <input type="text" class="form-control" name="volume" value="{{ old('volume') }}">
                                 </div>
 
                                  <div class="col-sm-6">
@@ -146,4 +149,13 @@
 
 
 <!-- /.content -->
+@endsection
+
+
+@section('custom_js')
+    <script>
+        function confirmSetInactive(){
+            return confirm("Are you sure you want to update the product status?")
+        }
+    </script>
 @endsection

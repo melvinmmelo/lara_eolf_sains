@@ -11,13 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
+
+        if (Schema::hasTable('products')) {
+            Schema::drop('products');
+        }
+
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
-            $table->string('description');
-            $table->string('unit');
+            $table->string('code')->uniqiue();
+            $table->string('product_type_code');
+            $table->string('product_variant_code');
             $table->tinyInteger('is_active')->default(1);
             $table->timestamps();
+
+            $table->unique(['product_type_code', 'product_variant_code'], 'unique_product_type_variant');
+
         });
     }
 
