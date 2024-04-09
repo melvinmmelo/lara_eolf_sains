@@ -91,7 +91,7 @@
 
                         <li class="nav-item">
                             <a href="/delivery-persons" class="nav-link">
-                                <i class="fas fa-biking nav-icon"></i>
+                                <i class="fas fa-truck-ramp-box nav-icon"></i>
                                 <p>Delivery Person</p>
                             </a>
                         </li>
