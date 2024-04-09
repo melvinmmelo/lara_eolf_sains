@@ -43,7 +43,7 @@ class ProductController extends Controller
 
         $Product = new Product();
         $Product->product_type_code = $request->product_type_code;
-        $Product->product_variant_code = $request->product_type_code;
+        $Product->product_variant_code = $request->product_variant_code;
         $Product->save();
 
         return redirect()->back()->with('sucess', 'Data saved!');
