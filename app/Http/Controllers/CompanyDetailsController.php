@@ -24,6 +24,8 @@ class CompanyDetailsController extends Controller
 
     public function update(CompanyDetails $companyDetails, Request $request){
         // dd($request->all());
+        $logoPath = '';
+
         $vData = $request->validate([
             'name' => 'required|max:199',
             'contact_no' => 'nullable|max:199',

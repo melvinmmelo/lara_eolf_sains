@@ -52,6 +52,15 @@
             overflow-y: auto;
         }
 
+        <style>
+
+        /* Add custom CSS to control modal content height and scrollbar */
+        .modal-body {
+            max-height: calc(100vh - 200px);
+            /* Adjust as needed */
+            overflow-y: auto;
+        }
+
         .modal-backdrop {
             background-color: rgba(255, 255, 255, 0.5) !important;
             /* Set the background color to white with some transparency */
@@ -59,9 +68,7 @@
             /* Apply a blur effect to the backdrop */
             /* 5% opacity black */
         }
-    </style>
 
-    <style>
         /* Style for dotted horizontal rule */
         .dotted-hr {
             border-top: 2px dotted #ccc;

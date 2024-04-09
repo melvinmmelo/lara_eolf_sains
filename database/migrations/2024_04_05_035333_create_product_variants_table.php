@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_variants', function (Blueprint $table) {
-            $table->id();
-            $table->string('code');
+            $table->string('code')->unique();
             $table->string('name');
             $table->tinyInteger('is_active')->default(1);
             $table->timestamps();

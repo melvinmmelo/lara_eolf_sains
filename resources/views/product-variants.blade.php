@@ -44,29 +44,21 @@
                         <th>Code</th>
                         <th>Name</th>
 
-
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($productVariants as $productVariant)
                     <tr>
-                        <td>aaa</td>
-                        <td>aaa</td>
-
-
+                        <td>{{ $productVariant->code }}</td>
+                        <td>{{ $productVariant->name }}</td>
                     </tr>
+                    @endforeach
 
-                    <tr>
-                        <td>aaa</td>
-                        <td>aaa</td>
-
-
-                    </tr>
                 </tbody>
                 <tfoot>
                     <tr>
                         <th>Code</th>
                         <th>Name</th>
-
 
                     </tr>
                 </tfoot>
@@ -76,7 +68,7 @@
         </div>
         <!-- /.card-body -->
         <div class="card-footer">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-product-variants">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-product-types">
                 Add New
             </button>
         </div>
@@ -85,13 +77,13 @@
     <!-- /.card -->
 
 
-    <div class="modal fade" id="modal-product-variants">
+    <div class="modal fade" id="modal-product-types">
         <div class="modal-dialog">
-            <form method="POST" action="{{ route('#') }}">
+            <form method="POST" action="{{ route('productVariant.store') }}">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Add Product Variants</h4>
+                        <h4 class="modal-title">Add Product Variant</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -101,39 +93,29 @@
                         <div class="form-group">
                             <div class="row mb-2">
                                 <div class="col-sm-3">
-                                    <label class="form-label" for="name">Code</label>
-                                    <input type="text" class="form-control" name="last_name">
+                                    <label class="form-label" for="code">Code</label>
+                                    <input type="text" class="form-control" name="code" value="{{ old('code') }}">
                                 </div>
                                 <div class="col-sm-9">
                                     <label class="form-label" for="name">Name</label>
-                                    <input type="text" class="form-control" name="first_name">
+                                    <input type="text" class="form-control" name="name" value="{{ old('name') }}">
                                 </div>
                             </div>
                         </div>
 
 
 
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Save changes</button>
+                        </div>
                     </div>
-
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Save
-                            changes</button>
-                    </div>
+                    <!-- /.modal-content -->
                 </div>
-
-
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Save
-                        changes</button>
-                </div>
+                <!-- /.modal-dialog -->
         </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
+        <!-- /.modal -->
 
-    </form>
+        </form>
     </div>
     </div>
 

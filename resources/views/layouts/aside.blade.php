@@ -112,7 +112,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="product-types" class="nav-link">
+                            <a href="products" class="nav-link">
                                 <i class="fas fa-ice-cream nav-icon"></i>
                                 <p>Products</p>
                             </a>

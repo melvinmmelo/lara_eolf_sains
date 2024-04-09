@@ -3,6 +3,9 @@
 use App\Http\Controllers\BranchesController;
 use App\Http\Controllers\CompanyDetailsController;
 use App\Http\Controllers\CustomersController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductTypeController;
+use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VehiclesController;
@@ -37,15 +40,36 @@ Route::middleware('auth')->group(function () {
     Route::get('/branch', [BranchesController::class, 'index'])->name('branch');
     Route::get('/edit-branch/{id}', [BranchesController::class, 'edit'])->name('branch.edit');
 
+
     Route::get('/customers', [CustomersController::class, 'index'])->name('customers');
-    Route::get('/customer/create', [CustomersController::class, 'create'])->name('customer.create');
-    Route::get('/edit-customer/{id}', [CustomersController::class, 'edit'])->name('customer.edit');
+
+    // Route::get('/edit-customer/{id}', [CustomersController::class, 'edit'])->name('customer.edit');
+    Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customer.edit');
+    Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
+    Route::post('/customers/store', [CustomersController::class, 'store']);
+    Route::put('/customers/{id}', [CustomersController::class, 'update']);
+    Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
+
 
     Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
     Route::get('/edit-vehicle/{id}', [CustomersController::class, 'edit'])->name('vehicle.edit');
 
     Route::get('/delivery-persons', [UsersController::class, 'deliveryPersons'])->name('delivery-persons');
-    Route::get('/edit-delivery-person/{id}', [CustomersController::class, 'edit'])->name('branch.edit');
+    Route::get('/edit-delivery-person/{id}', [CustomersController::class, 'edit'])->name('delivery-person.edit');
+
+
+    Route::get('/product-types', [ProductTypeController::class, 'index'])->name('productType.index');
+    Route::post('/product-types', [ProductTypeController::class, 'store'])->name('productType.store');
+
+    Route::get('/product-variants', [ProductVariantController::class,'index'])->name('productVariant.index');
+    Route::post('/product-variants', [ProductVariantController::class, 'store'])->name('productVariant.store');
+
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::post('/product/store', [ProductController::class, 'store'])->name('product.store');
+
+    Route::get('/product/{id}/toggle-status', [ProductController::class, 'toggleStatus'])->name('product.toggleStatus');
+    Route::get('/product-type/{id}/toggle-status', [ProductTypeController::class, 'toggleStatus'])->name('productType.toggleStatus');
+
 
 
 });
