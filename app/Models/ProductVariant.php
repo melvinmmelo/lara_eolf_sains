@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductType extends Model
+class ProductVariant extends Model
 {
     use HasFactory;
 
@@ -16,6 +16,5 @@ class ProductType extends Model
     protected $keyType = 'string';
 
     protected $guarded = [];
-
 
 }

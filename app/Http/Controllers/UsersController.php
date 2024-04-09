@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $users = User::all();
         return view('users', compact('users'));
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
         $request->validate([
             'user_id' => 'integer|exists:users,id',
             'e_lname' => 'required|string|max:190',

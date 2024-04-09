@@ -21,6 +21,9 @@
     <!-- Main content -->
     <section class="content">
 
+
+
+
         <!-- Default box -->
         <div class="card">
 
@@ -38,6 +41,10 @@
                 </div>
             </div>
             <div class="card-body">
+
+                @include('layouts.errors')
+
+
                 {{-- Sample displaying data --}}
                 Name {{ $company->name }}
 
