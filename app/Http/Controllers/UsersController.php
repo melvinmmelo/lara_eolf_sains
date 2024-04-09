@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
-    //
     public function index()
     {
         $users = User::all();
@@ -33,6 +32,7 @@ class UsersController extends Controller
         $user->save();
 
         return redirect()->back()->with('sucess', 'Data saved!');
+
     }
 
     public function deliveryPersons()

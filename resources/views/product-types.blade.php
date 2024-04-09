@@ -45,25 +45,21 @@
                         <th>Name</th>
                         <th>Volume</th>
                         <th>Active</th>
+                        <th></th>
 
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>aaa</td>
-                        <td>aaa</td>
-                        <td>aaa</td>
-                        <td>aaa</td>
+                    @foreach ($productTypes as $productType)
+                        <tr>
+                            <td>{{ $productType->code }}</td>
+                            <td>{{ $productType->name }}</td>
+                            <td>{{ $productType->volume }}</td>
+                            <td>{{ $productType->is_active == 1 ? 'Yes' : 'No' }}</td>
+                             <td><a href="{{ route('productType.toggleStatus', ['id' => $productType->code ]) }}" onclick="return confirmSetInactive();"><button type="submit" class="btn btn-sm {{ $productType->is_active ? 'btn-danger' : 'btn-success' }}">{{ $productType->is_active ? 'Deactive' : 'Activate' }}</button></a></td>
+                        </tr>
+                    @endforeach
 
-                    </tr>
-
-                    <tr>
-                        <td>aaa</td>
-                        <td>aaa</td>
-                        <td>aaa</td>
-                        <td>aaa</td>
-
-                    </tr>
                 </tbody>
                 <tfoot>
                     <tr>
@@ -71,6 +67,7 @@
                         <th>Name</th>
                         <th>Volume</th>
                         <th>Active</th>
+                        <th></th>
 
                     </tr>
                 </tfoot>
@@ -91,7 +88,7 @@
 
     <div class="modal fade" id="modal-product-types">
         <div class="modal-dialog">
-            <form method="POST" action="{{ route('#') }}">
+            <form method="POST" action="{{ route('productType.store') }}">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -105,12 +102,12 @@
                         <div class="form-group">
                             <div class="row mb-2">
                                 <div class="col-sm-3">
-                                    <label class="form-label" for="name">Code</label>
-                                    <input type="text" class="form-control" name="last_name">
+                                    <label class="form-label" for="code">Code</label>
+                                    <input type="text" class="form-control" name="code" value="{{ old('code') }}">
                                 </div>
                                 <div class="col-sm-9">
                                     <label class="form-label" for="name">Name</label>
-                                    <input type="text" class="form-control" name="first_name">
+                                    <input type="text" class="form-control" name="name" value="{{ old('name') }}">
                                 </div>
                             </div>
                         </div>
@@ -118,37 +115,24 @@
 
                         <div class="form-group">
                             <div class="row">
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="email">Volume</label>
-                                    <input type="text" class="form-control" name="email">
+                                <div class="col-sm-3">
+                                    <label class="form-label" for="volume">Volume</label>
+                                    <input type="text" class="form-control" name="volume" value="{{ old('volume') }}">
                                 </div>
-                            </div>
-                        </div>
 
-
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-sm-12">
+                                 <div class="col-sm-6">
                                     <label class="form-label" for="status">Active</label>
                                     <br>
-                                    <input type="checkbox" id="mySwitch" data-bootstrap-switch data-on-text="Yes"
+                                    <input type="checkbox" name="is_active" id="mySwitch" data-bootstrap-switch data-on-text="Yes"
                                         data-off-text="No" data-on-color="success" data-off-color="danger">
 
                                     <div style="margin-bottom: 20px"></div>
-
                                 </div>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-success">Save
-                                    changes</button>
                             </div>
                         </div>
 
-
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-success">Save
-                                changes</button>
+                            <button type="submit" class="btn btn-success">Save changes</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -165,4 +149,13 @@
 
 
 <!-- /.content -->
+@endsection
+
+
+@section('custom_js')
+    <script>
+        function confirmSetInactive(){
+            return confirm("Are you sure you want to update the product status?")
+        }
+    </script>
 @endsection
