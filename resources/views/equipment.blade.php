@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+
 @section('contents')
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -10,7 +11,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Pricing</li>
+                        <li class="breadcrumb-item active">Equipments</li>
                     </ol>
                 </div>
             </div>
@@ -23,7 +24,7 @@
         <!-- Default box -->
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Pricing</h3>
+                <h3 class="card-title">Equipment Details</h3>
 
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -38,8 +39,13 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Description</th>
+                            <th>Owned</th>
+                            <th>Type</th>
+                            <th>Brand</th>
+                            <th>Model</th>
+                            <th>Serial No.</th>
+                            <th>Code</th>
+                            <th>Date Assigned</th>
                             <th>Status</th>
 
 
@@ -51,6 +57,11 @@
                             <td>aaa</td>
                             <td>aaa</td>
                             <td>aaa</td>
+                            <td>aaa</td>
+                            <td>aaa</td>
+                            <td>aaa</td>
+                            <td>aaa</td>
+                            <td>aaa</td>
 
 
                         </tr>
@@ -59,16 +70,26 @@
                             <td>aaa</td>
                             <td>aaa</td>
                             <td>aaa</td>
+                            <td>aaa</td>
+                            <td>aaa</td>
+                            <td>aaa</td>
+                            <td>aaa</td>
+                            <td>aaa</td>
+
 
 
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>Name</th>
-                            <th>Description</th>
+                            <th>Owned</th>
+                            <th>Type</th>
+                            <th>Brand</th>
+                            <th>Model</th>
+                            <th>Serial No.</th>
+                            <th>Code</th>
+                            <th>Date Assigned</th>
                             <th>Status</th>
-
 
                         </tr>
                     </tfoot>
@@ -77,18 +98,18 @@
             </div>
             <!-- /.card-body -->
             <div class="card-footer">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-price">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
                     Add New
                 </button>
             </div>
             <!-- /.card-footer-->
         </div>
         <!-- /.card -->
-        <div class="modal fade" id="modal-price">
+        <div class="modal fade" id="modal-equipment">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Add Pricing</h4>
+                        <h4 class="modal-title">Add Equipment</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -98,7 +119,7 @@
                         <div class="form-group">
                             <div class="row mb-2">
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="price_code">Code</label>
+                                    <label class="form-label" for="price_code">Ownership</label>
                                     <select class="form-control" id="price_code">
                                         <option>option 1</option>
                                         <option>option 2</option>
@@ -109,7 +130,7 @@
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="price_unit">Unit</label>
+                                    <label class="form-label" for="price_unit">Type</label>
                                     <select class="form-control" id="price_unit">
                                         <option>option 1</option>
                                         <option>option 2</option>
@@ -124,7 +145,7 @@
                         <div class="form-group">
                             <div class="row mb-2">
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="price-quantity">Quantity</label>
+                                    <label class="form-label" for="price-quantity">Brand</label>
                                     <input type="text" class="form-control" id="cust_lname" name="lastname">
                                 </div>
 
@@ -134,6 +155,50 @@
                                     <input type="text" class="form-control" id="cust_lname" name="lastname">
                                 </div>
 
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row mb-2">
+                                <div class="col-sm-8">
+                                    <label class="form-label" for="price-quantity">Serial No.</label>
+                                    <input type="text" class="form-control" id="cust_lname" name="lastname">
+                                </div>
+
+
+                                <div class="col-sm-4">
+                                    <label class="form-label" for="price">Code</label>
+                                    <input type="text" class="form-control" id="cust_lname" name="lastname">
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row mb-2">
+                                <div class="col-sm-12">
+                                    <label class="form-label" for="price-quantity">Distributor</label>
+                                    <input type="text" class="form-control" id="cust_lname" name="lastname">
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="form-label">Date Delivered</label>
+                            <div class="input-group">
+                                <input type="date" class="form-control float-right">
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Date Purchased</label>
+                            <div class="input-group">
+                                <input type="date" class="form-control float-right">
 
                             </div>
                         </div>
@@ -155,5 +220,7 @@
 
         </div>
     </section>
+
+
     <!-- /.content -->
 @endsection
