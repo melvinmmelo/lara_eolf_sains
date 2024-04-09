@@ -125,6 +125,27 @@
                                 <p>Product Variants</p>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a href="pricing-level" class="nav-link">
+                                <i class="fas fa-receipt nav-icon"></i>
+                                <p>Pricing Level</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="pricing" class="nav-link">
+                                <i class="fas fa-peso-sign nav-icon"></i>
+                                <p>Pricing</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="equipment" class="nav-link">
+                                <i class="fas fa-box nav-icon"></i>
+                                <p>Equipment</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

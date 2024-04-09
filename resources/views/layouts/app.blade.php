@@ -27,6 +27,7 @@
     <!-- Include SweetAlert and Toast JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.1.2/sweetalert2.min.js"></script>
 
+
     <!-- Forms label CSS Style -->
     <style>
         .form-label {
@@ -135,7 +136,11 @@
     <script src="{{ asset('plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
 
 
+
+
+
     <!-- Page specific script -->
+
 
 
     <script>
