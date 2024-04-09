@@ -43,6 +43,7 @@ class CustomersController extends Controller
             'firstname' => $request->firstname,
             'middlename' => $request->middlename,
             'companyname' => $request->companyname,
+            'contact_no' => $request->contact_no,
             'email' => $request->email,
             'tin' => $request->tin,
             'region' => $request->region,
@@ -55,23 +56,29 @@ class CustomersController extends Controller
             // Add more fields as needed
         ]);
 
-        return redirect('/customers/create')->with('success', 'Customer added successfully!');
+        return redirect('/customers/')->with('success', 'Customer added successfully!');
     }
+
+    // public function edit($id)
+    // {
+    //     $customer = Customer::findOrFail($id);
+    //     return view('edit_customer', compact('customer'));
+    // }
 
     public function edit($id)
     {
         $customer = Customer::findOrFail($id);
-        return view('edit_customer', compact('customer'));
+        return response()->json($customer);
     }
-    public function update(Request $request, $id)
+
+    public function update(Request $request)
     {
-        $customer = Customer::findOrFail($id);
+        $customer = Customer::findOrFail($request->id);
 
         $request->validate([
             'lastname' => 'required',
             'firstname' => 'required',
             'companyname' => 'required',
-            'email' => 'required|email',
             // Add more validation rules as needed
         ]);
 
@@ -81,6 +88,7 @@ class CustomersController extends Controller
             'firstname' => $request->firstname,
             'middlename' => $request->middlename,
             'companyname' => $request->companyname,
+            'contact_no' => $request->contact_no,
             'email' => $request->email,
             'tin' => $request->tin,
             'region' => $request->region,
@@ -88,18 +96,18 @@ class CustomersController extends Controller
             'city' => $request->city,
             'brgy' => $request->brgy,
             'subdivision' => $request->subdivision,
-            'longitute' => $request->longitute,
+            'longitude' => $request->longitude,
             'latitude' => $request->latitude,
         ]);
 
-        return redirect('/customers/create')->with('success', 'Customer updated successfully!');
+        return redirect('/customers/')->with('success', 'Customer updated successfully!');
     }
 
     public function destroy($id)
     {
         $customer = Customer::findOrFail($id);
         $customer->delete();
-        return redirect('/customers/create')->with('success', 'Customer deleted successfully!');
+        return redirect('/customers/')->with('success', 'Customer deleted successfully!');
     }
 
 }
