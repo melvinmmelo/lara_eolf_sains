@@ -40,17 +40,24 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/customers', [CustomersController::class, 'index'])->name('customers');
-
-    // Route::get('/edit-customer/{id}', [CustomersController::class, 'edit'])->name('customer.edit');
     Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customer.edit');
     Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
     Route::post('/customers/store', [CustomersController::class, 'store']);
-    Route::put('/customers/{id}', [CustomersController::class, 'update']);
     Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
+    Route::put('/customers/{id}', [CustomerController::class, 'update'])->name('customer.update');
+    Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
 
 
     Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
-    Route::get('/edit-vehicle/{id}', [CustomersController::class, 'edit'])->name('vehicle.edit');
+    Route::get('/vehicles/{id}/edit', [VehiclesController::class, 'edit'])->name('vehicle.edit');
+    Route::get('/vehicles/create', [VehiclesController::class, 'create'])->name('vehicle.create');
+    Route::post('/vehicles/store', [VehiclesController::class, 'store']);
+    Route::put('/vehicles/{id}', [VehiclesController::class, 'update']);
+    Route::delete('/vehicles/{id}', [VehiclesController::class, 'destroy'])->name('vehicle.destroy');
+    Route::patch('/vehicles/', [VehiclesController::class, 'update'])->name('vehicle.update');
+
+    // Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
+    // Route::get('/edit-vehicle/{id}', [CustomersController::class, 'edit'])->name('vehicle.edit');
 
     Route::get('/delivery-persons', [UsersController::class, 'deliveryPersons'])->name('delivery-persons');
     Route::get('/edit-delivery-person/{id}', [CustomersController::class, 'edit'])->name('branch.edit');
