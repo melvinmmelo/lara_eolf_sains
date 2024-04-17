@@ -68,7 +68,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/product-types', [ProductTypeController::class, 'index'])->name('productType.index');
     Route::post('/product-types', [ProductTypeController::class, 'store'])->name('productType.store');
 
-    Route::get('/product-variants', [ProductVariantController::class,'index'])->name('productVariant.index');
+    Route::get('/product-variants', [ProductVariantController::class, 'index'])->name('productVariant.index');
     Route::post('/product-variants', [ProductVariantController::class, 'store'])->name('productVariant.store');
 
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -76,6 +76,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/product/{id}/toggle-status', [ProductController::class, 'toggleStatus'])->name('product.toggleStatus');
     Route::get('/product-type/{id}/toggle-status', [ProductTypeController::class, 'toggleStatus'])->name('productType.toggleStatus');
+
+
+    Route::get('/order', [ProductController::class, 'order'])->name('order');
+    Route::get('/ordering', [ProductController::class, 'ordering'])->name('ordering');
 
 
 

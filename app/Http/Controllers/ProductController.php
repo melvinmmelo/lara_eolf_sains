@@ -9,6 +9,18 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+
+    public function order()
+    {
+        return view('order');
+    }
+
+    public function ordering()
+    {
+        return view('ordering');
+    }
+
+
     /**
      * Display a listing of the resource.
      */
