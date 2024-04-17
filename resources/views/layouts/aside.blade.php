@@ -146,6 +146,13 @@
                                 <p>Equipment</p>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a href="order" class="nav-link">
+                                <i class="fas fa-file-invoice nav-icon"></i>
+                                <p>Order</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
