@@ -20,17 +20,17 @@
 
     <!-- Main content -->
     <section class="content">
-        @if(session('success'))
+        @if (session('success'))
             <script>
                 // JavaScript code to trigger SweetAlert pop-up message
-                document.addEventListener('DOMContentLoaded', function () {
+                document.addEventListener('DOMContentLoaded', function() {
                     // Set default icon
                     let icon = 'success';
-                    
+
                     // Check if success message is "Customer deleted successfully!"
-                    @if(session('success') == 'Customer deleted successfully!')
+                    @if (session('success') == 'Customer deleted successfully!')
                         icon = 'error'; // Set icon to 'error' if message is for deletion
-                    @elseif(session('success') == 'Customer updated successfully!')
+                    @elseif (session('success') == 'Customer updated successfully!')
                         icon = 'success'; // Set icon to 'success' if message is for update
                     @endif
 
@@ -68,26 +68,30 @@
                             <th>Firstname</th>
                             <th>Middlename</th>
                             <th>Company Name</th>
-                            
+
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($customers as $customer)
+                        @foreach ($customers as $customer)
                             <tr>
-                            <td>{{ $customer->id }}</td>
+                                <td>{{ $customer->id }}</td>
                                 <td>{{ $customer->distributor }}</td>
                                 <td>{{ $customer->lastname }}</td>
                                 <td>{{ $customer->firstname }}</td>
                                 <td>{{ $customer->middlename }}</td>
                                 <td>{{ $customer->companyname }}</td>
-                                
+
                                 <td>
                                     <!-- <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal" data-target="#editCustomerModal" data-id="{{ $customer->id }}">Edit</button> -->
-                                   
-                                    <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal" data-target="#editCustomerModal" onclick="setToUpdatecustomer('{{ $customer->id }}','{{ $customer->distributor }}','{{ $customer->lastname }}','{{ $customer->firstname }}','{{ $customer->middlename }}','{{ $customer->contact_no }}','{{ $customer->companyname }}','{{ $customer->tin }}','{{ $customer->longitude }}','{{ $customer->latitude }}')">Edit</button>
+
+                                    <a class="btn btn-success btn-sm" href="store-info" role="button">Store</a>
+                                    <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
+                                        data-target="#editCustomerModal"
+                                        onclick="setToUpdatecustomer('{{ $customer->id }}','{{ $customer->distributor }}','{{ $customer->lastname }}','{{ $customer->firstname }}','{{ $customer->middlename }}','{{ $customer->contact_no }}','{{ $customer->companyname }}','{{ $customer->tin }}','{{ $customer->longitude }}','{{ $customer->latitude }}')">Edit</button>
                                     <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editCustomerModal" onclick="setToUpdatecustomer('{{ $customer->id }}',{{ $customer->lastname }}','{{ $customer->firstname }}','{{ $customer->middlename }}','{{ $customer->contact_no }}')">Edit</a> -->
-                                    <form method="POST" action="{{ route('customer.destroy', $customer->id) }}" style="display: inline;">
+                                    <form method="POST" action="{{ route('customer.destroy', $customer->id) }}"
+                                        style="display: inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -99,12 +103,13 @@
                 </table>
             </div>
             <div class="card-footer">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#customerModal">Add New</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#customerModal">Add
+                    New</button>
             </div>
         </div>
         <!-- /.card -->
 
-        </section>
+    </section>
     <!-- /.content -->
 
     <!-- Customer Entry Modal -->
@@ -122,89 +127,16 @@
                     <div class="content-header">
                         <!-- Content Header (Page header) -->
                         <form method="POST" action="/customers/store">
-                        @csrf
-                        <div class="container-fluid">
-                            <!-- Your existing form -->
-                            <div class="form-group">
-
-                                <div class="row mb-3">
-                                    <div class="col-sm-6">
-                                        <label class="form-label" for="cust_dist">Distributor</label>
-                                        <select name="distributor" class="form-control d-block" id="cust_dist" onfocus="changeColor('cust_dist')" onblur="resetColor('cust_dist')">
-                                            <option>option 1</option>
-                                            <option>option 2</option>
-                                            <option>option 3</option>
-                                            <option>option 4</option>
-                                            <option>option 5</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-
+                            @csrf
+                            <div class="container-fluid">
+                                <!-- Your existing form -->
                                 <div class="form-group">
+
                                     <div class="row mb-3">
-                                        <div class="col-sm-4">
-                                            <label class="form-label" for="cust_lname">Last Name:</label>
-                                            <input type="text" class="form-control" id="cust_lname" name="lastname">
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <label class="form-label" for="cust_fname">First Name:</label>
-                                            <input type="text" class="form-control" id="cust_fname" name="firstname">
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <label class="form-label" for="cust_mname">Middle Name:</label>
-                                            <input type="text" class="form-control" id="cust_mname" name="middlename">
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group">
-                                    <div class="row mb-3">
-                                        <div class="col-sm-4">
-                                            <label class="form-label" for="cust_contact">Contact No.:</label>
-                                            <input type="text" class="form-control" id="cust_contact" name="contact_no">
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <label class="form-label" for="cust_comp">Company Name:</label>
-                                            <input type="text" class="form-control" id="cust_comp" name="companyname">
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <label class="form-label" for="cust_tin">TIN:</label>
-                                            <input type="text" class="form-control" id="cust_tin" name="tin">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <h6>Residential Address</h6>
-                                <hr class="dotted-hr">
-
-
-                                <div class="form-group">
-                                    <div class="row mb-2">
-                                        <div class="col-sm-3">
-                                            <label class="form-label" for="cust_region">Region</label>
-                                            <select class="form-control" id="cust_region" name="region">
-                                                <option>option 1</option>
-                                                <option>option 2</option>
-                                                <option>option 3</option>
-                                                <option>option 4</option>
-                                                <option>option 5</option>
-                                            </select>
-                                        </div>
                                         <div class="col-sm-6">
-                                            <label class="form-label" for="cust_prov">Province</label>
-                                            <select class="form-control" id="cust_prov" name="province">
-                                                <option>option 1</option>
-                                                <option>option 2</option>
-                                                <option>option 3</option>
-                                                <option>option 4</option>
-                                                <option>option 5</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <label class="form-label" for="cust_city">City</label>
-                                            <select class="form-control" id="cust_city" name="city">
+                                            <label class="form-label" for="cust_dist">Distributor</label>
+                                            <select name="distributor" class="form-control d-block" id="cust_dist"
+                                                onfocus="changeColor('cust_dist')" onblur="resetColor('cust_dist')">
                                                 <option>option 1</option>
                                                 <option>option 2</option>
                                                 <option>option 3</option>
@@ -214,13 +146,55 @@
                                         </div>
                                     </div>
 
+
+                                    <div class="form-group">
+                                        <div class="row mb-3">
+                                            <div class="col-sm-4">
+                                                <label class="form-label" for="cust_lname">Last Name:</label>
+                                                <input type="text" class="form-control" id="cust_lname" name="lastname">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="form-label" for="cust_fname">First Name:</label>
+                                                <input type="text" class="form-control" id="cust_fname" name="firstname">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="form-label" for="cust_mname">Middle Name:</label>
+                                                <input type="text" class="form-control" id="cust_mname"
+                                                    name="middlename">
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="row mb-3">
+                                            <div class="col-sm-4">
+                                                <label class="form-label" for="cust_contact">Contact No.:</label>
+                                                <input type="text" class="form-control" id="cust_contact"
+                                                    name="contact_no">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="form-label" for="cust_comp">Company Name:</label>
+                                                <input type="text" class="form-control" id="cust_comp"
+                                                    name="companyname">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="form-label" for="cust_tin">TIN:</label>
+                                                <input type="text" class="form-control" id="cust_tin"
+                                                    name="tin">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h6>Residential Address</h6>
+                                    <hr class="dotted-hr">
 
 
                                     <div class="form-group">
                                         <div class="row mb-2">
-                                            <div class="col-sm-6">
-                                                <label class="form-label" for="cust_brgy">Barangay</label>
-                                                <select class="form-control" id="cust_brgy" name="brgy">
+                                            <div class="col-sm-3">
+                                                <label class="form-label" for="cust_region">Region</label>
+                                                <select class="form-control" id="cust_region" name="region">
                                                     <option>option 1</option>
                                                     <option>option 2</option>
                                                     <option>option 3</option>
@@ -229,269 +203,273 @@
                                                 </select>
                                             </div>
                                             <div class="col-sm-6">
-                                                <label class="form-label" for="cust_subd">Subdivision:</label>
-                                                <input type="text" class="form-control" id="cust_subd" name="subdivision">
+                                                <label class="form-label" for="cust_prov">Province</label>
+                                                <select class="form-control" id="cust_prov" name="province">
+                                                    <option>option 1</option>
+                                                    <option>option 2</option>
+                                                    <option>option 3</option>
+                                                    <option>option 4</option>
+                                                    <option>option 5</option>
+                                                </select>
                                             </div>
-                                            <div class="col-sm-6">
-                                                <label class="form-label" for="cust_lat">Latitude:</label>
-                                                <input type="text" class="form-control" id="cust_lat" name="latitude">
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label class="form-label" for="cust_long">Longitude:</label>
-                                                <input type="text" class="form-control" id="cust_long" name="longitude">
+                                            <div class="col-sm-3">
+                                                <label class="form-label" for="cust_city">City</label>
+                                                <select class="form-control" id="cust_city" name="city">
+                                                    <option>option 1</option>
+                                                    <option>option 2</option>
+                                                    <option>option 3</option>
+                                                    <option>option 4</option>
+                                                    <option>option 5</option>
+                                                </select>
                                             </div>
                                         </div>
 
-                                    </div><!-- /.container-fluid -->
-                                </div><!-- /.content-header -->
 
-                            </div>
-                        
-                        </div><!-- /.container-fluid -->
+
+                                        <div class="form-group">
+                                            <div class="row mb-2">
+                                                <div class="col-sm-6">
+                                                    <label class="form-label" for="cust_brgy">Barangay</label>
+                                                    <select class="form-control" id="cust_brgy" name="brgy">
+                                                        <option>option 1</option>
+                                                        <option>option 2</option>
+                                                        <option>option 3</option>
+                                                        <option>option 4</option>
+                                                        <option>option 5</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label class="form-label" for="cust_subd">Subdivision:</label>
+                                                    <input type="text" class="form-control" id="cust_subd"
+                                                        name="subdivision">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label class="form-label" for="cust_lat">Latitude:</label>
+                                                    <input type="text" class="form-control" id="cust_lat"
+                                                        name="latitude">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label class="form-label" for="cust_long">Longitude:</label>
+                                                    <input type="text" class="form-control" id="cust_long"
+                                                        name="longitude">
+                                                </div>
+                                            </div>
+
+                                        </div><!-- /.container-fluid -->
+                                    </div><!-- /.content-header -->
+
+                                </div>
+
+                            </div><!-- /.container-fluid -->
                     </div><!-- /.content-header -->
                 </div>
                 <div class="modal-footer">
                     <!-- Button to open another modal -->
                     <!-- <button type="button" class="btn btn-primary" onclick="toggleModal('storeModal')">Store
-                        Info</button>
-                    <button type="button" class="btn btn-success swalDefaultSuccess">Save changes</button> -->
-                    <button type="button" class="btn btn-primary" onclick="toggleModal('storeModal')">Store Info</button>
+                                                                                                                                                        Info</button>
+                                                                                                                                                    <button type="button" class="btn btn-success swalDefaultSuccess">Save changes</button> -->
+
                     <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#storeModal">Store Info</button> -->
                     <!-- <input type="submit" name="submit" value="submit"> -->
                     <button type="submit" class="btn btn-success">Save changes</button>
                 </div>
-            </div></form>
+            </div>
+            </form>
         </div>
     </div>
 
-    <!-- Store Entry Modal -->
-    <div class="modal fade" id="storeModal" tabindex="-1" aria-labelledby="storeModalLabel" aria-hidden="true">
+
+
+    <!-- Edit Customer Modal -->
+    <div class="modal fade" id="editCustomerModal" tabindex="-1" aria-labelledby="editCustomerModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="storeModalLabel">Store Info</h5>
+                    <h5 class="modal-title" id="editCustomerModalLabel">Edit Customer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
+                <form id="editCustomerForm" method="POST" action="{{ route('customer.update') }}">
+                    @csrf
+                    @method('PATCH')
 
-                        <div class="form-group">
-                            <div class="row mb-2">
-                                <div class="col-sm-8">
-                                    <label class="form-label" for="cust_lname">Store Name:</label>
-                                    <input type="text" class="form-control" id="cust_lname">
-                                </div>
-                                <div class="col-sm-4">
-                                    <label class="form-label" for="cust_contact">Contact No.:</label>
-                                    <input type="text" class="form-control" id="cust_contact">
+
+                    <div class="modal-body">
+
+
+                        <div class="container-fluid">
+
+                            <div class="form-group">
+                                <div class="row mb-3">
+                                    <label for="distributor">Customer ID:</label>
+                                    <input type="text" class="form-control" name="id" id="id" required
+                                        readonly>
                                 </div>
                             </div>
-                        </div>
 
-
-
-                        <h6>Store Address</h6>
-                        <hr class="dotted-hr">
-
-                        <div class="form-group">
-                            <div class="row mb-2">
-                                <div class="col-sm-3">
-                                    <label class="form-label" for="cust_region">Region</label>
-                                    <select class="form-control" id="cust_region">
+                            <div class="form-group">
+                                <div class="row mb-3">
+                                    <label for="distributor">Distributor:</label>
+                                    <select name="distributor" class="form-control d-block" id="distributor"
+                                        onfocus="changeColor('cust_dist')" onblur="resetColor('cust_dist')">
                                         <option>option 1</option>
                                         <option>option 2</option>
                                         <option>option 3</option>
                                         <option>option 4</option>
                                         <option>option 5</option>
                                     </select>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="cust_prov">Province</label>
-                                    <select class="form-control" id="cust_prov">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                        <option>option 5</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-3">
-                                    <label class="form-label" for="cust_city">City</label>
-                                    <select class="form-control" id="cust_city">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                        <option>option 5</option>
-                                    </select>
-                                </div>
-                            </div>
 
-                            <div class="form-group">
-                                <div class="row mb-2">
-                                    <div class="col-sm-6">
-                                        <label class="form-label" for="cust_brgy">Barangay</label>
-                                        <select class="form-control" id="cust_brgy">
-                                            <option>option 1</option>
-                                            <option>option 2</option>
-                                            <option>option 3</option>
-                                            <option>option 4</option>
-                                            <option>option 5</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label class="form-label" for="cust_subd">Subdivision:</label>
-                                        <input type="text" class="form-control" id="cust_subd">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label class="form-label" for="cust_lat">Latitude:</label>
-                                        <input type="text" class="form-control" id="cust_lat">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label class="form-label" for="cust_long">Longitude:</label>
-                                        <input type="text" class="form-control" id="cust_long">
-                                    </div>
                                 </div>
-                            </div>
+                                <div class="form-group">
+                                    <div class="row mb-3">
+                                        <div class="col-sm-4">
+                                            <label class="form-label" for="lastname">Last Name:</label>
+                                            <input type="text" class="form-control" id="lastname" name="lastname">
+                                        </div>
 
-                            <div class="form-group">
-                                <div class="row mb-2">
-                                    <div class="col-sm-6">
-                                        <label for="store_list">List Type:</label>
-                                        <select class="form-control" id="store_region">
-                                            <option>option 1</option>
-                                            <option>option 2</option>
-                                            <option>option 3</option>
-                                            <option>option 4</option>
-                                            <option>option 5</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label for="store_length">Length of Stay:</label>
-                                        <select class="form-control" id="store_prov">
-                                            <option>option 1</option>
-                                            <option>option 2</option>
-                                            <option>option 3</option>
-                                            <option>option 4</option>
-                                            <option>option 5</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                                        <div class="col-sm-4">
+                                            <label class="form-label" for="firstname">First Name:</label>
+                                            <input type="text" class="form-control" id="firstname" name="firstname">
+                                        </div>
 
-                            <div class="form-group">
-                                <div class="row mb-2">
-                                    <div class="col-sm-12">
-                                        <label for="store_remarks">Remarks</label>
-                                        <textarea class="form-control" rows="3" id="store_remarks"></textarea>
+                                        <div class="col-sm-4">
+                                            <label class="form-label" for="middlename">Middle Name:</label>
+                                            <input type="text" class="form-control" id="middlename"
+                                                name="middlename">
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row mb-3">
+                                            <div class="col-sm-4">
+                                                <label class="form-label" for="cust_contact">Contact No.:</label>
+                                                <input type="text" class="form-control" id="contact_no"
+                                                    name="contact_no">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="form-label" for="cust_comp">Company Name:</label>
+                                                <input type="text" class="form-control" id="companyname"
+                                                    name="companyname">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="form-label" for="cust_tin">TIN:</label>
+                                                <input type="text" class="form-control" id="tin"
+                                                    name="tin">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h6>Residential Address</h6>
+                                    <hr class="dotted-hr">
+
+
+                                    <div class="form-group">
+                                        <div class="row mb-2">
+                                            <div class="col-sm-3">
+                                                <label class="form-label" for="cust_region">Region</label>
+                                                <select class="form-control" id="region" name="region">
+                                                    <option>option 1</option>
+                                                    <option>option 2</option>
+                                                    <option>option 3</option>
+                                                    <option>option 4</option>
+                                                    <option>option 5</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="form-label" for="cust_prov">Province</label>
+                                                <select class="form-control" id="province" name="province">
+                                                    <option>option 1</option>
+                                                    <option>option 2</option>
+                                                    <option>option 3</option>
+                                                    <option>option 4</option>
+                                                    <option>option 5</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label class="form-label" for="cust_city">City</label>
+                                                <select class="form-control" id="city" name="city">
+                                                    <option>option 1</option>
+                                                    <option>option 2</option>
+                                                    <option>option 3</option>
+                                                    <option>option 4</option>
+                                                    <option>option 5</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="form-group">
+                                            <div class="row mb-2">
+                                                <div class="col-sm-6">
+                                                    <label class="form-label" for="cust_brgy">Barangay</label>
+                                                    <select class="form-control" id="brgy" name="brgy">
+                                                        <option>option 1</option>
+                                                        <option>option 2</option>
+                                                        <option>option 3</option>
+                                                        <option>option 4</option>
+                                                        <option>option 5</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label class="form-label" for="cust_subd">Subdivision:</label>
+                                                    <input type="text" class="form-control" id="subdivision"
+                                                        name="subdivision">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label class="form-label" for="cust_lat">Latitude:</label>
+                                                    <input type="text" class="form-control" id="latitude"
+                                                        name="latitude">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label class="form-label" for="cust_long">Longitude:</label>
+                                                    <input type="text" class="form-control" id="longitude"
+                                                        name="longitude">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-success swalDefaultSuccess">Save
-                                changes</button>
                         </div>
                     </div>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-<!-- Edit Customer Modal -->
-<div class="modal fade" id="editCustomerModal" tabindex="-1" aria-labelledby="editCustomerModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editCustomerModalLabel">Edit Customer</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="editCustomerForm" method="POST" action="{{ route('customer.update') }}">
-                @csrf
-                @method('PATCH')
 
-                
-                <div class="modal-body">
-                <input type="text" class="form-control" name="id" id="id" required readonly>
-
-                    <div class="container-fluid">
-                        <div class="form-group">
-                            <label for="distributor">Distributor:</label>
-                            <input type="text" class="form-control" id="distributor" name="distributor" >
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="lastname">Last Name:</label>
-                            <input type="text" class="form-control" id="lastname" name="lastname">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="firstname">First Name:</label>
-                            <input type="text" class="form-control" id="firstname" name="firstname">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="middlename">Middle Name:</label>
-                            <input type="text" class="form-control" id="middlename" name="middlename">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="contact_no">Contact No.:</label>
-                            <input type="text" class="form-control" id="contact_no" name="contact_no">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="companyname">Company Name:</label>
-                            <input type="text" class="form-control" id="companyname" name="companyname" >
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="tin">TIN:</label>
-                            <input type="text" class="form-control" id="tin" name="tin">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="longitude">LONGITUDE:</label>
-                            <input type="text" class="form-control" id="longitude" name="longitude">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="latitude">LATITUDE:</label>
-                            <input type="text" class="form-control" id="latitude" name="latitude">
-                        </div>
-                        <!-- Add more input fields for other customer attributes -->
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
-<!-- JavaScript to handle edit button click and populate modal -->
-<script>
-    $('.edit-btn').click(function() {
-        var id = $(this).data('id');
-        $.ajax({
-            url: '/customers/' + id + '/edit',
-            method: 'GET',
-            success: function(data) {
-                $('#edit_distributor').val(data.distributor);
-                $('#edit_lastname').val(data.lastname);
-                $('#edit_firstname').val(data.firstname);
-                $('#edit_middlename').val(data.middlename);
-                $('#edit_companyname').val(data.companyname);
-                // Update other modal fields with data from 'data' object
-            },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-            }
+    <!-- JavaScript to handle edit button click and populate modal -->
+    <script>
+        $('.edit-btn').click(function() {
+            var id = $(this).data('id');
+            $.ajax({
+                url: '/customers/' + id + '/edit',
+                method: 'GET',
+                success: function(data) {
+                    $('#edit_distributor').val(data.distributor);
+                    $('#edit_lastname').val(data.lastname);
+                    $('#edit_firstname').val(data.firstname);
+                    $('#edit_middlename').val(data.middlename);
+                    $('#edit_companyname').val(data.companyname);
+                    // Update other modal fields with data from 'data' object
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
         });
-    });
-</script>
+    </script>
 
 
-<script>
+    <script>
         function toggleModal(modalId) {
             // Close the existing modal
             $('#customerModal').modal('hide');
@@ -521,18 +499,28 @@
                 title: 'Customers Added'
             })
         });
+
+        $('.swalDefaultDelete').click(function() {
+            Toast.fire({
+                icon: 'success',
+                title: 'Customers Deleted'
+            })
+        });
+
+        $('.swalDefaultUpdate').click(function() {
+            Toast.fire({
+                icon: 'success',
+                title: 'Customers Updated'
+            })
+        });
     </script>
     <!-- Include any additional scripts you may need -->
-
-
-
-
 @endsection
 
 
 @section('custom_js')
     <script>
-        function setToUpdatecustomer(uid,dist, ln, fn, mn, con,cm,tin,long,lat) {
+        function setToUpdatecustomer(uid, dist, ln, fn, mn, con, cm, tin, long, lat) {
             document.getElementById("id").value = uid;
             document.getElementById("distributor").value = dist;
             document.getElementById("lastname").value = ln;
@@ -543,7 +531,7 @@
             document.getElementById("tin").value = tin;
             document.getElementById("longitude").value = long;
             document.getElementById("latitude").value = lat;
-            
+
         }
     </script>
 @endsection
