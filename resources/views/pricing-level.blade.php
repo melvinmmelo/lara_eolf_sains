@@ -47,21 +47,15 @@
                         </tr>
                     </thead>
                     <tbody>
+                    @foreach($pricelevels as $pl)
                         <tr>
-                            <td>aaa</td>
-                            <td>aaa</td>
-                            <td>aaa</td>
+                            <td>{{ $pl->pl_name }}</td>
+                            <td>{{ $pl->pl_desc }}</td>
+                            <td>{{ $pl->pl_status }}</td>
 
 
                         </tr>
-
-                        <tr>
-                            <td>aaa</td>
-                            <td>aaa</td>
-                            <td>aaa</td>
-
-
-                        </tr>
+                        @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
@@ -71,6 +65,7 @@
 
 
                         </tr>
+                       
                     </tfoot>
                 </table>
 
@@ -86,9 +81,11 @@
         <!-- /.card -->
         <div class="modal fade" id="modal-price-level">
             <div class="modal-dialog">
+            <form method="POST" action="/pricing-level/store">
+                        @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Add Branch</h4>
+                        <h4 class="modal-title">Add Price Level</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -99,7 +96,7 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <label class="form-label" for="code">Name</label>
-                                    <input type="text" class="form-control" name="code">
+                                    <input type="text" class="form-control" name="name">
                                 </div>
 
                             </div>
@@ -108,7 +105,7 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <label class="form-label" for="address">Description</label>
-                                    <textarea class="form-control" rows="3" name="address"></textarea>
+                                    <textarea class="form-control" rows="3" name="Description"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -119,7 +116,7 @@
                                     <label class="form-label" for="address">Active</label>
                                     <br>
                                     <input type="checkbox" id="mySwitch" data-bootstrap-switch data-on-text="On"
-                                        data-off-text="Off" data-on-color="success" data-off-color="danger">
+                                        data-off-text="Off" data-on-color="success" data-off-color="danger" name="status">
 
                                     <div style="margin-bottom: 20px"></div>
                                 </div>
@@ -128,7 +125,7 @@
 
 
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-success swalDefaultSuccess">Save changes</button>
+                            <button type="submit" class="btn btn-success swalDefaultSuccess">Save changes</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -136,6 +133,8 @@
                 <!-- /.modal-dialog -->
             </div>
             <!-- /.modal -->
+
+</form>
 
 
 

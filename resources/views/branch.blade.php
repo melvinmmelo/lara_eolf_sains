@@ -19,7 +19,30 @@
 
     <!-- Main content -->
     <section class="content">
+     @if(session('success'))
+        <script>
+            // JavaScript code to trigger SweetAlert pop-up message
+            document.addEventListener('DOMContentLoaded', function () {
+                // Set default icon
+                let icon = 'success';
+                
+                // Check if success message is "Customer deleted successfully!"
+                @if(session('success') == 'Vehicle deleted successfully!')
+                    icon = 'error'; // Set icon to 'error' if message is for deletion
+                @elseif(session('success') == 'Vehicle updated successfully!')
+                    icon = 'success'; // Set icon to 'success' if message is for update
+                @endif
 
+                // Show SweetAlert pop-up message with the determined icon
+                Swal.fire({
+                    icon: icon,
+                    title: '{{ session('success') }}',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            });
+        </script>
+    @endif
         <!-- Default box -->
         <div class="card">
             <div class="card-header">
@@ -47,19 +70,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>aaa</td>
-                            <td>aaa</td>
-                            <td>aaa</td>
-                            <td>aaa</td>
 
-                        </tr>
-
+                    @foreach($branches as $branch)
                         <tr>
-                            <td>aaa</td>
-                            <td>aaa</td>
-                            <td>aaa</td>
-                            <td>aaa</td>
+                            <td>{{ $branch->code }}</td>
+                            <td>{{ $branch->name }}</td>
+                            <td>{{ $branch->address }}</td>
+                            <td>{{ $branch->office_no }}</td>
 
                         </tr>
                     </tbody>
@@ -72,6 +89,7 @@
 
 
                         </tr>
+                        @endforeach
                     </tfoot>
                 </table>
 
@@ -87,6 +105,8 @@
         <!-- /.card -->
         <div class="modal fade" id="modal-branch">
             <div class="modal-dialog">
+            <form method="POST" action="/branch/store">
+                        @csrf
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Add Branch</h4>
@@ -129,9 +149,9 @@
 
 
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-success swalDefaultSuccess">Save changes</button>
+                            <button type="submit" class="btn btn-success swalDefaultSuccess">Save changes</button>
                         </div>
-                    </div>
+                    </div></form>
                     <!-- /.modal-content -->
                 </div>
                 <!-- /.modal-dialog -->
