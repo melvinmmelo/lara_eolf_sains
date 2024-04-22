@@ -1,0 +1,110 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\StoreInfo; // Make sure to import the StoreInfo model
+
+class StoreController extends Controller
+{
+    // public function index()
+    // {
+        
+    //     // Fetch all storeinfo records
+    //     $storeinfos = StoreInfo::all();
+        
+    //     // Pass the storeinfo data to the view
+    //     return view('store-info', compact('storeinfos'));
+    // }
+
+    public function index(Request $request) {
+        $customer_id = $request->query('customer_id');
+    
+        // Fetch store information based on customer_id
+        $storeinfos = StoreInfo::where('customer_id', $customer_id)->get();
+    
+        return view('store-info', compact('storeinfos'));
+    }
+
+    public function store(Request $request)
+    {
+
+        // dd($request->all());
+        $request->validate([
+            'storename' => 'required',
+
+
+            // Add more validation rules as needed
+        ]);
+
+        Storeinfo::create([
+            
+            'customer_id' => $request->customer_id,
+            'storename' => $request->storename,
+            'contactno' => $request->contactno,
+            'region' => $request->region,
+            'province' => $request->province,
+            'city' => $request->city,
+            'brgy' => $request->brgy,
+            'subdivision' => $request->subdivision,
+            'longitude' => $request->longitude,
+            'latitude' => $request->latitude,
+            'listype' => $request->listype,
+            'length_stay' => $request->length_stay,
+            'remarks' => $request->remarks,
+            // Add more fields as needed
+        ]);
+
+        // return redirect('/store-info/')->with('success', 'Store Info added successfully!');
+        // return redirect()->route('store-info.index')->with('success', 'Store Info added successfully!');
+        return redirect()->back()
+            ->with('success', 'Store Info added successfully!');
+            
+        
+    }
+    public function update(Request $request)
+    {
+        $storeInfo = StoreInfo::findOrFail($request->id);
+
+        $request->validate([
+            'storename' => 'required',
+            // Add more validation rules as needed
+        ]);
+
+        $storeInfo->update([
+            'customer_id' => $request->customer_id,
+            'storename' => $request->storename,
+            'contactno' => $request->contactno,
+            'region' => $request->region,
+            'province' => $request->province,
+            'city' => $request->city,
+            'brgy' => $request->brgy,
+            'subdivision' => $request->subdivision,
+            'longitude' => $request->longitude,
+            'latitude' => $request->latitude,
+            'listype' => $request->listype,
+            'length_stay' => $request->length_stay,
+            'remarks' => $request->remarks,
+        ]);
+
+        return redirect()->back()->with('success', 'Store Info updated successfully!');
+    }
+
+    // public function destroy($id)
+    // {
+    //     $customer = store::findOrFail($id);
+    //     $customer->delete();
+    //     return redirect()->route('store-info.index')->with('success', 'Store Info deleted successfully!')
+    //         ->withQuery(['customer_id' => $request->customer_id, 'customer_name' => $request->customer_name]);
+    // }
+    public function destroy($id, Request $request)
+    {
+        $storeInfo = StoreInfo::findOrFail($id); // Correct the model name to 'StoreInfo'
+        $storeInfo->delete();
+        return redirect()->back()
+            ->with('success', 'Store Info deleted successfully!');
+            
+    }
+}
+
+

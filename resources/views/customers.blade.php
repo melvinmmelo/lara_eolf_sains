@@ -59,6 +59,7 @@
                 </div>
             </div>
             <div class="card-body">
+            @include('layouts.errors')
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -85,10 +86,13 @@
                                 <td>
                                     <!-- <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal" data-target="#editCustomerModal" data-id="{{ $customer->id }}">Edit</button> -->
 
-                                    <a class="btn btn-success btn-sm" href="store-info" role="button">Store</a>
+                                    <!-- <a class="btn btn-success btn-sm" href="store-info" role="button">Store</a> -->
+                                    <!-- <a class="btn btn-success btn-sm" href="/store-info" role="button">Store</a> -->
+                                    <a class="btn btn-success btn-sm" href="/store-info?customer_id={{ $customer->id }}&customer_name={{ urlencode($customer->firstname . ' ' . $customer->lastname) }}" role="button">Store</a>
+
                                     <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
                                         data-target="#editCustomerModal"
-                                        onclick="setToUpdatecustomer('{{ $customer->id }}','{{ $customer->distributor }}','{{ $customer->lastname }}','{{ $customer->firstname }}','{{ $customer->middlename }}','{{ $customer->contact_no }}','{{ $customer->companyname }}','{{ $customer->tin }}','{{ $customer->longitude }}','{{ $customer->latitude }}')">Edit</button>
+                                        onclick="setToUpdatecustomer('{{ $customer->id }}','{{ $customer->distributor }}','{{ $customer->lastname }}','{{ $customer->firstname }}','{{ $customer->middlename }}','{{ $customer->contact_no }}','{{ $customer->companyname }}','{{ $customer->tin }}','{{ $customer->longitude }}','{{ $customer->latitude }}','{{ $customer->region }}','{{ $customer->province }}','{{ $customer->city }}','{{ $customer->brgy }}','{{ $customer->subdivision }}')">Edit</button>
                                     <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editCustomerModal" onclick="setToUpdatecustomer('{{ $customer->id }}',{{ $customer->lastname }}','{{ $customer->firstname }}','{{ $customer->middlename }}','{{ $customer->contact_no }}')">Edit</a> -->
                                     <form method="POST" action="{{ route('customer.destroy', $customer->id) }}"
                                         style="display: inline;">
@@ -520,7 +524,7 @@
 
 @section('custom_js')
     <script>
-        function setToUpdatecustomer(uid, dist, ln, fn, mn, con, cm, tin, long, lat) {
+        function setToUpdatecustomer(uid, dist, ln, fn, mn, con, cm, tin,long, lat,reg,prov,city,brgy,subv ) {
             document.getElementById("id").value = uid;
             document.getElementById("distributor").value = dist;
             document.getElementById("lastname").value = ln;
@@ -529,9 +533,16 @@
             document.getElementById("contact_no").value = con;
             document.getElementById("companyname").value = cm;
             document.getElementById("tin").value = tin;
+            document.getElementById("region").value = reg;
+            document.getElementById("province").value = prov;
+            document.getElementById("city").value = city;
+            document.getElementById("brgy").value = brgy;
+            document.getElementById("subdivision").value = subv;
             document.getElementById("longitude").value = long;
             document.getElementById("latitude").value = lat;
 
         }
+
+
     </script>
 @endsection
