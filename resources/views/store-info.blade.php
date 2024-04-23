@@ -84,19 +84,10 @@
                                 <td>
 
 
-                                    <!-- <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
-                                    data-target="#editStoreModal"
-                                    onclick="setToUpdatestoreinfo('{{ $storeinfo->id }}', '{{ $storeinfo->customer_id }}', '{{ $storeinfo->storename }}', '{{ $storeinfo->contactno }}', '{{ $storeinfo->region }}', '{{ $storeinfo->province }}', '{{ $storeinfo->city }}', '{{ $storeinfo->brgy }}', '{{ $storeinfo->subdivision }}', '{{ $storeinfo->longitude }}', '{{ $storeinfo->latitude }}', '{{ $storeinfo->listype }}', '{{ $storeinfo->length_stay }}', '{{ $storeinfo->length_stay }}', '{{ $storeinfo->remarks }}')">Edit</button> -->
-
-
-                                    <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
+                                <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
                                     data-target="#editStoreModal"
                                     onclick="setToUpdatestoreinfo('{{ $storeinfo->id }}', '{{ $storeinfo->customer_id }}', '{{ $storeinfo->storename }}', '{{ $storeinfo->contactno }}', '{{ $storeinfo->region }}', '{{ $storeinfo->province }}', '{{ $storeinfo->city }}', '{{ $storeinfo->brgy }}', '{{ $storeinfo->subdivision }}', '{{ $storeinfo->longitude }}', '{{ $storeinfo->latitude }}', '{{ $storeinfo->listype }}', '{{ $storeinfo->length_stay }}', '{{ $storeinfo->remarks }}')">Edit</button>
 
-<!-- <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
-        data-target="#editStoreModal"
-        onclick="setToUpdatestoreinfo('{{ $storeinfo->id }}', '{{ $storeinfo->customer_id }}', '{{ $storeinfo->storename }}', '{{ $storeinfo->contactno }}', '{{ $storeinfo->region }}', '{{ $storeinfo->province }}', '{{ $storeinfo->city }}', '{{ $storeinfo->brgy }}', '{{ $storeinfo->subdivision }}', '{{ $storeinfo->longitude }}', '{{ $storeinfo->latitude }}', '{{ $storeinfo->listype }}', '{{ $storeinfo->length_stay }}', '{{ $storeinfo->remarks }}'.replace(/\n/g, '\\n'))">Edit</button>
- -->
 
 
                                     <form method="POST" action="{{ route('store-info.destroy', $storeinfo->id) }}" style="display: inline;">
@@ -245,7 +236,8 @@
                                     <div class="row mb-2">
                                         <div class="col-sm-12">
                                             <label for="remarks">Remarks</label>
-                                            <textarea class="form-control" rows="3" id="remarks" name="remarks"></textarea>
+                                            <!-- <textarea class="form-control" rows="3" id="remarks" name="remarks"></textarea> -->
+                                            <input type="type" class="form-control" name="remarks" id="remarks" >
                                         </div>
                                     </div>
                                 </div>
@@ -272,7 +264,9 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form method="POST" action="{{ route('customer.update') }}">
+                        <form method="POST" action="{{ route('store-info.update') }}">
+                        
+
                         @csrf
                         @method('PATCH')
                             Customer ID:
@@ -391,7 +385,8 @@
                                     <div class="row mb-2">
                                         <div class="col-sm-12">
                                             <label for="remarks2">Remarks</label>
-                                            <textarea class="form-control" rows="3" id="remarks2" name="remarks"></textarea>
+                                            <!-- <textarea class="form-control" rows="3" id="remarks2" name="remarks"></textarea> -->
+                                            <input type="type" class="form-control" name="remarks" id="remarks2" >
                                         </div>
                                     </div>
                                 </div>
@@ -410,9 +405,7 @@
     </section>
     <!-- /.content -->
 @endsection
-<!-- <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
-                                    data-target="#editStoreModal"
-                                    onclick="setToUpdatestoreinfo('{{ $storeinfo->id }}', '{{ $storeinfo->customer_id }}', '{{ $storeinfo->storename }}', '{{ $storeinfo->contactno }}', '{{ $storeinfo->region }}', '{{ $storeinfo->province }}', '{{ $storeinfo->city }}', '{{ $storeinfo->brgy }}', '{{ $storeinfo->subdivision }}', '{{ $storeinfo->longitude }}', '{{ $storeinfo->latitude }}', '{{ $storeinfo->listype }}', '{{ $storeinfo->length_stay }}', '{{ $storeinfo->remarks }}')">Edit</button> -->
+
 
 @section('custom_js')
     <script>

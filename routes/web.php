@@ -61,7 +61,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/store-info', [StoreController::class, 'index'])->name('store-info.index');
     Route::post('/store-info/store', [StoreController::class, 'store'])->name('store-info.store');
     Route::delete('/store-info/{id}', [StoreController::class, 'destroy'])->name('store-info.destroy');
-
+    Route::patch('/store-info/update', [StoreController::class, 'update'])->name('store-info.update');
+    
 
     Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
     Route::get('/vehicles/{id}/edit', [VehiclesController::class, 'edit'])->name('vehicle.edit');
