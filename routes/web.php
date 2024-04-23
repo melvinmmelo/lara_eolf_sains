@@ -9,6 +9,10 @@ use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VehiclesController;
+use App\Http\Controllers\DeliveryController;
+use App\Http\Controllers\DriversController;
+use App\Http\Controllers\PricelevelsController;
+use App\Http\Controllers\PricesController;
 use App\Models\CompanyDetails;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +42,7 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/branch', [BranchesController::class, 'index'])->name('branch');
+    Route::post('/branch/store', [BranchesController::class, 'store']);
     Route::get('/edit-branch/{id}', [BranchesController::class, 'edit'])->name('branch.edit');
 
 
@@ -46,7 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
     Route::post('/customers/store', [CustomersController::class, 'store']);
     Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
-    Route::put('/customers/{id}', [CustomerController::class, 'update'])->name('customer.update');
+    Route::put('/customers/{id}', [CustomersController::class, 'update'])->name('customer.update');
     Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
 
 
@@ -61,8 +66,15 @@ Route::middleware('auth')->group(function () {
     // Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
     // Route::get('/edit-vehicle/{id}', [CustomersController::class, 'edit'])->name('vehicle.edit');
 
-    Route::get('/delivery-persons', [UsersController::class, 'deliveryPersons'])->name('delivery-persons');
-    Route::get('/edit-delivery-person/{id}', [CustomersController::class, 'edit'])->name('delivery-person.edit');
+    Route::get('/delivery-persons', [DriversController::class, 'index'])->name('delivery-persons');
+    Route::get('/edit-delivery-person/{id}', [DriversController::class, 'edit'])->name('delivery-person.edit');
+    Route::post('/Drivers/store', [DriversController::class, 'store']);
+
+    Route::get('/pricing-level', [PriceLevelsController::class, 'index'])->name('pricing-level.index');
+    Route::post('/pricing-level/store', [PriceLevelsController::class, 'store']);
+
+    Route::get('/pricing', [PricesController::class, 'index'])->name('pricing.index');
+    Route::post('/pricing/store', [PricesController::class, 'store']);
 
 
     Route::get('/product-types', [ProductTypeController::class, 'index'])->name('productType.index');

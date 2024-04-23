@@ -23,7 +23,7 @@
         <!-- Default box -->
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Vehicles Info</h3>
+                <h3 class="card-title">Delivery Persons Info</h3>
 
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -49,20 +49,12 @@
                         </tr>
                     </thead>
                     <tbody>
+                    @foreach($drivers as $driver)
                         <tr>
-                            <td>aaa</td>
-                            <td>aaa</td>
-                            <td>aaa</td>
-                            <td>aaa</td>
-
-
-                        </tr>
-
-                        <tr>
-                            <td>aaa</td>
-                            <td>aaa</td>
-                            <td>aaa</td>
-                            <td>aaa</td>
+                            <td>{{ $driver->name }}</td>
+                            <td>{{ $driver->address }}</td>
+                            <td>{{ $driver->contact }}</td>
+                            <td>{{ $driver->status }}</td>
 
 
                         </tr>
@@ -75,6 +67,7 @@
                             <th>Status</th>
 
                         </tr>
+                        @endforeach
                     </tfoot>
                 </table>
 
@@ -94,7 +87,8 @@
         <div class="modal
                     fade" id="modal-devpersons">
             <div class="modal-dialog">
-                <form method="POST">
+            <form method="POST" action="/Drivers/store">
+                        @csrf
 
                     <div class="modal-content">
                         <div class="modal-header">
@@ -141,7 +135,7 @@
                                         <label class="form-label" for="status">Status</label>
                                         <br>
                                         <input type="checkbox" id="mySwitch" data-bootstrap-switch data-on-text="On"
-                                            data-off-text="Off" data-on-color="success" data-off-color="danger">
+                                            data-off-text="Off" data-on-color="success" data-off-color="danger" name="status">
 
                                         <div style="margin-bottom: 20px"></div>
 
