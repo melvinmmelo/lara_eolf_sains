@@ -15,6 +15,8 @@ use App\Http\Controllers\PricelevelsController;
 use App\Http\Controllers\PricesController;
 use App\Models\CompanyDetails;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StoreController;
+use App\Models\StoreInfo; // Import the StoreInfo model
 
 
 Route::get('/', function () {
@@ -53,6 +55,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
     Route::put('/customers/{id}', [CustomersController::class, 'update'])->name('customer.update');
     Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
+
+    // Route::get('/store-info', [StoreController::class, 'storeInfo']);
+    Route::get('/store/create', [StoreController::class, 'create'])->name('store.create');
+    Route::get('/store-info', [StoreController::class, 'index'])->name('store-info.index');
+    Route::post('/store-info/store', [StoreController::class, 'store'])->name('store-info.store');
+    Route::delete('/store-info/{id}', [StoreController::class, 'destroy'])->name('store-info.destroy');
 
 
     Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
