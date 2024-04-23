@@ -41,55 +41,63 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th></th>
+
                             <th>Last Name</th>
                             <th>First Name</th>
                             <th>Contact</th>
                             <th>Address</th>
                             <th>Email</th>
                             <th>Created at</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($users as $user)
                             <tr>
-                                <td>
-                                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                                        <a href="#" data-toggle="modal" data-target="#editUser" onclick="setToUpdateUser('{{ $user->id }}','{{ $user->last_name }}','{{ $user->first_name }}','{{ $user->contact_no }}','{{ $user->address }}')">
-                                            <button type="button" class="btn btn-secondary">View</button>
-                                        </a>
 
-                                        <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-secondary dropdown-toggle"
-                                                data-toggle="dropdown" aria-expanded="false">
-                                            </button>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editUser" onclick="setToUpdateUser('{{ $user->id }}','{{ $user->last_name }}','{{ $user->first_name }}','{{ $user->contact_no }}','{{ $user->address }}')">Edit</a>
-                                                <a class="dropdown-item" href="#">Reset password</a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </td>
                                 <td>{{ $user->last_name }}</td>
                                 <td>{{ $user->first_name }}</td>
                                 <td>{{ $user->contact_no }}</td>
                                 <td>{{ $user->address }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->created_at }}</td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                                        <button type="button" class="btn btn-success" data-toggle="modal"
+                                            data-target="#editUser"
+                                            onclick="setToUpdateUser('{{ $user->id }}','{{ $user->last_name }}','{{ $user->first_name }}','{{ $user->contact_no }}','{{ $user->address }}')">
+                                            View
+                                        </button>
+                                        <div class="btn-group" role="group">
+                                            <button id="btnGroupDrop1" type="button" class="btn btn-danger dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Actions
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                                <a class="dropdown-item" href="#" data-toggle="modal"
+                                                    data-target="#editUser"
+                                                    onclick="setToUpdateUser('{{ $user->id }}','{{ $user->last_name }}','{{ $user->first_name }}','{{ $user->contact_no }}','{{ $user->address }}')">
+                                                    Delete
+                                                </a>
+                                                <a class="dropdown-item" href="#">
+                                                    Reset password
+                                                </a>
+                                            </div>
+                                </td>
                             </tr>
                         @endforeach
 
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th></th>
+
                             <th>Last Name</th>
                             <th>First Name</th>
                             <th>Contact</th>
                             <th>Address</th>
                             <th>Email</th>
                             <th>Created at</th>
+                            <th></th>
                         </tr>
                     </tfoot>
                 </table>
@@ -199,25 +207,25 @@
                     </div>
                     <div class="modal-body">
 
-                        <input type="hide" class="form-control" name="user_id" id="user_id" required readonly>
+                        <input type="hide" class="form-control" name="user_id" id="user_id" required readonly
+                            hidden>
 
                         <div class="form-group">
                             <div class="row mb-2">
-                                <div class="col-sm-12">
+                                <div class="col-sm-6">
                                     <label class="form-label" for="e_lname">Last Name</label>
                                     <input type="text" class="form-control" name="e_lname" id="e_lname">
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="form-group">
-                            <div class="row mb-2">
-                                <div class="col-sm-12">
+
+                                <div class="col-sm-6">
                                     <label class="form-label" for="e_fname">First Name</label>
                                     <input type="text" class="form-control" name="e_fname" id="e_fname">
                                 </div>
+
                             </div>
                         </div>
+
 
                         <div class="form-group">
                             <div class="row mb-2">
