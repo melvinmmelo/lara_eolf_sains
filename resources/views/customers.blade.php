@@ -46,20 +46,9 @@
         @endif
         <!-- Default box -->
         <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Customers Info</h3>
 
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
             <div class="card-body">
-            @include('layouts.errors')
+                @include('layouts.errors')
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -88,7 +77,9 @@
 
                                     <!-- <a class="btn btn-success btn-sm" href="store-info" role="button">Store</a> -->
                                     <!-- <a class="btn btn-success btn-sm" href="/store-info" role="button">Store</a> -->
-                                    <a class="btn btn-success btn-sm" href="/store-info?customer_id={{ $customer->id }}&customer_name={{ urlencode($customer->firstname . ' ' . $customer->lastname) }}" role="button">Store</a>
+                                    <a class="btn btn-success btn-sm"
+                                        href="/store-info?customer_id={{ $customer->id }}&customer_name={{ urlencode($customer->firstname . ' ' . $customer->lastname) }}"
+                                        role="button">Store</a>
 
                                     <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
                                         data-target="#editCustomerModal"
@@ -270,8 +261,8 @@
                 <div class="modal-footer">
                     <!-- Button to open another modal -->
                     <!-- <button type="button" class="btn btn-primary" onclick="toggleModal('storeModal')">Store
-                                                                                                                                                        Info</button>
-                                                                                                                                                    <button type="button" class="btn btn-success swalDefaultSuccess">Save changes</button> -->
+                                                                                                                                                                            Info</button>
+                                                                                                                                                                        <button type="button" class="btn btn-success swalDefaultSuccess">Save changes</button> -->
 
                     <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#storeModal">Store Info</button> -->
                     <!-- <input type="submit" name="submit" value="submit"> -->
@@ -524,7 +515,7 @@
 
 @section('custom_js')
     <script>
-        function setToUpdatecustomer(uid, dist, ln, fn, mn, con, cm, tin,long, lat,reg,prov,city,brgy,subv ) {
+        function setToUpdatecustomer(uid, dist, ln, fn, mn, con, cm, tin, long, lat, reg, prov, city, brgy, subv) {
             document.getElementById("id").value = uid;
             document.getElementById("distributor").value = dist;
             document.getElementById("lastname").value = ln;
@@ -542,7 +533,5 @@
             document.getElementById("latitude").value = lat;
 
         }
-
-
     </script>
 @endsection

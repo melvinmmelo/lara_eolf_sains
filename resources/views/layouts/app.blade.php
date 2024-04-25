@@ -24,8 +24,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.1.2/sweetalert2.min.css">
     <!-- Include AdminLTE JavaScript -->
 
-    <!-- Include SweetAlert and Toast JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.1.2/sweetalert2.min.js"></script>
+
 
 
 
@@ -94,6 +93,26 @@
         }
     </style>
 
+
+    <style>
+        /* Change the background color of the export buttons */
+        .dataTables_wrapper .dt-buttons .btn {
+            background-color: #ffffff;
+            color: #292b2c;
+            /* Text color */
+            border-color: #e7e7e7;
+            /* Border color */
+            border-radius: 0px;
+        }
+
+        /* Change the background color of the export buttons on hover */
+        .dataTables_wrapper .dt-buttons .btn:hover {
+            background-color: #0275d8;
+            border-color: #0275d8;
+            color: #fff;
+        }
+    </style>
+
     @yield('custom_css')
 
 </head>
@@ -114,6 +133,9 @@
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             @yield('contents')
+            <div class="preloader flex-column justify-content-center align-items-center">
+                <img class="animation__shake" src="{{ asset('img/preloader.jpg') }}" alt="AdminLTELogo">
+            </div>
         </div>
         <!-- /.content-wrapper -->
 
@@ -129,11 +151,13 @@
 
 
     <!-- jQuery -->
+    <!-- Include SweetAlert and Toast JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.1.2/sweetalert2.min.js"></script>
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
     <!-- Bootstrap 4 -->
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
-    <script src="{{ asset('plugins/adminlte/dist/js/adminlte.min.js') }}"></script>
+
     <!-- SweetAlert2 -->
     <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 
