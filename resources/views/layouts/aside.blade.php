@@ -14,6 +14,7 @@
 
             <div class="info">
                 <a href="#" class="d-block">Username</a>
+
                 Branch
             </div>
         </div>
@@ -36,21 +37,29 @@
 
         <!-- Sidebar Menu -->
 
-        <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                data-accordion="false">
+        <nav class="mt-2" id="sidebar">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
+
+
+
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-tachometer-alt" style="color: #74C0FC;"></i>
+                    <a href="#" class="nav-link" onclick="toggleTreeview();">
+                        <i class="nav-icon fas fa-user-tie" style="color: #74C0FC;"></i>
                         <p>
                             Dashboard
                             <i class="right"></i>
                         </p>
                     </a>
+                    <ul class="nav nav-treeview" id="dashboard-treeview">
+                        <li>
 
-                    <!-- <li class="nav-header">MULTI LEVEL EXAMPLE</li> -->
+                        </li>
+
+
+                    </ul>
+                </li>
 
                 <li class="nav-item">
                     <a href="#" class="nav-link">
@@ -61,35 +70,35 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="company" class="nav-link">
+                        <li>
+                            <a href="/company" class="nav-link">
                                 <i class="far fa-building nav-icon"></i>
                                 <p>Company</p>
                             </a>
                         </li>
 
-                        <li class="nav-item">
+                        <li>
                             <a href="/branch" class="nav-link">
                                 <i class="fas fa-store nav-icon"></i>
                                 <p>Branch</p>
                             </a>
                         </li>
 
-                        <li class="nav-item">
+                        <li>
                             <a href="/users" class="nav-link">
                                 <i class="fas fa-users nav-icon"></i>
                                 <p>User</p>
                             </a>
                         </li>
 
-                        <li class="nav-item">
+                        <li>
                             <a href="/vehicles" class="nav-link">
                                 <i class="fas fa-truck nav-icon"></i>
                                 <p>Vehicles</p>
                             </a>
                         </li>
 
-                        <li class="nav-item">
+                        <li>
                             <a href="/delivery-persons" class="nav-link">
                                 <i class="fas fa-truck-ramp-box nav-icon"></i>
                                 <p>Delivery Person</p>
@@ -97,21 +106,21 @@
                         </li>
 
 
-                        <li class="nav-item">
+                        <li>
                             <a href="customers" class="nav-link">
                                 <i class="fas fa-id-card nav-icon"></i>
                                 <p>Customers</p>
                             </a>
                         </li>
 
-                        <li class="nav-item">
+                        <li>
                             <a href="product-types" class="nav-link">
                                 <i class="fas fa-list nav-icon"></i>
                                 <p>Products Type</p>
                             </a>
                         </li>
 
-                        <li class="nav-item">
+                        <li>
                             <a href="products" class="nav-link">
                                 <i class="fas fa-ice-cream nav-icon"></i>
                                 <p>Products</p>
@@ -119,35 +128,35 @@
                         </li>
 
 
-                        <li class="nav-item">
+                        <li>
                             <a href="product-variants" class="nav-link">
                                 <i class="fas fa-list-ol nav-icon"></i>
                                 <p>Product Variants</p>
                             </a>
                         </li>
 
-                        <li class="nav-item">
+                        <li>
                             <a href="pricing-level" class="nav-link">
                                 <i class="fas fa-receipt nav-icon"></i>
                                 <p>Pricing Level</p>
                             </a>
                         </li>
 
-                        <li class="nav-item">
+                        <li>
                             <a href="pricing" class="nav-link">
                                 <i class="fas fa-peso-sign nav-icon"></i>
                                 <p>Pricing</p>
                             </a>
                         </li>
 
-                        <li class="nav-item">
+                        <li>
                             <a href="equipment" class="nav-link">
                                 <i class="fas fa-box nav-icon"></i>
                                 <p>Equipment</p>
                             </a>
                         </li>
 
-                        <li class="nav-item">
+                        <li>
                             <a href="order" class="nav-link">
                                 <i class="fas fa-file-invoice nav-icon"></i>
                                 <p>Order</p>
@@ -155,6 +164,9 @@
                         </li>
                     </ul>
                 </li>
+
+
+
 
 
 
@@ -170,125 +182,18 @@
                             @csrf
                         </form>
                     </a>
-                </li>
-
-                {{-- <!-- Inventory Menu -->
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fas fa-warehouse"></i>
-                        <p>
-                            Inventory
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Level 2</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>
-                                    Level 2
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-dot-circle nav-icon"></i>
-                                        <p>Level 3</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-dot-circle nav-icon"></i>
-                                        <p>Level 3</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-dot-circle nav-icon"></i>
-                                        <p>Level 3</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Level 2</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <!-- Sales Menu -->
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-chart-line"></i>
-                        <p>
-                            Sales
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Level 2</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>
-                                    Level 2
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-dot-circle nav-icon"></i>
-                                        <p>Level 3</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-dot-circle nav-icon"></i>
-                                        <p>Level 3</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-dot-circle nav-icon"></i>
-                                        <p>Level 3</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Level 2</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
 
 
-            </ul> --}}
+
         </nav>
         <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
 </aside>
 
-<!-- set the link active when click -->
+
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
@@ -300,4 +205,43 @@
             $(this).addClass('active');
         });
     });
+
+    // Check if the DOMContentLoaded event has fired
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the sidebar element
+        var sidebarContent = document.getElementById('sidebar');
+        // Retrieve stored content from session storage
+        var storedContent = sessionStorage.getItem('nav-item');
+        // If stored content exists, restore it
+        if (storedContent) {
+            sidebarContent.innerHTML = storedContent;
+        }
+
+        // Remove the session item and revert to original state after 1 second
+        setTimeout(function() {
+            sessionStorage.removeItem('nav-item');
+            // Revert to original state here if needed
+        }, 1000); // 1000 milliseconds = 1 second
+    });
+
+    // Store content in session storage before page is unloaded (refreshed)
+    window.addEventListener('beforeunload', function() {
+        // Get the content wrapper element
+        var sidebarContent = document.getElementById('sidebar');
+        // Store the current content in session storage
+        sessionStorage.setItem('nav-item', sidebarContent.innerHTML);
+    });
+
+
+    function toggleTreeview() {
+        // Collapse all treeviews except for the Dashboard treeview
+        $('.nav-treeview').not('#dashboard-treeview').hide();
+        // Toggle the Dashboard treeview
+        $('#dashboard-treeview').toggle();
+
+        // Redirect to the dashboard page after a short delay
+        setTimeout(function() {
+            window.location.href = '/dashboard';
+        }, 0); // Adjust the delay (in milliseconds) as needed
+    }
 </script>

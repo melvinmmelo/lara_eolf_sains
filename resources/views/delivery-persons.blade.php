@@ -6,6 +6,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
+                    <h1>Delivery Persons</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -22,18 +23,7 @@
 
         <!-- Default box -->
         <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Delivery Persons Info</h3>
 
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
             <div class="card-body">
 
                 @include('layouts.errors')
@@ -49,15 +39,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach($drivers as $driver)
-                        <tr>
-                            <td>{{ $driver->name }}</td>
-                            <td>{{ $driver->address }}</td>
-                            <td>{{ $driver->contact }}</td>
-                            <td>{{ $driver->status }}</td>
+                        @foreach ($drivers as $driver)
+                            <tr>
+                                <td>{{ $driver->name }}</td>
+                                <td>{{ $driver->address }}</td>
+                                <td>{{ $driver->contact }}</td>
+                                <td>{{ $driver->status }}</td>
 
 
-                        </tr>
+                            </tr>
                     </tbody>
                     <tfoot>
                         <tr>
@@ -87,8 +77,8 @@
         <div class="modal
                     fade" id="modal-devpersons">
             <div class="modal-dialog">
-            <form method="POST" action="/Drivers/store">
-                        @csrf
+                <form method="POST" action="/Drivers/store">
+                    @csrf
 
                     <div class="modal-content">
                         <div class="modal-header">
@@ -135,7 +125,8 @@
                                         <label class="form-label" for="status">Status</label>
                                         <br>
                                         <input type="checkbox" id="mySwitch" data-bootstrap-switch data-on-text="On"
-                                            data-off-text="Off" data-on-color="success" data-off-color="danger" name="status">
+                                            data-off-text="Off" data-on-color="success" data-off-color="danger"
+                                            name="status">
 
                                         <div style="margin-bottom: 20px"></div>
 
