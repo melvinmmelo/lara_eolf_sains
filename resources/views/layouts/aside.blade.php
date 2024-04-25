@@ -13,7 +13,8 @@
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
 
             <div class="info">
-                <a href="#" class="d-block">Username</a>
+                <a href="#" class="d-block">{{ auth()->user()->fullName }}</a>
+                {{ auth()->user()->fullName }}
                 Branch
             </div>
         </div>
@@ -30,9 +31,6 @@
                 </div>
             </div>
         </div>
-
-
-
 
         <!-- Sidebar Menu -->
 
