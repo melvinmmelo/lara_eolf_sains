@@ -10,6 +10,8 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'code';
+    public $incrementing = false;
     protected $guarded = [];
     protected $casts = [
         'is_active' => 'boolean',

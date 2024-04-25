@@ -1,19 +1,58 @@
 @extends('layouts.app')
 
-@section('contents')
+@section('custom_css')
     <style>
+        .input-number {
+            text-align: center;
+        }
+
+        @media (max-width: 767px) {
+
+            .table-responsive table td,
+            .table-responsive table th {
+                display: block;
+                width: 100%;
+            }
+
+            .table-responsive table th {
+                display: none;
+            }
+
+            .align-middle {
+                text-align: left;
+                padding: 8px;
+            }
+
+            .d-md-table-header {
+                display: table-header-group !important;
+                border: none !important;
+            }
+
+            .d-md-none {
+                display: none;
+            }
+
+
+            .desktop-view {
+                display: none;
+            }
+        }
+
         .buttontypes {
             margin: 5px;
         }
     </style>
+@endsection
 
-
+@section('contents')
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Ordering</h1>
+                    <h1>Ordering
+
+                    </h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -28,213 +67,163 @@
     <!-- Main content -->
     <section class="content">
 
+        @include('layouts.errors')
+
         <!-- Default box -->
         <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Ordering Info</h3>
+            <form action="{{ route('inbound.store') }}" method="POST">
+                @csrf
 
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
 
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label class="form-label" for="price-quantity">Price Level</label>
-                            <input type="text" class="form-control" id="#" name="#">
-                        </div>
 
-                        <div class="col-sm-3">
-                            <label class="form-label" for="price-quantity">Delivery Person</label>
-                            <input type="text" class="form-control" id="#" name="#">
-                        </div>
+                <div class="card-header">
+                    <h3 class="card-title mr-2">Ordering Info</h3>
 
-                        <div class="col-sm-3">
-                            <label class="form-label" for="price-quantity">Vehicle</label>
-                            <input type="text" class="form-control" id="#" name="#">
-                        </div>
+                     <input type="text" name="inboundId" id="inboundId" class="label-input" value="{{ $inboundId }}"
+                            required readonly>
 
-                        <div class="col-sm-3">
-                            <label class="form-label" for="price-quantity">Equipment</label>
-                            <input type="text" class="form-control" id="#" name="#">
-                        </div>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
                     </div>
                 </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label class="form-label" for="price-quantity">Price Level</label>
+                                <input type="text" class="form-control" id="#" name="#"
+                                    value="{{ $defaultPriceLevel->pl_name }}">
+                            </div>
 
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label class="form-label" for="button types">Types</label>
-                            <div class="buttontypes">
-                                <button type="button" class="btn btn-primary">BC</button>
-                                <button type="button" class="btn btn-primary">BC</button>
+                            <div class="col-sm-3">
+                                <label class="form-label" for="price-quantity">Delivery Person</label>
+                                <input type="text" class="form-control" id="#" name="#"
+                                    value="{{ $deliveryPerson->name }}">
+                            </div>
+
+                            <div class="col-sm-3">
+                                <label class="form-label" for="price-quantity">Vehicle</label>
+                                <input type="text" class="form-control" id="#" name="#"
+                                    value="{{ $vehicle->plateno }}">
+                            </div>
+
+                            <div class="col-sm-3">
+                                <label class="form-label" for="price-quantity">Equipment</label>
+                                <input type="text" class="form-control" id="#" name="#"
+                                    value="{{ $equipment }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label class="form-label" for="button types">Types</label>
+                                <div class="buttontypes">
+                                    @foreach ($productTypes as $type)
+                                        <button type="button" class="btn btn-primary"
+                                            onclick="getProducts('{{ $type->code }}')">{{ $type->code }}</button>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div id="productsListContainer">
+                        <div id="productsList"></div>
+                    </div>
+
+                    <div>
+                        <div id="inboundList">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="table-responsive">
+
+
+                                        <table class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th>Quantity</th>
+                                                    <th>Unit</th>
+                                                    <th>Unit Price</th>
+                                                    <th>Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="5" class="d-md-none"><strong>Items</strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="align-middle text-center" colspan="5">No data available.
+                                                    </td>
+                                                </tr>
+
+                                                <!-- Additional rows here -->
+                                                <tr>
+                                                    <td colspan="5" class="d-md-none"><strong>Total</strong></td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot class="desktop-view">
+                                                <tr>
+                                                    <td colspan="3"></td>
+                                                    <td>Total:</td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Product Type</th>
+                                                <th>Quantity</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="2" class="text-center">No data available</td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+                                </div>
                             </div>
                         </div>
 
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label class="form-label" for="button types">Products</label>
-                            <div class="buttontypes">
-                                <button type="button" class="btn btn-primary">BC</button>
-                                <button type="button" class="btn btn-primary">BC</button>
-                            </div>
-                        </div>
-
-                    </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <a href="{{ route('inbound.destroy', ['inbound' => $inboundId]) }}"
+                        onclick="return discardIn()"><button type="button" class="btn btn-danger">Discard</button></a>
+                    <button type="submit" class="btn btn-success">Save</button>
                 </div>
-                <div>
-                    <div class="row">
-                        <div class="col-sm-8">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Product</th>
-                                            <th>Quantity</th>
-                                            <th>Unit</th>
-                                            <th>Unit Price</th>
-                                            <th>Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="5" class="d-md-none"><strong>Items</strong></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="align-middle">aaaa</td>
-                                            <td class="align-middle">
-
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <button type="button"
-                                                            class="quantity-left-minus btn btn-danger btn-number"
-                                                            data-type="minus" data-field="">
-                                                            <span class="fas fa-minus"></span>
-                                                        </button>
-                                                    </div>
-                                                    <input type="text" id="quantity" name="quantity"
-                                                        class="form-control input-number" value="1" min="1"
-                                                        max="99999">
-                                                    <div class="input-group-append">
-                                                        <button type="button"
-                                                            class="quantity-right-plus btn btn-success btn-number"
-                                                            data-type="plus" data-field="">
-                                                            <span class="fas fa-plus"></span>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle">aaa</td>
-                                            <td class="align-middle">aaa</td>
-                                            <td class="align-middle">aaa</td>
-                                        </tr>
-
-
-                                        <!-- Additional rows here -->
-                                        <tr>
-                                            <td colspan="5" class="d-md-none"><strong>Total</strong></td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot class="desktop-view">
-                                        <tr>
-                                            <td colspan="3"></td>
-                                            <td>Total:</td>
-                                            <td></td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-
-
-                            <style>
-                                .input-number {
-                                    text-align: center;
-                                }
-
-                                @media (max-width: 767px) {
-
-                                    .table-responsive table td,
-                                    .table-responsive table th {
-                                        display: block;
-                                        width: 100%;
-                                    }
-
-                                    .table-responsive table th {
-                                        display: none;
-                                    }
-
-                                    .align-middle {
-                                        text-align: left;
-                                        padding: 8px;
-                                    }
-
-                                    .d-md-table-header {
-                                        display: table-header-group !important;
-                                        border: none !important;
-                                    }
-
-                                    .d-md-none {
-                                        display: none;
-                                    }
-
-
-                                    .desktop-view {
-                                        display: none;
-                                    }
-                                }
-                            </style>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <table class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Product Type</th>
-                                        <th>Quantity</th>
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-
-                                    </tr>
-                                </tbody>
-
-                            </table>
-                        </div>
-                    </div>
-
-
-                </div>
-
-
-            </div>
-            <!-- /.card-body -->
-            <div class="card-footer">
-                <button type="button" class="btn btn-danger">Discard</button>
-                <button type="button" class="btn btn-success swalDefaultSuccess">Save</button>
-            </div>
-            <!-- /.card-footer-->
+                <!-- /.card-footer-->
+            </form>
         </div>
         <!-- /.card -->
 
     </section>
     <!-- /.content -->
+@endsection
 
-
-
-    {{-- Quantity button script --}}
+@section('custom_js')
     <script>
+        function discardIn() {
+            return confirm('Are you sure you want to discard this inbound?');
+        }
+        $(document).ready(function() {
+            document.getElementById("productsListContainer").display = "none";
+        });
+
         $(document).ready(function() {
 
             var quantitiy = 0;
@@ -269,5 +258,73 @@
             });
 
         });
+
+        function getProducts(code) {
+            if (code == "") {
+                document.getElementById("productsList").innerHTML = "";
+                return;
+            } else {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("productsList").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET", "/productsin/" + code, true);
+                xmlhttp.send();
+            }
+        }
+
+        function addProduct(code) {
+            if (code == "") {
+                document.getElementById("inboundList").innerHTML = "";
+                return;
+            } else {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("inboundList").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET", "/inboundin/" + code, true);
+                xmlhttp.send();
+            }
+        }
+
+        function minusQtyProduct(code) {
+            const qty = document.getElementById(code).value;
+            if (qty > 1) {
+                document.getElementById(code).value = parseInt(qty) - 1;
+                updateQty(code, 'min');
+            }
+
+        }
+
+        function plusQtyProduct(code) {
+            const qty = document.getElementById(code).value;
+            if (qty < 99999) {
+                document.getElementById(code).value = parseInt(qty) + 1;
+                updateQty(code, 'add');
+            }
+
+        }
+
+        function updateQty(productCode, action) {
+            const inboundId = document.getElementById("inboundId").value;
+            // console.log({inboundId, productCode, action});
+            if (inboundId == "") {
+                // document.getElementById("inboundProdInput").innerHTML = "";
+                return;
+            } else {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        // document.getElementById("inboundProdInput").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET", "/inbound-updateProdQty/" + inboundId + "/" + productCode + "/" + action, true);
+                xmlhttp.send();
+            }
+        }
     </script>
 @endsection

@@ -92,7 +92,7 @@
 
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Add Vehicle</h4>
+                            <h4 class="modal-title">Add delivery person</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>

@@ -11,16 +11,22 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VehiclesController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\DriversController;
+use App\Http\Controllers\InboundController;
 use App\Http\Controllers\PricelevelsController;
 use App\Http\Controllers\PricesController;
 use App\Models\CompanyDetails;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StoreController;
 use App\Models\StoreInfo; // Import the StoreInfo model
-
+use App\Services\PriceService;
 
 Route::get('/', function () {
     return view('auth.login');
+});
+
+Route::get('/price', function () {
+    $price = PriceService::getPrice('SC_RR');
+    dd($price);
 });
 
 
@@ -38,10 +44,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit-company', [CompanyDetailsController::class, 'edit'])->name('company.edit');
     Route::put('/edit-company/{companyDetails}', [CompanyDetailsController::class, 'update'])->name('company.update');
 
-
     Route::get('/users', [UsersController::class, 'index'])->name('users');
     Route::patch('/users', [UsersController::class, 'update'])->name('user.update');
-
 
     Route::get('/branch', [BranchesController::class, 'index'])->name('branch');
     Route::post('/branch/store', [BranchesController::class, 'store']);
@@ -62,7 +66,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/store-info/store', [StoreController::class, 'store'])->name('store-info.store');
     Route::delete('/store-info/{id}', [StoreController::class, 'destroy'])->name('store-info.destroy');
     Route::patch('/store-info/update', [StoreController::class, 'update'])->name('store-info.update');
-    
+
 
     Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
     Route::get('/vehicles/{id}/edit', [VehiclesController::class, 'edit'])->name('vehicle.edit');
@@ -99,10 +103,25 @@ Route::middleware('auth')->group(function () {
     Route::get('/product-type/{id}/toggle-status', [ProductTypeController::class, 'toggleStatus'])->name('productType.toggleStatus');
 
 
-    Route::get('/order', [ProductController::class, 'order'])->name('order');
-    Route::get('/ordering', [ProductController::class, 'ordering'])->name('ordering');
+    Route::get('/orders', [InboundController::class, 'index'])->name('order.index');
 
+    Route::post('/submit/process-one', [InboundController::class, 'submitProcessOne'])->name('order.submitProcessOne');
 
+    Route::get('/ordering/{inbound}', [InboundController::class, 'orderProcessTwoUI'])->name('order.processTwo');
+
+    // ajax
+    Route::get('/productsin/{code}', [InboundController::class, 'ajaxProductList'])->name('products.ajaxProductList');
+    Route::get('/inboundin/{code}', [InboundController::class, 'ajaxInboundList'])->name('inbound.inboundList');
+
+    // update if done na mag add ng productin
+    Route::post('/inbound', [InboundController::class, 'store'])->name('inbound.store');
+
+    // update lang quantity
+    // para sa add, min button
+    Route::get('/inbound-updateProdQty/{inbound}/{code}/{action}', [InboundController::class, 'update'])->name('inbound.update');
+
+    // deleting pending inbound
+    Route::get('/inbound-destroy/{inbound}', [InboundController::class, 'destroy'])->name('inbound.destroy');
 
 });
 

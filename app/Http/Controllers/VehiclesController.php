@@ -36,12 +36,13 @@ class VehiclesController extends Controller
 
             // Add more validation rules as needed
         ]);
-        $status = 'NOT AVAILABLE';
+        $status = 'INACTIVE';
 
         // Check if the request data is 'on'
         if ($request->status === 'on') {
-            $status = 'AVAILABLE';
+            $status = 'ACTIVE';
         }
+
         Vehicle::create([
             'plateno' => $request->plateno,
             'brand' => $request->brand,
@@ -51,7 +52,7 @@ class VehiclesController extends Controller
             'capacity' => $request->capacity,
             'remarks' => $request->remarks,
             'status' => $status,
-   
+
             // Add more fields as needed
         ]);
 
@@ -75,7 +76,7 @@ class VehiclesController extends Controller
         $request->validate([
             'plateno' => 'required',
             'brand' => 'required',
-  
+
             // Add more validation rules as needed
         ]);
     // Set default status
