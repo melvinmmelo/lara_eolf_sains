@@ -28,6 +28,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.1.2/sweetalert2.min.js"></script>
 
 
+
     <!-- Forms label CSS Style -->
     <style>
         .form-label {
@@ -77,7 +78,23 @@
             margin: 20px 0;
             /* Adjust spacing as needed */
         }
+
+        .label-input {
+            border: none;
+            background-color: transparent;
+            font-size: 1rem;
+            font-family: inherit;
+            padding: 0;
+            margin: 0;
+            color: inherit;
+        }
+
+        .label-input:focus {
+            outline: none;
+        }
     </style>
+
+    @yield('custom_css')
 
 </head>
 
@@ -167,6 +184,8 @@
     <script src="../../plugins/sweetalert2/sweetalert2.min.js"></script>
 
     @yield('custom_js')
+
+
 
     <!-- Toast script for saving forms -->
     <script>
