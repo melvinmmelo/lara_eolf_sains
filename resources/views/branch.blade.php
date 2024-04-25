@@ -6,6 +6,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
+                    <h1>Branch</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -19,44 +20,33 @@
 
     <!-- Main content -->
     <section class="content">
-     @if(session('success'))
-        <script>
-            // JavaScript code to trigger SweetAlert pop-up message
-            document.addEventListener('DOMContentLoaded', function () {
-                // Set default icon
-                let icon = 'success';
-                
-                // Check if success message is "Customer deleted successfully!"
-                @if(session('success') == 'Vehicle deleted successfully!')
-                    icon = 'error'; // Set icon to 'error' if message is for deletion
-                @elseif(session('success') == 'Vehicle updated successfully!')
-                    icon = 'success'; // Set icon to 'success' if message is for update
-                @endif
+        @if (session('success'))
+            <script>
+                // JavaScript code to trigger SweetAlert pop-up message
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Set default icon
+                    let icon = 'success';
 
-                // Show SweetAlert pop-up message with the determined icon
-                Swal.fire({
-                    icon: icon,
-                    title: '{{ session('success') }}',
-                    showConfirmButton: false,
-                    timer: 2000
+                    // Check if success message is "Customer deleted successfully!"
+                    @if (session('success') == 'Vehicle deleted successfully!')
+                        icon = 'error'; // Set icon to 'error' if message is for deletion
+                    @elseif (session('success') == 'Vehicle updated successfully!')
+                        icon = 'success'; // Set icon to 'success' if message is for update
+                    @endif
+
+                    // Show SweetAlert pop-up message with the determined icon
+                    Swal.fire({
+                        icon: icon,
+                        title: '{{ session('success') }}',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
                 });
-            });
-        </script>
-    @endif
+            </script>
+        @endif
         <!-- Default box -->
         <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Branch Info</h3>
 
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
             <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
@@ -71,14 +61,14 @@
                     </thead>
                     <tbody>
 
-                    @foreach($branches as $branch)
-                        <tr>
-                            <td>{{ $branch->code }}</td>
-                            <td>{{ $branch->name }}</td>
-                            <td>{{ $branch->address }}</td>
-                            <td>{{ $branch->office_no }}</td>
+                        @foreach ($branches as $branch)
+                            <tr>
+                                <td>{{ $branch->code }}</td>
+                                <td>{{ $branch->name }}</td>
+                                <td>{{ $branch->address }}</td>
+                                <td>{{ $branch->office_no }}</td>
 
-                        </tr>
+                            </tr>
                     </tbody>
                     <tfoot>
                         <tr>
@@ -105,58 +95,59 @@
         <!-- /.card -->
         <div class="modal fade" id="modal-branch">
             <div class="modal-dialog">
-            <form method="POST" action="/branch/store">
-                        @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Add Branch</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-
-                        <div class="form-group">
-                            <div class="row mb-3">
-                                <div class="col-sm-4">
-                                    <label class="form-label" for="code">Code</label>
-                                    <input type="text" class="form-control" name="code">
-                                </div>
-
-                                <div class="col-sm-8">
-                                    <label class="form-label" for="name">Branch Name</label>
-                                    <input type="text" class="form-control" name="name">
-                                </div>
-                            </div>
+                <form method="POST" action="/branch/store">
+                    @csrf
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Add Branch</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <label class="form-label" for="address">Address</label>
-                                    <textarea class="form-control" rows="3" name="address"></textarea>
+                        <div class="modal-body">
+
+                            <div class="form-group">
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        <label class="form-label" for="code">Code</label>
+                                        <input type="text" class="form-control" name="code" required>
+                                    </div>
+
+                                    <div class="col-sm-8">
+                                        <label class="form-label" for="name">Branch Name</label>
+                                        <input type="text" class="form-control" name="name" required>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <label class="form-label" for="address">Contact No.</label>
-                                    <input type="text" class="form-control" name="office_no">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="form-label" for="address">Address</label>
+                                        <textarea class="form-control" rows="3" name="address"></textarea>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="form-label" for="address">Contact No.</label>
+                                        <input type="text" class="form-control" name="office_no">
+                                    </div>
+                                </div>
+                            </div>
 
 
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-success swalDefaultSuccess">Save changes</button>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success swalDefaultSuccess">Save changes</button>
+                            </div>
                         </div>
-                    </div></form>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
+                </form>
+                <!-- /.modal-content -->
             </div>
-            <!-- /.modal -->
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
 
 
 

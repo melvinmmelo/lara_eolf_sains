@@ -6,6 +6,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
+                    <h1>Products</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -22,18 +23,7 @@
 
         <!-- Default box -->
         <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Products</h3>
 
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
             <div class="card-body">
 
                 @include('layouts.errors')
@@ -56,7 +46,10 @@
                                 <td>{{ $product->code }}</td>
                                 <td>{{ $product->productName }}</td>
                                 <td>{{ $product->is_active == 1 ? 'Yes' : 'No' }}</td>
-                                <td><a href="{{ route('product.toggleStatus', ['id' => $product->id ]) }}" onclick="return confirmSetInactive();"><button type="submit" class="btn btn-sm {{ $product->is_active ? 'btn-danger' : 'btn-success' }}">{{ $product->is_active ? 'Deactive' : 'Activate' }}</button></a></td>
+                                <td><a href="{{ route('product.toggleStatus', ['id' => $product->id]) }}"
+                                        onclick="return confirmSetInactive();"><button type="submit"
+                                            class="btn btn-sm {{ $product->is_active ? 'btn-danger' : 'btn-success' }}">{{ $product->is_active ? 'Deactive' : 'Activate' }}</button></a>
+                                </td>
                             </tr>
                         @endforeach
 
@@ -146,7 +139,7 @@
 
 @section('custom_js')
     <script>
-        function confirmSetInactive(){
+        function confirmSetInactive() {
             return confirm("Are you sure you want to update the product status?")
         }
     </script>
