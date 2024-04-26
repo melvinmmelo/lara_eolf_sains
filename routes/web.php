@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StoreController;
 use App\Models\StoreInfo; // Import the StoreInfo model
 use App\Services\PriceService;
+use App\Http\Controllers\PhAddrController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -59,6 +60,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
     Route::put('/customers/{id}', [CustomersController::class, 'update'])->name('customer.update');
     Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
+    
+    // Route for fetching provinces based on the selected region
+    // Route::get('/get-provinces/{regionId}', [CustomersController::class, 'getProvinces']);
+// routes/web.php
+
+
+
+Route::get('/get-regions', [PhAddrController::class, 'getRegions']);
+Route::get('/get-provinces/{regionId}', [PhAddrController::class, 'getProvinces']);
+Route::get('/get-cities/{provinceId}', [PhAddrController::class, 'getCities']);
+Route::get('/get-brgy/{cityId}', [PhAddrController::class, 'getBrgy']);
 
     // Route::get('/store-info', [StoreController::class, 'storeInfo']);
     Route::get('/store/create', [StoreController::class, 'create'])->name('store.create');

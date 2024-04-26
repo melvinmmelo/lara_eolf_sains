@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\StoreInfo; // Make sure to import the StoreInfo model
+use App\Models\PhAddr; // Adjust the namespace and model accordingly
 
 class StoreController extends Controller
 {
@@ -36,16 +37,19 @@ class StoreController extends Controller
 
             // Add more validation rules as needed
         ]);
-
+        $regionName = PhAddr::where('code', $request->region)->value('name');
+        $provinceName = PhAddr::where('code', $request->province)->value('name');
+        $cityName = PhAddr::where('code', $request->city)->value('name');
+        $brgyName = PhAddr::where('code', $request->brgy)->value('name');
         Storeinfo::create([
             
             'customer_id' => $request->customer_id,
             'storename' => $request->storename,
             'contactno' => $request->contactno,
-            'region' => $request->region,
-            'province' => $request->province,
-            'city' => $request->city,
-            'brgy' => $request->brgy,
+            'region' => $regionName, // Insert region name instead of code
+            'province' => $provinceName, // Insert province name instead of code
+            'city' => $cityName, // Insert city name instead of code
+            'brgy' => $brgyName, // Insert barangay name instead of code
             'subdivision' => $request->subdivision,
             'longitude' => $request->longitude,
             'latitude' => $request->latitude,
@@ -70,15 +74,18 @@ class StoreController extends Controller
             'storename' => 'required',
             // Add more validation rules as needed
         ]);
-
+        $regionName = PhAddr::where('code', $request->region)->value('name');
+        $provinceName = PhAddr::where('code', $request->province)->value('name');
+        $cityName = PhAddr::where('code', $request->city)->value('name');
+        $brgyName = PhAddr::where('code', $request->brgy)->value('name');
         $storeInfo->update([
             'customer_id' => $request->customer_id,
             'storename' => $request->storename,
             'contactno' => $request->contactno,
-            'region' => $request->region,
-            'province' => $request->province,
-            'city' => $request->city,
-            'brgy' => $request->brgy,
+            'region' => $regionName, // Insert region name instead of code
+            'province' => $provinceName, // Insert province name instead of code
+            'city' => $cityName, // Insert city name instead of code
+            'brgy' => $brgyName, // Insert barangay name instead of code
             'subdivision' => $request->subdivision,
             'longitude' => $request->longitude,
             'latitude' => $request->latitude,
