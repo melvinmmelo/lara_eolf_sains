@@ -106,9 +106,10 @@ class InboundController extends Controller
 
         // get the latest price
         foreach ($allProducts as $product) {
+
             $price = prices::where('p_code', $product->code)->orderBy('created_at', 'desc')->first();
 
-            $t = ['code' => $product->code, 'price' => $product->price, 'unit' => $price->p_unit, 'qty' => $price->p_quant];
+            $t = ['code' => $product->code, 'price' => $product->price, 'unit' => "0", 'qty' => $price->p_quant];
 
             array_push($products, $t);
         }
@@ -177,7 +178,7 @@ class InboundController extends Controller
 
             $price = prices::where('p_code', $product['code'])->orderBy('created_at', 'desc')->first();
 
-            $price->p_quant += $product['quantity'];
+            $price->p_quant -= $product['quantity'];
             $price->save();
 
             $message = 'Success';
