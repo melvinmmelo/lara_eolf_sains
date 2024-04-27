@@ -78,10 +78,6 @@ Route::get('/get-brgy/{cityId}', [PhAddrController::class, 'getBrgy']);
     Route::post('/store-info/store', [StoreController::class, 'store'])->name('store-info.store');
     Route::delete('/store-info/{id}', [StoreController::class, 'destroy'])->name('store-info.destroy');
     Route::patch('/store-info/update', [StoreController::class, 'update'])->name('store-info.update');
-<<<<<<< Updated upstream
-    Route::patch('/store-info/update', [StoreController::class, 'update'])->name('store-info.update');
-=======
->>>>>>> Stashed changes
     
 
     Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
