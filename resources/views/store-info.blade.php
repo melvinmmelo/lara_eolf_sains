@@ -149,33 +149,33 @@
                             <div class="form-group">
                                 <div class="row mb-2">
                                     <div class="col-sm-3">
-                                        <label class="form-label" for="region">Region</label>
-                                        <select class="form-control" id="region" name="region">
-                                            <option>option 1</option>
+                                        <label class="form-label" for="cust_region">Region</label>
+                                        <select class="form-control" id="cust_region" name="region">
+                                            <!-- <option>option 1</option>
                                             <option>option 2</option>
                                             <option>option 3</option>
                                             <option>option 4</option>
-                                            <option>option 5</option>
+                                            <option>option 5</option> -->
                                         </select>
                                     </div>
                                     <div class="col-sm-6">
-                                        <label class="form-label" for="province">Province</label>
-                                        <select class="form-control" id="province" name="province">
-                                            <option>option 1</option>
+                                        <label class="form-label" for="cust_prov">Province</label>
+                                        <select class="form-control" id="cust_prov" name="province">
+                                            <!-- <option>option 1</option>
                                             <option>option 2</option>
                                             <option>option 3</option>
                                             <option>option 4</option>
-                                            <option>option 5</option>
+                                            <option>option 5</option> -->
                                         </select>
                                     </div>
                                     <div class="col-sm-3">
-                                        <label class="form-label" for="city">City</label>
-                                        <select class="form-control" id="city" name="city">
-                                            <option>option 1</option>
+                                        <label class="form-label" for="cust_city">City</label>
+                                        <select class="form-control" id="cust_city" name="city">
+                                            <!-- <option>option 1</option>
                                             <option>option 2</option>
                                             <option>option 3</option>
                                             <option>option 4</option>
-                                            <option>option 5</option>
+                                            <option>option 5</option> -->
                                         </select>
                                     </div>
                                 </div>
@@ -183,13 +183,13 @@
                                 <div class="form-group">
                                     <div class="row mb-2">
                                         <div class="col-sm-6">
-                                            <label class="form-label" for="brgy">Barangay</label>
-                                            <select class="form-control" id="brgy" name="brgy">
-                                                <option>option 1</option>
+                                            <label class="form-label" for="cust_brgy">Barangay</label>
+                                            <select class="form-control" id="cust_brgy" name="brgy">
+                                                <!-- <option>option 1</option>
                                                 <option>option 2</option>
                                                 <option>option 3</option>
                                                 <option>option 4</option>
-                                                <option>option 5</option>
+                                                <option>option 5</option> -->
                                             </select>
                                         </div>
                                         <div class="col-sm-6">
@@ -298,33 +298,33 @@
                             <div class="form-group">
                                 <div class="row mb-2">
                                     <div class="col-sm-3">
-                                        <label class="form-label" for="region2">Region</label>
-                                        <select class="form-control" id="region2" name="region">
-                                            <option>option 1</option>
+                                        <label class="form-label" for="region">Region</label>
+                                        <select class="form-control" id="region" name="region">
+                                            <!-- <option>option 1</option>
                                             <option>option 2</option>
                                             <option>option 3</option>
                                             <option>option 4</option>
-                                            <option>option 5</option>
+                                            <option>option 5</option> -->
                                         </select>
                                     </div>
                                     <div class="col-sm-6">
-                                        <label class="form-label" for="province2">Province</label>
-                                        <select class="form-control" id="province2" name="province">
-                                            <option>option 1</option>
+                                        <label class="form-label" for="province">Province</label>
+                                        <select class="form-control" id="province" name="province">
+                                            <!-- <option>option 1</option>
                                             <option>option 2</option>
                                             <option>option 3</option>
                                             <option>option 4</option>
-                                            <option>option 5</option>
+                                            <option>option 5</option> -->
                                         </select>
                                     </div>
                                     <div class="col-sm-3">
-                                        <label class="form-label" for="city2">City</label>
-                                        <select class="form-control" id="city2" name="city">
-                                            <option>option 1</option>
+                                        <label class="form-label" for="city">City</label>
+                                        <select class="form-control" id="city" name="city">
+                                            <!-- <option>option 1</option>
                                             <option>option 2</option>
                                             <option>option 3</option>
                                             <option>option 4</option>
-                                            <option>option 5</option>
+                                            <option>option 5</option> -->
                                         </select>
                                     </div>
                                 </div>
@@ -332,13 +332,13 @@
                                 <div class="form-group">
                                     <div class="row mb-2">
                                         <div class="col-sm-6">
-                                            <label class="form-label" for="brgy2">Barangay</label>
-                                            <select class="form-control" id="brgy2" name="brgy">
-                                                <option>option 1</option>
+                                            <label class="form-label" for="brgy">Barangay</label>
+                                            <select class="form-control" id="brgy" name="brgy">
+                                                <!-- <option>option 1</option>
                                                 <option>option 2</option>
                                                 <option>option 3</option>
                                                 <option>option 4</option>
-                                                <option>option 5</option>
+                                                <option>option 5</option> -->
                                             </select>
                                         </div>
                                         <div class="col-sm-6">
@@ -414,10 +414,10 @@
             document.getElementById("customer_id").value = cusid;
             document.getElementById("storename2").value = storename2;
             document.getElementById("contactno2").value = contactno2;
-            document.getElementById("region2").value = reg;
-            document.getElementById("province2").value = prov;
-            document.getElementById("city2").value = city;
-            document.getElementById("brgy2").value = brgy;
+            document.getElementById("region").value = reg;
+            document.getElementById("province").value = prov;
+            document.getElementById("city").value = city;
+            document.getElementById("brgy").value = brgy;
             document.getElementById("subdivision2").value = subv;
             document.getElementById("longitude2").value = long;
             document.getElementById("latitude2").value = lat;
@@ -427,4 +427,198 @@
         }
 
     </script>
+
+
+<script>
+    $(document).ready(function(){
+        
+        // Function to populate the Region dropdown
+        function populateRegionDropdown() {
+    // Clear existing options
+    $('#cust_region').empty();
+
+    // Add a blank option as the first option
+    $('#cust_region').append('<option value="">Please select</option>');
+            $.ajax({
+                type: "GET",
+                url: "/get-regions", // Route to fetch regions from your server
+                success: function(response) {
+                    // $('#cust_region').empty(); // Clear existing options
+                    $.each(response, function(key, value) {
+                        $('#cust_region').append('<option value="' + value.code + '">' + value.name + '</option>');
+                    });
+                }
+            });
+        }
+        function populateRegionDropdown2() {
+    // Clear existing options
+
+        $('#region').empty();
+
+// Add a blank option as the first option
+        $('#region').append('<option value="">Please select</option>');
+            $.ajax({
+                type: "GET",
+                url: "/get-regions", // Route to fetch regions from your server
+                success: function(response) {
+                    // $('#cust_region').empty(); // Clear existing options
+                    $.each(response, function(key, value) {
+                        $('#region').append('<option value="' + value.code + '">' + value.name + '</option>');
+                    });
+                }
+            });
+        }
+        // Function to populate the Province dropdown based on the selected region
+        function populateProvinceDropdown(regionId) {
+            $('#cust_prov').empty();
+
+// Add a blank option as the first option
+            $('#cust_prov').append('<option value="">Please select</option>');
+            $.ajax({
+                type: "GET",
+                url: "/get-provinces/" + regionId, // Route to fetch provinces based on region
+                success: function(response) {
+                    // $('#cust_prov').empty(); // Clear existing options
+                    $.each(response, function(key, value) {
+                        $('#cust_prov').append('<option value="' + value.code + '">' + value.name + '</option>');
+                    });
+                }
+            });
+        }
+        function populateProvinceDropdown2(regionId) {
+            $('#province').empty();
+
+// Add a blank option as the first option
+            $('#province').append('<option value="">Please select</option>');
+            $.ajax({
+                type: "GET",
+                url: "/get-provinces/" + regionId, // Route to fetch provinces based on region
+                success: function(response) {
+                    // $('#cust_prov').empty(); // Clear existing options
+                    $.each(response, function(key, value) {
+                        $('#province').append('<option value="' + value.code + '">' + value.name + '</option>');
+                    });
+                }
+            });
+        }
+
+        // Function to populate the City dropdown based on the selected province
+        function populateCityDropdown(provinceId) {
+            $('#cust_city').empty();
+
+// Add a blank option as the first option
+            $('#cust_city').append('<option value="">Please select</option>');
+            $.ajax({
+                type: "GET",
+                url: "/get-cities/" + provinceId, // Route to fetch cities based on province
+                success: function(response) {
+                    // $('#cust_city').empty(); // Clear existing options
+                    $.each(response, function(key, value) {
+                        $('#cust_city').append('<option value="' + value.code + '">' + value.name + '</option>');
+                    });
+                }
+            });
+        }
+        function populateCityDropdown2(provinceId) {
+            $('#city').empty();
+
+// Add a blank option as the first option
+            $('#city').append('<option value="">Please select</option>');
+            $.ajax({
+                type: "GET",
+                url: "/get-cities/" + provinceId, // Route to fetch cities based on province
+                success: function(response) {
+                    // $('#cust_city').empty(); // Clear existing options
+                    $.each(response, function(key, value) {
+                        $('#city').append('<option value="' + value.code + '">' + value.name + '</option>');
+                    });
+                }
+            });
+        }
+
+        function populateBrgyDropdown(cityId) {
+            $('#cust_brgy').empty();
+
+// Add a blank option as the first option
+            $('#cust_brgy').append('<option value="">Please select</option>');
+            $.ajax({
+                type: "GET",
+                url: "/get-brgy/" + cityId, // Route to fetch cities based on city/mun
+                success: function(response) {
+                    // $('#cust_brgy').empty(); // Clear existing options
+                    $.each(response, function(key, value) {
+                        $('#cust_brgy').append('<option value="' + value.code + '">' + value.name + '</option>');
+                    });
+                }
+            });
+        }
+        function populateBrgyDropdown2(cityId) {
+            $('#brgy').empty();
+
+// Add a blank option as the first option
+            $('#brgy').append('<option value="">Please select</option>');
+            $.ajax({
+                type: "GET",
+                url: "/get-brgy/" + cityId, // Route to fetch cities based on city/mun
+                success: function(response) {
+                    // $('#cust_brgy').empty(); // Clear existing options
+                    $.each(response, function(key, value) {
+                        $('#brgy').append('<option value="' + value.code + '">' + value.name + '</option>');
+                    });
+                }
+            });
+        }
+        // Initial population of Region dropdown
+        populateRegionDropdown();
+        populateRegionDropdown2();
+        // Event listener for Region dropdown change
+        $('#cust_region').change(function(){
+            var regionId = $(this).val();
+            if(regionId){
+                // Populate Province dropdown based on selected region
+                populateProvinceDropdown(regionId);
+            }
+        });
+        $('#region').change(function(){
+            var regionId = $(this).val();
+            if(regionId){
+                // Populate Province dropdown based on selected region
+                populateProvinceDropdown2(regionId);
+            }
+        });
+
+        // Event listener for Province dropdown change
+        $('#cust_prov').change(function(){
+            var provinceId = $(this).val();
+            if(provinceId){
+                // Populate City dropdown based on selected province
+                populateCityDropdown(provinceId);
+            }
+        });
+        $('#province').change(function(){
+            var provinceId = $(this).val();
+            if(provinceId){
+                // Populate City dropdown based on selected province
+                populateCityDropdown2(provinceId);
+            }
+        });
+        // Event listener for brgy dropdown change
+        $('#cust_city').change(function(){
+            var cityId = $(this).val();
+            if(cityId){
+                // Populate brgy dropdown based on selected province
+                populateBrgyDropdown(cityId);
+            }
+        });
+        $('#city').change(function(){
+            var cityId = $(this).val();
+            if(cityId){
+                // Populate brgy dropdown based on selected province
+                populateBrgyDropdown2(cityId);
+            }
+        });
+    });
+</script>
+
+
 @endsection
