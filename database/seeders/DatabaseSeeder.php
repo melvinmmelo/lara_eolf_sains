@@ -114,18 +114,6 @@ class DatabaseSeeder extends Seeder
                 'product_type_code' => 'SC',
                 'product_variant_code' => 'RR',
                 'is_active' => 'on',
-            ],
-            [
-                'code' => "SC_SB",
-                'product_type_code' => 'SC',
-                'product_variant_code' => 'SB',
-                'is_active' => 'on',
-            ],
-            [
-                'code' => "MC_SB",
-                'product_type_code' => 'MC',
-                'product_variant_code' => 'SB',
-                'is_active' => 'on',
             ]
         );
 
@@ -160,6 +148,22 @@ class DatabaseSeeder extends Seeder
             'p_unit' => 'Bag',
             'p_quant' => 5,
             'p_price' => 150,
+        ]);
+
+        prices::create([
+            'p_level' => "FACTORY PRICE",
+            'p_code' => 'SC_SB',
+            'p_unit' => 'Bag',
+            'p_quant' => 15,
+            'p_price' => 180,
+        ]);
+
+        prices::create([
+            'p_level' => "FACTORY PRICE",
+            'p_code' => 'MC_SB',
+            'p_unit' => 'Bag',
+            'p_quant' => 15,
+            'p_price' => 180,
         ]);
     }
 }

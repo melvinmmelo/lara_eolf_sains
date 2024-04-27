@@ -154,7 +154,7 @@
                         </li>
 
                         <li>
-                            <a href="order" class="nav-link">
+                            <a href="{{ route('order.index') }}" class="nav-link">
                                 <i class="fas fa-file-invoice nav-icon"></i>
                                 <p>Order</p>
                             </a>

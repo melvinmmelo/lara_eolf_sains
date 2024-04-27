@@ -293,8 +293,22 @@
 
         function minusQtyProduct(code) {
             const qty = document.getElementById(code).value;
+
             if (qty > 1) {
                 document.getElementById(code).value = parseInt(qty) - 1;
+
+                const newQty = parseInt(qty) - 1;
+
+                document.getElementById(code).value = newQty;
+
+                const pcodePrice = document.getElementById(code + "_price");
+                const pcodeAmt = document.getElementById(code + "_amt");
+                const total = document.getElementById("total");
+
+                pcodeAmt.value = parseInt(pcodePrice.value) * newQty;
+
+                total.value = parseInt(total.value) - parseInt(pcodePrice.value);
+
                 updateQty(code, 'min');
             }
 
@@ -303,7 +317,18 @@
         function plusQtyProduct(code) {
             const qty = document.getElementById(code).value;
             if (qty < 99999) {
-                document.getElementById(code).value = parseInt(qty) + 1;
+                const newQty = parseInt(qty) + 1;
+
+                document.getElementById(code).value = newQty;
+
+                const pcodePrice = document.getElementById(code + "_price");
+                const pcodeAmt = document.getElementById(code + "_amt");
+                const total = document.getElementById("total");
+
+                pcodeAmt.value = parseInt(pcodePrice.value) * newQty;
+
+                total.value = parseInt(total.value) + parseInt(pcodePrice.value);
+
                 updateQty(code, 'add');
             }
 
