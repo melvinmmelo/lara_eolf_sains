@@ -47,8 +47,12 @@
                                 </div>
                             </td>
                             <td class="align-middle">{{ $product['unit'] }}</td>
-                            <td class="align-middle">{{ $product['price'] }}</td>
-                            <td class="align-middle">{{ $totalAmount[] = $product['quantity'] * $product['price'] }}
+                            <td class="align-middle">
+                                <input type="text" name="pcodeprice" id="{{ $product['code']  .'_price'}}" class="label-input" value="{{ $product['price'] }}" readonly>
+                                </td>
+                            <td class="align-middle">
+                                @php $totalAmount[] = $product['quantity'] * $product['price'] @endphp
+                                <input type="text" name="pcodeamt" id="{{ $product['code'] .'_amt' }}" class="label-input" value="{{ $product['quantity'] * $product['price'] }}" readonly>
                             </td>
                         </tr>
                     @endforeach
@@ -62,7 +66,7 @@
                     <tr>
                         <td colspan="3"></td>
                         <td>Total:</td>
-                        <td>{{ array_sum($totalAmount) }}</td>
+                        <td><input type="text" name="total" id="total" class="label-input" value="{{ array_sum($totalAmount) }}" readonly></td>
                     </tr>
                 </tfoot>
             </table>
