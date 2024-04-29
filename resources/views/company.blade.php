@@ -33,9 +33,55 @@
 
 
                 {{-- Sample displaying data --}}
-                Name {{ $company->name }}
 
 
+                <div class="card card-primary">
+                    <div class="card-header">
+
+                        <h3 class="card-title">Company Info</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+
+                        <div align="center"><img src="{{ asset('img/eolf_logo_trans.png') }}" alt="AdminLTELogo"
+                                height="120" width="200"></div>
+
+                        <hr>
+                        <strong><i class="fas fa-book mr-1"></i> Name</strong>
+
+                        <p class="text-muted">
+                            {{ $company->name }}
+                        </p>
+
+                        <hr>
+
+                        <strong><i class="fas fa-map-marker-alt mr-1"></i>Address</strong>
+
+                        <p class="text-muted">
+                            {{ $company->address }}
+                        </p>
+
+                        <hr>
+
+                        <strong><i class="fas fa-envelope mr-1"></i>Email Address</strong>
+
+                        <p class="text-muted">
+                            {{ $company->email }}
+
+                        </p>
+
+                        <hr>
+
+                        <strong><i class="fas fa-phone mr-1"></i> Contact No</strong>
+
+                        <p class="text-muted">
+                            {{ $company->contact }}
+
+
+                        </p>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
 
                 <div class="modal fade" id="modal-company">
                     <form action="{{ route('company.update', ['companyDetails' => $company->id]) }}" method="POST"

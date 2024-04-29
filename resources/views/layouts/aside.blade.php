@@ -14,8 +14,8 @@
 
             <div class="info">
                 <a href="#" class="d-block">{{ auth()->user()->fullName }}</a>
-                {{ auth()->user()->fullName }}
-                Branch
+
+                <small>Branch</small>
             </div>
         </div>
 
