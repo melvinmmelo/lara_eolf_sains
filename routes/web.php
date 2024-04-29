@@ -20,6 +20,8 @@ use App\Http\Controllers\StoreController;
 use App\Models\StoreInfo; // Import the StoreInfo model
 use App\Services\PriceService;
 use App\Http\Controllers\PhAddrController;
+use App\Http\Controllers\EquipmentController;
+
 
 Route::get('/', function () {
     return view('auth.login');
@@ -65,12 +67,19 @@ Route::middleware('auth')->group(function () {
     // Route::get('/get-provinces/{regionId}', [CustomersController::class, 'getProvinces']);
 // routes/web.php
 
+    Route::get('/equipment', [EquipmentController::class, 'index'])->name('equipment.index');
+    Route::post('/equipment/store', [EquipmentController::class, 'store'])->name('equipment.store');
+    Route::put('/equipment/{id}', [EquipmentController::class, 'update'])->name('equipment.update');
+    Route::delete('/equipment/{id}', [EquipmentController::class, 'destroy'])->name('equipment.destroy');
+    Route::get('/equipment/{id}/edit', [EquipmentController::class, 'edit'])->name('equipment.edit');
+    Route::patch('/equipment/', [EquipmentController::class, 'update'])->name('equipment.update');
+    Route::patch('/equipment/{id}', [EquipmentController::class, 'update'])->name('equipment.update');
 
 
-Route::get('/get-regions', [PhAddrController::class, 'getRegions']);
-Route::get('/get-provinces/{regionId}', [PhAddrController::class, 'getProvinces']);
-Route::get('/get-cities/{provinceId}', [PhAddrController::class, 'getCities']);
-Route::get('/get-brgy/{cityId}', [PhAddrController::class, 'getBrgy']);
+    Route::get('/get-regions', [PhAddrController::class, 'getRegions']);
+    Route::get('/get-provinces/{regionId}', [PhAddrController::class, 'getProvinces']);
+    Route::get('/get-cities/{provinceId}', [PhAddrController::class, 'getCities']);
+    Route::get('/get-brgy/{cityId}', [PhAddrController::class, 'getBrgy']);
 
     // Route::get('/store-info', [StoreController::class, 'storeInfo']);
     Route::get('/store/create', [StoreController::class, 'create'])->name('store.create');

@@ -93,7 +93,7 @@
                                     <form method="POST" action="{{ route('store-info.destroy', $storeinfo->id) }}" style="display: inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this store info?')">Delete</button>
                                     </form>
 
                                 </td>
