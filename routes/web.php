@@ -62,7 +62,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
     Route::put('/customers/{id}', [CustomersController::class, 'update'])->name('customer.update');
     Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
-    
+
     // Route for fetching provinces based on the selected region
     // Route::get('/get-provinces/{regionId}', [CustomersController::class, 'getProvinces']);
 // routes/web.php
@@ -73,7 +73,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/equipment/{id}', [EquipmentController::class, 'destroy'])->name('equipment.destroy');
     Route::get('/equipment/{id}/edit', [EquipmentController::class, 'edit'])->name('equipment.edit');
     Route::patch('/equipment/', [EquipmentController::class, 'update'])->name('equipment.update');
-    Route::patch('/equipment/{id}', [EquipmentController::class, 'update'])->name('equipment.update');
+    // Route::patch('/equipment/{id}', [EquipmentController::class, 'update'])->name('equipment.update');
 
 
     Route::get('/get-regions', [PhAddrController::class, 'getRegions']);
@@ -87,7 +87,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/store-info/store', [StoreController::class, 'store'])->name('store-info.store');
     Route::delete('/store-info/{id}', [StoreController::class, 'destroy'])->name('store-info.destroy');
     Route::patch('/store-info/update', [StoreController::class, 'update'])->name('store-info.update');
-    
+
 
     Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
     Route::get('/vehicles/{id}/edit', [VehiclesController::class, 'edit'])->name('vehicle.edit');

@@ -76,7 +76,7 @@
             <td>{{ $equipment->date_delivered }}</td>
             <td>{{ $equipment->date_purchased }}</td>
             <td>
-            <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal" 
+            <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
         data-target="#edit-equipment"
         onclick="setToUpdateEquipment('{{ $equipment->id }}','{{ $equipment->ownership }}','{{ $equipment->type }}','{{ $equipment->brand }}','{{ $equipment->price }}','{{ $equipment->serial_no }}','{{ $equipment->code }}','{{ $equipment->distributor }}','{{ $equipment->date_delivered }}','{{ $equipment->date_purchased }}')">Edit</button>
 
@@ -220,7 +220,7 @@
             </div>
             <div class="modal-body">
 
-                <form action="{{ route('equipment.update', ['id' => $equipment->id]) }}" method="POST">
+                <form action="{{ route('equipment.update') }}" method="POST">
                     @csrf
                     @method('PATCH')
                     <input type="text" class="form-control" name="id" id="equipment_id" required readonly><br>
@@ -281,7 +281,7 @@
                         <label class="form-label" for="edit-date_purchased">Date Purchased</label>
                         <input type="date" class="form-control" id="edit-date_purchased" name="date_purchased">
                     </div>
-                
+
             </div>
             <!-- /.modal-body -->
             <div class="modal-footer">
@@ -319,7 +319,7 @@ function setToUpdateEquipment(id, ownership, type, brand, price, serial_no, code
     // Open the modal
     // $('#edit-equipment').modal('show');
 }
-  
+
 </script>
 
 
