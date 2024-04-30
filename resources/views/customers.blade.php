@@ -53,10 +53,8 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Distributor</th>
-                            <th>Lastname</th>
-                            <th>Firstname</th>
-                            <th>Middlename</th>
+
+                            <th>Name</th>
                             <th>Company Name</th>
 
                             <th>Actions</th>
@@ -66,10 +64,8 @@
                         @foreach ($customers as $customer)
                             <tr>
                                 <td>{{ $customer->id }}</td>
-                                <td>{{ $customer->distributor }}</td>
-                                <td>{{ $customer->lastname }}</td>
-                                <td>{{ $customer->firstname }}</td>
-                                <td>{{ $customer->middlename }}</td>
+
+                                <td>{{ $customer->lastname }} {{ $customer->firstname }} {{ $customer->middlename }}</td>
                                 <td>{{ $customer->companyname }}</td>
 
                                 <td>
@@ -190,29 +186,29 @@
                                             <div class="col-sm-3">
                                                 <label class="form-label" for="cust_region">Region</label>
                                                 <select class="form-control" id="cust_region" name="region">
-                                                <!-- <option></option> -->
+                                                    <!-- <option></option> -->
                                                 </select>
                                             </div>
                                             <div class="col-sm-6">
                                                 <label class="form-label" for="cust_prov">Province</label>
                                                 <select class="form-control" id="cust_prov" name="province">
-                                                <!-- <option></option> -->
+                                                    <!-- <option></option> -->
                                                     <!-- <option>option 1</option>
-                                                    <option>option 2</option>
-                                                    <option>option 3</option>
-                                                    <option>option 4</option>
-                                                    <option>option 5</option> -->
+                                                                <option>option 2</option>
+                                                                <option>option 3</option>
+                                                                <option>option 4</option>
+                                                                <option>option 5</option> -->
                                                 </select>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label class="form-label" for="cust_city">City</label>
                                                 <select class="form-control" id="cust_city" name="city">
-                                                <!-- <option></option> -->
+                                                    <!-- <option></option> -->
                                                     <!-- <option>option 1</option>
-                                                    <option>option 2</option>
-                                                    <option>option 3</option>
-                                                    <option>option 4</option>
-                                                    <option>option 5</option> -->
+                                                                <option>option 2</option>
+                                                                <option>option 3</option>
+                                                                <option>option 4</option>
+                                                                <option>option 5</option> -->
                                                 </select>
                                             </div>
                                         </div>
@@ -223,12 +219,12 @@
                                                 <div class="col-sm-6">
                                                     <label class="form-label" for="cust_brgy">Barangay</label>
                                                     <select class="form-control" id="cust_brgy" name="brgy">
-                                                    <!-- <option></option> -->
+                                                        <!-- <option></option> -->
                                                         <!-- <option>option 1</option>
-                                                        <option>option 2</option>
-                                                        <option>option 3</option>
-                                                        <option>option 4</option>
-                                                        <option>option 5</option> -->
+                                                                    <option>option 2</option>
+                                                                    <option>option 3</option>
+                                                                    <option>option 4</option>
+                                                                    <option>option 5</option> -->
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-6">
@@ -259,8 +255,8 @@
                 <div class="modal-footer">
                     <!-- Button to open another modal -->
                     <!-- <button type="button" class="btn btn-primary" onclick="toggleModal('storeModal')">Store
-                                                                                                                                                                            Info</button>
-                                                                                                                                                                        <button type="button" class="btn btn-success swalDefaultSuccess">Save changes</button> -->
+                                                                                                                                                                                        Info</button>
+                                                                                                                                                                                    <button type="button" class="btn btn-success swalDefaultSuccess">Save changes</button> -->
 
                     <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#storeModal">Store Info</button> -->
                     <!-- <input type="submit" name="submit" value="submit"> -->
@@ -364,9 +360,9 @@
                                             <div class="col-sm-3">
                                                 <label class="form-label" for="region">Region</label>
                                                 <select class="form-control" id="region" name="region">
-                                                <!-- <option>Region I (Ilocos Region)</option>
-                                                    <option>Region II (Cagayan Valley)</option>
-                                                    <option>Region IV-A (CALABARZON)</option> -->
+                                                    <!-- <option>Region I (Ilocos Region)</option>
+                                                                <option>Region II (Cagayan Valley)</option>
+                                                                <option>Region IV-A (CALABARZON)</option> -->
                                                 </select>
                                             </div>
 
@@ -379,7 +375,7 @@
                                             <div class="col-sm-3">
                                                 <label class="form-label" for="city">City</label>
                                                 <select class="form-control" id="city" name="city">
- 
+
                                                 </select>
                                             </div>
                                         </div>
@@ -424,8 +420,8 @@
             </div>
         </div>
     </div>
-    @endsection
-    @section('custom_js')
+@endsection
+@section('custom_js')
     <!-- JavaScript to handle edit button click and populate modal -->
     <script>
         $('.edit-btn').click(function() {
@@ -522,195 +518,207 @@
 
 
 
-<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
-<script>
-    $(document).ready(function(){
-        
-        // Function to populate the Region dropdown
-        function populateRegionDropdown() {
-    // Clear existing options
-    $('#cust_region').empty();
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    <script>
+        $(document).ready(function() {
 
-    // Add a blank option as the first option
-    $('#cust_region').append('<option value="">Please select</option>');
-            $.ajax({
-                type: "GET",
-                url: "/get-regions", // Route to fetch regions from your server
-                success: function(response) {
-                    // $('#cust_region').empty(); // Clear existing options
-                    $.each(response, function(key, value) {
-                        $('#cust_region').append('<option value="' + value.code + '">' + value.name + '</option>');
-                    });
-                }
-            });
-        }
-        function populateRegionDropdown2() {
-    // Clear existing options
+            // Function to populate the Region dropdown
+            function populateRegionDropdown() {
+                // Clear existing options
+                $('#cust_region').empty();
 
-        $('#region').empty();
-
-// Add a blank option as the first option
-        $('#region').append('<option value="">Please select</option>');
-            $.ajax({
-                type: "GET",
-                url: "/get-regions", // Route to fetch regions from your server
-                success: function(response) {
-                    // $('#cust_region').empty(); // Clear existing options
-                    $.each(response, function(key, value) {
-                        $('#region').append('<option value="' + value.code + '">' + value.name + '</option>');
-                    });
-                }
-            });
-        }
-        // Function to populate the Province dropdown based on the selected region
-        function populateProvinceDropdown(regionId) {
-            $('#cust_prov').empty();
-
-// Add a blank option as the first option
-            $('#cust_prov').append('<option value="">Please select</option>');
-            $.ajax({
-                type: "GET",
-                url: "/get-provinces/" + regionId, // Route to fetch provinces based on region
-                success: function(response) {
-                    // $('#cust_prov').empty(); // Clear existing options
-                    $.each(response, function(key, value) {
-                        $('#cust_prov').append('<option value="' + value.code + '">' + value.name + '</option>');
-                    });
-                }
-            });
-        }
-        function populateProvinceDropdown2(regionId) {
-            $('#province').empty();
-
-// Add a blank option as the first option
-            $('#province').append('<option value="">Please select</option>');
-            $.ajax({
-                type: "GET",
-                url: "/get-provinces/" + regionId, // Route to fetch provinces based on region
-                success: function(response) {
-                    // $('#cust_prov').empty(); // Clear existing options
-                    $.each(response, function(key, value) {
-                        $('#province').append('<option value="' + value.code + '">' + value.name + '</option>');
-                    });
-                }
-            });
-        }
-
-        // Function to populate the City dropdown based on the selected province
-        function populateCityDropdown(provinceId) {
-            $('#cust_city').empty();
-
-// Add a blank option as the first option
-            $('#cust_city').append('<option value="">Please select</option>');
-            $.ajax({
-                type: "GET",
-                url: "/get-cities/" + provinceId, // Route to fetch cities based on province
-                success: function(response) {
-                    // $('#cust_city').empty(); // Clear existing options
-                    $.each(response, function(key, value) {
-                        $('#cust_city').append('<option value="' + value.code + '">' + value.name + '</option>');
-                    });
-                }
-            });
-        }
-        function populateCityDropdown2(provinceId) {
-            $('#city').empty();
-
-// Add a blank option as the first option
-            $('#city').append('<option value="">Please select</option>');
-            $.ajax({
-                type: "GET",
-                url: "/get-cities/" + provinceId, // Route to fetch cities based on province
-                success: function(response) {
-                    // $('#cust_city').empty(); // Clear existing options
-                    $.each(response, function(key, value) {
-                        $('#city').append('<option value="' + value.code + '">' + value.name + '</option>');
-                    });
-                }
-            });
-        }
-
-        function populateBrgyDropdown(cityId) {
-            $('#cust_brgy').empty();
-
-// Add a blank option as the first option
-            $('#cust_brgy').append('<option value="">Please select</option>');
-            $.ajax({
-                type: "GET",
-                url: "/get-brgy/" + cityId, // Route to fetch cities based on city/mun
-                success: function(response) {
-                    // $('#cust_brgy').empty(); // Clear existing options
-                    $.each(response, function(key, value) {
-                        $('#cust_brgy').append('<option value="' + value.code + '">' + value.name + '</option>');
-                    });
-                }
-            });
-        }
-        function populateBrgyDropdown2(cityId) {
-            $('#brgy').empty();
-
-// Add a blank option as the first option
-            $('#brgy').append('<option value="">Please select</option>');
-            $.ajax({
-                type: "GET",
-                url: "/get-brgy/" + cityId, // Route to fetch cities based on city/mun
-                success: function(response) {
-                    // $('#cust_brgy').empty(); // Clear existing options
-                    $.each(response, function(key, value) {
-                        $('#brgy').append('<option value="' + value.code + '">' + value.name + '</option>');
-                    });
-                }
-            });
-        }
-        // Initial population of Region dropdown
-        populateRegionDropdown();
-        populateRegionDropdown2();
-        // Event listener for Region dropdown change
-        $('#cust_region').change(function(){
-            var regionId = $(this).val();
-            if(regionId){
-                // Populate Province dropdown based on selected region
-                populateProvinceDropdown(regionId);
+                // Add a blank option as the first option
+                $('#cust_region').append('<option value="">Please select</option>');
+                $.ajax({
+                    type: "GET",
+                    url: "/get-regions", // Route to fetch regions from your server
+                    success: function(response) {
+                        // $('#cust_region').empty(); // Clear existing options
+                        $.each(response, function(key, value) {
+                            $('#cust_region').append('<option value="' + value.code + '">' +
+                                value.name + '</option>');
+                        });
+                    }
+                });
             }
-        });
-        $('#region').change(function(){
-            var regionId = $(this).val();
-            if(regionId){
-                // Populate Province dropdown based on selected region
-                populateProvinceDropdown2(regionId);
-            }
-        });
 
-        // Event listener for Province dropdown change
-        $('#cust_prov').change(function(){
-            var provinceId = $(this).val();
-            if(provinceId){
-                // Populate City dropdown based on selected province
-                populateCityDropdown(provinceId);
+            function populateRegionDropdown2() {
+                // Clear existing options
+
+                $('#region').empty();
+
+                // Add a blank option as the first option
+                $('#region').append('<option value="">Please select</option>');
+                $.ajax({
+                    type: "GET",
+                    url: "/get-regions", // Route to fetch regions from your server
+                    success: function(response) {
+                        // $('#cust_region').empty(); // Clear existing options
+                        $.each(response, function(key, value) {
+                            $('#region').append('<option value="' + value.code + '">' + value
+                                .name + '</option>');
+                        });
+                    }
+                });
             }
-        });
-        $('#province').change(function(){
-            var provinceId = $(this).val();
-            if(provinceId){
-                // Populate City dropdown based on selected province
-                populateCityDropdown2(provinceId);
+            // Function to populate the Province dropdown based on the selected region
+            function populateProvinceDropdown(regionId) {
+                $('#cust_prov').empty();
+
+                // Add a blank option as the first option
+                $('#cust_prov').append('<option value="">Please select</option>');
+                $.ajax({
+                    type: "GET",
+                    url: "/get-provinces/" + regionId, // Route to fetch provinces based on region
+                    success: function(response) {
+                        // $('#cust_prov').empty(); // Clear existing options
+                        $.each(response, function(key, value) {
+                            $('#cust_prov').append('<option value="' + value.code + '">' + value
+                                .name + '</option>');
+                        });
+                    }
+                });
             }
-        });
-        // Event listener for brgy dropdown change
-        $('#cust_city').change(function(){
-            var cityId = $(this).val();
-            if(cityId){
-                // Populate brgy dropdown based on selected province
-                populateBrgyDropdown(cityId);
+
+            function populateProvinceDropdown2(regionId) {
+                $('#province').empty();
+
+                // Add a blank option as the first option
+                $('#province').append('<option value="">Please select</option>');
+                $.ajax({
+                    type: "GET",
+                    url: "/get-provinces/" + regionId, // Route to fetch provinces based on region
+                    success: function(response) {
+                        // $('#cust_prov').empty(); // Clear existing options
+                        $.each(response, function(key, value) {
+                            $('#province').append('<option value="' + value.code + '">' + value
+                                .name + '</option>');
+                        });
+                    }
+                });
             }
-        });
-        $('#city').change(function(){
-            var cityId = $(this).val();
-            if(cityId){
-                // Populate brgy dropdown based on selected province
-                populateBrgyDropdown2(cityId);
+
+            // Function to populate the City dropdown based on the selected province
+            function populateCityDropdown(provinceId) {
+                $('#cust_city').empty();
+
+                // Add a blank option as the first option
+                $('#cust_city').append('<option value="">Please select</option>');
+                $.ajax({
+                    type: "GET",
+                    url: "/get-cities/" + provinceId, // Route to fetch cities based on province
+                    success: function(response) {
+                        // $('#cust_city').empty(); // Clear existing options
+                        $.each(response, function(key, value) {
+                            $('#cust_city').append('<option value="' + value.code + '">' + value
+                                .name + '</option>');
+                        });
+                    }
+                });
             }
+
+            function populateCityDropdown2(provinceId) {
+                $('#city').empty();
+
+                // Add a blank option as the first option
+                $('#city').append('<option value="">Please select</option>');
+                $.ajax({
+                    type: "GET",
+                    url: "/get-cities/" + provinceId, // Route to fetch cities based on province
+                    success: function(response) {
+                        // $('#cust_city').empty(); // Clear existing options
+                        $.each(response, function(key, value) {
+                            $('#city').append('<option value="' + value.code + '">' + value
+                                .name + '</option>');
+                        });
+                    }
+                });
+            }
+
+            function populateBrgyDropdown(cityId) {
+                $('#cust_brgy').empty();
+
+                // Add a blank option as the first option
+                $('#cust_brgy').append('<option value="">Please select</option>');
+                $.ajax({
+                    type: "GET",
+                    url: "/get-brgy/" + cityId, // Route to fetch cities based on city/mun
+                    success: function(response) {
+                        // $('#cust_brgy').empty(); // Clear existing options
+                        $.each(response, function(key, value) {
+                            $('#cust_brgy').append('<option value="' + value.code + '">' + value
+                                .name + '</option>');
+                        });
+                    }
+                });
+            }
+
+            function populateBrgyDropdown2(cityId) {
+                $('#brgy').empty();
+
+                // Add a blank option as the first option
+                $('#brgy').append('<option value="">Please select</option>');
+                $.ajax({
+                    type: "GET",
+                    url: "/get-brgy/" + cityId, // Route to fetch cities based on city/mun
+                    success: function(response) {
+                        // $('#cust_brgy').empty(); // Clear existing options
+                        $.each(response, function(key, value) {
+                            $('#brgy').append('<option value="' + value.code + '">' + value
+                                .name + '</option>');
+                        });
+                    }
+                });
+            }
+            // Initial population of Region dropdown
+            populateRegionDropdown();
+            populateRegionDropdown2();
+            // Event listener for Region dropdown change
+            $('#cust_region').change(function() {
+                var regionId = $(this).val();
+                if (regionId) {
+                    // Populate Province dropdown based on selected region
+                    populateProvinceDropdown(regionId);
+                }
+            });
+            $('#region').change(function() {
+                var regionId = $(this).val();
+                if (regionId) {
+                    // Populate Province dropdown based on selected region
+                    populateProvinceDropdown2(regionId);
+                }
+            });
+
+            // Event listener for Province dropdown change
+            $('#cust_prov').change(function() {
+                var provinceId = $(this).val();
+                if (provinceId) {
+                    // Populate City dropdown based on selected province
+                    populateCityDropdown(provinceId);
+                }
+            });
+            $('#province').change(function() {
+                var provinceId = $(this).val();
+                if (provinceId) {
+                    // Populate City dropdown based on selected province
+                    populateCityDropdown2(provinceId);
+                }
+            });
+            // Event listener for brgy dropdown change
+            $('#cust_city').change(function() {
+                var cityId = $(this).val();
+                if (cityId) {
+                    // Populate brgy dropdown based on selected province
+                    populateBrgyDropdown(cityId);
+                }
+            });
+            $('#city').change(function() {
+                var cityId = $(this).val();
+                if (cityId) {
+                    // Populate brgy dropdown based on selected province
+                    populateBrgyDropdown2(cityId);
+                }
+            });
         });
-    });
-</script>
+    </script>
 @endsection

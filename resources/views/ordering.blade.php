@@ -230,8 +230,8 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                    <a href="{{ route('inbound.destroy', ['inbound' => $inboundId]) }}"
-                        onclick="return discardIn()"><button type="button" class="btn btn-danger">Discard</button></a>
+                    <a href="{{ route('inbound.destroy', ['inbound' => $inboundId]) }}" onclick="return discardIn()"><button
+                            type="button" class="btn btn-danger">Discard</button></a>
                     <button type="submit" class="btn btn-success">Save</button>
                 </div>
                 <!-- /.card-footer-->
