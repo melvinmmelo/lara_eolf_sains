@@ -79,8 +79,8 @@
                 <div class="card-header">
                     <h3 class="card-title mr-2">Ordering Info</h3>
 
-                     <input type="text" name="inboundId" id="inboundId" class="label-input" value="{{ $inboundId }}"
-                            required readonly>
+                    <input type="text" name="inboundId" id="inboundId" class="label-input" value="{{ $inboundId }}"
+                        required readonly>
 
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -139,6 +139,8 @@
                     <div>
                         <div id="inboundList">
                             <div class="row">
+                                <div class="col-sm-2">
+                                </div>
                                 <div class="col-sm-8">
                                     <div class="table-responsive">
 
@@ -178,7 +180,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-4">
+                                <div class="col-sm-2">
                                     <table class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
@@ -202,8 +204,8 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                    <a href="{{ route('inbound.destroy', ['inbound' => $inboundId]) }}"
-                        onclick="return discardIn()"><button type="button" class="btn btn-danger">Discard</button></a>
+                    <a href="{{ route('inbound.destroy', ['inbound' => $inboundId]) }}" onclick="return discardIn()"><button
+                            type="button" class="btn btn-danger">Discard</button></a>
                     <button type="submit" class="btn btn-success">Save</button>
                 </div>
                 <!-- /.card-footer-->

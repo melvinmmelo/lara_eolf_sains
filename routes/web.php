@@ -27,6 +27,14 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::get('/se', function () {
+    return view('selectsample');
+});
+
+Route::post('/se', function (Request $request) {
+    dd($request->all());
+});
+
 Route::get('/price', function () {
     $price = PriceService::getPrice('SC_RR');
     dd($price);

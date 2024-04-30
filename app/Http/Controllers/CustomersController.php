@@ -16,7 +16,7 @@ class CustomersController extends Controller
         $customers = Customer::all();
         // Pass the customers data to the view
         return view('customers', compact('customers'));
-        
+
     }
 
 
@@ -39,13 +39,13 @@ class CustomersController extends Controller
             'companyname' => 'required',
             // Add more validation rules as needed
         ]);
-    
+
         // Retrieve the names of the region, province, city, etc. based on their codes
         $regionName = PhAddr::where('code', $request->region)->value('name');
         $provinceName = PhAddr::where('code', $request->province)->value('name');
         $cityName = PhAddr::where('code', $request->city)->value('name');
         $brgyName = PhAddr::where('code', $request->brgy)->value('name');
-    
+
         // Create a new Customer instance with the provided data
         Customer::create([
             'distributor' => $request->distributor,
@@ -65,7 +65,7 @@ class CustomersController extends Controller
             'latitude' => $request->latitude,
             // Add more fields as needed
         ]);
-    
+
         // Redirect the user back with a success message
         return redirect('/customers/')->with('success', 'Customer added successfully!');
     }
