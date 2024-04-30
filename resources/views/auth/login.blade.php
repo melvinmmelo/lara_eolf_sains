@@ -46,7 +46,10 @@
                                 <span class="fas fa-envelope"></span>
                             </div>
                         </div>
+
                     </div>
+                    <p class="text-red-500 text-xs italic">@error('email') {{ $message }} @enderror</p>
+
                     <div class="input-group mb-3">
                         <input type="password" name="password" required autocomplete="current-password"
                             class="form-control" placeholder="Password">
@@ -72,10 +75,6 @@
                         <!-- /.col -->
                     </div>
                 </form>
-
-                <p class="mb-0">
-                    <a href="register.html" class="text-center">Register a new membership</a>
-                </p>
             </div>
             <!-- /.card-body -->
         </div>
