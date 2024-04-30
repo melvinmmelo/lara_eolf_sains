@@ -25,15 +25,15 @@ class InboundController extends Controller
      */
     public function index()
     {
-        //
 
-        // session()->put('inboundId', 2);
 
         $equipment = Equipment::all();
         $drivers = Drivers::all();
         $vehicles = Vehicles::all();
 
         $inbounds = Inbound::with('driver','vehicle')->get();
+
+        // dd($equipment);
 
         return view('order', compact('equipment', 'drivers', 'vehicles', 'inbounds'));
     }
@@ -114,6 +114,8 @@ class InboundController extends Controller
             array_push($products, $t);
         }
 
+        // dd($products);
+
         return view('productsList', compact('products'));
     }
 
@@ -131,10 +133,11 @@ class InboundController extends Controller
 
         $data = ['ptype_code' => $product->product_type_code, 'code' => $product->code, 'quantity' => 1, 'price' => $price->p_price, 'unit' => $price->unit];
 
-        $products = json_decode($inbound->products, true);
+        $products = $inbound->products;
 
         $isExist = false;
 
+        // dd($products);
         $inProdService = new InboundProductsService($products);
 
         $products = $inProdService->addQty($code);
@@ -162,11 +165,18 @@ class InboundController extends Controller
     {
         $request->validate([
             'inboundId' => 'required|exists:inbounds,id',
+
         ]);
 
         $inbound = Inbound::find($request->inboundId);
 
         $inbound->status = 'Completed';
+
+        $inbound->with_invoice = $request->with_invoice == 'on' ? 1 : 0;
+
+        $inbound->bad_order = $request->bad_order == 'on' ? 1 : 0;
+
+
 
         $inbound->save();
 
@@ -207,7 +217,7 @@ class InboundController extends Controller
 
         $inbound = Inbound::find($inboundId);
 
-        $inboundService = new InboundProductsService(json_decode($inbound->products, true));
+        $inboundService = new InboundProductsService($inbound->products);
 
         if($action == 'add'){
             $products = $inboundService->addQty($code);

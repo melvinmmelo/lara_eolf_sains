@@ -10,25 +10,28 @@ class StoreController extends Controller
 {
     // public function index()
     // {
-        
+
     //     // Fetch all storeinfo records
     //     $storeinfos = StoreInfo::all();
-        
+
     //     // Pass the storeinfo data to the view
     //     return view('store-info', compact('storeinfos'));
     // }
 
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $customer_id = $request->query('customer_id');
-    
+
         // Fetch store information based on customer_id
         $storeinfos = StoreInfo::where('customer_id', $customer_id)->get();
-    
+
         return view('store-info', compact('storeinfos'));
     }
 
     public function store(Request $request)
     {
+
+
 
         // dd($request->all());
         $request->validate([
@@ -42,7 +45,7 @@ class StoreController extends Controller
         $cityName = PhAddr::where('code', $request->city)->value('name');
         $brgyName = PhAddr::where('code', $request->brgy)->value('name');
         Storeinfo::create([
-            
+
             'customer_id' => $request->customer_id,
             'storename' => $request->storename,
             'contactno' => $request->contactno,
@@ -63,8 +66,8 @@ class StoreController extends Controller
         // return redirect()->route('store-info.index')->with('success', 'Store Info added successfully!');
         return redirect()->back()
             ->with('success', 'Store Info added successfully!');
-            
-        
+
+
     }
     public function update(Request $request)
     {
@@ -110,7 +113,7 @@ class StoreController extends Controller
         $storeInfo->delete();
         return redirect()->back()
             ->with('success', 'Store Info deleted successfully!');
-            
+
     }
 }
 

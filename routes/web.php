@@ -9,35 +9,25 @@ use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VehiclesController;
-use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\DriversController;
 use App\Http\Controllers\InboundController;
 use App\Http\Controllers\PricelevelsController;
 use App\Http\Controllers\PricesController;
-use App\Models\CompanyDetails;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StoreController;
-use App\Models\StoreInfo; // Import the StoreInfo model
-use App\Services\PriceService;
 use App\Http\Controllers\PhAddrController;
 use App\Http\Controllers\EquipmentController;
-
 
 Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/price', function () {
-    $price = PriceService::getPrice('SC_RR');
-    dd($price);
-});
-
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
+
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    });
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit'); // views
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update'); // backend
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // backend
@@ -54,7 +44,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/branch/store', [BranchesController::class, 'store']);
     Route::get('/edit-branch/{id}', [BranchesController::class, 'edit'])->name('branch.edit');
 
-
     Route::get('/customers', [CustomersController::class, 'index'])->name('customers');
     Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customer.edit');
     Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
@@ -63,17 +52,12 @@ Route::middleware('auth')->group(function () {
     Route::put('/customers/{id}', [CustomersController::class, 'update'])->name('customer.update');
     Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
 
-    // Route for fetching provinces based on the selected region
-    // Route::get('/get-provinces/{regionId}', [CustomersController::class, 'getProvinces']);
-// routes/web.php
-
     Route::get('/equipment', [EquipmentController::class, 'index'])->name('equipment.index');
     Route::post('/equipment/store', [EquipmentController::class, 'store'])->name('equipment.store');
     Route::put('/equipment/{id}', [EquipmentController::class, 'update'])->name('equipment.update');
     Route::delete('/equipment/{id}', [EquipmentController::class, 'destroy'])->name('equipment.destroy');
     Route::get('/equipment/{id}/edit', [EquipmentController::class, 'edit'])->name('equipment.edit');
     Route::patch('/equipment/', [EquipmentController::class, 'update'])->name('equipment.update');
-    // Route::patch('/equipment/{id}', [EquipmentController::class, 'update'])->name('equipment.update');
 
 
     Route::get('/get-regions', [PhAddrController::class, 'getRegions']);
@@ -81,13 +65,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/get-cities/{provinceId}', [PhAddrController::class, 'getCities']);
     Route::get('/get-brgy/{cityId}', [PhAddrController::class, 'getBrgy']);
 
-    // Route::get('/store-info', [StoreController::class, 'storeInfo']);
     Route::get('/store/create', [StoreController::class, 'create'])->name('store.create');
     Route::get('/store-info', [StoreController::class, 'index'])->name('store-info.index');
     Route::post('/store-info/store', [StoreController::class, 'store'])->name('store-info.store');
     Route::delete('/store-info/{id}', [StoreController::class, 'destroy'])->name('store-info.destroy');
     Route::patch('/store-info/update', [StoreController::class, 'update'])->name('store-info.update');
-
 
     Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
     Route::get('/vehicles/{id}/edit', [VehiclesController::class, 'edit'])->name('vehicle.edit');
@@ -96,9 +78,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/vehicles/{id}', [VehiclesController::class, 'update']);
     Route::delete('/vehicles/{id}', [VehiclesController::class, 'destroy'])->name('vehicle.destroy');
     Route::patch('/vehicles/', [VehiclesController::class, 'update'])->name('vehicle.update');
-
-    // Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
-    // Route::get('/edit-vehicle/{id}', [CustomersController::class, 'edit'])->name('vehicle.edit');
 
     Route::get('/delivery-persons', [DriversController::class, 'index'])->name('delivery-persons');
     Route::get('/edit-delivery-person/{id}', [DriversController::class, 'edit'])->name('delivery-person.edit');
@@ -143,7 +122,6 @@ Route::middleware('auth')->group(function () {
 
     // deleting pending inbound
     Route::get('/inbound-destroy/{inbound}', [InboundController::class, 'destroy'])->name('inbound.destroy');
-
 });
 
 require __DIR__ . '/auth.php';

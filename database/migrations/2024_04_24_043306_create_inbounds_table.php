@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('driver_id');
             $table->string('vehicle_id');
             $table->json('products')->nullable();
+            $table->tinyInteger('with_invoice')->nullable();
+            $table->tinyInteger('bad_order')->nullable();
             $table->string('status', 10);
 
             $table->timestamps();

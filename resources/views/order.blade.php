@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('custom_css')
+@endsection
+
 @section('contents')
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -104,12 +107,12 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label class="form-label" for="equipment">Equipment</label>
-                                        <select class="form-control" name="equipment" id="equipment">
-                                            <option>option 1</option>
-                                            <option>option 2</option>
-                                            <option>option 3</option>
-                                            <option>option 4</option>
-                                            <option>option 5</option>
+                                        <select class="form-control equipment w-100" name="equipment" id="equipment">
+                                            @for ($i = 0; $i < 20; $i++)
+                                                @foreach ($equipment as $equip)
+                                                    <option value="{{ $equip->id }}">{{ $equip->type }}</option>
+                                                @endforeach
+                                            @endfor
                                         </select>
                                     </div>
                                 </div>
@@ -164,4 +167,8 @@
         </div>
     </section>
     <!-- /.content -->
+@endsection
+
+@section('custom_js')
+
 @endsection
