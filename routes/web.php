@@ -27,11 +27,6 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/price', function () {
-    $price = PriceService::getPrice('SC_RR');
-    dd($price);
-});
-
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -50,10 +45,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/users', [UsersController::class, 'index'])->name('users');
     Route::patch('/users', [UsersController::class, 'update'])->name('user.update');
 
+    Route::get('/userdelete/{id}', [UsersController::class, 'delete'])->name('user.delete');
+    Route::get('/usereset/{id}', [UsersController::class, 'resetPassword'])->name('user.reset');
+
     Route::get('/branch', [BranchesController::class, 'index'])->name('branch');
     Route::post('/branch/store', [BranchesController::class, 'store']);
     Route::get('/edit-branch/{id}', [BranchesController::class, 'edit'])->name('branch.edit');
-
 
     Route::get('/customers', [CustomersController::class, 'index'])->name('customers');
     Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customer.edit');
@@ -61,11 +58,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/customers/store', [CustomersController::class, 'store']);
     Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
     Route::put('/customers/{id}', [CustomersController::class, 'update'])->name('customer.update');
-    Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
-
-    // Route for fetching provinces based on the selected region
-    // Route::get('/get-provinces/{regionId}', [CustomersController::class, 'getProvinces']);
-// routes/web.php
 
     Route::get('/equipment', [EquipmentController::class, 'index'])->name('equipment.index');
     Route::post('/equipment/store', [EquipmentController::class, 'store'])->name('equipment.store');
@@ -73,21 +65,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/equipment/{id}', [EquipmentController::class, 'destroy'])->name('equipment.destroy');
     Route::get('/equipment/{id}/edit', [EquipmentController::class, 'edit'])->name('equipment.edit');
     Route::patch('/equipment/', [EquipmentController::class, 'update'])->name('equipment.update');
-    // Route::patch('/equipment/{id}', [EquipmentController::class, 'update'])->name('equipment.update');
-
 
     Route::get('/get-regions', [PhAddrController::class, 'getRegions']);
     Route::get('/get-provinces/{regionId}', [PhAddrController::class, 'getProvinces']);
     Route::get('/get-cities/{provinceId}', [PhAddrController::class, 'getCities']);
     Route::get('/get-brgy/{cityId}', [PhAddrController::class, 'getBrgy']);
 
-    // Route::get('/store-info', [StoreController::class, 'storeInfo']);
     Route::get('/store/create', [StoreController::class, 'create'])->name('store.create');
     Route::get('/store-info', [StoreController::class, 'index'])->name('store-info.index');
     Route::post('/store-info/store', [StoreController::class, 'store'])->name('store-info.store');
     Route::delete('/store-info/{id}', [StoreController::class, 'destroy'])->name('store-info.destroy');
     Route::patch('/store-info/update', [StoreController::class, 'update'])->name('store-info.update');
-
 
     Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
     Route::get('/vehicles/{id}/edit', [VehiclesController::class, 'edit'])->name('vehicle.edit');
@@ -96,9 +84,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/vehicles/{id}', [VehiclesController::class, 'update']);
     Route::delete('/vehicles/{id}', [VehiclesController::class, 'destroy'])->name('vehicle.destroy');
     Route::patch('/vehicles/', [VehiclesController::class, 'update'])->name('vehicle.update');
-
-    // Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
-    // Route::get('/edit-vehicle/{id}', [CustomersController::class, 'edit'])->name('vehicle.edit');
 
     Route::get('/delivery-persons', [DriversController::class, 'index'])->name('delivery-persons');
     Route::get('/edit-delivery-person/{id}', [DriversController::class, 'edit'])->name('delivery-person.edit');
@@ -109,7 +94,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/pricing', [PricesController::class, 'index'])->name('pricing.index');
     Route::post('/pricing/store', [PricesController::class, 'store']);
-
 
     Route::get('/product-types', [ProductTypeController::class, 'index'])->name('productType.index');
     Route::post('/product-types', [ProductTypeController::class, 'store'])->name('productType.store');
@@ -122,7 +106,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/product/{id}/toggle-status', [ProductController::class, 'toggleStatus'])->name('product.toggleStatus');
     Route::get('/product-type/{id}/toggle-status', [ProductTypeController::class, 'toggleStatus'])->name('productType.toggleStatus');
-
 
     Route::get('/orders', [InboundController::class, 'index'])->name('order.index');
 

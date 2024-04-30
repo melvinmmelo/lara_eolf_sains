@@ -15,7 +15,7 @@ class InboundProductsService extends Model
 
     public function __construct($products)
     {
-        $this->products = $products;
+        $this->products = json_decode($products, true);
     }
 
     public function isExist()

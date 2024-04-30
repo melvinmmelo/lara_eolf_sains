@@ -31,12 +31,12 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-
                             <th>Last Name</th>
                             <th>First Name</th>
                             <th>Contact</th>
                             <th>Address</th>
                             <th>Email</th>
+                            <th>Role</th>
                             <th>Created at</th>
                             <th></th>
                         </tr>
@@ -50,6 +50,12 @@
                                 <td>{{ $user->contact_no }}</td>
                                 <td>{{ $user->address }}</td>
                                 <td>{{ $user->email }}</td>
+                                <td>
+                                    @foreach ($user->roles as $role)
+                                        {{ $role->name }}
+                                    @endforeach
+
+                                </td>
                                 <td>{{ $user->created_at }}</td>
                                 <td>
                                     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
@@ -64,12 +70,12 @@
                                                 Actions
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                <a class="dropdown-item" href="#" data-toggle="modal"
-                                                    data-target="#editUser"
-                                                    onclick="setToUpdateUser('{{ $user->id }}','{{ $user->last_name }}','{{ $user->first_name }}','{{ $user->contact_no }}','{{ $user->address }}')">
+                                                <a class="dropdown-item"
+                                                    href="{{ route('user.delete', ['id' => $user->id]) }}"
+                                                    onclick="return deleteUser();">
                                                     Delete
                                                 </a>
-                                                <a class="dropdown-item" href="#">
+                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target='#resetUser' onclick="setUserToReset('{{ $user->id }}')">
                                                     Reset password
                                                 </a>
                                             </div>
@@ -80,12 +86,12 @@
                     </tbody>
                     <tfoot>
                         <tr>
-
                             <th>Last Name</th>
                             <th>First Name</th>
                             <th>Contact</th>
                             <th>Address</th>
                             <th>Email</th>
+                            <th>Role</th>
                             <th>Created at</th>
                             <th></th>
                         </tr>
@@ -156,6 +162,23 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <p class="text-smaller text-muted">The default password is Eolf@2024</p>
+
+                            <div class="form-group">
+                                <div class="row mb-2">
+                                    <div class="col-sm-12">
+                                        <label class="form-label" for="role">Role</label>
+                                        <select name="role" id="role" class="form-control">
+                                            @foreach ($roles as $role)
+                                                <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+
                             <!-- /.modal-content -->
                             <!-- /.modal-dialog -->
                         </div>
@@ -235,6 +258,19 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <div class="row mb-2">
+                                <div class="col-sm-12">
+                                    <label class="form-label" for="e_role">Role</label>
+                                    <select name="e_role" id="e_role" class="form-control">
+                                        @foreach ($roles as $role)
+                                            <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- /.modal-content -->
                     </div>
                     <!-- /.modal-dialog -->
@@ -244,22 +280,72 @@
                     </div>
                 </div>
                 <!-- /.modal -->
-
             </form>
         </div>
     </div>
     {{-- End Editing user modal --}}
+
+    {{-- Reset password user modal --}}
+    <div class="modal fade" id="resetUser">
+        <div class="modal-dialog">
+            <form id="resetForm" method="GET" action="">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Reset User Password</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <input type="hidden" class="form-control" name="ruser_id" id="ruser_id" required readonly>
+
+                        <div class="form-group">
+                            <div class="row mb-2">
+                                <div class="col-sm-12">
+                                    <label class="form-label" for="password">Confirm Password</label>
+                                    <input type="text" name="password" class="form-control"
+                                        value="Eolf@2024">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+                <!-- /.modal -->
+            </form>
+        </div>
+    </div>
+    {{-- End Reset password user modal --}}
 @endsection
 
 
 @section('custom_js')
     <script>
-        function setToUpdateUser(uid, ln, fn, con, addr) {
+        function setToUpdateUser(uid, ln, fn, con, addr, role) {
             document.getElementById("user_id").value = uid;
             document.getElementById("e_lname").value = ln;
             document.getElementById("e_fname").value = fn;
             document.getElementById("e_cno").value = con;
             document.getElementById("e_addr").value = addr;
+            document.getElementById("e_role").value = role;
+        }
+
+        function setUserToReset(uid) {
+            document.getElementById("resetForm").action = "/usereset/" + uid;
+            document.getElementById("ruser_id").value = uid;
+        }
+
+        function deleteUser() {
+            return confirm('Are you sure you want to delete this user?');
         }
     </script>
 @endsection
