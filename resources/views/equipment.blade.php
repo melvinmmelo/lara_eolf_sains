@@ -305,14 +305,14 @@
                                             <div class="card-body">
                                                 <div class="form-group">
                                                     <label class="form-label">Model/Serial</label>
-                                                    <select name="distributor" class="form-control d-block"
-                                                        id="cust_dist" onfocus="changeColor('cust_dist')"
-                                                        onblur="resetColor('cust_dist')">
-                                                        <option>option 1</option>
-                                                        <option>option 2</option>
-                                                        <option>option 3</option>
-                                                        <option>option 4</option>
-                                                        <option>option 5</option>
+                                                    <select class="form-control select2bs4" style="width: 100%;">
+                                                        <option selected="selected">Alabama</option>
+                                                        <option>Alaska</option>
+                                                        <option>California</option>
+                                                        <option>Delaware</option>
+                                                        <option>Tennessee</option>
+                                                        <option>Texas</option>
+                                                        <option>Washington</option>
                                                     </select>
                                                 </div>
 
