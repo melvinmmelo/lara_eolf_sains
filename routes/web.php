@@ -9,30 +9,25 @@ use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VehiclesController;
-use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\DriversController;
 use App\Http\Controllers\InboundController;
 use App\Http\Controllers\PricelevelsController;
 use App\Http\Controllers\PricesController;
-use App\Models\CompanyDetails;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StoreController;
-use App\Models\StoreInfo; // Import the StoreInfo model
-use App\Services\PriceService;
 use App\Http\Controllers\PhAddrController;
 use App\Http\Controllers\EquipmentController;
-
 
 Route::get('/', function () {
     return view('auth.login');
 });
 
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
+
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    });
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit'); // views
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update'); // backend
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // backend
@@ -45,9 +40,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/users', [UsersController::class, 'index'])->name('users');
     Route::patch('/users', [UsersController::class, 'update'])->name('user.update');
 
-    Route::get('/userdelete/{id}', [UsersController::class, 'delete'])->name('user.delete');
-    Route::get('/usereset/{id}', [UsersController::class, 'resetPassword'])->name('user.reset');
-
     Route::get('/branch', [BranchesController::class, 'index'])->name('branch');
     Route::post('/branch/store', [BranchesController::class, 'store']);
     Route::get('/edit-branch/{id}', [BranchesController::class, 'edit'])->name('branch.edit');
@@ -58,6 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/customers/store', [CustomersController::class, 'store']);
     Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
     Route::put('/customers/{id}', [CustomersController::class, 'update'])->name('customer.update');
+    Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
 
     Route::get('/equipment', [EquipmentController::class, 'index'])->name('equipment.index');
     Route::post('/equipment/store', [EquipmentController::class, 'store'])->name('equipment.store');
@@ -65,6 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/equipment/{id}', [EquipmentController::class, 'destroy'])->name('equipment.destroy');
     Route::get('/equipment/{id}/edit', [EquipmentController::class, 'edit'])->name('equipment.edit');
     Route::patch('/equipment/', [EquipmentController::class, 'update'])->name('equipment.update');
+
 
     Route::get('/get-regions', [PhAddrController::class, 'getRegions']);
     Route::get('/get-provinces/{regionId}', [PhAddrController::class, 'getProvinces']);
@@ -95,6 +89,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pricing', [PricesController::class, 'index'])->name('pricing.index');
     Route::post('/pricing/store', [PricesController::class, 'store']);
 
+
     Route::get('/product-types', [ProductTypeController::class, 'index'])->name('productType.index');
     Route::post('/product-types', [ProductTypeController::class, 'store'])->name('productType.store');
 
@@ -106,6 +101,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/product/{id}/toggle-status', [ProductController::class, 'toggleStatus'])->name('product.toggleStatus');
     Route::get('/product-type/{id}/toggle-status', [ProductTypeController::class, 'toggleStatus'])->name('productType.toggleStatus');
+
 
     Route::get('/orders', [InboundController::class, 'index'])->name('order.index');
 
@@ -126,7 +122,6 @@ Route::middleware('auth')->group(function () {
 
     // deleting pending inbound
     Route::get('/inbound-destroy/{inbound}', [InboundController::class, 'destroy'])->name('inbound.destroy');
-
 });
 
 require __DIR__ . '/auth.php';
