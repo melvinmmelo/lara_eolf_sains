@@ -81,6 +81,7 @@
         }
 
         .label-input {
+            width: 100%;
             border: none;
             background-color: transparent;
             font-size: 1rem;

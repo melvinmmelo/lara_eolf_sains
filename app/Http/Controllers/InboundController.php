@@ -3,19 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inbound;
-use App\Http\Requests\StoreInboundRequest;
-use App\Http\Requests\UpdateInboundRequest;
 use App\Models\Drivers;
 use App\Models\Equipment;
 use App\Models\pricelevels;
 use App\Models\prices;
 use App\Models\Product;
 use App\Models\ProductType;
-use App\Models\TempInbound;
 use App\Models\Vehicles;
 use App\Services\InboundProductsService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 
 class InboundController extends Controller
 {
@@ -92,7 +88,21 @@ class InboundController extends Controller
 
         $productTypes = ProductType::where('is_active', 'on')->get();
 
-        return view('ordering', compact('inboundId','productTypes', 'equipment', 'deliveryPerson', 'vehicle', 'defaultPriceLevel'));
+        // check if inbound has products
+        $inboundList = [];
+        $summary = [];
+
+        if($inbound->products) {
+            $inboundList = json_decode($inbound->products, true);
+
+            $inboundService = new InboundProductsService($inbound->products);
+
+            $summary = $inboundService->summary();
+
+            $summary = $inboundService->addSppbinSummary(); // ! you need to call summary() first before addSppbinSummary()
+        }
+
+        return view('ordering', compact('inboundId','productTypes', 'equipment', 'deliveryPerson', 'vehicle', 'defaultPriceLevel', 'inboundList', 'summary'));
 
     }
 
@@ -131,20 +141,18 @@ class InboundController extends Controller
         $product = Product::where('code', $code)->first();
         $price = prices::where('p_code', $code)->first();
 
-        $data = ['ptype_code' => $product->product_type_code, 'code' => $product->code, 'quantity' => 1, 'price' => $price->p_price, 'unit' => $price->unit];
+        $data = ['ptype_code' => $product->product_type_code, 'code' => $product->code, 'quantity' => 1, 'price' => $price->p_price, 'unit' => $price->p_unit, 'sppb' => $product->spoon_pcs_per_bag];
 
         $products = $inbound->products;
 
         $isExist = false;
 
-        // dd($products);
         $inProdService = new InboundProductsService($products);
 
         $products = $inProdService->addQty($code);
 
         $isExist = $inProdService->isExist();
 
-        $summary = array_values($inProdService->summary());
 
         if($isExist == false and $products) {
             array_push($products, $data);
@@ -156,7 +164,15 @@ class InboundController extends Controller
         $uiProducts = $products;
 
         $inbound->products = json_encode($products);
-        $inbound->save();
+
+        $summary = [];
+
+        if($inbound->save()){
+            $inProdService = new InboundProductsService($inbound->products);
+            $summary = $inProdService->summary();
+            $summary = $inProdService->addSppbinSummary();
+        }
+
 
         return view('inboundList', compact('inbound', 'uiProducts', 'summary'));
     }
@@ -227,7 +243,14 @@ class InboundController extends Controller
 
         $inbound->products = json_encode($products);
 
+        $summary = $inboundService->summary();
+
+        $summary = $inboundService->addSppbinSummary();
+
+
         $inbound->save();
+
+        return view('orderProductSum', compact('summary'));
 
     }
 

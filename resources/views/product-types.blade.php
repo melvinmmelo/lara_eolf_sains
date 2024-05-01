@@ -34,6 +34,7 @@
                             <th>Code</th>
                             <th>Name</th>
                             <th>Volume</th>
+                            <th>Spoon PCS/BAG</th>
                             <th>Active</th>
                             <th></th>
 
@@ -45,6 +46,7 @@
                                 <td>{{ $productType->code }}</td>
                                 <td>{{ $productType->name }}</td>
                                 <td>{{ $productType->volume }}</td>
+                                <td>{{ $productType->spoon_pcs_per_bag }}</td>
                                 <td>{{ $productType->is_active == 1 ? 'Yes' : 'No' }}</td>
                                 <td><a href="{{ route('productType.toggleStatus', ['id' => $productType->code]) }}"
                                         onclick="return confirmSetInactive();"><button type="submit"
@@ -59,6 +61,7 @@
                             <th>Code</th>
                             <th>Name</th>
                             <th>Volume</th>
+                            <th>Spoon PCS/BAG</th>
                             <th>Active</th>
                             <th></th>
 
@@ -116,7 +119,13 @@
                                             value="{{ old('volume') }}">
                                     </div>
 
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-3">
+                                        <label class="form-label" for="volume">Spoon PCS/Bag</label>
+                                        <input type="text" class="form-control" name="spoon_pcs_per_bag"
+                                            value="{{ old('spoon_pcs_per_bag') }}">
+                                    </div>
+
+                                    <div class="col-sm-3">
                                         <label class="form-label" for="status">Active</label>
                                         <br>
                                         <input type="checkbox" name="is_active" id="mySwitch" data-bootstrap-switch

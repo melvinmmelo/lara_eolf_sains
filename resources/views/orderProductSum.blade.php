@@ -1,0 +1,54 @@
+        <div id="orderProductSum">
+
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Product Type</th>
+                        <th>Quantity</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach ($summary as $summ)
+                        @if ($summ['ptype_code'] == 'SC')
+                            @php
+                                $spCnt = ($summ['total'] * $summ['sppb']) / 12;
+                            @endphp
+                        @elseif ($summ['ptype_code'] == 'MC')
+                            @php
+                                $spCnt = ($summ['total'] * $summ['sppb']) / 12;
+                            @endphp
+                        @elseif ($summ['ptype_code'] == 'BC')
+                            @php
+                                $spCnt = ($summ['total'] * $summ['sppb']) / 12;
+                            @endphp
+                        @endif
+
+                        @php
+                            $totalSpCount[] = $spCnt;
+                        @endphp
+                        <tr>
+                            <td>
+                                <input type="text" name="total" id="total" class="label-input"
+                                    value="{{ $summ['ptype_code'] }}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="total" id="total" class="label-input"
+                                    value="{{ $summ['total'] }}" readonly>
+                            </td>
+                        </tr>
+                    @endforeach
+
+
+                </tbody>
+
+            </table>
+
+
+            <div>
+                <label for="spoon_count">Spoon Count</label>
+                <input type="text" name="sum_spoon_count" id="sum_spoon_count" class="form-control w-100"
+                    value="{{ number_format(array_sum($totalSpCount)) }}" readonly>
+            </div>
+        </div>

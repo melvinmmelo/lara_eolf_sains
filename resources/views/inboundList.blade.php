@@ -48,11 +48,13 @@
                             </td>
                             <td class="align-middle">{{ $product['unit'] }}</td>
                             <td class="align-middle">
-                                <input type="text" name="pcodeprice" id="{{ $product['code']  .'_price'}}" class="label-input" value="{{ $product['price'] }}" readonly>
-                                </td>
+                                <input type="text" name="pcodeprice" id="{{ $product['code'] . '_price' }}"
+                                    class="label-input" value="{{ $product['price'] }}" readonly>
+                            </td>
                             <td class="align-middle">
                                 @php $totalAmount[] = $product['quantity'] * $product['price'] @endphp
-                                <input type="text" name="pcodeamt" id="{{ $product['code'] .'_amt' }}" class="label-input" value="{{ $product['quantity'] * $product['price'] }}" readonly>
+                                <input type="text" name="pcodeamt" id="{{ $product['code'] . '_amt' }}"
+                                    class="label-input" value="{{ $product['quantity'] * $product['price'] }}" readonly>
                             </td>
                         </tr>
                     @endforeach
@@ -66,7 +68,8 @@
                     <tr>
                         <td colspan="3"></td>
                         <td>Total:</td>
-                        <td><input type="text" name="total" id="total" class="label-input" value="{{ array_sum($totalAmount) }}" readonly></td>
+                        <td><input type="text" name="total" id="total" class="label-input"
+                                value="{{ array_sum($totalAmount) }}" readonly></td>
                     </tr>
                 </tfoot>
             </table>
@@ -74,24 +77,6 @@
     </div>
 
     <div class="col-sm-4">
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Product Type</th>
-                    <th>Quantity</th>
-
-                </tr>
-            </thead>
-            <tbody>
-
-                @foreach ($summary as $summ)
-                    <tr>
-                        <td>{{ $summ['ptype_code'] }} </td>
-                        <td>{{ $summ['total'] }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-
-        </table>
+        @include('orderProductSum')
     </div>
 </div>

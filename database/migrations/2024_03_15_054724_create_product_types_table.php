@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('code')->unique()->primary();
             $table->string('name');
             $table->string('volume');
+            $table->integer('spoon_pcs_per_bag');
             $table->string('bo_pricing')->nullable();
             $table->tinyInteger('is_active')->default(1);
             $table->timestamps();

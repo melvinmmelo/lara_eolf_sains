@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/users', [UsersController::class, 'index'])->name('users');
     Route::patch('/users', [UsersController::class, 'update'])->name('user.update');
+    Route::get('/user/{id}', [UsersController::class, 'delete'])->name('user.delete');
 
     Route::get('/branch', [BranchesController::class, 'index'])->name('branch');
     Route::post('/branch/store', [BranchesController::class, 'store']);
