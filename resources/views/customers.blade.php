@@ -123,7 +123,7 @@
                                 <!-- Your existing form -->
                                 <div class="form-group">
 
-                                    <div class="row mb-3">
+                                    <!-- <div class="row mb-3">
                                         <div class="col-sm-6">
                                             <label class="form-label" for="cust_dist">Distributor</label>
                                             <select name="distributor" class="form-control d-block" id="cust_dist"
@@ -135,8 +135,8 @@
                                                 <option>option 5</option>
                                             </select>
                                         </div>
-                                    </div>
-
+                                    </div> -->
+                                    <input type="hidden" name ="distributor" value="n/a">
 
                                     <div class="form-group">
                                         <div class="row mb-3">
@@ -298,7 +298,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <div class="row mb-3">
                                     <label for="distributor">Distributor:</label>
                                     <select name="distributor" class="form-control d-block" id="distributor"
@@ -310,7 +310,8 @@
                                         <option>option 5</option>
                                     </select>
 
-                                </div>
+                                </div> -->
+                                <input type="hidden" name ="distributor" id="distributor>
                                 <div class="form-group">
                                     <div class="row mb-3">
                                         <div class="col-sm-4">

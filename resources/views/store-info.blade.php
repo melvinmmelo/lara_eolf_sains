@@ -82,7 +82,12 @@
 
 
                                 <td>
-
+                                <!-- <a class="btn btn-success btn-sm"
+                                        href="/equipment-store?store_id={{ $storeinfo->id }}&store_name={{ $storeinfo->storename }}"
+                                        role="button">Equipment Info</a> -->
+                                        <a class="btn btn-success btn-sm"
+                                        href="/equipment-store?store_id={{ $storeinfo->id }}&store_name={{ $storeinfo->storename }}&customer_id={{ request()->input('customer_id') }}&customer_name={{ request()->input('customer_name') }}"
+                                        role="button">Equipment Info</a>
 
                                     <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
                                         data-target="#editStoreModal"
@@ -247,8 +252,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <hr>
-                                    <div class="form-group">
+                                    <!-- <hr> -->
+                                    <!-- <div class="form-group">
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <label for="remarks">Equipment List</label>
@@ -268,7 +273,7 @@
 
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="modal-footer">
                                     <!-- <button type="submit" class="btn btn-success swalDefaultSuccess">Save

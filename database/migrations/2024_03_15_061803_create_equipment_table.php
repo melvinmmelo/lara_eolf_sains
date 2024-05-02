@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('distributor')->nullable(); // Distributor of the equipment
             $table->date('date_delivered')->nullable(); // Date the equipment was delivered
             $table->date('date_purchased')->nullable(); // Date the equipment was purchased
+            $table->string('status')->default('available'); // Date the equipment was purchased
+            
             $table->timestamps();
         });
     }
