@@ -42,8 +42,8 @@
 
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link" onclick="toggleTreeview();">
-                        <i class="nav-icon fas fa-user-tie" style="color: #74C0FC;"></i>
+                    <a href="#" class="nav-link" onclick="toggleTreeview('dashboard-treeview','dashboard');">
+                        <i class="nav-icon fas fa-gauge" style="color: #74C0FC;"></i>
                         <p>
                             Dashboard
                             <i class="right"></i>
@@ -153,17 +153,45 @@
                             </a>
                         </li>
 
-                        <li>
-                            <a href="{{ route('order.index') }}" class="nav-link">
-                                <i class="fas fa-file-invoice nav-icon"></i>
-                                <p>Order</p>
-                            </a>
-                        </li>
                     </ul>
                 </li>
 
 
 
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="toggleTreeview('order-treeview', '/orders');">
+                        <i class="nav-icon fas fa-file-invoice" style="color: #74C0FC;"></i>
+                        <p>
+                            Order
+                            <i class="right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview" id="order-treeview">
+                        <li>
+
+                        </li>
+
+
+                    </ul>
+                </li>
+
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="toggleTreeview('order-treeview', '/inventory');">
+                        <i class="nav-icon fas fa-receipt" style="color: #74C0FC;"></i>
+                        <p>
+                            Inventory
+                            <i class="right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview" id="order-treeview">
+                        <li>
+
+                        </li>
+
+
+                    </ul>
+                </li>
 
 
 
@@ -213,7 +241,6 @@
         if (storedContent) {
             sidebarContent.innerHTML = storedContent;
         }
-
     });
 
     // Store content in session storage before page is unloaded (refreshed)
@@ -225,15 +252,17 @@
     });
 
 
-    function toggleTreeview() {
-        // Collapse all treeviews except for the Dashboard treeview
-        $('.nav-treeview').not('#dashboard-treeview').hide();
-        // Toggle the Dashboard treeview
-        $('#dashboard-treeview').toggle();
+    function toggleTreeview(treeviewId, redirectUrl) {
+        // Collapse all treeviews except for the specified one
+        $('.nav-treeview').not('#' + treeviewId).hide();
+        // Toggle the specified treeview
+        $('#' + treeviewId).toggle();
 
-        // Redirect to the dashboard page after a short delay
-        setTimeout(function() {
-            window.location.href = '/dashboard';
-        }, 0); // Adjust the delay (in milliseconds) as needed
+        // Redirect to the specified URL after a short delay
+        if (redirectUrl) {
+            setTimeout(function() {
+                window.location.href = redirectUrl;
+            }, 0); // Adjust the delay (in milliseconds) as needed
+        }
     }
 </script>
