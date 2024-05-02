@@ -147,7 +147,7 @@
                         </li>
 
                         <li>
-                            <a href="equipment" class="nav-link">
+                            <a href="{{ route('equipment.index') }}" class="nav-link">
                                 <i class="fas fa-box nav-icon"></i>
                                 <p>Equipment</p>
                             </a>
@@ -241,12 +241,6 @@
         if (storedContent) {
             sidebarContent.innerHTML = storedContent;
         }
-
-        // // Remove the session item and revert to original state after 1 second
-        // setTimeout(function() {
-        //     sessionStorage.removeItem('nav-item');
-        //     // Revert to original state here if needed
-        // }, 1000); // 1000 milliseconds = 1 second
     });
 
     // Store content in session storage before page is unloaded (refreshed)

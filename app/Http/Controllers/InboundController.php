@@ -3,19 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inbound;
-use App\Http\Requests\StoreInboundRequest;
-use App\Http\Requests\UpdateInboundRequest;
 use App\Models\Drivers;
 use App\Models\Equipment;
 use App\Models\pricelevels;
 use App\Models\prices;
 use App\Models\Product;
 use App\Models\ProductType;
-use App\Models\TempInbound;
 use App\Models\Vehicles;
 use App\Services\InboundProductsService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 
 class InboundController extends Controller
 {
@@ -25,13 +21,11 @@ class InboundController extends Controller
      */
     public function index()
     {
-
-
         $equipment = Equipment::all();
         $drivers = Drivers::all();
         $vehicles = Vehicles::all();
 
-        $inbounds = Inbound::with('driver','vehicle')->get();
+        $inbounds = Inbound::with('driver', 'vehicle')->get();
 
         // dd($equipment);
 
@@ -67,7 +61,6 @@ class InboundController extends Controller
 
 
         return redirect()->route('order.processTwo', ['inbound' => $inboundId]);
-
     }
 
     public function orderProcessTwoUI($inbound) // adding products in order
@@ -79,12 +72,12 @@ class InboundController extends Controller
 
         $inbound = Inbound::find($inboundId);
 
-        if($inbound->status == 'Completed') {
+        if ($inbound->status == 'Completed') {
             session()->forget('inboundId');
             return redirect()->route('order.index')->withErrors('Your order has been completed.');
         }
 
-        $equipment = Equipment::select('name')->find($inbound->equipment_id);
+        $equipment = Equipment::select('serial_no')->find($inbound->equipment_id);
         $deliveryPerson = Drivers::select('name')->find($inbound->driver_id);
         $vehicle = Vehicles::select('plateno')->find($inbound->vehicle_id);
 
@@ -92,8 +85,21 @@ class InboundController extends Controller
 
         $productTypes = ProductType::where('is_active', 'on')->get();
 
-        return view('ordering', compact('inboundId','productTypes', 'equipment', 'deliveryPerson', 'vehicle', 'defaultPriceLevel'));
+        // check if inbound has products
+        $inboundList = [];
+        $summary = [];
 
+        if ($inbound->products) {
+            $inboundList = json_decode($inbound->products, true);
+
+            $inboundService = new InboundProductsService($inbound->products);
+
+            $summary = $inboundService->summary();
+
+            $summary = $inboundService->addSppbinSummary(); // ! you need to call summary() first before addSppbinSummary()
+        }
+
+        return view('ordering', compact('inboundId', 'productTypes', 'equipment', 'deliveryPerson', 'vehicle', 'defaultPriceLevel', 'inboundList', 'summary'));
     }
 
     // ajax products list
@@ -104,14 +110,20 @@ class InboundController extends Controller
 
         $products = [];
 
+
         // get the latest price
         foreach ($allProducts as $product) {
 
             $price = prices::where('p_code', $product->code)->orderBy('created_at', 'desc')->first();
 
-            $t = ['code' => $product->code, 'price' => $product->price, 'unit' => "0", 'qty' => $price->p_quant];
+            if ($price == null) {
+                break;
+            } else {
 
-            array_push($products, $t);
+                $t = ['code' => $product->code, 'price' => $product->price, 'unit' => "0", 'qty' => $price->p_quant];
+
+                array_push($products, $t);
+            }
         }
 
         // dd($products);
@@ -123,7 +135,7 @@ class InboundController extends Controller
     // per product na ito ha, ito na yung table ng product, yung may details
     public function ajaxInboundList($code)
     {
-        if(session()->has('inboundId')) {
+        if (session()->has('inboundId')) {
             $inboundId = session()->get('inboundId');
         }
 
@@ -131,24 +143,22 @@ class InboundController extends Controller
         $product = Product::where('code', $code)->first();
         $price = prices::where('p_code', $code)->first();
 
-        $data = ['ptype_code' => $product->product_type_code, 'code' => $product->code, 'quantity' => 1, 'price' => $price->p_price, 'unit' => $price->unit];
+        $data = ['ptype_code' => $product->product_type_code, 'code' => $product->code, 'quantity' => 1, 'price' => $price->p_price, 'unit' => $price->p_unit, 'sppb' => $product->spoon_pcs_per_bag];
 
         $products = $inbound->products;
 
         $isExist = false;
 
-        // dd($products);
         $inProdService = new InboundProductsService($products);
 
         $products = $inProdService->addQty($code);
 
         $isExist = $inProdService->isExist();
 
-        $summary = array_values($inProdService->summary());
 
-        if($isExist == false and $products) {
+        if ($isExist == false and $products) {
             array_push($products, $data);
-        }else if($products == null) {
+        } else if ($products == null) {
             $products = [];
             array_push($products, $data);
         }
@@ -156,7 +166,15 @@ class InboundController extends Controller
         $uiProducts = $products;
 
         $inbound->products = json_encode($products);
-        $inbound->save();
+
+        $summary = [];
+
+        if ($inbound->save()) {
+            $inProdService = new InboundProductsService($inbound->products);
+            $summary = $inProdService->summary();
+            $summary = $inProdService->addSppbinSummary();
+        }
+
 
         return view('inboundList', compact('inbound', 'uiProducts', 'summary'));
     }
@@ -176,8 +194,6 @@ class InboundController extends Controller
 
         $inbound->bad_order = $request->bad_order == 'on' ? 1 : 0;
 
-
-
         $inbound->save();
 
         $updatingData = [];
@@ -194,7 +210,6 @@ class InboundController extends Controller
             $message = 'Success';
 
             $updatingData[] = ['code' => $product['code'], 'message' => $message];
-
         }
 
         session()->forget('inboundId');
@@ -204,12 +219,11 @@ class InboundController extends Controller
 
 
         return redirect()->route('order.index')->with('success', 'Your order has been completed.');
-
     }
 
     public function update(Request $request, $inbound, $code, $action)
     {
-        if(session()->has('inboundId')) {
+        if (session()->has('inboundId')) {
             $inboundId = session()->get('inboundId');
         } else {
             return redirect()->route('order.index');
@@ -219,16 +233,22 @@ class InboundController extends Controller
 
         $inboundService = new InboundProductsService($inbound->products);
 
-        if($action == 'add'){
+        if ($action == 'add') {
             $products = $inboundService->addQty($code);
-        }else{
+        } else {
             $products = $inboundService->minQty($code);
         }
 
         $inbound->products = json_encode($products);
 
+        $summary = $inboundService->summary();
+
+        $summary = $inboundService->addSppbinSummary();
+
+
         $inbound->save();
 
+        return view('orderProductSum', compact('summary'));
     }
 
     // create delete inbound function
@@ -236,6 +256,5 @@ class InboundController extends Controller
     {
         $inbound = Inbound::destroy($inbound);
         return redirect()->route('order.index')->with('success', 'An inbound has been deleted.');
-
     }
 }

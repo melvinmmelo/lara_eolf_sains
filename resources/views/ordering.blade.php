@@ -1,11 +1,6 @@
 @extends('layouts.app')
 
 @section('custom_css')
-
-<link href="https://cdn.jsdelivr.net/npm/select2@4.0.9/dist/css/select2.min.css" rel="stylesheet">
-
-
-
     <style>
         .input-number {
             text-align: center;
@@ -50,6 +45,11 @@
         .product-list {
             max-height: 250px;
             overflow: auto;
+        }
+
+        .form-control:disabled,
+        .form-control[readonly] {
+            background-color: #edf4fc;
         }
     </style>
 @endsection
@@ -104,26 +104,28 @@
                             <div class="col-sm-3">
                                 <label class="form-label" for="price-quantity">Price Level</label>
                                 <input type="text" class="form-control" id="#" name="#"
-                                    value="{{ $defaultPriceLevel->pl_name }}">
+                                    value="{{ $defaultPriceLevel->pl_name }}" readonly>
                             </div>
 
                             <div class="col-sm-3">
                                 <label class="form-label" for="price-quantity">Delivery Person</label>
                                 <input type="text" class="form-control" id="#" name="#"
-                                    value="{{ $deliveryPerson->name }}">
+                                    value="{{ $deliveryPerson->name }}" readonly>
                             </div>
 
                             <div class="col-sm-3">
                                 <label class="form-label" for="price-quantity">Vehicle</label>
                                 <input type="text" class="form-control" id="#" name="#"
-                                    value="{{ $vehicle->plateno }}">
+                                    value="{{ $vehicle->plateno }}" readonly>
                             </div>
 
                             <div class="col-sm-3">
-                                <label class="form-label" for="price-quantity">Equipment</label>
+                                <label class="form-label" for="price-quantity">Customer</label>
                                 <input type="text" class="form-control" id="#" name="#"
-                                    value="{{ $equipment }}">
+                                    value="{{ $equipment->serial_no }}" readonly>
                             </div>
+
+
                         </div>
                     </div>
 
@@ -141,14 +143,51 @@
                             </div>
                         </div>
 
+                        <div class="col-sm-1">
+                            <div style="min-height: 520px;">
+                                <label class="form-label" for="button types">Quantity</label>
+                                <div class="">
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(1)">1</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(2)">2</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(3)">3</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(4)">4</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(5)">5</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(10)">10</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(15)">15</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(20)">20</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(25)">25</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(30)">30</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(35)">35</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(40)">40</button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="col-sm-2">
+                            <label for="qty_toadd">Quantity</label>
+                            <div>
+                                <input type="text" name="qty_toadd" id="qty_toadd" class="form-control" value="1">
+                            </div>
                             <div class="product-list" id="productsListContainer">
                                 <div id="productsList"></div>
                             </div>
                         </div>
 
-                        <div class="col-sm-8">
+                        <div class="col-sm-7">
                             <div>
+
                                 <div id="inboundList">
                                     <div class="row">
                                         <div class="col-sm-8">
@@ -164,19 +203,74 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr>
-                                                            <td colspan="5" class="d-md-none"><strong>Items</strong></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="align-middle text-center" colspan="5">No data
-                                                                available.
-                                                            </td>
-                                                        </tr>
+                                                        @if (count($inboundList))
+                                                            @foreach ($inboundList as $product)
+                                                                <tr>
+                                                                    <td class="align-middle">{{ $product['code'] }} </td>
+                                                                    <td class="align-middle">
 
-                                                        <!-- Additional rows here -->
-                                                        <tr>
-                                                            <td colspan="5" class="d-md-none"><strong>Total</strong></td>
-                                                        </tr>
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <button type="button"
+                                                                                    class="quantity-left-minus btn btn-danger btn-number"
+                                                                                    data-type="minus" data-field=""
+                                                                                    onclick="minusQtyProduct('{{ $product['code'] }}', 'min');">
+                                                                                    <span class="fas fa-minus"></span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <input type="text"
+                                                                                id="{{ $product['code'] }}"
+                                                                                name="quantity"
+                                                                                class="form-control input-number"
+                                                                                value="{{ $product['quantity'] }}"
+                                                                                min="1" max="99999">
+                                                                            <div class="input-group-append">
+                                                                                <button type="button"
+                                                                                    class="quantity-right-plus btn btn-success btn-number"
+                                                                                    data-type="plus" data-field=""
+                                                                                    onclick="plusQtyProduct('{{ $product['code'] }}', 'add')">
+                                                                                    <span class="fas fa-plus"></span>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="align-middle">{{ $product['unit'] }}</td>
+                                                                    <td class="align-middle">
+                                                                        <input type="text" name="pcodeprice"
+                                                                            id="{{ $product['code'] . '_price' }}"
+                                                                            class="label-input"
+                                                                            value="{{ $product['price'] }}" readonly>
+                                                                    </td>
+                                                                    <td class="align-middle">
+                                                                        @php $totalAmount[] = $product['quantity'] * $product['price'] @endphp
+                                                                        <input type="text" name="pcodeamt"
+                                                                            id="{{ $product['code'] . '_amt' }}"
+                                                                            class="label-input"
+                                                                            value="{{ $product['quantity'] * $product['price'] }}"
+                                                                            readonly>
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        @else
+                                                            <tr>
+                                                                <td colspan="5" class="d-md-none">
+                                                                    <strong>Items</strong>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="align-middle text-center" colspan="5">No
+                                                                    data
+                                                                    available.
+                                                                </td>
+                                                            </tr>
+
+                                                            <!-- Additional rows here -->
+                                                            <tr>
+                                                                <td colspan="5" class="d-md-none">
+                                                                    <strong>Total</strong>
+                                                                </td>
+                                                            </tr>
+                                                        @endif
                                                     </tbody>
                                                     <tfoot class="desktop-view">
                                                         <tr>
@@ -190,21 +284,30 @@
                                         </div>
 
                                         <div class="col-sm-4">
-                                            <table class="table table-bordered table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Product Type</th>
-                                                        <th>Quantity</th>
+                                            @if (count($summary))
+                                                @include('orderProductSum')
+                                            @else
+                                                <table class="table table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Product Type</th>
+                                                            <th>Quantity</th>
 
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td colspan="2" class="text-center">No data available</td>
-                                                    </tr>
-                                                </tbody>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
 
-                                            </table>
+
+
+
+                                                        <tr>
+                                                            <td colspan="2" class="text-center">No data available</td>
+                                                        </tr>
+                                                    </tbody>
+
+                                                </table>
+                                            @endif
+
                                         </div>
                                     </div>
                                 </div>
@@ -230,8 +333,8 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                    <a href="{{ route('inbound.destroy', ['inbound' => $inboundId]) }}" onclick="return discardIn()"><button
-                            type="button" class="btn btn-danger">Discard</button></a>
+                    <a href="{{ route('inbound.destroy', ['inbound' => $inboundId]) }}"
+                        onclick="return discardIn()"><button type="button" class="btn btn-danger">Discard</button></a>
                     <button type="submit" class="btn btn-success">Save</button>
                 </div>
                 <!-- /.card-footer-->
@@ -244,22 +347,22 @@
 @endsection
 
 @section('custom_js')
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.9/js/select2.min.js" integrity="sha512-9p/L4acAjbjIaaGXmZf0Q2bV42HetlCLbv8EP0z3rLbQED2TAFUlDvAezy7kumYqg5T8jHtDdlm1fgIsr5QzKg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.9/js/select2.min.js"
+        integrity="sha512-9p/L4acAjbjIaaGXmZf0Q2bV42HetlCLbv8EP0z3rLbQED2TAFUlDvAezy7kumYqg5T8jHtDdlm1fgIsr5QzKg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
 
-        $("#equipment").select2({
-            placeholder: "Select a state",
-            allowClear: true
-        });
+        function setQty(qty) {
+            document.getElementById("qty_toadd").value = qty;
+        }
+
 
 
         function discardIn() {
-            return confirm('Are you sure you want to discard this inbound?');
+            return confirm('Are you sure you want to discard this order?');
         }
+
         $(document).ready(function() {
             document.getElementById("productsListContainer").display = "none";
         });
@@ -384,7 +487,7 @@
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
-                        // document.getElementById("inboundProdInput").innerHTML = this.responseText;
+                        document.getElementById("orderProductSum").innerHTML = this.responseText;
                     }
                 };
                 xmlhttp.open("GET", "/inbound-updateProdQty/" + inboundId + "/" + productCode + "/" + action, true);

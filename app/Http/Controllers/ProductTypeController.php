@@ -35,13 +35,15 @@ class ProductTypeController extends Controller
             'code' => 'string|unique:product_types|max:190',
             'name' => 'required|string|max:190',
             'volume' => 'required|string|max:190',
-            'is_active' => 'required',
+            'spoon_pcs_per_bag' => 'integer|required',
+            'is_active' => '',
         ]);
 
         $productType = new ProductType();
         $productType->code = $request->code;
         $productType->name = $request->name;
         $productType->volume = $request->volume;
+        $productType->spoon_pcs_per_bag = $request->spoon_pcs_per_bag;
         $productType->is_active = $request->is_active;
         $productType->save();
 

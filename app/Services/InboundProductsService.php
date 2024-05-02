@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\prices;
+use App\Models\ProductType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,6 +12,8 @@ class InboundProductsService extends Model
 
     protected $products;
     protected $isExist = false;
+    protected $summary = null;
+
 
     public function __construct($products)
     {
@@ -27,8 +29,6 @@ class InboundProductsService extends Model
         // check if product is already in the list
         if ($this->products) {
             foreach ($this->products as $key => $value) {
-
-                $price = prices::where('product_code', $newProductCode)->first();
 
                 if ($value['code'] == $newProductCode) {
                     $this->products[$key]['quantity'] += 1;
@@ -64,12 +64,25 @@ class InboundProductsService extends Model
         foreach ($this->products as $product) {
             $ptypeCode = $product['ptype_code'];
             if (isset($summary[$ptypeCode])) {
-                $summary[$ptypeCode]['total']++;
+                $summary[$ptypeCode]['total'] += $product['quantity'];
             } else {
-                $summary[$ptypeCode] = ['ptype_code' => $ptypeCode, 'total' => 1];
+                $summary[$ptypeCode] = ['ptype_code' => $ptypeCode,'total' => $product['quantity']];
             }
         }
 
+
+        return $this->summary = $summary;
+    }
+
+    public function addSppbinSummary()
+    {
+
+        $summary = array_values($this->summary);
+
+        foreach ($summary as $key => $value) {
+            $product = ProductType::where('code', $value['ptype_code'])->first();
+            $summary[$key]['sppb'] = $product->spoon_pcs_per_bag;
+        }
 
         return $summary;
     }
