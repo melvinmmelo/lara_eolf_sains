@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\prices;
 use App\Models\ProductType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -30,8 +29,6 @@ class InboundProductsService extends Model
         // check if product is already in the list
         if ($this->products) {
             foreach ($this->products as $key => $value) {
-
-                $price = prices::where('product_code', $newProductCode)->first();
 
                 if ($value['code'] == $newProductCode) {
                     $this->products[$key]['quantity'] += 1;

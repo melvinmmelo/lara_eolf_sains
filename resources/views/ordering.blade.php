@@ -120,10 +120,12 @@
                             </div>
 
                             <div class="col-sm-3">
-                                <label class="form-label" for="price-quantity">Equipment</label>
+                                <label class="form-label" for="price-quantity">Customer</label>
                                 <input type="text" class="form-control" id="#" name="#"
-                                    value="{{ $equipment }}" readonly>
+                                    value="{{ $equipment->serial_no }}" readonly>
                             </div>
+
+
                         </div>
                     </div>
 
@@ -141,14 +143,51 @@
                             </div>
                         </div>
 
+                        <div class="col-sm-1">
+                            <div style="min-height: 520px;">
+                                <label class="form-label" for="button types">Quantity</label>
+                                <div class="">
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(1)">1</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(2)">2</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(3)">3</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(4)">4</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(5)">5</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(10)">10</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(15)">15</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(20)">20</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(25)">25</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(30)">30</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(35)">35</button>
+                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                        onclick="setQty(40)">40</button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="col-sm-2">
+                            <label for="qty_toadd">Quantity</label>
+                            <div>
+                                <input type="text" name="qty_toadd" id="qty_toadd" class="form-control" value="1">
+                            </div>
                             <div class="product-list" id="productsListContainer">
                                 <div id="productsList"></div>
                             </div>
                         </div>
 
-                        <div class="col-sm-8">
+                        <div class="col-sm-7">
                             <div>
+
                                 <div id="inboundList">
                                     <div class="row">
                                         <div class="col-sm-8">
@@ -180,7 +219,8 @@
                                                                                 </button>
                                                                             </div>
                                                                             <input type="text"
-                                                                                id="{{ $product['code'] }}" name="quantity"
+                                                                                id="{{ $product['code'] }}"
+                                                                                name="quantity"
                                                                                 class="form-control input-number"
                                                                                 value="{{ $product['quantity'] }}"
                                                                                 min="1" max="99999">
@@ -312,7 +352,11 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
-        const spoonDivisor = 12;
+
+        function setQty(qty) {
+            document.getElementById("qty_toadd").value = qty;
+        }
+
 
 
         function discardIn() {

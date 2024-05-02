@@ -13,20 +13,25 @@
                     @foreach ($summary as $summ)
                         @if ($summ['ptype_code'] == 'SC')
                             @php
-                                $spCnt = ($summ['total'] * $summ['sppb']) / 12;
+                                $spCnt = ($summ['total'] * $summ['sppb']);
+                                $spCnt2 = $spCnt / 12;
                             @endphp
                         @elseif ($summ['ptype_code'] == 'MC')
                             @php
-                                $spCnt = ($summ['total'] * $summ['sppb']) / 12;
+                                $spCnt = ($summ['total'] * $summ['sppb']);
+                                $spCnt2 = $spCnt / 12;
                             @endphp
                         @elseif ($summ['ptype_code'] == 'BC')
                             @php
-                                $spCnt = ($summ['total'] * $summ['sppb']) / 12;
+                                $spCnt = ($summ['total'] * $summ['sppb']);
+                                $spCnt2 = $spCnt / 12;
                             @endphp
                         @endif
 
                         @php
                             $totalSpCount[] = $spCnt;
+                            $totalSpCountSet[] = $spCnt2;
+
                         @endphp
                         <tr>
                             <td>
@@ -50,5 +55,9 @@
                 <label for="spoon_count">Spoon Count</label>
                 <input type="text" name="sum_spoon_count" id="sum_spoon_count" class="form-control w-100"
                     value="{{ number_format(array_sum($totalSpCount)) }}" readonly>
+
+                    <label for="sum_set_spoon">Total</label>
+                <input type="text" name="sum_set_spoon" id="sum_set_spoon" class="form-control w-100"
+                    value="{{ number_format(array_sum($totalSpCountSet)) }}" readonly>
             </div>
         </div>
