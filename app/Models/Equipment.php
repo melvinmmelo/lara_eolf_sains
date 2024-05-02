@@ -22,4 +22,21 @@ class Equipment extends Model
         'date_purchased',
         // Add other attributes here as needed
     ];
+
+    public function equipmentStore()
+    {
+        return $this->hasOne(EquipmentStore::class);
+    }
+
+    // create a scope for available equipment
+    public function scopeAvailable($query)
+    {
+        return $query->where('status', 'available');
+    }
+
+    // CREATE A SCOPE FOR NOT AVAILABLE EQUIPMENT
+    public function scopeNotAvailable($query)
+    {
+        return $query->where('status', 'added');
+    }
 }

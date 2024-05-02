@@ -75,13 +75,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Small Cup',
                 'volume' => '150',
                 'bo_pricing' => '',
-                'is_active' => 'on',
-            ],
-            [
-                'code' => "MC",
-                'name' => 'Medium Cup',
-                'volume' => '150',
-                'bo_pricing' => '',
+                'spoon_pcs_per_bag' => '60',
                 'is_active' => 'on',
             ]
         );
@@ -92,6 +86,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Medium Cup',
                 'volume' => '150',
                 'bo_pricing' => '',
+                'spoon_pcs_per_bag' => '35',
                 'is_active' => 'on',
             ]
         );

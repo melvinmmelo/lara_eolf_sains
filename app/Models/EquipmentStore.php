@@ -9,4 +9,6 @@ class EquipmentStore extends Model
 {
     protected $table = 'equipment_store';
     use HasFactory;
+
+
 }

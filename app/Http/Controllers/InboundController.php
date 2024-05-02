@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Inbound;
 use App\Models\Drivers;
 use App\Models\Equipment;
+use App\Models\EquipmentStore;
 use App\Models\pricelevels;
 use App\Models\prices;
 use App\Models\Product;
@@ -21,13 +22,13 @@ class InboundController extends Controller
      */
     public function index()
     {
-        $equipment = Equipment::all();
         $drivers = Drivers::all();
+
         $vehicles = Vehicles::all();
 
         $inbounds = Inbound::with('driver', 'vehicle')->get();
 
-        // dd($equipment);
+        $equipment = Equipment::notAvailable()->get();
 
         return view('order', compact('equipment', 'drivers', 'vehicles', 'inbounds'));
     }

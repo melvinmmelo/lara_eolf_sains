@@ -37,6 +37,7 @@ class CustomersController extends Controller
             'lastname' => 'required',
             'firstname' => 'required',
             'companyname' => 'required',
+            'middlename' => 'required',
             // Add more validation rules as needed
         ]);
 

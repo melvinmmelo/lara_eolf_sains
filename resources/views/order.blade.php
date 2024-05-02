@@ -107,12 +107,10 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label class="form-label" for="equipment">Equipment</label>
-                                        <select class="form-control equipment w-100" name="equipment" id="equipment">
-                                            @for ($i = 0; $i < 20; $i++)
+                                        <select class="form-control equipment w-100 select2bs4" name="equipment" id="equipment">
                                                 @foreach ($equipment as $equip)
                                                     <option value="{{ $equip->id }}">{{ $equip->type }}</option>
                                                 @endforeach
-                                            @endfor
                                         </select>
                                     </div>
                                 </div>
