@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\PhAddrController;
 use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\EquipmentStoreController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -71,6 +72,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/store-info/store', [StoreController::class, 'store'])->name('store-info.store');
     Route::delete('/store-info/{id}', [StoreController::class, 'destroy'])->name('store-info.destroy');
     Route::patch('/store-info/update', [StoreController::class, 'update'])->name('store-info.update');
+
+    Route::get('/equipment-store', [EquipmentStoreController::class, 'index'])->name('equipment-store.index');
+    Route::get('/equipment-store/create', [EquipmentStoreController::class, 'create'])->name('equipment-store.create');
+    Route::post('/equipment-storestore', [EquipmentStoreController::class, 'store'])->name('equipment-store.store');
+    Route::patch('/equipment-store/update', [EquipmentStoreController::class, 'update'])->name('store-info.update');
+    Route::delete('/equipment-store/{id}', [EquipmentStoreController::class, 'destroy'])->name('equipment-store.destroy');
 
     Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
     Route::get('/vehicles/{id}/edit', [VehiclesController::class, 'edit'])->name('vehicle.edit');
