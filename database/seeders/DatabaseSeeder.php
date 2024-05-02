@@ -76,7 +76,7 @@ class DatabaseSeeder extends Seeder
                 'volume' => '150',
                 'bo_pricing' => '',
                 'spoon_pcs_per_bag' => '60',
-                'is_active' => 'on',
+                'is_active' => '1',
             ]
         );
 
@@ -87,20 +87,20 @@ class DatabaseSeeder extends Seeder
                 'volume' => '150',
                 'bo_pricing' => '',
                 'spoon_pcs_per_bag' => '35',
-                'is_active' => 'on',
+                'is_active' => '1',
             ]
         );
 
         ProductVariant::create([
             'code' => "RR",
             'name' => 'Rocky Road',
-            'is_active' => 'on',
+            'is_active' => '1',
         ]);
 
         ProductVariant::create([
             'code' => "SB",
             'name' => 'Strawberry',
-            'is_active' => 'on',
+            'is_active' => '1',
         ]);
 
         Product::create(
@@ -108,7 +108,7 @@ class DatabaseSeeder extends Seeder
                 'code' => "SC_RR",
                 'product_type_code' => 'SC',
                 'product_variant_code' => 'RR',
-                'is_active' => 'on',
+                'is_active' => '1',
             ]
         );
 
@@ -117,7 +117,7 @@ class DatabaseSeeder extends Seeder
                 'code' => "SC_SB",
                 'product_type_code' => 'SC',
                 'product_variant_code' => 'SB',
-                'is_active' => 'on',
+                'is_active' => '1',
             ]
         );
 
@@ -126,7 +126,7 @@ class DatabaseSeeder extends Seeder
                 'code' => "MC_SB",
                 'product_type_code' => 'MC',
                 'product_variant_code' => 'SB',
-                'is_active' => 'on',
+                'is_active' => '1',
             ]
         );
 

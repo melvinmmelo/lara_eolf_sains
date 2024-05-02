@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('contact_no');
             $table->string('position'); // admin, secretary, driver
-            $table->tinyInteger('status')->default('active'); // active, resigned, retired, awol, ban
+            $table->string('status')->default('active'); // active, resigned, retired, awol, ban
             $table->timestamps();
         });
     }

@@ -29,6 +29,16 @@ Route::middleware('auth')->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
+
+    Route::get('/inventory', function () {
+        return view('inventory');
+    });
+
+    Route::get('/inventory-items', function () {
+        return view('inventory-items');
+    });
+
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit'); // views
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update'); // backend
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // backend
@@ -51,12 +61,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
     Route::post('/customers/store', [CustomersController::class, 'store']);
     Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
-    Route::put('/customers/{id}', [CustomersController::class, 'update'])->name('customer.update');
+    // Route::put('/customers/{id}', [CustomersController::class, 'update'])->name('customer.update');
     Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
 
     Route::get('/equipment', [EquipmentController::class, 'index'])->name('equipment.index');
     Route::post('/equipment/store', [EquipmentController::class, 'store'])->name('equipment.store');
-    Route::put('/equipment/{id}', [EquipmentController::class, 'update'])->name('equipment.update');
+    // Route::put('/equipment/{id}', [EquipmentController::class, 'update'])->name('equipment.update');
     Route::delete('/equipment/{id}', [EquipmentController::class, 'destroy'])->name('equipment.destroy');
     Route::get('/equipment/{id}/edit', [EquipmentController::class, 'edit'])->name('equipment.edit');
     Route::patch('/equipment/', [EquipmentController::class, 'update'])->name('equipment.update');
@@ -76,7 +86,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/equipment-store', [EquipmentStoreController::class, 'index'])->name('equipment-store.index');
     Route::get('/equipment-store/create', [EquipmentStoreController::class, 'create'])->name('equipment-store.create');
     Route::post('/equipment-storestore', [EquipmentStoreController::class, 'store'])->name('equipment-store.store');
-    Route::patch('/equipment-store/update', [EquipmentStoreController::class, 'update'])->name('store-info.update');
+    Route::patch('/equipment-store/update', [EquipmentStoreController::class, 'update'])->name('equistore-info.update');
     Route::delete('/equipment-store/{id}', [EquipmentStoreController::class, 'destroy'])->name('equipment-store.destroy');
 
     Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
