@@ -18,8 +18,6 @@ use App\Http\Controllers\StoreController;
 use App\Http\Controllers\PhAddrController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentStoreController;
-use App\Models\Equipment;
-use App\Models\EquipmentStore;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -39,6 +37,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/inventory-items', function () {
         return view('inventory-items');
     });
+
+    Route::get('/loading-ticket', function () {
+        return view('loading-ticket');
+    });
+
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit'); // views
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update'); // backend

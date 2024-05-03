@@ -1,3 +1,10 @@
+<style>
+    .sidebar-light-primary {
+        background-color: #f3f7fd;
+    }
+</style>
+
+
 <aside class="main-sidebar sidebar-light-primary">
     <!-- elevation-4 shadow for sidebar -->
     <!-- Brand Logo -->

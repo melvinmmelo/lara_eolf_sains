@@ -177,6 +177,8 @@
                             <div>
                                 <input type="text" name="qty_toadd" id="qty_toadd" class="form-control"
                                     value="1">
+                                <input type="text" name="qty_toadd" id="qty_toadd" class="form-control"
+                                    value="1">
                             </div>
                             <div class="product-list" id="productsListContainer">
                                 <div id="productsList"></div>
@@ -228,6 +230,7 @@
                                                                                 min="1" max="99999">
                                                                             <div class="input-group-append">
                                                                                 <button type="button"
+                                                                                    class="quantity-right-plus btn btn-success btn-number btn-xs"
                                                                                     class="quantity-right-plus btn btn-success btn-number btn-xs"
                                                                                     data-type="plus" data-field=""
                                                                                     onclick="plusQtyProduct('{{ $product['code'] }}', 'add')">

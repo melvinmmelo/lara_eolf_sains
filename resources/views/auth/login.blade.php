@@ -8,7 +8,8 @@
 
     <!-- Theme style -->
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }} ">
     <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }} ">
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
@@ -19,7 +20,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"></script>
     <!-- Include SweetAlert and Toast JavaScript -->
 
-
+    <style>
+        .login-page {
+            background-image: url("{{ asset('img/eolfbg.png') }}");
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
 
 </head>
 
@@ -48,7 +55,11 @@
                         </div>
 
                     </div>
-                    <p class="text-red-500 text-xs italic">@error('email') {{ $message }} @enderror</p>
+                    <p class="text-red-500 text-xs italic">
+                        @error('email')
+                            {{ $message }}
+                        @enderror
+                    </p>
 
                     <div class="input-group mb-3">
                         <input type="password" name="password" required autocomplete="current-password"
