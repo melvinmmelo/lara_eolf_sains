@@ -178,7 +178,8 @@
                         <div class="col-sm-2">
                             <label for="qty_toadd">Quantity</label>
                             <div>
-                                <input type="text" name="qty_toadd" id="qty_toadd" class="form-control" value="1">
+                                <input type="text" name="qty_toadd" id="qty_toadd" class="form-control"
+                                    value="1">
                             </div>
                             <div class="product-list" id="productsListContainer">
                                 <div id="productsList"></div>
@@ -212,7 +213,7 @@
                                                                         <div class="input-group">
                                                                             <div class="input-group-prepend">
                                                                                 <button type="button"
-                                                                                    class="quantity-left-minus btn btn-danger btn-number"
+                                                                                    class="quantity-left-minus btn btn-danger btn-number btn-xs"
                                                                                     data-type="minus" data-field=""
                                                                                     onclick="minusQtyProduct('{{ $product['code'] }}', 'min');">
                                                                                     <span class="fas fa-minus"></span>
@@ -226,7 +227,7 @@
                                                                                 min="1" max="99999">
                                                                             <div class="input-group-append">
                                                                                 <button type="button"
-                                                                                    class="quantity-right-plus btn btn-success btn-number"
+                                                                                    class="quantity-right-plus btn btn-success btn-number btn-xs"
                                                                                     data-type="plus" data-field=""
                                                                                     onclick="plusQtyProduct('{{ $product['code'] }}', 'add')">
                                                                                     <span class="fas fa-plus"></span>
@@ -352,7 +353,6 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
-
         function setQty(qty) {
             document.getElementById("qty_toadd").value = qty;
         }

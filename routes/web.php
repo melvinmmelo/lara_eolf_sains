@@ -38,6 +38,10 @@ Route::middleware('auth')->group(function () {
         return view('inventory-items');
     });
 
+    Route::get('/loading-ticket', function () {
+        return view('loading-ticket');
+    });
+
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit'); // views
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update'); // backend
