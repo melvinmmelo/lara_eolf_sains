@@ -111,6 +111,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/product-types', [ProductTypeController::class, 'index'])->name('productType.index');
     Route::post('/product-types', [ProductTypeController::class, 'store'])->name('productType.store');
 
+    Route::patch('/product-types', [ProductTypeController::class, 'update'])->name('productType.update');
+
+
     Route::get('/product-variants', [ProductVariantController::class, 'index'])->name('productVariant.index');
     Route::post('/product-variants', [ProductVariantController::class, 'store'])->name('productVariant.store');
 

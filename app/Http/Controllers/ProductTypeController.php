@@ -35,8 +35,8 @@ class ProductTypeController extends Controller
             'code' => 'string|unique:product_types|max:190',
             'name' => 'required|string|max:190',
             'volume' => 'required|string|max:190',
-            'spoon_pcs_per_bag' => 'integer|required',
-            'is_active' => '',
+            'spoon_pcs_per_bag' => 'integer',
+            'is_active' => 'nullable',
         ]);
 
         $productType = new ProductType();
@@ -44,7 +44,7 @@ class ProductTypeController extends Controller
         $productType->name = $request->name;
         $productType->volume = $request->volume;
         $productType->spoon_pcs_per_bag = $request->spoon_pcs_per_bag;
-        $productType->is_active = $request->is_active;
+        $productType->is_active = $request->is_active ?? 0;
         $productType->save();
 
         return redirect()->back()->with('sucess', 'Data saved!');
@@ -78,9 +78,26 @@ class ProductTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
         //
+        $request->validate([
+            'e_code' => 'string|max:190',
+            'e_name' => 'required|string|max:190',
+            'e_volume' => 'required|string|max:190',
+            'e_spoon_pcs_per_bag' => 'integer',
+            'e_is_active' => 'nullable',
+        ]);
+
+        $productType = ProductType::find($request->e_code)->first();
+        $productType->name = $request->e_name;
+        $productType->volume = $request->e_volume;
+        $productType->spoon_pcs_per_bag = $request->e_spoon_pcs_per_bag;
+        $productType->is_active = !$request->e_is_active;
+        $productType->save();
+
+        return redirect()->back()->with('sucess', 'Data saved!');
+
     }
 
     /**
