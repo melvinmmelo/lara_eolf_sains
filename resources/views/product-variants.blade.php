@@ -33,6 +33,7 @@
                         <tr>
                             <th>Code</th>
                             <th>Name</th>
+                            <th></th>
 
                         </tr>
                     </thead>
@@ -41,6 +42,11 @@
                             <tr>
                                 <td>{{ $productVariant->code }}</td>
                                 <td>{{ $productVariant->name }}</td>
+                                <td>
+                                    <a href="#" data-toggle="modal" data-target="#modalEdit"
+                                        onclick="setToUpdateProduct('{{ $productVariant->code }}','{{ $productVariant->name }}')"><button
+                                            type="submit" class="btn btn-sm btn-primary">Edit</button></a>
+                                </td>
                             </tr>
                         @endforeach
 
@@ -49,6 +55,7 @@
                         <tr>
                             <th>Code</th>
                             <th>Name</th>
+                            <th></th>
 
                         </tr>
                     </tfoot>
@@ -109,10 +116,61 @@
 
             </form>
         </div>
+
+
+        <div class="modal fade" id="modalEdit">
+            <div class="modal-dialog">
+                <form method="POST" action="{{ route('productVariant.update') }}">
+                    @csrf
+                    @method('PATCH')
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Edit product</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="row mb-2">
+                                    <div class="col-sm-3">
+                                        <label class="form-label" for="code">Code</label>
+                                        <input type="text" class="form-control" name="e_code"
+                                            value="{{ old('code') }}" required readonly>
+
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <label class="form-label" for="name">Name</label>
+                                        <input type="text" class="form-control" name="e_name"
+                                            value="{{ old('name') }}" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Save changes</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+
+            </form>
         </div>
 
     </section>
 
 
     <!-- /.content -->
+@endsection
+
+@section('custom_js')
+    <script>
+        function setToUpdateProduct(code, name) {
+            document.querySelector('input[name="e_code"]').value = code;
+            document.querySelector('input[name="e_name"]').value = name;
+        }
+    </script>
 @endsection

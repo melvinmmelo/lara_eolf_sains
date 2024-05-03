@@ -63,7 +63,7 @@ class ProductController extends Controller
 
     public function toggleStatus(int $id)
     {
-        $Product = Product::find($id)->first();
+        $Product = Product::where('id',$id)->first();
         $Product->is_active = !$Product->is_active;
         $Product->save();
 

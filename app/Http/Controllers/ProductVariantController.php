@@ -64,6 +64,16 @@ class ProductVariantController extends Controller
     public function update(Request $request, ProductVariant $productVariant)
     {
         //
+        $request->validate([
+            'e_code' => 'string|max:190',
+            'e_name' => 'required|string|max:190',
+        ]);
+
+        $pvar = ProductVariant::find($request->e_code)->first();
+        $pvar->name = $request->e_name;
+        $pvar->save();
+
+        return redirect()->back()->with('sucess', 'Data saved!');
     }
 
     /**
