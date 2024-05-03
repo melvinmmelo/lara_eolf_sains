@@ -5,8 +5,9 @@
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Product</th>
-                        <th>Quantity</th>
+                        <th style="width:20%">Quantity</th>
                         <th>Unit</th>
                         <th>Unit Price</th>
                         <th>Amount</th>
@@ -23,12 +24,12 @@
 
                     @foreach ($uiProducts as $product)
                         <tr>
+                            <td class="align-middle"><button type="button" class="btn btn-xs btn-danger" onclick="deleteProduct('{{ $inboundId }}', `{{ $product['code'] }}`)"><i class="fas fa-trash"></i></button></td>
                             <td class="align-middle">{{ $product['code'] }} </td>
                             <td class="align-middle">
-
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <button type="button" class="quantity-left-minus btn btn-danger btn-number"
+                                        <button type="button" class="quantity-left-minus btn btn-warning btn-number btn-xs"
                                             data-type="minus" data-field=""
                                             onclick="minusQtyProduct('{{ $product['code'] }}', 'min');">
                                             <span class="fas fa-minus"></span>
@@ -38,7 +39,7 @@
                                         class="form-control input-number" value="{{ $product['quantity'] }}"
                                         min="1" max="99999">
                                     <div class="input-group-append">
-                                        <button type="button" class="quantity-right-plus btn btn-success btn-number"
+                                        <button type="button" class="quantity-right-plus btn btn-success btn-number btn-xs"
                                             data-type="plus" data-field=""
                                             onclick="plusQtyProduct('{{ $product['code'] }}', 'add')">
                                             <span class="fas fa-plus"></span>
@@ -66,7 +67,7 @@
                 </tbody>
                 <tfoot class="desktop-view">
                     <tr>
-                        <td colspan="3"></td>
+                        <td colspan="4"></td>
                         <td>Total:</td>
                         <td><input type="text" name="total" id="total" class="label-input"
                                 value="{{ array_sum($totalAmount) }}" readonly></td>

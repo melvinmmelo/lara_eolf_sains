@@ -8,7 +8,7 @@ class StoreInfo extends Model
 {
     // Your model code here
     protected $table = 'storeinfo';
-    
+
     protected $fillable = [
         'customer_id',
         // Add other fillable fields here
@@ -25,4 +25,9 @@ class StoreInfo extends Model
         'length_stay',
         'remarks',
     ];
+
+    public function customer()
+    {
+        return $this->belongsTo(Customers::class);
+    }
 }

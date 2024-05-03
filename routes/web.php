@@ -18,6 +18,8 @@ use App\Http\Controllers\StoreController;
 use App\Http\Controllers\PhAddrController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentStoreController;
+use App\Models\Equipment;
+use App\Models\EquipmentStore;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -37,7 +39,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/inventory-items', function () {
         return view('inventory-items');
     });
-
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit'); // views
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update'); // backend
@@ -135,7 +136,9 @@ Route::middleware('auth')->group(function () {
 
     // ajax
     Route::get('/productsin/{code}', [InboundController::class, 'ajaxProductList'])->name('products.ajaxProductList');
-    Route::get('/inboundin/{code}', [InboundController::class, 'ajaxInboundList'])->name('inbound.inboundList');
+    Route::get('/inboundin/{code}/{qty}', [InboundController::class, 'ajaxInboundList'])->name('inbound.inboundList');
+    Route::get('/delete-inboundin/{inboundId}/{pcode}', [InboundController::class, 'deleteAInbound'])->name('inbound.deleteAInbound');
+
 
     // update if done na mag add ng productin
     Route::post('/inbound', [InboundController::class, 'store'])->name('inbound.store');
@@ -149,3 +152,4 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
+require __DIR__ . '/ajaxreq.php';

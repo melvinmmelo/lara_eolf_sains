@@ -232,11 +232,11 @@
                                             <div class="col-sm-6">
                                                 <label for="length_stay">Length of Stay:</label>
                                                 <select class="form-control" id="length_stay" name="length_stay">
-                                                    <option>option 1</option>
-                                                    <option>option 2</option>
-                                                    <option>option 3</option>
-                                                    <option>option 4</option>
-                                                    <option>option 5</option>
+                                                    <option value="1">option 1</option>
+                                                    <option value="2">option 2</option>
+                                                    <option value="3">option 3</option>
+                                                    <option value="4">option 4</option>
+                                                    <option value="5">option 5</option>
                                                 </select>
                                             </div>
                                         </div>

@@ -10,4 +10,9 @@ class Customers extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->firstname} {$this->lastname}";
+    }
 }

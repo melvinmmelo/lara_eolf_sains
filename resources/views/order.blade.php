@@ -107,10 +107,12 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label class="form-label" for="equipment">Equipment</label>
-                                        <select class="form-control equipment w-100 select2bs4" name="equipment" id="equipment">
-                                                @foreach ($equipment as $equip)
-                                                    <option value="{{ $equip->id }}">{{ $equip->type }}</option>
-                                                @endforeach
+                                        <select class="form-control equipment w-100 select2bs4" name="equipment"
+                                            id="equipment" onchange="setCustomerName(this.value)">
+                                            <option value="">--Select--</option>
+                                            @foreach ($equipment as $equip)
+                                                <option value="{{ $equip->id }}">{{ $equip->type }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -168,5 +170,26 @@
 @endsection
 
 @section('custom_js')
+    <script>
 
+        function setCustomerName(str) {
+            if(str == '') {
+                return;
+            }
+
+            console.log('here');
+            var equipment = document.getElementById('equipment').value;
+            document.getElementById('customer').value = equipment;
+
+            // get to get who owns the equipment
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById('customer').value = this.responseText;
+                }
+            };
+            xmlhttp.open("GET", "/get-equipmentcustomerstore/" + str, true);
+            xmlhttp.send();
+        }
+    </script>
 @endsection

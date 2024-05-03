@@ -2,6 +2,10 @@
 
 @section('custom_css')
     <style>
+
+        .fixBtn{
+            min-width: 100px;
+        }
         .input-number {
             text-align: center;
         }
@@ -122,17 +126,15 @@
                             <div class="col-sm-3">
                                 <label class="form-label" for="price-quantity">Customer</label>
                                 <input type="text" class="form-control" id="#" name="#"
-                                    value="{{ $equipment->serial_no }}" readonly>
+                                    value="{{ $equipmentSerial }} {{ $customerName }}" readonly>
                             </div>
-
-
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
 
-                            <div class="product-list">
+                            <div class="product-list" style="min-height: 520px;">
                                 <label class="form-label" for="button types">Types</label>
                                 <div class="">
                                     @foreach ($productTypes as $type)
@@ -147,47 +149,42 @@
                             <div style="min-height: 520px;">
                                 <label class="form-label" for="button types">Quantity</label>
                                 <div class="">
-                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
-                                        onclick="setQty(1)">1</button>
-                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
-                                        onclick="setQty(2)">2</button>
-                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
-                                        onclick="setQty(3)">3</button>
-                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
-                                        onclick="setQty(4)">4</button>
-                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
-                                        onclick="setQty(5)">5</button>
-                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                    <button type="button" class="btn btn-primary w-100 mb-2" onclick="setQty(1)">1</button>
+                                    <button type="button" class="btn btn-primary w-100 mb-2" onclick="setQty(2)">2</button>
+                                    <button type="button" class="btn btn-primary w-100 mb-2" onclick="setQty(3)">3</button>
+                                    <button type="button" class="btn btn-primary w-100 mb-2" onclick="setQty(4)">4</button>
+                                    <button type="button" class="btn btn-primary w-100 mb-2" onclick="setQty(5)">5</button>
+                                    <button type="button" class="btn btn-primary w-100 mb-2"
                                         onclick="setQty(10)">10</button>
-                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                    <button type="button" class="btn btn-primary w-100 mb-2"
                                         onclick="setQty(15)">15</button>
-                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                    <button type="button" class="btn btn-primary w-100 mb-2"
                                         onclick="setQty(20)">20</button>
-                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                    <button type="button" class="btn btn-primary w-100 mb-2"
                                         onclick="setQty(25)">25</button>
-                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                    <button type="button" class="btn btn-primary w-100 mb-2"
                                         onclick="setQty(30)">30</button>
-                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                    <button type="button" class="btn btn-primary w-100 mb-2"
                                         onclick="setQty(35)">35</button>
-                                    <button type="button" class="btn btn-primary btn-xs w-100 mb-2"
+                                    <button type="button" class="btn btn-primary w-100 mb-2"
                                         onclick="setQty(40)">40</button>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                             <label for="qty_toadd">Quantity</label>
                             <div>
-                                <input type="text" name="qty_toadd" id="qty_toadd" class="form-control" value="1">
+                                <input type="text" name="qty_toadd" id="qty_toadd" class="form-control"
+                                    value="1">
                             </div>
                             <div class="product-list" id="productsListContainer">
                                 <div id="productsList"></div>
                             </div>
                         </div>
 
-                        <div class="col-sm-7">
+                        <div class="col-sm-9">
                             <div>
-
                                 <div id="inboundList">
                                     <div class="row">
                                         <div class="col-sm-8">
@@ -195,8 +192,9 @@
                                                 <table class="table table-bordered table-striped">
                                                     <thead>
                                                         <tr>
+                                                            <th></th>
                                                             <th>Product</th>
-                                                            <th>Quantity</th>
+                                                            <th style="width:20%">Quantity</th>
                                                             <th>Unit</th>
                                                             <th>Unit Price</th>
                                                             <th>Amount</th>
@@ -206,13 +204,17 @@
                                                         @if (count($inboundList))
                                                             @foreach ($inboundList as $product)
                                                                 <tr>
-                                                                    <td class="align-middle">{{ $product['code'] }} </td>
+                                                                    <td class="align-middle"><button type="button"
+                                                                            class="btn btn-xs btn-danger"
+                                                                            onclick="deleteProduct('{{ $inboundId }}', `{{ $product['code'] }}`)"><i
+                                                                                class="fas fa-trash"></i></button></td>
+                                                                    <td class="align-middle"> {{ $product['code'] }} </td>
                                                                     <td class="align-middle">
-
                                                                         <div class="input-group">
+
                                                                             <div class="input-group-prepend">
                                                                                 <button type="button"
-                                                                                    class="quantity-left-minus btn btn-danger btn-number"
+                                                                                    class="quantity-left-minus btn btn-warning btn-number btn-xs"
                                                                                     data-type="minus" data-field=""
                                                                                     onclick="minusQtyProduct('{{ $product['code'] }}', 'min');">
                                                                                     <span class="fas fa-minus"></span>
@@ -226,13 +228,14 @@
                                                                                 min="1" max="99999">
                                                                             <div class="input-group-append">
                                                                                 <button type="button"
-                                                                                    class="quantity-right-plus btn btn-success btn-number"
+                                                                                    class="quantity-right-plus btn btn-success btn-number btn-xs"
                                                                                     data-type="plus" data-field=""
                                                                                     onclick="plusQtyProduct('{{ $product['code'] }}', 'add')">
                                                                                     <span class="fas fa-plus"></span>
                                                                                 </button>
                                                                             </div>
                                                                         </div>
+
                                                                     </td>
                                                                     <td class="align-middle">{{ $product['unit'] }}</td>
                                                                     <td class="align-middle">
@@ -274,7 +277,7 @@
                                                     </tbody>
                                                     <tfoot class="desktop-view">
                                                         <tr>
-                                                            <td colspan="3"></td>
+                                                            <td colspan="4"></td>
                                                             <td>Total:</td>
                                                             <td></td>
                                                         </tr>
@@ -352,6 +355,20 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
+        function deleteProduct(inboundId, pcode) {
+            if (inboundId == "" || pcode == "") {
+                return;
+            } else {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("inboundList").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET", "/delete-inboundin/" + inboundId + "/" + pcode, true);
+                xmlhttp.send();
+            }
+        }
 
         function setQty(qty) {
             document.getElementById("qty_toadd").value = qty;
@@ -419,6 +436,7 @@
         }
 
         function addProduct(code) {
+            const qty = document.getElementById("qty_toadd").value;
             if (code == "") {
                 document.getElementById("inboundList").innerHTML = "";
                 return;
@@ -429,7 +447,7 @@
                         document.getElementById("inboundList").innerHTML = this.responseText;
                     }
                 };
-                xmlhttp.open("GET", "/inboundin/" + code, true);
+                xmlhttp.open("GET", "/inboundin/" + code + "/" + qty, true);
                 xmlhttp.send();
             }
         }

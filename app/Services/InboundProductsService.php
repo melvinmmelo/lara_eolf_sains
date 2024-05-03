@@ -25,13 +25,29 @@ class InboundProductsService extends Model
         return $this->isExist;
     }
 
-    public function addQty($newProductCode){
+    // delete product from the list
+    public function deleteProduct($productCode)
+    {
+        // check if product is already in the list
+        if ($this->products) {
+            foreach ($this->products as $key => $value) {
+                if ($value['code'] == $productCode) {
+                    unset($this->products[$key]);
+                    $this->isExist = true;
+                }
+            }
+        }
+
+        return $this->products;
+    }
+
+    public function addQty($newProductCode, $plusQty){
         // check if product is already in the list
         if ($this->products) {
             foreach ($this->products as $key => $value) {
 
                 if ($value['code'] == $newProductCode) {
-                    $this->products[$key]['quantity'] += 1;
+                    $this->products[$key]['quantity'] += $plusQty;
                     $this->isExist = true;
                 }
             }
@@ -70,13 +86,15 @@ class InboundProductsService extends Model
             }
         }
 
+        $this->summary = $summary;
 
-        return $this->summary = $summary;
+        return $this->summary;
     }
 
     public function addSppbinSummary()
     {
 
+        if ($this->summary == null) return [];
         $summary = array_values($this->summary);
 
         foreach ($summary as $key => $value) {

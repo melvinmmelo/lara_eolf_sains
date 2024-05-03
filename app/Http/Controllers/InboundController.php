@@ -17,6 +17,35 @@ use Illuminate\Http\Request;
 class InboundController extends Controller
 {
 
+    // delete product from the list
+    public function deleteAInbound($inboundId, $pcode)
+    {
+        $inbound = Inbound::find($inboundId);
+
+        $inboundService = new InboundProductsService($inbound->products);
+
+        $products = $inboundService->deleteProduct($pcode);
+
+
+        $uiProducts = $products;
+
+        $summary = [];
+
+        if($inbound->products){
+
+            $summary = $inboundService->summary();
+
+            $summary = $inboundService->addSppbinSummary(); // ! you need to call summary() first before addSppbinSummary()
+        }
+
+        $inbound->products = json_encode($products);
+
+        $inbound->save();
+
+        return view('inboundList', compact('inboundId', 'inbound', 'uiProducts', 'summary'));
+
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -78,13 +107,15 @@ class InboundController extends Controller
             return redirect()->route('order.index')->withErrors('Your order has been completed.');
         }
 
-        $equipment = Equipment::select('serial_no')->find($inbound->equipment_id);
+        $equipmentStore = EquipmentStore::find($inbound->equipment_id);
+        $customerName = $equipmentStore->store->customer->fullName;
+        $equipmentSerial = $equipmentStore->equipment->serial_no;
         $deliveryPerson = Drivers::select('name')->find($inbound->driver_id);
         $vehicle = Vehicles::select('plateno')->find($inbound->vehicle_id);
 
         $defaultPriceLevel = pricelevels::where('pl_status', 'Active')->select('pl_name')->first();
 
-        $productTypes = ProductType::where('is_active', 'on')->get();
+        $productTypes = ProductType::where('is_active', 1)->get();
 
         // check if inbound has products
         $inboundList = [];
@@ -100,7 +131,8 @@ class InboundController extends Controller
             $summary = $inboundService->addSppbinSummary(); // ! you need to call summary() first before addSppbinSummary()
         }
 
-        return view('ordering', compact('inboundId', 'productTypes', 'equipment', 'deliveryPerson', 'vehicle', 'defaultPriceLevel', 'inboundList', 'summary'));
+
+        return view('ordering', compact('inboundId', 'productTypes', 'deliveryPerson', 'vehicle', 'defaultPriceLevel', 'inboundList', 'summary', 'customerName', 'equipmentSerial'));
     }
 
     // ajax products list
@@ -134,7 +166,7 @@ class InboundController extends Controller
 
     // ajax inbound products
     // per product na ito ha, ito na yung table ng product, yung may details
-    public function ajaxInboundList($code)
+    public function ajaxInboundList($code, $qty = 1)
     {
         if (session()->has('inboundId')) {
             $inboundId = session()->get('inboundId');
@@ -152,7 +184,7 @@ class InboundController extends Controller
 
         $inProdService = new InboundProductsService($products);
 
-        $products = $inProdService->addQty($code);
+        $products = $inProdService->addQty($code, $qty);
 
         $isExist = $inProdService->isExist();
 
@@ -177,7 +209,7 @@ class InboundController extends Controller
         }
 
 
-        return view('inboundList', compact('inbound', 'uiProducts', 'summary'));
+        return view('inboundList', compact('inboundId','inbound', 'uiProducts', 'summary'));
     }
 
     public function store(Request $request)
@@ -200,6 +232,7 @@ class InboundController extends Controller
         $updatingData = [];
 
         $inboundProducts = json_decode($inbound->products, true);
+
         foreach ($inboundProducts as $product) {
             $message = 'Failed';
 
@@ -235,7 +268,7 @@ class InboundController extends Controller
         $inboundService = new InboundProductsService($inbound->products);
 
         if ($action == 'add') {
-            $products = $inboundService->addQty($code);
+            $products = $inboundService->addQty($code, 1);
         } else {
             $products = $inboundService->minQty($code);
         }
