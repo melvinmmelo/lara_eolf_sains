@@ -43,6 +43,15 @@ Route::middleware('auth')->group(function () {
     });
 
 
+    Route::get('/customersinfo', function () {
+        return view('customersinfo');
+    });
+
+    Route::get('/branch-select', function () {
+        return view('branch-select');
+    });
+
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit'); // views
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update'); // backend
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // backend
