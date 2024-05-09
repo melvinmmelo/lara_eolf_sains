@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\EquipmentStore; // Import the EquipmentStore model
 use App\Models\Equipment; // Import the Equipment model
+use App\Models\Customers as Customer;
 use Illuminate\Http\Request;
 
 
@@ -41,10 +42,11 @@ class EquipmentStoreController extends Controller
 
         // Pass the data to the view
         return view('equipment-store', compact('equipments', 'availableEquipments'));
+        // return view('customers', compact('availableEquipments'));
     }
 
-        
 
+    
 
 
     /**
