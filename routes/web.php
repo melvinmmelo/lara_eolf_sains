@@ -19,6 +19,7 @@ use App\Http\Controllers\PhAddrController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentStoreController;
 
+
 Route::get('/', function () {
     return view('auth.login');
 });
@@ -43,9 +44,9 @@ Route::middleware('auth')->group(function () {
     });
 
 
-    Route::get('/customersinfo', function () {
-        return view('customersinfo');
-    });
+    // Route::get('/customersinfo', function () {
+    //     return view('customersinfo');
+    // });
 
     Route::get('/branch-select', function () {
         return view('branch-select');
@@ -72,10 +73,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/customers', [CustomersController::class, 'index'])->name('customers');
     Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customer.edit');
     Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
-    Route::post('/customers/store', [CustomersController::class, 'store']);
+    Route::post('/customers/store', [CustomersController::class, 'store'])->name('customers.store'); // Corrected route definition
     Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
-    // Route::put('/customers/{id}', [CustomersController::class, 'update'])->name('customer.update');
+    
     Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
+    Route::post('/customers/store', [CustomersController::class, 'store'])->name('customers.store');
+    
+
+    // Route::get('/customersinfo', [CustomersController::class, 'index'])->name('customersinfo');
+
+
 
     Route::get('/equipment', [EquipmentController::class, 'index'])->name('equipment.index');
     Route::post('/equipment/store', [EquipmentController::class, 'store'])->name('equipment.store');
@@ -83,6 +90,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/equipment/{id}', [EquipmentController::class, 'destroy'])->name('equipment.destroy');
     Route::get('/equipment/{id}/edit', [EquipmentController::class, 'edit'])->name('equipment.edit');
     Route::patch('/equipment/', [EquipmentController::class, 'update'])->name('equipment.update');
+    // Route::get('/equipment-store', [EquipmentStoreController::class, 'index'])->name('equipment-store.index');
 
 
     Route::get('/get-regions', [PhAddrController::class, 'getRegions']);

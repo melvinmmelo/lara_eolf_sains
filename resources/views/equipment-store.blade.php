@@ -7,7 +7,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                <h1>Customer: <b>{{ request()->query('customer_name') }}</b> &nbsp;&nbsp;&nbsp;  Store: <b>{{ request()->query('store_name') }}</b></h1>
+                <h4>Customer: <b>{{ request()->query('customer_name') }}</b> <br> Store: <b>{{ request()->query('store_name') }}</b></h4>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -115,7 +115,7 @@
             <!-- /.card-footer-->
         </div>
         <!-- /.card -->
-        <div class="modal fade" id="modal-equipment">
+<div class="modal fade" id="modal-equipment">
     <div class="modal-dialog modal-lg" >
         <div class="modal-content">
             <div class="modal-header">
