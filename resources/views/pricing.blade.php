@@ -30,8 +30,8 @@
                         <tr>
                             <th>Pricing Level</th>
                             <th>Product Code</th>
-                            <th>Quantity</th>
                             <th>Unit</th>
+                            <th>Quantity</th>
                             <th>Price</th>
 
                         </tr>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\BranchesController;
 use App\Http\Controllers\CompanyDetailsController;
 use App\Http\Controllers\CustomersController;
+use App\Http\Controllers\DeliveryPurchaseReceiptController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ProductVariantController;
@@ -26,14 +27,23 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
 
+    Route::get('/inventory', [DeliveryPurchaseReceiptController::class, 'index'])->name('delivery-purchase-receipts.index');
+    Route::post('/delivery-purchase-receipts', [DeliveryPurchaseReceiptController::class, 'store'])->name('delivery-purchase-receipts.store');
+
+    Route::get('/dpr-products/{dprId}', [DeliveryPurchaseReceiptController::class, 'products'])->name('drp.products');
+    Route::post('/dpr-product/store', [DeliveryPurchaseReceiptController::class, 'storeProduct'])->name('dpr-product.store');
+
+    Route::get('/dpr-save/{id}', [DeliveryPurchaseReceiptController::class, 'saveAndInventoryProduct'])->name('dpr.save');
+
+
+
+
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
 
-    Route::get('/inventory', function () {
-        return view('inventory');
-    });
+
 
     Route::get('/inventory-items', function () {
         return view('inventory-items');

@@ -184,7 +184,7 @@
 
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link" onclick="toggleTreeview('order-treeview', '/inventory');">
+              <a href="{{ route('delivery-purchase-receipts.index') }}" class="nav-link" >       {{--  onclick="toggleTreeview('order-treeview', '{{ route('delivery-purchase-receipts.index') }}');" --}}
                         <i class="nav-icon fas fa-receipt" style="color: #74C0FC;"></i>
                         <p>
                             Inventory

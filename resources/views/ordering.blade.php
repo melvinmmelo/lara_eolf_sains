@@ -88,8 +88,6 @@
             <form action="{{ route('inbound.store') }}" method="POST">
                 @csrf
 
-
-
                 <div class="card-header">
                     <h3 class="card-title mr-2">Ordering Info</h3>
 
@@ -175,8 +173,6 @@
                         <div class="col-sm-1">
                             <label for="qty_toadd">Quantity</label>
                             <div>
-                                <input type="text" name="qty_toadd" id="qty_toadd" class="form-control"
-                                    value="1">
                                 <input type="text" name="qty_toadd" id="qty_toadd" class="form-control"
                                     value="1">
                             </div>
