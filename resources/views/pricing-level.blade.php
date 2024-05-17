@@ -20,30 +20,25 @@
 
     <!-- Main content -->
     <section class="content">
-
         <!-- Default box -->
         <div class="card">
-
             <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
+                            <th>Branch</th>
                             <th>Name</th>
                             <th>Description</th>
                             <th>Status</th>
-
-
-
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($pricelevels as $pl)
                             <tr>
+                                <td>{{ $pl->branch_code }}</td>
                                 <td>{{ $pl->pl_name }}</td>
                                 <td>{{ $pl->pl_desc }}</td>
                                 <td>{{ $pl->pl_status }}</td>
-
-
                             </tr>
                         @endforeach
                     </tbody>
@@ -52,10 +47,7 @@
                             <th>Name</th>
                             <th>Description</th>
                             <th>Status</th>
-
-
                         </tr>
-
                     </tfoot>
                 </table>
 
@@ -81,6 +73,16 @@
                             </button>
                         </div>
                         <div class="modal-body">
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="form-label" for="branch_code">Branch Code</label>
+                                        <input type="text" class="form-control" name="branch_code" id="branch_code"
+                                            value="{{ session('branch_code') }}" required readonly>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <div class="row">
@@ -124,11 +126,7 @@
                     <!-- /.modal-dialog -->
             </div>
             <!-- /.modal -->
-
             </form>
-
-
-
         </div>
     </section>
     <!-- /.content -->

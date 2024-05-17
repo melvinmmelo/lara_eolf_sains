@@ -90,9 +90,20 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="issue_date">User Id</label>
+                                        <label class="form-label" for="user_id">User Id</label>
                                         <input type="text" class="form-control" name="user_id" id="user_id"
                                             value="{{ auth()->user()->id }}" required readonly>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="form-label" for="branch_code">Branch Code</label>
+                                        <input type="text" class="form-control" name="branch_code" id="branch_code"
+                                            value="{{ session('branch_code') }}" required readonly>
 
                                     </div>
                                 </div>

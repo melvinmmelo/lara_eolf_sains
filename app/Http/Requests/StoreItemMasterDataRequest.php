@@ -4,19 +4,13 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreDeliveryPurchaseReceiptRequest extends FormRequest
+class StoreItemMasterDataRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-
-        // check if the user is an admin
-        if (auth()->user()->hasRole('admin')) {
-            return true;
-        }
-
         return false;
     }
 
@@ -28,10 +22,7 @@ class StoreDeliveryPurchaseReceiptRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'branch_code' => 'required',
-            'dr_no' => 'required|unique:delivery_purchase_receipts,dr_no',
-            'issue_date' => 'required|date',
-            'user_id' => 'required|exists:users,id',
+            //
         ];
     }
 }

@@ -131,6 +131,7 @@ class DatabaseSeeder extends Seeder
         );
 
         pricelevels::create([
+            'branch_code' => "CODE 1.26",
             'pl_name' => "FACTORY PRICE",
             'pl_desc' => 'FP Summer 2024',
             'pl_status' => 'Active',

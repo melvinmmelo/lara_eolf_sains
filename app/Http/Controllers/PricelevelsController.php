@@ -35,9 +35,10 @@ class PricelevelsController extends Controller
         $request->validate([
             'name' => 'required',
             'Description' => 'required',
-
+            'branch_code' => 'required',
             // Add more validation rules as needed
         ]);
+
         $status = 'NOT ACTIVE';
 
          // Check if the request data is 'on'
@@ -45,10 +46,11 @@ class PricelevelsController extends Controller
              $status = 'ACTIVE';
          }
         pricelevels::create([
+            'branch_code' => $request->branch_code,
             'pl_name' => $request->name,
             'pl_desc' => $request->Description,
             'pl_status' => $status,
-   
+
             // Add more fields as needed
         ]);
 

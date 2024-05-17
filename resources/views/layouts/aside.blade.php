@@ -22,7 +22,7 @@
             <div class="info">
                 <strong><a href="#" class="d-block">{{ auth()->user()->fullName }}</a></strong>
 
-                <small>Branch</small>
+                <small>{{ session('branch_code') }}</small>
             </div>
         </div>
 
@@ -49,7 +49,7 @@
 
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link" onclick="toggleTreeview('dashboard-treeview','dashboard');">
+                    <a href="#" class="nav-link {{ Route::currentRouteNamed('dashboard') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-gauge" style="color: #74C0FC;"></i>
                         <p>
                             Dashboard
@@ -58,14 +58,11 @@
                     </a>
                     <ul class="nav nav-treeview" id="dashboard-treeview">
                         <li>
-
                         </li>
-
-
                     </ul>
                 </li>
 
-                <li class="nav-item">
+                <li class="nav-item {{ Route::currentRouteNamed('company') || Route::currentRouteNamed('branch') || Route::currentRouteNamed('users') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-user-tie" style="color: #74C0FC;"></i>
                         <p>
@@ -75,14 +72,14 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li>
-                            <a href="/company" class="nav-link">
+                            <a href="{{ route('company') }}" class="nav-link {{ Route::currentRouteNamed('company') ? 'active' : '' }}">
                                 <i class="far fa-building nav-icon"></i>
                                 <p>Company</p>
                             </a>
                         </li>
 
                         <li>
-                            <a href="/branch" class="nav-link">
+                            <a href="/branch" class="nav-link {{ Route::currentRouteNamed('branch') ? 'active' : '' }}">
                                 <i class="fas fa-store nav-icon"></i>
                                 <p>Branch</p>
                             </a>
@@ -163,44 +160,52 @@
                     </ul>
                 </li>
 
-
-
                 <li class="nav-item">
-                    <a href="#" class="nav-link" onclick="toggleTreeview('order-treeview', '/orders');">
-                        <i class="nav-icon fas fa-file-invoice" style="color: #74C0FC;"></i>
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-coins" style="color: #74C0FC;"></i>
                         <p>
-                            Order
-                            <i class="right"></i>
+                            Sales
+                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview" id="order-treeview">
+                    <ul class="nav nav-treeview">
+
                         <li>
-
+                            <a href="/orders" class="nav-link">
+                                <i class="fas fa-circle-left nav-icon"></i>
+                                <p>Outbound</p>
+                            </a>
                         </li>
-
-
                     </ul>
                 </li>
 
-
                 <li class="nav-item">
-              <a href="{{ route('delivery-purchase-receipts.index') }}" class="nav-link" >       {{--  onclick="toggleTreeview('order-treeview', '{{ route('delivery-purchase-receipts.index') }}');" --}}
-                        <i class="nav-icon fas fa-receipt" style="color: #74C0FC;"></i>
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-warehouse" style="color: #74C0FC;"></i>
                         <p>
                             Inventory
-                            <i class="right"></i>
+                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview" id="order-treeview">
-                        <li>
+                    <ul class="nav nav-treeview">
 
+                        <li>
+                            <a href="{{ route('delivery-purchase-receipts.index') }}" class="nav-link">
+                                <i class="fas fa-circle-right nav-icon"></i>
+                                <p>Inbound</p>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('itemdata.index') }}" class="nav-link">
+                                <i class="fas fa-database nav-icon"></i>
+                                <p>Item master data</p>
+                            </a>
                         </li>
 
 
                     </ul>
                 </li>
-
-
 
                 <li class="nav-item">
                     <a href="#" class="nav-link"
@@ -215,8 +220,6 @@
                         </form>
                     </a>
 
-
-
         </nav>
         <!-- /.sidebar-menu -->
     </div>
@@ -228,48 +231,51 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $('.nav-link').click(function() {
-            // Remove active class from all nav-links
-            $('.nav-link').removeClass('active');
+     $(document).ready(function() {
+            $('.nav-link').click(function() {
+                // Remove active class from all nav-links
+                $('.nav-link').removeClass('active');
 
-            // Add active class to the clicked nav-link
-            $(this).addClass('active');
+                // Add active class to the clicked nav-link
+                $(this).addClass('active');
+            });
+
+            console.log({{ Route::currentRouteName() }});
         });
-    });
 
-    // Check if the DOMContentLoaded event has fired
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get the sidebar element
-        var sidebarContent = document.getElementById('sidebar');
-        // Retrieve stored content from session storage
-        var storedContent = sessionStorage.getItem('nav-item');
-        // If stored content exists, restore it
-        if (storedContent) {
-            sidebarContent.innerHTML = storedContent;
-        }
-    });
+        // Check if the DOMContentLoaded event has fired
 
-    // Store content in session storage before page is unloaded (refreshed)
-    window.addEventListener('beforeunload', function() {
-        // Get the content wrapper element
-        var sidebarContent = document.getElementById('sidebar');
-        // Store the current content in session storage
-        sessionStorage.setItem('nav-item', sidebarContent.innerHTML);
-    });
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     // Get the sidebar element
+        //     var sidebarContent = document.getElementById('sidebar');
+        //     // Retrieve stored content from session storage
+        //     var storedContent = sessionStorage.getItem('nav-item');
+        //     // If stored content exists, restore it
+        //     if (storedContent) {
+        //         sidebarContent.innerHTML = storedContent;
+        //     }
+        // });
+
+        // // Store content in session storage before page is unloaded (refreshed)
+        // window.addEventListener('beforeunload', function() {
+        //     // Get the content wrapper element
+        //     var sidebarContent = document.getElementById('sidebar');
+        //     // Store the current content in session storage
+        //     sessionStorage.setItem('nav-item', sidebarContent.innerHTML);
+        // });
 
 
-    function toggleTreeview(treeviewId, redirectUrl) {
-        // Collapse all treeviews except for the specified one
-        $('.nav-treeview').not('#' + treeviewId).hide();
-        // Toggle the specified treeview
-        $('#' + treeviewId).toggle();
+        // function toggleTreeview(treeviewId, redirectUrl) {
+        //     // Collapse all treeviews except for the specified one
+        //     $('.nav-treeview').not('#' + treeviewId).hide();
+        //     // Toggle the specified treeview
+        //     $('#' + treeviewId).toggle();
 
-        // Redirect to the specified URL after a short delay
-        if (redirectUrl) {
-            setTimeout(function() {
-                window.location.href = redirectUrl;
-            }, 0); // Adjust the delay (in milliseconds) as needed
-        }
-    }
+        //     // Redirect to the specified URL after a short delay
+        //     if (redirectUrl) {
+        //         setTimeout(function() {
+        //             window.location.href = redirectUrl;
+        //         }, 0); // Adjust the delay (in milliseconds) as needed
+        //     }
+        // }
 </script>

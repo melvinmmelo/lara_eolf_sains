@@ -106,6 +106,17 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
+                                        <label class="form-label" for="branch_code">Branch Code</label>
+                                        <input type="text" class="form-control" name="branch_code" id="branch_code"
+                                            value="{{ session('branch_code') }}" required readonly>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
                                         <label class="form-label" for="equipment">Equipment</label>
                                         <select class="form-control equipment w-100 select2bs4" name="equipment"
                                             id="equipment" onchange="setCustomerName(this.value)">

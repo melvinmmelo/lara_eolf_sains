@@ -25,7 +25,6 @@
             background-image: url("{{ asset('img/eolfbg.png') }}");
             background-size: cover;
             background-position: center;
-
         }
     </style>
 
@@ -41,33 +40,24 @@
                     style="max-width: 100%; height: auto; ">
             </div>
             <div class="card-body">
-                <p class="login-box-msg">Welcome! <strong>Username</strong></p>
+                <p class="login-box-msg">Welcome! <strong>{{ auth()->user()->fullName }}</strong></p>
                 <p class="login-box-msg">Select branch</p>
                 <hr>
 
 
 
-                <form method="POST" action="#">
+                <form id="myForm" action="#" method="GET" onsubmit="submitForm()">
                     @csrf
 
-
                     <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="radio" id="radioPrimary1" name="r1" checked>
-                            <label for="radioPrimary1">
-                                EOLF Food Trading OPC - Cagayan
-                            </label>
-                        </div>
-                        <hr>
-                        <div class="icheck-primary d-inline">
-                            <input type="radio" id="radioPrimary2" name="r1" checked>
-                            <label for="radioPrimary2">
-                                EOLF Food Trading OPC - Tarlac
-                            </label>
-                        </div>
+                        @foreach ($gbranches as $gbranch)
+                            <div class="icheck-primary d-inline">
+                                <input name="branch_code" value="{{ $gbranch->code }}" type="radio" id="radioPrimary{{ $gbranch->code }}">
+                                <label for="radioPrimary{{ $gbranch->code }}">{{ $gbranch->code }}</label>
+                            </div>
+                            <hr>
+                        @endforeach
                     </div>
-
-
 
                     <div class="row">
 
@@ -92,6 +82,18 @@
     <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
     <!-- SweetAlert2 -->
 
+    <script>
+        function submitForm() {
+            var form = document.getElementById("myForm");
+            var checkbox = document.querySelector('input[name="branch_code"]:checked');
+            if (checkbox) {
+                form.action = '/set-branch/' + checkbox.value;
+                form.submit();
+            } else {
+                alert('Please select a branch.');
+            }
+        }
+    </script>
 
 </body>
 

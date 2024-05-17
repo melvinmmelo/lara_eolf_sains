@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pricelevels', function (Blueprint $table) {
+        Schema::create('item_master_data', function (Blueprint $table) {
             $table->id();
             $table->string('branch_code', 15);
-            $table->string('pl_name');
-            $table->string('pl_desc');
-            $table->string('pl_status');
+            $table->string('product_code', 15);
+            $table->string('quantity', 15);
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pricelevels');
+        Schema::dropIfExists('item_master_data');
     }
 };

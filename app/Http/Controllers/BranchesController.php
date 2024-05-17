@@ -10,6 +10,11 @@ use App\Models\Branches;
 class BranchesController extends Controller
 {
     //
+    public function setBranchSession($code)
+    {
+        session(['branch_code' => $code]);
+        return redirect()->route('dashboard')->with('success', 'Branch set successfully!');
+    }
 
     public function index(): View
     {
@@ -42,7 +47,7 @@ class BranchesController extends Controller
             'name' => $request->name,
             'address' => $request->address,
             'office_no' => $request->office_no,
-   
+
             // Add more fields as needed
         ]);
 

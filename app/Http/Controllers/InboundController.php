@@ -66,14 +66,15 @@ class InboundController extends Controller
     {
 
         $request->validate([
+            'branch_code' => 'required',
             'equipment' => 'required',
             'deliveryPerson' => 'required',
             'vehicle' => 'required',
         ]);
 
-
         $tempInbound = new Inbound();
         $tempInbound->user_id = auth()->user()->id;
+        $tempInbound->branch_code = $request->branch_code;
         $tempInbound->equipment_id = $request->equipment;
         $tempInbound->driver_id = $request->deliveryPerson;
         $tempInbound->vehicle_id = $request->vehicle;
@@ -109,11 +110,13 @@ class InboundController extends Controller
 
         $equipmentStore = EquipmentStore::find($inbound->equipment_id);
         $customerName = $equipmentStore->store->customer->fullName;
+        $branchCode = session('branch_code');
+
         $equipmentSerial = $equipmentStore->equipment->serial_no;
         $deliveryPerson = Drivers::select('name')->find($inbound->driver_id);
         $vehicle = Vehicles::select('plateno')->find($inbound->vehicle_id);
 
-        $defaultPriceLevel = pricelevels::where('pl_status', 'Active')->select('pl_name')->first();
+        $defaultPriceLevel = pricelevels::where('branch_code', $branchCode)->select('pl_name')->first();
 
         $productTypes = ProductType::where('is_active', 1)->get();
 
@@ -130,7 +133,6 @@ class InboundController extends Controller
 
             $summary = $inboundService->addSppbinSummary(); // ! you need to call summary() first before addSppbinSummary()
         }
-
 
         return view('ordering', compact('inboundId', 'productTypes', 'deliveryPerson', 'vehicle', 'defaultPriceLevel', 'inboundList', 'summary', 'customerName', 'equipmentSerial'));
     }

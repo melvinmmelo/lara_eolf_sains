@@ -65,10 +65,10 @@
                             <tr>
                                 <td>{{ $branch->code }}</td>
                                 <td>{{ $branch->name }}</td>
-                                <td>{{ $branch->address }}</td>
                                 <td>{{ $branch->office_no }}</td>
-
+                                <td>{{ $branch->address }}</td>
                             </tr>
+                            @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
@@ -79,7 +79,7 @@
 
 
                         </tr>
-                        @endforeach
+
                     </tfoot>
                 </table>
 

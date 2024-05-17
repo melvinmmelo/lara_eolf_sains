@@ -31,6 +31,7 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
+                            <th>Branch</th>
                             <th>Name</th>
                             <th>Contact Nos</th>
                             <th>Tin no.</th>
@@ -41,42 +42,46 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($customers as $customer)
-                        <tr>
-                            <td>{{ $customer->lastname }}, {{ $customer->firstname }} {{ $customer->middlename }}</td>
-                            <td>{{ $customer->contact_no }}</td>
-                            <td>{{ $customer->tin }}</td>
-                            <td>{{ $customer->storeinfo->storename ?? '' }}</td>
-                            <td>
-                            @if(optional($customer->equipmentStores)->isNotEmpty())
-                        @foreach($customer->equipmentStores as $equipmentStore)
-                            {{ $equipmentStore->equipment_id }}
-                            @if(!$loop->last)
-                                , <!-- Add comma if it's not the last equipment -->
-                            @endif
-                        @endforeach
-                    @else
-                        No equipment available <!-- Display a message if there are no equipment stores -->
-                    @endif
-                            </td>
-                            <td>{{ $customer->storeinfo->brgy }}, {{ $customer->storeinfo->subdivision }}, {{ $customer->storeinfo->city }}</td>
-                            <td>
-                            <a class="btn btn-success btn-sm"
-                                href="/equipment-store?store_id={{ $customer->storeinfo->id }}&store_name={{ $customer->storeinfo->storename }}&customer_id={{ $customer->id }}&customer_name={{ $customer->lastname }}, {{ $customer->firstname }} {{ $customer->middlename }}"
-                                role="button">Equipment</a>
-                                <!-- add the edit button here -->
-                                <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
-                        data-target="#editModal"
-                        onclick="setToUpdatecustomer('{{ $customer->id }}','{{ $customer->lastname }}','{{ $customer->firstname }}','{{ $customer->middlename }}','{{ $customer->contact_no }}','{{ $customer->companyname }}','{{ $customer->tin }}','{{ $customer->longitude }}','{{ $customer->latitude }}','{{ $customer->region }}','{{ $customer->province }}','{{ $customer->city }}','{{ $customer->brgy }}','{{ $customer->subdivision }}','{{ $customer->storeinfo->id }}','{{ $customer->storeinfo->storename }}','{{ $customer->storeinfo->contactno }}','{{ $customer->storeinfo->region }}','{{ $customer->storeinfo->province }}','{{ $customer->storeinfo->city }}','{{ $customer->storeinfo->brgy }}','{{ $customer->storeinfo->subdivision }}','{{ $customer->storeinfo->latitude }}','{{ $customer->storeinfo->longitude }}','{{ $customer->storeinfo->listype }}','{{ $customer->storeinfo->length_stay }}','{{ $customer->storeinfo->remarks }}')">Edit</button>
-                        <form method="POST" action="{{ route('customer.destroy', $customer->id) }}"
+                        @foreach ($customers as $customer)
+                            <tr>
+                                <td>{{ $customer->branch_code }}</td>
+                                <td>{{ $customer->lastname }}, {{ $customer->firstname }} {{ $customer->middlename }}</td>
+                                <td>{{ $customer->contact_no }}</td>
+                                <td>{{ $customer->tin }}</td>
+                                <td>{{ $customer->storeinfo->storename ?? '' }}</td>
+                                <td>
+                                    @if (optional($customer->equipmentStores)->isNotEmpty())
+                                        @foreach ($customer->equipmentStores as $equipmentStore)
+                                            {{ $equipmentStore->equipment_id }}
+                                            @if (!$loop->last)
+                                                , <!-- Add comma if it's not the last equipment -->
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        No equipment available <!-- Display a message if there are no equipment stores -->
+                                    @endif
+                                </td>
+                                <td>{{ $customer->storeinfo->brgy }}, {{ $customer->storeinfo->subdivision }},
+                                    {{ $customer->storeinfo->city }}</td>
+                                <td>
+                                    <a class="btn btn-success btn-sm"
+                                        href="/equipment-store?store_id={{ $customer->storeinfo->id }}&store_name={{ $customer->storeinfo->storename }}&customer_id={{ $customer->id }}&customer_name={{ $customer->lastname }}, {{ $customer->firstname }} {{ $customer->middlename }}"
+                                        role="button">Equipment</a>
+                                    <!-- add the edit button here -->
+                                    <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
+                                        data-target="#editModal"
+                                        onclick="setToUpdatecustomer('{{ $customer->id }}','{{ $customer->lastname }}','{{ $customer->firstname }}','{{ $customer->middlename }}','{{ $customer->contact_no }}','{{ $customer->companyname }}','{{ $customer->tin }}','{{ $customer->longitude }}','{{ $customer->latitude }}','{{ $customer->region }}','{{ $customer->province }}','{{ $customer->city }}','{{ $customer->brgy }}','{{ $customer->subdivision }}','{{ $customer->storeinfo->id }}','{{ $customer->storeinfo->storename }}','{{ $customer->storeinfo->contactno }}','{{ $customer->storeinfo->region }}','{{ $customer->storeinfo->province }}','{{ $customer->storeinfo->city }}','{{ $customer->storeinfo->brgy }}','{{ $customer->storeinfo->subdivision }}','{{ $customer->storeinfo->latitude }}','{{ $customer->storeinfo->longitude }}','{{ $customer->storeinfo->listype }}','{{ $customer->storeinfo->length_stay }}','{{ $customer->storeinfo->remarks }}')">Edit</button>
+                                    <form method="POST" action="{{ route('customer.destroy', $customer->id) }}"
                                         style="display: inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" onclick="return confirm('Are you sure you want to delete this customer info?')" class="btn btn-danger btn-sm">Delete</button>
+                                        <button type="submit"
+                                            onclick="return confirm('Are you sure you want to delete this customer info?')"
+                                            class="btn btn-danger btn-sm">Delete</button>
                                     </form>
 
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
@@ -99,7 +104,7 @@
 
         <div class="modal fade custom-modal" id="modal-customer">
             <div class="modal-dialog modal-xl">
-               
+
                 <form method="POST" action="/customers/store">
                     @csrf
                     <input type="hidden" name ="distributor" value="n/a">
@@ -122,6 +127,18 @@
                                             Customer
                                         </div>
                                         <div class="card-body">
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <label class="form-label" for="branch_code">Branch Code</label>
+                                                        <input type="text" class="form-control" name="branch_code"
+                                                            id="branch_code" value="{{ session('branch_code') }}" required
+                                                            readonly>
+
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                             <div class="form-group">
                                                 <div class="row mb-3">
@@ -193,10 +210,10 @@
                                                         <select class="form-control" id="cust_prov" name="province">
                                                             <!-- <option></option> -->
                                                             <!-- <option>option 1</option>
-                                                                                <option>option 2</option>
-                                                                                <option>option 3</option>
-                                                                                <option>option 4</option>
-                                                                                <option>option 5</option> -->
+                                                                                    <option>option 2</option>
+                                                                                    <option>option 3</option>
+                                                                                    <option>option 4</option>
+                                                                                    <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -209,10 +226,10 @@
                                                         <select class="form-control" id="cust_city" name="city">
                                                             <!-- <option></option> -->
                                                             <!-- <option>option 1</option>
-                                                                                <option>option 2</option>
-                                                                                <option>option 3</option>
-                                                                                <option>option 4</option>
-                                                                                <option>option 5</option> -->
+                                                                                    <option>option 2</option>
+                                                                                    <option>option 3</option>
+                                                                                    <option>option 4</option>
+                                                                                    <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -225,10 +242,10 @@
                                                         <select class="form-control" id="cust_brgy" name="brgy">
                                                             <!-- <option></option> -->
                                                             <!-- <option>option 1</option>
-                                                                                    <option>option 2</option>
-                                                                                    <option>option 3</option>
-                                                                                    <option>option 4</option>
-                                                                                    <option>option 5</option> -->
+                                                                                        <option>option 2</option>
+                                                                                        <option>option 3</option>
+                                                                                        <option>option 4</option>
+                                                                                        <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -306,10 +323,10 @@
                                                         <label class="form-label" for="region2">Region</label>
                                                         <select class="form-control" id="cust_region2" name="region2">
                                                             <!-- <option>option 1</option>
-                                                                                                                                                <option>option 2</option>
-                                                                                                                                                <option>option 3</option>
-                                                                                                                                                <option>option 4</option>
-                                                                                                                                                <option>option 5</option> -->
+                                                                                                                                                    <option>option 2</option>
+                                                                                                                                                    <option>option 3</option>
+                                                                                                                                                    <option>option 4</option>
+                                                                                                                                                    <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -321,10 +338,10 @@
                                                         <label class="form-label" for="province2">Province</label>
                                                         <select class="form-control" id="cust_prov2" name="province2">
                                                             <!-- <option>option 1</option>
-                                                                                                                                                                    <option>option 2</option>
-                                                                                                                                                                    <option>option 3</option>
-                                                                                                                                                                    <option>option 4</option>
-                                                                                                                                                                    <option>option 5</option> -->
+                                                                                                                                                                        <option>option 2</option>
+                                                                                                                                                                        <option>option 3</option>
+                                                                                                                                                                        <option>option 4</option>
+                                                                                                                                                                        <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -336,10 +353,10 @@
                                                         <label class="form-label" for="city2">City</label>
                                                         <select class="form-control" id="cust_city2" name="city2">
                                                             <!-- <option>option 1</option>
-                                                                                                                                                                    <option>option 2</option>
-                                                                                                                                                                    <option>option 3</option>
-                                                                                                                                                                    <option>option 4</option>
-                                                                                                                                                                    <option>option 5</option> -->
+                                                                                                                                                                        <option>option 2</option>
+                                                                                                                                                                        <option>option 3</option>
+                                                                                                                                                                        <option>option 4</option>
+                                                                                                                                                                        <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -351,10 +368,10 @@
                                                         <label class="form-label" for="brgy2">Barangay</label>
                                                         <select class="form-control" id="cust_brgy2" name="brgy2">
                                                             <!-- <option>option 1</option>
-                                                                                                                                                                    <option>option 2</option>
-                                                                                                                                                                    <option>option 3</option>
-                                                                                                                                                                    <option>option 4</option>
-                                                                                                                                                                    <option>option 5</option> -->
+                                                                                                                                                                        <option>option 2</option>
+                                                                                                                                                                        <option>option 3</option>
+                                                                                                                                                                        <option>option 4</option>
+                                                                                                                                                                        <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -446,10 +463,10 @@
         </div>
         </div>
 
-<!---star areh ng edut -->
+        <!---star areh ng edut -->
         <div class="modal fade custom-modal" id="editModal">
             <div class="modal-dialog modal-xl">
-               
+
                 <form method="POST" action="/customers/store">
                     @csrf
 
@@ -462,11 +479,11 @@
                         </div>
                         <div class="modal-body">
 
-                        <input type="hidden" name ="distributor" value="n/a">
-                   Customer ID <input type="text" class="form-control" name="id" id="id" required
-                                        readonly><br>
-                   Store ID <input type="text" class="form-control" name="store_id" id="store_id" required
-                                        readonly><br>
+                            <input type="hidden" name ="distributor" value="n/a">
+                            Customer ID <input type="text" class="form-control" name="id" id="id"
+                                required readonly><br>
+                            Store ID <input type="text" class="form-control" name="store_id" id="store_id" required
+                                readonly><br>
                             <div class="row mb-2">
                                 {{-- customer info card --}}
                                 <div class="col-sm-6">
@@ -546,10 +563,10 @@
                                                         <select class="form-control" id="province" name="province">
                                                             <!-- <option></option> -->
                                                             <!-- <option>option 1</option>
-                                                                                <option>option 2</option>
-                                                                                <option>option 3</option>
-                                                                                <option>option 4</option>
-                                                                                <option>option 5</option> -->
+                                                                                    <option>option 2</option>
+                                                                                    <option>option 3</option>
+                                                                                    <option>option 4</option>
+                                                                                    <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -562,10 +579,10 @@
                                                         <select class="form-control" id="city" name="city">
                                                             <!-- <option></option> -->
                                                             <!-- <option>option 1</option>
-                                                                                <option>option 2</option>
-                                                                                <option>option 3</option>
-                                                                                <option>option 4</option>
-                                                                                <option>option 5</option> -->
+                                                                                    <option>option 2</option>
+                                                                                    <option>option 3</option>
+                                                                                    <option>option 4</option>
+                                                                                    <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -578,10 +595,10 @@
                                                         <select class="form-control" id="brgy" name="brgy">
                                                             <!-- <option></option> -->
                                                             <!-- <option>option 1</option>
-                                                                                    <option>option 2</option>
-                                                                                    <option>option 3</option>
-                                                                                    <option>option 4</option>
-                                                                                    <option>option 5</option> -->
+                                                                                        <option>option 2</option>
+                                                                                        <option>option 3</option>
+                                                                                        <option>option 4</option>
+                                                                                        <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -600,7 +617,8 @@
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="latitude">Latitude</label>
-                                                        <input type="text" class="form-control" name="latitude" id="latitude">
+                                                        <input type="text" class="form-control" name="latitude"
+                                                            id="latitude">
                                                     </div>
                                                 </div>
                                             </div>
@@ -609,7 +627,8 @@
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="longitude">Longitude</label>
-                                                        <input type="text" class="form-control" name="longitude" id="longitude">
+                                                        <input type="text" class="form-control" name="longitude"
+                                                            id="longitude">
                                                     </div>
                                                 </div>
                                             </div>
@@ -636,7 +655,8 @@
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="storename">Store Name</label>
-                                                        <input type="text" class="form-control" name="storename" id="storename">
+                                                        <input type="text" class="form-control" name="storename"
+                                                            id="storename">
                                                     </div>
                                                 </div>
                                             </div>
@@ -645,7 +665,8 @@
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="contactno2">Contact No.</label>
-                                                        <input type="text" class="form-control" name="contactno2" id="contactno2">
+                                                        <input type="text" class="form-control" name="contactno2"
+                                                            id="contactno2">
                                                     </div>
                                                 </div>
                                             </div>
@@ -659,10 +680,10 @@
                                                         <label class="form-label" for="region2">Region</label>
                                                         <select class="form-control" id="cust_region2" name="region2">
                                                             <!-- <option>option 1</option>
-                                                                                                                                                <option>option 2</option>
-                                                                                                                                                <option>option 3</option>
-                                                                                                                                                <option>option 4</option>
-                                                                                                                                                <option>option 5</option> -->
+                                                                                                                                                    <option>option 2</option>
+                                                                                                                                                    <option>option 3</option>
+                                                                                                                                                    <option>option 4</option>
+                                                                                                                                                    <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -674,10 +695,10 @@
                                                         <label class="form-label" for="province2">Province</label>
                                                         <select class="form-control" id="cust_prov2" name="province2">
                                                             <!-- <option>option 1</option>
-                                                                                                                                                                    <option>option 2</option>
-                                                                                                                                                                    <option>option 3</option>
-                                                                                                                                                                    <option>option 4</option>
-                                                                                                                                                                    <option>option 5</option> -->
+                                                                                                                                                                        <option>option 2</option>
+                                                                                                                                                                        <option>option 3</option>
+                                                                                                                                                                        <option>option 4</option>
+                                                                                                                                                                        <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -689,10 +710,10 @@
                                                         <label class="form-label" for="city2">City</label>
                                                         <select class="form-control" id="cust_city2" name="city2">
                                                             <!-- <option>option 1</option>
-                                                                                                                                                                    <option>option 2</option>
-                                                                                                                                                                    <option>option 3</option>
-                                                                                                                                                                    <option>option 4</option>
-                                                                                                                                                                    <option>option 5</option> -->
+                                                                                                                                                                        <option>option 2</option>
+                                                                                                                                                                        <option>option 3</option>
+                                                                                                                                                                        <option>option 4</option>
+                                                                                                                                                                        <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -704,10 +725,10 @@
                                                         <label class="form-label" for="brgy2">Barangay</label>
                                                         <select class="form-control" id="cust_brgy2" name="brgy2">
                                                             <!-- <option>option 1</option>
-                                                                                                                                                                    <option>option 2</option>
-                                                                                                                                                                    <option>option 3</option>
-                                                                                                                                                                    <option>option 4</option>
-                                                                                                                                                                    <option>option 5</option> -->
+                                                                                                                                                                        <option>option 2</option>
+                                                                                                                                                                        <option>option 3</option>
+                                                                                                                                                                        <option>option 4</option>
+                                                                                                                                                                        <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -810,60 +831,57 @@
 
 
 @section('custom_js')
+    <script>
+        function setToUpdatecustomer(uid, ln, fn, mn, con, cm, tin, long, lat, reg, prov, city, brgy, subv, store_id,
+            storename, contactno, reg2, prov2, city2, brgy2, subv2, lat2, long2, listype, length_stay, remarks) {
+            // Populate customer information fields
+            document.getElementById("id").value = uid;
 
+            document.getElementById("lastname").value = ln;
+            document.getElementById("firstname").value = fn;
+            document.getElementById("middlename").value = mn;
+            document.getElementById("contact_no").value = con;
+            document.getElementById("companyname").value = cm;
+            document.getElementById("tin").value = tin;
+            document.getElementById("region").value = reg;
+            document.getElementById("province").value = prov;
+            document.getElementById("city").value = city;
+            document.getElementById("brgy").value = brgy;
+            document.getElementById("subdivision").value = subv;
+            document.getElementById("longitude").value = long;
+            document.getElementById("latitude").value = lat;
 
-<script>
-    function setToUpdatecustomer(uid, ln, fn, mn, con, cm, tin, long, lat, reg, prov, city, brgy, subv,store_id, storename, contactno, reg2, prov2, city2, brgy2, subv2, lat2, long2, listype, length_stay, remarks) {
-        // Populate customer information fields
-        document.getElementById("id").value = uid;
-
-        document.getElementById("lastname").value = ln;
-        document.getElementById("firstname").value = fn;
-        document.getElementById("middlename").value = mn;
-        document.getElementById("contact_no").value = con;
-        document.getElementById("companyname").value = cm;
-        document.getElementById("tin").value = tin;
-        document.getElementById("region").value = reg;
-        document.getElementById("province").value = prov;
-        document.getElementById("city").value = city;
-        document.getElementById("brgy").value = brgy;
-        document.getElementById("subdivision").value = subv;
-        document.getElementById("longitude").value = long;
-        document.getElementById("latitude").value = lat;
-
-        // Populate store information fields
-        document.getElementById("store_id").value = store_id;
-        document.getElementById("storename").value = storename;
-        document.getElementById("contactno2").value = contactno;
-        document.getElementById("cust_region2").value = reg2;
-        document.getElementById("cust_prov2").value = prov2;
-        document.getElementById("cust_city2").value = city2;
-        document.getElementById("cust_brgy2").value = brgy2;
-        document.getElementById("subdivision2").value = subv2;
-        document.getElementById("latitude2").value = lat2;
-        document.getElementById("longitude2").value = long2;
-        document.getElementById("listype2").value = listype;
-        document.getElementById("length_stay2").value = length_stay;
-        document.getElementById("remarks2").value = remarks;
-    }
-</script>
-
-
+            // Populate store information fields
+            document.getElementById("store_id").value = store_id;
+            document.getElementById("storename").value = storename;
+            document.getElementById("contactno2").value = contactno;
+            document.getElementById("cust_region2").value = reg2;
+            document.getElementById("cust_prov2").value = prov2;
+            document.getElementById("cust_city2").value = city2;
+            document.getElementById("cust_brgy2").value = brgy2;
+            document.getElementById("subdivision2").value = subv2;
+            document.getElementById("latitude2").value = lat2;
+            document.getElementById("longitude2").value = long2;
+            document.getElementById("listype2").value = listype;
+            document.getElementById("length_stay2").value = length_stay;
+            document.getElementById("remarks2").value = remarks;
+        }
+    </script>
 
 
 
-<script>
-$('#modal-equipment').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget);
-    var customerId = button.data('customer-id');
-    var storeId = button.data('store-id');
-    var modal = $(this);
-    modal.find('input[name="customer_id"]').val(customerId);
-    modal.find('input[name="store_id"]').val(storeId);
-});
 
 
-</script>
+    <script>
+        $('#modal-equipment').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            var customerId = button.data('customer-id');
+            var storeId = button.data('store-id');
+            var modal = $(this);
+            modal.find('input[name="customer_id"]').val(customerId);
+            modal.find('input[name="store_id"]').val(storeId);
+        });
+    </script>
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script>
         $(document).ready(function() {
@@ -1070,7 +1088,7 @@ $('#modal-equipment').on('show.bs.modal', function (event) {
 
 
 
-<script>
+    <script>
         $(document).ready(function() {
 
             // Function to populate the Region dropdown
@@ -1124,7 +1142,8 @@ $('#modal-equipment').on('show.bs.modal', function (event) {
                     success: function(response) {
                         // $('#cust_prov').empty(); // Clear existing options
                         $.each(response, function(key, value) {
-                            $('#cust_prov2').append('<option value="' + value.code + '">' + value
+                            $('#cust_prov2').append('<option value="' + value.code + '">' +
+                                value
                                 .name + '</option>');
                         });
                     }
@@ -1161,7 +1180,8 @@ $('#modal-equipment').on('show.bs.modal', function (event) {
                     success: function(response) {
                         // $('#cust_city').empty(); // Clear existing options
                         $.each(response, function(key, value) {
-                            $('#cust_city2').append('<option value="' + value.code + '">' + value
+                            $('#cust_city2').append('<option value="' + value.code + '">' +
+                                value
                                 .name + '</option>');
                         });
                     }
@@ -1197,7 +1217,8 @@ $('#modal-equipment').on('show.bs.modal', function (event) {
                     success: function(response) {
                         // $('#cust_brgy').empty(); // Clear existing options
                         $.each(response, function(key, value) {
-                            $('#cust_brgy2').append('<option value="' + value.code + '">' + value
+                            $('#cust_brgy2').append('<option value="' + value.code + '">' +
+                                value
                                 .name + '</option>');
                         });
                     }
@@ -1272,5 +1293,4 @@ $('#modal-equipment').on('show.bs.modal', function (event) {
             });
         });
     </script>
-
 @endsection

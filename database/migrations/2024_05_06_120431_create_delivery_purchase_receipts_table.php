@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('delivery_purchase_receipts', function (Blueprint $table) {
             $table->id();
-            $table->string('branch')->nullable();
+            $table->string('branch_code');
             $table->string('dr_no')->unique();
             $table->date('issue_date');
             $table->string('status')->default('Encoding');

@@ -19,7 +19,8 @@ use App\Http\Controllers\StoreController;
 use App\Http\Controllers\PhAddrController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentStoreController;
-
+use App\Http\Controllers\ItemMasterDataController;
+use App\Models\ItemMasterData;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -60,7 +61,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/branch-select', function () {
         return view('branch-select');
-    });
+    })->name('branch-select');
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit'); // views
@@ -85,10 +86,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
     Route::post('/customers/store', [CustomersController::class, 'store'])->name('customers.store'); // Corrected route definition
     Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
-    
+
     Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
     Route::post('/customers/store', [CustomersController::class, 'store'])->name('customers.store');
-    
+
 
     // Route::get('/customersinfo', [CustomersController::class, 'index'])->name('customersinfo');
 
@@ -144,7 +145,6 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('/product-types', [ProductTypeController::class, 'update'])->name('productType.update');
 
-
     Route::get('/product-variants', [ProductVariantController::class, 'index'])->name('productVariant.index');
     Route::post('/product-variants', [ProductVariantController::class, 'store'])->name('productVariant.store');
 
@@ -169,7 +169,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/inboundin/{code}/{qty}', [InboundController::class, 'ajaxInboundList'])->name('inbound.inboundList');
     Route::get('/delete-inboundin/{inboundId}/{pcode}', [InboundController::class, 'deleteAInbound'])->name('inbound.deleteAInbound');
 
-
     // update if done na mag add ng productin
     Route::post('/inbound', [InboundController::class, 'store'])->name('inbound.store');
 
@@ -179,6 +178,11 @@ Route::middleware('auth')->group(function () {
 
     // deleting pending inbound
     Route::get('/inbound-destroy/{inbound}', [InboundController::class, 'destroy'])->name('inbound.destroy');
+
+    Route::get('/set-branch/{code}', [BranchesController::class, 'setBranchSession'])->name('branch.setBranchSession');
+
+    Route::get('/item-master-data', [ItemMasterDataController::class, 'index'])->name('itemdata.index');
+
 });
 
 require __DIR__ . '/auth.php';
