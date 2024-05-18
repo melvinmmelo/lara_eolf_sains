@@ -13,6 +13,12 @@ class BranchesController extends Controller
     public function setBranchSession($code)
     {
         session(['branch_code' => $code]);
+
+        $url = url()->previous();
+        if ($url == route('branch-select')) {
+            return redirect()->route('dashboard')->with('success', 'Branch set successfully!');
+        }
+
         return redirect()->back()->with('success', 'Branch set successfully!');
     }
 

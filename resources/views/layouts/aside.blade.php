@@ -62,7 +62,7 @@
                     </ul>
                 </li>
 
-                <li class="nav-item {{ Route::currentRouteNamed('company') || Route::currentRouteNamed('branch') || Route::currentRouteNamed('users') ? 'menu-is-opening menu-open' : '' }}">
+                <li class="nav-item {{ Route::currentRouteNamed('company') || Route::currentRouteNamed('branch') || Route::currentRouteNamed('users') || Route::currentRouteNamed('vehicles') || Route::currentRouteNamed('delivery-persons') || Route::currentRouteNamed('customers') || Route::currentRouteNamed('product-types') || Route::currentRouteNamed('products') || Route::currentRouteNamed('product-variants') || Route::currentRouteNamed('pricing-level') || Route::currentRouteNamed('pricing') || Route::currentRouteNamed('equipment') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-user-tie" style="color: #74C0FC;"></i>
                         <p>
@@ -86,21 +86,21 @@
                         </li>
 
                         <li>
-                            <a href="/users" class="nav-link">
+                            <a href="/users" class="nav-link {{ Route::currentRouteNamed('users') ? 'active' : '' }}">
                                 <i class="fas fa-users nav-icon"></i>
                                 <p>User</p>
                             </a>
                         </li>
 
                         <li>
-                            <a href="/vehicles" class="nav-link">
+                            <a href="/vehicles" class="nav-link {{ Route::currentRouteNamed('vehicles') ? 'active' : '' }}">
                                 <i class="fas fa-truck nav-icon"></i>
                                 <p>Vehicles</p>
                             </a>
                         </li>
 
                         <li>
-                            <a href="/delivery-persons" class="nav-link">
+                            <a href="/delivery-persons" class="nav-link {{ Route::currentRouteNamed('delivery-persons') ? 'active' : '' }}">
                                 <i class="fas fa-truck-ramp-box nav-icon"></i>
                                 <p>Delivery Person</p>
                             </a>
@@ -108,21 +108,21 @@
 
 
                         <li>
-                            <a href="customers" class="nav-link">
+                            <a href="customers" class="nav-link {{ Route::currentRouteNamed('customers') ? 'active' : '' }}">
                                 <i class="fas fa-id-card nav-icon"></i>
                                 <p>Customers</p>
                             </a>
                         </li>
 
                         <li>
-                            <a href="product-types" class="nav-link">
+                            <a href="product-types" class="nav-link {{ Route::currentRouteNamed('product-types') ? 'active' : '' }}">
                                 <i class="fas fa-list nav-icon"></i>
                                 <p>Products Type</p>
                             </a>
                         </li>
 
                         <li>
-                            <a href="products" class="nav-link">
+                            <a href="products" class="nav-link {{ Route::currentRouteNamed('products') ? 'active' : '' }}">
                                 <i class="fas fa-ice-cream nav-icon"></i>
                                 <p>Products</p>
                             </a>
@@ -130,28 +130,28 @@
 
 
                         <li>
-                            <a href="product-variants" class="nav-link">
+                            <a href="product-variants" class="nav-link {{ Route::currentRouteNamed('product-variants') ? 'active' : '' }}">
                                 <i class="fas fa-list-ol nav-icon"></i>
                                 <p>Product Variants</p>
                             </a>
                         </li>
 
                         <li>
-                            <a href="pricing-level" class="nav-link">
+                            <a href="pricing-level" class="nav-link {{ Route::currentRouteNamed('pricing-level') ? 'active' : '' }}">
                                 <i class="fas fa-receipt nav-icon"></i>
                                 <p>Pricing Level</p>
                             </a>
                         </li>
 
                         <li>
-                            <a href="pricing" class="nav-link">
+                            <a href="pricing" class="nav-link {{ Route::currentRouteNamed('pricing') ? 'active' : '' }}">
                                 <i class="fas fa-peso-sign nav-icon"></i>
                                 <p>Pricing</p>
                             </a>
                         </li>
 
                         <li>
-                            <a href="{{ route('equipment.index') }}" class="nav-link">
+                            <a href="{{ route('equipment.index') }}" class="nav-link {{ Route::currentRouteNamed('equipment') ? 'active' : '' }}">
                                 <i class="fas fa-box nav-icon"></i>
                                 <p>Equipment</p>
                             </a>
@@ -160,7 +160,7 @@
                     </ul>
                 </li>
 
-                <li class="nav-item">
+                <li class="nav-item {{Route::currentRouteNamed('order.index') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-coins" style="color: #74C0FC;"></i>
                         <p>
@@ -171,7 +171,7 @@
                     <ul class="nav nav-treeview">
 
                         <li>
-                            <a href="/orders" class="nav-link">
+                            <a href="/orders" class="nav-link {{ Route::currentRouteNamed('order.index') ? 'active' : '' }}">
                                 <i class="fas fa-circle-left nav-icon"></i>
                                 <p>Outbound</p>
                             </a>
@@ -179,7 +179,7 @@
                     </ul>
                 </li>
 
-                <li class="nav-item">
+                <li class="nav-item {{ Route::currentRouteNamed('delivery-purchase-receipts.index') || Route::currentRouteNamed('itemdata.index')  ? 'menu-is-opening menu-open' : '' }}" ||>
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-warehouse" style="color: #74C0FC;"></i>
                         <p>
@@ -190,14 +190,14 @@
                     <ul class="nav nav-treeview">
 
                         <li>
-                            <a href="{{ route('delivery-purchase-receipts.index') }}" class="nav-link">
+                            <a href="{{ route('delivery-purchase-receipts.index') }}" class="nav-link {{ Route::currentRouteNamed('delivery-purchase-receipts.index') ? 'active' : '' }}">
                                 <i class="fas fa-circle-right nav-icon"></i>
                                 <p>Inbound</p>
                             </a>
                         </li>
 
                         <li>
-                            <a href="{{ route('itemdata.index') }}" class="nav-link">
+                            <a href="{{ route('itemdata.index') }}" class="nav-link {{ Route::currentRouteNamed('itemdata.index') ? 'active' : '' }}">
                                 <i class="fas fa-database nav-icon"></i>
                                 <p>Item master data</p>
                             </a>
