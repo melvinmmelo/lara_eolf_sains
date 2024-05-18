@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('pl_desc');
             $table->string('pl_status');
             $table->timestamps();
+
+            $table->index('branch_code');
         });
     }
 

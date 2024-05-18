@@ -20,6 +20,8 @@ return new class extends Migration
             $table->json('products')->nullable();
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
+
+            $table->index('branch_code');
         });
     }
 

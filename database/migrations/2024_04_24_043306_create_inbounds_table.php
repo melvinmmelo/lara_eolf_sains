@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string('status', 10);
 
             $table->timestamps();
+
+            $table->index('branch_code');
         });
     }
 
