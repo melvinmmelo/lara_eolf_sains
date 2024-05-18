@@ -53,47 +53,47 @@
                 @include('layouts.errors')
 
                 <!-- <table id="example1" class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>Plate No.</th>
-                                <th>Brand</th>
-                                <th>Type</th>
-                                <th>Capacity</th>
-                                <th>Status</th>
+                                    <thead>
+                                        <tr>
+                                            <th>Plate No.</th>
+                                            <th>Brand</th>
+                                            <th>Type</th>
+                                            <th>Capacity</th>
+                                            <th>Status</th>
 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>aaa</td>
-                                <td>aaa</td>
-                                <td>aaa</td>
-                                <td>aaa</td>
-                                <td>aaa</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>aaa</td>
+                                            <td>aaa</td>
+                                            <td>aaa</td>
+                                            <td>aaa</td>
+                                            <td>aaa</td>
 
-                            </tr>
+                                        </tr>
 
-                            <tr>
-                                <td>aaa</td>
-                                <td>aaa</td>
-                                <td>aaa</td>
-                                <td>aaa</td>
-                                <td>aaa</td>
+                                        <tr>
+                                            <td>aaa</td>
+                                            <td>aaa</td>
+                                            <td>aaa</td>
+                                            <td>aaa</td>
+                                            <td>aaa</td>
 
 
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>Plate No.</th>
-                                <th>Brand</th>
-                                <th>Type</th>
-                                <th>Capacity</th>
-                                <th>Status</th>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Plate No.</th>
+                                            <th>Brand</th>
+                                            <th>Type</th>
+                                            <th>Capacity</th>
+                                            <th>Status</th>
 
-                            </tr>
-                        </tfoot>
-                    </table> -->
+                                        </tr>
+                                    </tfoot>
+                                </table> -->
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -163,12 +163,12 @@
                             <div class="form-group">
                                 <div class="row mb-2">
                                     <div class="col-sm-6">
-                                        <label class="form-label" for="plate_no">Plate No.</label>
-                                        <input type="text" class="form-control" name="plateno">
+                                        <label class="form-label" for="plate_no"><i style="color:red">*</i>Plate No.</label>
+                                        <input type="text" class="form-control" name="plateno" required>
                                     </div>
                                     <div class="col-sm-6">
-                                        <label class="form-label" for="brand">Brand</label>
-                                        <input type="text" class="form-control" name="brand">
+                                        <label class="form-label" for="brand"><i style="color:red">*</i>Brand</label>
+                                        <input type="text" class="form-control" name="brand" required>
                                     </div>
                                 </div>
                             </div>
@@ -186,7 +186,7 @@
                             <div class="form-group">
                                 <div class="row mb-3">
                                     <div class="col-sm-4">
-                                        <label class="form-label" for="type">Type</label>
+                                        <label class="form-label" for="type"><i style="color:red">*</i>Type</label>
                                         <select class="form-control d-block" name="type">
                                             <option>option 1</option>
                                             <option>option 2</option>

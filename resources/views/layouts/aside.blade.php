@@ -5,7 +5,7 @@
 </style>
 
 
-<aside class="main-sidebar sidebar-light-primary">
+<aside class="main-sidebar sidebar-light-primary elevation-1">
     <!-- elevation-4 shadow for sidebar -->
     <!-- Brand Logo -->
 
@@ -62,7 +62,8 @@
                     </ul>
                 </li>
 
-                <li class="nav-item {{ Route::currentRouteNamed('company') || Route::currentRouteNamed('branch') || Route::currentRouteNamed('users') ? 'menu-is-opening menu-open' : '' }}">
+                <li
+                    class="nav-item {{ Route::currentRouteNamed('company') || Route::currentRouteNamed('branch') || Route::currentRouteNamed('users') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-user-tie" style="color: #74C0FC;"></i>
                         <p>
@@ -72,7 +73,8 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li>
-                            <a href="{{ route('company') }}" class="nav-link {{ Route::currentRouteNamed('company') ? 'active' : '' }}">
+                            <a href="{{ route('company') }}"
+                                class="nav-link {{ Route::currentRouteNamed('company') ? 'active' : '' }}">
                                 <i class="far fa-building nav-icon"></i>
                                 <p>Company</p>
                             </a>
@@ -215,7 +217,8 @@
                             Logout
                         </p>
 
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                            style="display: none;">
                             @csrf
                         </form>
                     </a>
@@ -231,51 +234,51 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-     $(document).ready(function() {
-            $('.nav-link').click(function() {
-                // Remove active class from all nav-links
-                $('.nav-link').removeClass('active');
+    $(document).ready(function() {
+        $('.nav-link').click(function() {
+            // Remove active class from all nav-links
+            $('.nav-link').removeClass('active');
 
-                // Add active class to the clicked nav-link
-                $(this).addClass('active');
-            });
-
-            console.log({{ Route::currentRouteName() }});
+            // Add active class to the clicked nav-link
+            $(this).addClass('active');
         });
 
-        // Check if the DOMContentLoaded event has fired
+        console.log({{ Route::currentRouteName() }});
+    });
 
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     // Get the sidebar element
-        //     var sidebarContent = document.getElementById('sidebar');
-        //     // Retrieve stored content from session storage
-        //     var storedContent = sessionStorage.getItem('nav-item');
-        //     // If stored content exists, restore it
-        //     if (storedContent) {
-        //         sidebarContent.innerHTML = storedContent;
-        //     }
-        // });
+    // Check if the DOMContentLoaded event has fired
 
-        // // Store content in session storage before page is unloaded (refreshed)
-        // window.addEventListener('beforeunload', function() {
-        //     // Get the content wrapper element
-        //     var sidebarContent = document.getElementById('sidebar');
-        //     // Store the current content in session storage
-        //     sessionStorage.setItem('nav-item', sidebarContent.innerHTML);
-        // });
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     // Get the sidebar element
+    //     var sidebarContent = document.getElementById('sidebar');
+    //     // Retrieve stored content from session storage
+    //     var storedContent = sessionStorage.getItem('nav-item');
+    //     // If stored content exists, restore it
+    //     if (storedContent) {
+    //         sidebarContent.innerHTML = storedContent;
+    //     }
+    // });
+
+    // // Store content in session storage before page is unloaded (refreshed)
+    // window.addEventListener('beforeunload', function() {
+    //     // Get the content wrapper element
+    //     var sidebarContent = document.getElementById('sidebar');
+    //     // Store the current content in session storage
+    //     sessionStorage.setItem('nav-item', sidebarContent.innerHTML);
+    // });
 
 
-        // function toggleTreeview(treeviewId, redirectUrl) {
-        //     // Collapse all treeviews except for the specified one
-        //     $('.nav-treeview').not('#' + treeviewId).hide();
-        //     // Toggle the specified treeview
-        //     $('#' + treeviewId).toggle();
+    // function toggleTreeview(treeviewId, redirectUrl) {
+    //     // Collapse all treeviews except for the specified one
+    //     $('.nav-treeview').not('#' + treeviewId).hide();
+    //     // Toggle the specified treeview
+    //     $('#' + treeviewId).toggle();
 
-        //     // Redirect to the specified URL after a short delay
-        //     if (redirectUrl) {
-        //         setTimeout(function() {
-        //             window.location.href = redirectUrl;
-        //         }, 0); // Adjust the delay (in milliseconds) as needed
-        //     }
-        // }
+    //     // Redirect to the specified URL after a short delay
+    //     if (redirectUrl) {
+    //         setTimeout(function() {
+    //             window.location.href = redirectUrl;
+    //         }, 0); // Adjust the delay (in milliseconds) as needed
+    //     }
+    // }
 </script>

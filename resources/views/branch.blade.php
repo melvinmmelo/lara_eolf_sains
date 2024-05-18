@@ -68,7 +68,7 @@
                                 <td>{{ $branch->office_no }}</td>
                                 <td>{{ $branch->address }}</td>
                             </tr>
-                            @endforeach
+                        @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
@@ -109,12 +109,13 @@
                             <div class="form-group">
                                 <div class="row mb-3">
                                     <div class="col-sm-4">
-                                        <label class="form-label" for="code">Code</label>
+                                        <label class="form-label" for="code"><i style="color:red">*</i>Code</label>
                                         <input type="text" class="form-control" name="code" required>
                                     </div>
 
                                     <div class="col-sm-8">
-                                        <label class="form-label" for="name">Branch Name</label>
+                                        <label class="form-label" for="name"><i style="color:red">*</i>Branch
+                                            Name</label>
                                         <input type="text" class="form-control" name="name" required>
                                     </div>
                                 </div>
