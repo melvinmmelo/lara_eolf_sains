@@ -15,9 +15,23 @@ class PricesController extends Controller
      */
     public function index()
     {
-        $pricing = prices::all();
-        $pricelevels = pricelevels::all();
+        $pricelevels = pricelevels::with('prices')->branch(session('branch_code'))->get();
+
+
+        foreach ($pricelevels as $pricelevel) {
+            $pricing = $pricelevel->prices;
+            dd($pricing);
+        }
+
+        // $pricing = prices::all();
+
+        $pricing = $pricelevels->prices()->get();
+
+        // Get all products
+
         $products = Product::all();
+
+
         // Pass the vehicles data to the view
         return view('pricing', compact('pricing','pricelevels','products'));
     }
@@ -37,7 +51,7 @@ class PricesController extends Controller
     {
          // dd($request->all());
          $request->validate([
-            'price_level' => 'required',
+            'pricing_id' => 'required',
             'price_code' => 'required',
             'price_unit' => 'required',
             'quant' => 'required',
@@ -52,12 +66,12 @@ class PricesController extends Controller
         //      $status = 'ACTIVE';
         //  }
         prices::create([
-            'p_level' => $request->price_level,
+            'pricing_id' => $request->price_level,
             'p_code' => $request->price_code,
             'p_unit' => $request->price_unit,
             'p_quant' => $request->quant,
             'p_price' => $request->price,
-   
+
             // Add more fields as needed
         ]);
 

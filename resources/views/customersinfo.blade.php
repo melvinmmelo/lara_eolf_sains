@@ -209,10 +209,10 @@
                                                         <select class="form-control" id="cust_prov" name="province">
                                                             <!-- <option></option> -->
                                                             <!-- <option>option 1</option>
-                                                                                    <option>option 2</option>
-                                                                                    <option>option 3</option>
-                                                                                    <option>option 4</option>
-                                                                                    <option>option 5</option> -->
+                                                                                                            <option>option 2</option>
+                                                                                                            <option>option 3</option>
+                                                                                                            <option>option 4</option>
+                                                                                                            <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -225,10 +225,10 @@
                                                         <select class="form-control" id="cust_city" name="city">
                                                             <!-- <option></option> -->
                                                             <!-- <option>option 1</option>
-                                                                                    <option>option 2</option>
-                                                                                    <option>option 3</option>
-                                                                                    <option>option 4</option>
-                                                                                    <option>option 5</option> -->
+                                                                                                            <option>option 2</option>
+                                                                                                            <option>option 3</option>
+                                                                                                            <option>option 4</option>
+                                                                                                            <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -241,10 +241,10 @@
                                                         <select class="form-control" id="cust_brgy" name="brgy">
                                                             <!-- <option></option> -->
                                                             <!-- <option>option 1</option>
-                                                                                        <option>option 2</option>
-                                                                                        <option>option 3</option>
-                                                                                        <option>option 4</option>
-                                                                                        <option>option 5</option> -->
+                                                                                                                <option>option 2</option>
+                                                                                                                <option>option 3</option>
+                                                                                                                <option>option 4</option>
+                                                                                                                <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -290,10 +290,20 @@
                                 <div class="col-sm-6">
                                     <div class="card">
                                         <div class="card-header bg-primary">
+
+
                                             Store
                                         </div>
                                         <div class="card-body">
-
+                                            <div class="form-group">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" name="is_store" id="is_store"
+                                                            value="1">
+                                                        Home based
+                                                    </label>
+                                                </div>
+                                            </div>
 
                                             <div class="form-group">
                                                 <div class="row mb-1">
@@ -319,13 +329,13 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="region2">Region</label>
+                                                        <label class="form-label" for="cust_region2">Region</label>
                                                         <select class="form-control" id="cust_region2" name="region2">
                                                             <!-- <option>option 1</option>
-                                                                                                                                                    <option>option 2</option>
-                                                                                                                                                    <option>option 3</option>
-                                                                                                                                                    <option>option 4</option>
-                                                                                                                                                    <option>option 5</option> -->
+                                                                                                                                                                            <option>option 2</option>
+                                                                                                                                                                            <option>option 3</option>
+                                                                                                                                                                            <option>option 4</option>
+                                                                                                                                                                            <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -334,13 +344,13 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="province2">Province</label>
+                                                        <label class="form-label" for="cust_prov2">Province</label>
                                                         <select class="form-control" id="cust_prov2" name="province2">
                                                             <!-- <option>option 1</option>
-                                                                                                                                                                        <option>option 2</option>
-                                                                                                                                                                        <option>option 3</option>
-                                                                                                                                                                        <option>option 4</option>
-                                                                                                                                                                        <option>option 5</option> -->
+                                                                                                                                                                                                <option>option 2</option>
+                                                                                                                                                                                                <option>option 3</option>
+                                                                                                                                                                                                <option>option 4</option>
+                                                                                                                                                                                                <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -349,13 +359,13 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="city2">City</label>
+                                                        <label class="form-label" for="cust_city2">City</label>
                                                         <select class="form-control" id="cust_city2" name="city2">
                                                             <!-- <option>option 1</option>
-                                                                                                                                                                        <option>option 2</option>
-                                                                                                                                                                        <option>option 3</option>
-                                                                                                                                                                        <option>option 4</option>
-                                                                                                                                                                        <option>option 5</option> -->
+                                                                                                                                                                                                <option>option 2</option>
+                                                                                                                                                                                                <option>option 3</option>
+                                                                                                                                                                                                <option>option 4</option>
+                                                                                                                                                                                                <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -364,13 +374,13 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="brgy2">Barangay</label>
+                                                        <label class="form-label" for="cust_brgy2">Barangay</label>
                                                         <select class="form-control" id="cust_brgy2" name="brgy2">
                                                             <!-- <option>option 1</option>
-                                                                                                                                                                        <option>option 2</option>
-                                                                                                                                                                        <option>option 3</option>
-                                                                                                                                                                        <option>option 4</option>
-                                                                                                                                                                        <option>option 5</option> -->
+                                                                                                                                                                                                <option>option 2</option>
+                                                                                                                                                                                                <option>option 3</option>
+                                                                                                                                                                                                <option>option 4</option>
+                                                                                                                                                                                                <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -547,8 +557,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_region">Region</label>
-                                                        <select class="form-control" id="region" name="region">
+                                                        <label class="form-label" for="e_region">Region</label>
+                                                        <select class="form-control" id="e_region" name="e_region">
                                                             <!-- <option></option> -->
                                                         </select>
                                                     </div>
@@ -558,14 +568,14 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_prov">Province</label>
-                                                        <select class="form-control" id="province" name="province">
+                                                        <label class="form-label" for="e_province">Province</label>
+                                                        <select class="form-control" id="e_province" name="e_province">
                                                             <!-- <option></option> -->
                                                             <!-- <option>option 1</option>
-                                                                                    <option>option 2</option>
-                                                                                    <option>option 3</option>
-                                                                                    <option>option 4</option>
-                                                                                    <option>option 5</option> -->
+                                                                                                            <option>option 2</option>
+                                                                                                            <option>option 3</option>
+                                                                                                            <option>option 4</option>
+                                                                                                            <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -574,14 +584,14 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_city">City</label>
-                                                        <select class="form-control" id="city" name="city">
+                                                        <label class="form-label" for="e_city">City</label>
+                                                        <select class="form-control" id="e_city" name="e_city">
                                                             <!-- <option></option> -->
                                                             <!-- <option>option 1</option>
-                                                                                    <option>option 2</option>
-                                                                                    <option>option 3</option>
-                                                                                    <option>option 4</option>
-                                                                                    <option>option 5</option> -->
+                                                                                                            <option>option 2</option>
+                                                                                                            <option>option 3</option>
+                                                                                                            <option>option 4</option>
+                                                                                                            <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -590,14 +600,14 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_brgy">Barangay</label>
-                                                        <select class="form-control" id="brgy" name="brgy">
+                                                        <label class="form-label" for="e_brgy">Barangay</label>
+                                                        <select class="form-control" id="e_brgy" name="e_brgy">
                                                             <!-- <option></option> -->
                                                             <!-- <option>option 1</option>
-                                                                                        <option>option 2</option>
-                                                                                        <option>option 3</option>
-                                                                                        <option>option 4</option>
-                                                                                        <option>option 5</option> -->
+                                                                                                                <option>option 2</option>
+                                                                                                                <option>option 3</option>
+                                                                                                                <option>option 4</option>
+                                                                                                                <option>option 5</option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -676,13 +686,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="region2">Region</label>
-                                                        <select class="form-control" id="cust_region2" name="region2">
-                                                            <!-- <option>option 1</option>
-                                                                                                                                                    <option>option 2</option>
-                                                                                                                                                    <option>option 3</option>
-                                                                                                                                                    <option>option 4</option>
-                                                                                                                                                    <option>option 5</option> -->
+                                                        <label class="form-label" for="e_region2">Region</label>
+                                                        <select class="form-control" id="e_region2" name="e_region2">
                                                         </select>
                                                     </div>
                                                 </div>
@@ -691,13 +696,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="province2">Province</label>
-                                                        <select class="form-control" id="cust_prov2" name="province2">
-                                                            <!-- <option>option 1</option>
-                                                                                                                                                                        <option>option 2</option>
-                                                                                                                                                                        <option>option 3</option>
-                                                                                                                                                                        <option>option 4</option>
-                                                                                                                                                                        <option>option 5</option> -->
+                                                        <label class="form-label" for="e_province2">Province</label>
+                                                        <select class="form-control" id="e_province2" name="e_province2">
                                                         </select>
                                                     </div>
                                                 </div>
@@ -706,13 +706,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="city2">City</label>
-                                                        <select class="form-control" id="cust_city2" name="city2">
-                                                            <!-- <option>option 1</option>
-                                                                                                                                                                        <option>option 2</option>
-                                                                                                                                                                        <option>option 3</option>
-                                                                                                                                                                        <option>option 4</option>
-                                                                                                                                                                        <option>option 5</option> -->
+                                                        <label class="form-label" for="e_city2">City</label>
+                                                        <select class="form-control" id="e_city2" name="e_city2">
                                                         </select>
                                                     </div>
                                                 </div>
@@ -721,13 +716,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="brgy2">Barangay</label>
-                                                        <select class="form-control" id="cust_brgy2" name="brgy2">
-                                                            <!-- <option>option 1</option>
-                                                                                                                                                                        <option>option 2</option>
-                                                                                                                                                                        <option>option 3</option>
-                                                                                                                                                                        <option>option 4</option>
-                                                                                                                                                                        <option>option 5</option> -->
+                                                        <label class="form-label" for="e_brgy2">Barangay</label>
+                                                        <select class="form-control" id="e_brgy2" name="e_brgy2">
                                                         </select>
                                                     </div>
                                                 </div>
@@ -842,10 +832,10 @@
             document.getElementById("contact_no").value = con;
             document.getElementById("companyname").value = cm;
             document.getElementById("tin").value = tin;
-            document.getElementById("region").value = reg;
-            document.getElementById("province").value = prov;
-            document.getElementById("city").value = city;
-            document.getElementById("brgy").value = brgy;
+            document.getElementById("e_region").value = reg;
+            document.getElementById("e_province").value = prov;
+            document.getElementById("e_city").value = city;
+            document.getElementById("e_brgy").value = brgy;
             document.getElementById("subdivision").value = subv;
             document.getElementById("longitude").value = long;
             document.getElementById("latitude").value = lat;
@@ -854,10 +844,10 @@
             document.getElementById("store_id").value = store_id;
             document.getElementById("storename").value = storename;
             document.getElementById("contactno2").value = contactno;
-            document.getElementById("cust_region2").value = reg2;
-            document.getElementById("cust_prov2").value = prov2;
-            document.getElementById("cust_city2").value = city2;
-            document.getElementById("cust_brgy2").value = brgy2;
+            document.getElementById("e_region2").value = reg2;
+            document.getElementById("e_province2").value = prov2;
+            document.getElementById("e_city2").value = city2;
+            document.getElementById("e_brgy2").value = brgy2;
             document.getElementById("subdivision2").value = subv2;
             document.getElementById("latitude2").value = lat2;
             document.getElementById("longitude2").value = long2;
@@ -865,13 +855,7 @@
             document.getElementById("length_stay2").value = length_stay;
             document.getElementById("remarks2").value = remarks;
         }
-    </script>
 
-
-
-
-
-    <script>
         $('#modal-equipment').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
             var customerId = button.data('customer-id');
@@ -880,11 +864,8 @@
             modal.find('input[name="customer_id"]').val(customerId);
             modal.find('input[name="store_id"]').val(storeId);
         });
-    </script>
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
-    <script>
-        $(document).ready(function() {
 
+        $(document).ready(function() {
             // Function to populate the Region dropdown
             function populateRegionDropdown() {
                 // Clear existing options
@@ -901,29 +882,27 @@
                             $('#cust_region').append('<option value="' + value.code + '">' +
                                 value.name + '</option>');
                         });
-                    }
-                });
-            }
 
-            function populateRegionDropdown2() {
-                // Clear existing options
-
-                $('#region').empty();
-
-                // Add a blank option as the first option
-                $('#region').append('<option value="">Please select</option>');
-                $.ajax({
-                    type: "GET",
-                    url: "/get-regions", // Route to fetch regions from your server
-                    success: function(response) {
-                        // $('#cust_region').empty(); // Clear existing options
                         $.each(response, function(key, value) {
-                            $('#region').append('<option value="' + value.code + '">' + value
+                            $('#cust_region2').append('<option value="' + value.code + '">' +
+                                value
                                 .name + '</option>');
+                        });
+
+
+                        $.each(response, function(key, value) {
+                            $('#e_region').append('<option value="' + value.code + '">' +
+                                value.name + '</option>');
+                        });
+
+                        $.each(response, function(key, value) {
+                            $('#e_region2').append('<option value="' + value.code + '">' +
+                                value.name + '</option>');
                         });
                     }
                 });
             }
+
             // Function to populate the Province dropdown based on the selected region
             function populateProvinceDropdown(regionId) {
                 $('#cust_prov').empty();
@@ -1033,102 +1012,7 @@
                     }
                 });
             }
-            // Initial population of Region dropdown
-            populateRegionDropdown();
-            populateRegionDropdown2();
-            // Event listener for Region dropdown change
-            $('#cust_region').change(function() {
-                var regionId = $(this).val();
-                if (regionId) {
-                    // Populate Province dropdown based on selected region
-                    populateProvinceDropdown(regionId);
-                }
-            });
-            $('#region').change(function() {
-                var regionId = $(this).val();
-                if (regionId) {
-                    // Populate Province dropdown based on selected region
-                    populateProvinceDropdown2(regionId);
-                }
-            });
 
-            // Event listener for Province dropdown change
-            $('#cust_prov').change(function() {
-                var provinceId = $(this).val();
-                if (provinceId) {
-                    // Populate City dropdown based on selected province
-                    populateCityDropdown(provinceId);
-                }
-            });
-            $('#province').change(function() {
-                var provinceId = $(this).val();
-                if (provinceId) {
-                    // Populate City dropdown based on selected province
-                    populateCityDropdown2(provinceId);
-                }
-            });
-            // Event listener for brgy dropdown change
-            $('#cust_city').change(function() {
-                var cityId = $(this).val();
-                if (cityId) {
-                    // Populate brgy dropdown based on selected province
-                    populateBrgyDropdown(cityId);
-                }
-            });
-            $('#city').change(function() {
-                var cityId = $(this).val();
-                if (cityId) {
-                    // Populate brgy dropdown based on selected province
-                    populateBrgyDropdown2(cityId);
-                }
-            });
-        });
-    </script>
-
-
-
-    <script>
-        $(document).ready(function() {
-
-            // Function to populate the Region dropdown
-            function populateRegionDropdown2() {
-                // Clear existing options
-                $('#cust_region2').empty();
-
-                // Add a blank option as the first option
-                $('#cust_region2').append('<option value="">Please select</option>');
-                $.ajax({
-                    type: "GET",
-                    url: "/get-regions", // Route to fetch regions from your server
-                    success: function(response) {
-                        // $('#cust_region').empty(); // Clear existing options
-                        $.each(response, function(key, value) {
-                            $('#cust_region2').append('<option value="' + value.code + '">' +
-                                value.name + '</option>');
-                        });
-                    }
-                });
-            }
-
-            function populateRegionDropdown22() {
-                // Clear existing options
-
-                $('#region2').empty();
-
-                // Add a blank option as the first option
-                $('#region2').append('<option value="">Please select</option>');
-                $.ajax({
-                    type: "GET",
-                    url: "/get-regions", // Route to fetch regions from your server
-                    success: function(response) {
-                        // $('#cust_region').empty(); // Clear existing options
-                        $.each(response, function(key, value) {
-                            $('#region2').append('<option value="' + value.code + '">' + value
-                                .name + '</option>');
-                        });
-                    }
-                });
-            }
             // Function to populate the Province dropdown based on the selected region
             function populateProvinceDropdown2(regionId) {
                 $('#cust_prov2').empty();
@@ -1149,23 +1033,6 @@
                 });
             }
 
-            function populateProvinceDropdown22(regionId) {
-                $('#province').empty();
-
-                // Add a blank option as the first option
-                $('#province').append('<option value="">Please select</option>');
-                $.ajax({
-                    type: "GET",
-                    url: "/get-provinces/" + regionId, // Route to fetch provinces based on region
-                    success: function(response) {
-                        // $('#cust_prov').empty(); // Clear existing options
-                        $.each(response, function(key, value) {
-                            $('#province').append('<option value="' + value.code + '">' + value
-                                .name + '</option>');
-                        });
-                    }
-                });
-            }
 
             // Function to populate the City dropdown based on the selected province
             function populateCityDropdown2(provinceId) {
@@ -1181,24 +1048,6 @@
                         $.each(response, function(key, value) {
                             $('#cust_city2').append('<option value="' + value.code + '">' +
                                 value
-                                .name + '</option>');
-                        });
-                    }
-                });
-            }
-
-            function populateCityDropdown22(provinceId) {
-                $('#city2').empty();
-
-                // Add a blank option as the first option
-                $('#city2').append('<option value="">Please select</option>');
-                $.ajax({
-                    type: "GET",
-                    url: "/get-cities/" + provinceId, // Route to fetch cities based on province
-                    success: function(response) {
-                        // $('#cust_city').empty(); // Clear existing options
-                        $.each(response, function(key, value) {
-                            $('#city2').append('<option value="' + value.code + '">' + value
                                 .name + '</option>');
                         });
                     }
@@ -1242,21 +1091,46 @@
                 });
             }
             // Initial population of Region dropdown
-            populateRegionDropdown2();
-            populateRegionDropdown22();
+
             // Event listener for Region dropdown change
+
+            $('#cust_region').change(function() {
+                var regionId = $(this).val();
+                if (regionId) {
+                    // Populate Province dropdown based on selected region
+                    populateProvinceDropdown(regionId);
+                    populateProvinceDropdown2(regionId);
+
+                }
+            });
+
+            // Event listener for Province dropdown change
+            $('#cust_prov').change(function() {
+                var provinceId = $(this).val();
+                if (provinceId) {
+                    // Populate City dropdown based on selected province
+                    populateCityDropdown(provinceId);
+                    populateCityDropdown2(provinceId);
+
+                }
+            });
+            // Event listener for brgy dropdown change
+            $('#cust_city').change(function() {
+                var cityId = $(this).val();
+                if (cityId) {
+                    // Populate brgy dropdown based on selected province
+                    populateBrgyDropdown(cityId);
+                    populateBrgyDropdown2(cityId);
+
+                }
+            });
+
             $('#cust_region2').change(function() {
                 var regionId = $(this).val();
                 if (regionId) {
                     // Populate Province dropdown based on selected region
                     populateProvinceDropdown2(regionId);
-                }
-            });
-            $('#region2').change(function() {
-                var regionId = $(this).val();
-                if (regionId) {
-                    // Populate Province dropdown based on selected region
-                    populateProvinceDropdown22(regionId);
+
                 }
             });
 
@@ -1268,13 +1142,6 @@
                     populateCityDropdown2(provinceId);
                 }
             });
-            $('#province2').change(function() {
-                var provinceId = $(this).val();
-                if (provinceId) {
-                    // Populate City dropdown based on selected province
-                    populateCityDropdown22(provinceId);
-                }
-            });
             // Event listener for brgy dropdown change
             $('#cust_city2').change(function() {
                 var cityId = $(this).val();
@@ -1283,13 +1150,159 @@
                     populateBrgyDropdown2(cityId);
                 }
             });
-            $('#city2').change(function() {
+
+
+
+            // EDIT MODAL REGION, PROVINCE, CITY, BRGY
+
+            $("#e_region").change(function() {
+                var regionId = $(this).val();
+                if (regionId) {
+                    // Populate Province dropdown based on selected region
+                    populateProvinceDropdown(regionId);
+                    populateProvinceDropdown2(regionId);
+                }
+            });
+
+            // Event listener for Province dropdown change
+            $("#e_province").change(function() {
+                var provinceId = $(this).val();
+                if (provinceId) {
+                    // Populate City dropdown based on selected province
+                    populateCityDropdown(provinceId);
+                    populateCityDropdown2(provinceId);
+                }
+            });
+            // Event listener for brgy dropdown change
+            $("#e_city").change(function() {
                 var cityId = $(this).val();
                 if (cityId) {
                     // Populate brgy dropdown based on selected province
-                    populateBrgyDropdown22(cityId);
+                    populateBrgyDropdown(cityId);
+                    populateBrgyDropdown2(cityId);
                 }
             });
+
+            $("#e_region2").change(function() {
+                var regionId = $(this).val();
+                if (regionId) {
+                    // Populate Province dropdown based on selected region
+                    populateProvinceDropdown2(regionId);
+                }
+            });
+
+            // Event listener for Province dropdown change
+            $("#e_province2").change(function() {
+                var provinceId = $(this).val();
+                if (provinceId) {
+                    // Populate City dropdown based on selected province
+                    populateCityDropdown2(provinceId);
+                }
+            });
+            // Event listener for brgy dropdown change
+            $("#e_city2").change(function() {
+                var cityId = $(this).val();
+                if (cityId) {
+                    // Populate brgy dropdown based on selected province
+                    populateBrgyDropdown2(cityId);
+                }
+            });
+
+            // EDIT MODAL REGION, PROVINCE, CITY, BRGY
+
+            $("#e_region").change(function() {
+                var regionId = $(this).val();
+                if (regionId) {
+                    // Populate Province dropdown based on selected region
+                    editPopulateProvinceDropdown(regionId);
+                    editPopulateProvinceDropdown2(regionId);
+
+                }
+            });
+
+            // Event listener for Province dropdown change
+            $("#e_province").change(function() {
+                var provinceId = $(this).val();
+                if (provinceId) {
+                    // Populate City dropdown based on selected province
+                    editPopulateCityDropdown(provinceId);
+                    editPopulateCityDropdown2(provinceId);
+                }
+            });
+            // Event listener for brgy dropdown change
+            $("#e_city").change(function() {
+                var cityId = $(this).val();
+                if (cityId) {
+                    // Populate brgy dropdown based on selected province
+                    editPopulateBrgyDropdown(cityId);
+                    editPopulateBrgyDropdown2(cityId);
+                }
+            });
+
+            $("#e_region2").change(function() {
+                var regionId = $(this).val();
+                if (regionId) {
+                    // Populate Province dropdown based on selected region
+                    editPopulateProvinceDropdown2(regionId);
+                }
+            });
+
+            // Event listener for Province dropdown change
+            $("#e_province2").change(function() {
+                var provinceId = $(this).val();
+                if (provinceId) {
+                    // Populate City dropdown based on selected province
+                    editPopulateCityDropdown2(provinceId);
+                }
+            });
+            // Event listener for brgy dropdown change
+            $("#e_city2").change(function() {
+                var cityId = $(this).val();
+                if (cityId) {
+                    // Populate brgy dropdown based on selected province
+                    editPopulateBrgyDropdown2(cityId);
+                }
+            });
+
+
+            // Initial population of Region dropdown
+            populateRegionDropdown();
+
         });
+
+        window.onload = function() {
+            var checkbox = document.getElementById('is_store');
+            var companyNameInput = document.querySelector('input[name="companyname"]');
+            var storeNameInput = document.querySelector('input[name="storename"]');
+
+            var contacNo = document.querySelector('input[name="contact_no"]');
+            var storeContacNo = document.querySelector('input[name="contactno2"]');
+
+            var cust_region = document.querySelector('select[name="region"]');
+            var cust_prov = document.querySelector('select[name="province"]');
+            var cust_city = document.querySelector('select[name="city"]');
+            var cust_brgy = document.querySelector('select[name="brgy"]');
+
+            var cust_region2 = document.querySelector('select[name="region2"]');
+            var cust_prov2 = document.querySelector('select[name="province2"]');
+            var cust_city2 = document.querySelector('select[name="city2"]');
+            var cust_brgy2 = document.querySelector('select[name="brgy2"]');
+
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+
+                    storeNameInput.value = companyNameInput.value;
+                    storeContacNo.value = contacNo.value;
+
+                    // get selected region, province, city, brgy
+                    // and set it to store region, province, city, brgy
+                    cust_region2.value = cust_region.value;
+                    cust_prov2.value = cust_prov.value;
+                    cust_city2.value = cust_city.value;
+                    cust_brgy2.value = cust_brgy.value;
+
+                }
+            });
+        }
     </script>
 @endsection

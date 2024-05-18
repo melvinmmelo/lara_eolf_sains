@@ -180,6 +180,8 @@
     <script src="{{ asset('plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.js') }}"></script>
     <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 
+
+
     <!-- Page specific script -->
     <script>
         $(function() {
@@ -203,8 +205,6 @@
     <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
     <!-- SweetAlert2 -->
     <script src="../../plugins/sweetalert2/sweetalert2.min.js"></script>
-
-    @yield('custom_js')
 
 
 
@@ -256,6 +256,10 @@
             })
         })
     </script>
+
+    @yield('custom_js')
+
+    <script src="{{ asset('js/editcustomeraddress.js') }}"></script>
 
 </body>
 

@@ -13,7 +13,7 @@ class PricelevelsController extends Controller
      */
     public function index()
     {
-        $pricelevels = pricelevels::all();
+        $pricelevels = pricelevels::branch(session('branch_code'))->get();
         // Pass the vehicles data to the view
         return view('pricing-level', compact('pricelevels'));
     }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('prices', function (Blueprint $table) {
             $table->id();
-            $table->string('p_level');
+            $table->string('pricelevels_id');
             $table->string('p_code');
             $table->string('p_unit');
             $table->string('p_quant');

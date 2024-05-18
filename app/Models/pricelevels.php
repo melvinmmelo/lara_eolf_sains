@@ -15,4 +15,15 @@ class pricelevels extends Model
         'pl_status'
         // Add other fillable attributes here if any
     ];
+
+    public function scopeBranch($query, $branch_code)
+    {
+        return $query->where('branch_code', $branch_code);
+    }
+
+    // CREATE A RELATIONSHIP BETWEEN PRICELEVELS AND PRICES
+    public function prices()
+    {
+        return $this->hasMany(prices::class, 'pricelevels_id', 'id');
+    }
 }

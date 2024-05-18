@@ -114,9 +114,10 @@ class InboundController extends Controller
 
         $equipmentSerial = $equipmentStore->equipment->serial_no;
         $deliveryPerson = Drivers::select('name')->find($inbound->driver_id);
+
         $vehicle = Vehicles::select('plateno')->find($inbound->vehicle_id);
 
-        $defaultPriceLevel = pricelevels::where('branch_code', $branchCode)->select('pl_name')->first();
+        $defaultPriceLevel = pricelevels::where('branch_code', $branchCode)->select('pl_name')->orderBy('id', 'desc')->first();
 
         $productTypes = ProductType::where('is_active', 1)->get();
 

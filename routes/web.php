@@ -20,9 +20,17 @@ use App\Http\Controllers\PhAddrController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentStoreController;
 use App\Http\Controllers\ItemMasterDataController;
-use App\Models\ItemMasterData;
 
 Route::get('/', function () {
+    if (auth()->check()) {
+
+        if (session('branch_code') == null) {
+            return redirect()->route('branch-select');
+        }else{
+            return redirect()->route('dashboard');
+        }
+    }
+
     return view('auth.login');
 });
 

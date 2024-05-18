@@ -131,37 +131,37 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        pricelevels::create([
-            'branch_code' => "CODE 1.26",
-            'pl_name' => "FACTORY PRICE",
-            'pl_desc' => 'FP Summer 2024',
-            'pl_status' => 'Active',
-        ]);
+        // pricelevels::create([
+        //     'branch_code' => "CODE 1.26",
+        //     'pl_name' => "FACTORY PRICE",
+        //     'pl_desc' => 'FP Summer 2024',
+        //     'pl_status' => 'Active',
+        // ]);
 
 
-        prices::create([
-            'p_level' => "FACTORY PRICE",
-            'p_code' => 'SC_RR',
-            'p_unit' => 'Bag',
-            'p_quant' => 5,
-            'p_price' => 150,
-        ]);
+        // prices::create([
+        //     'p_level' => "FACTORY PRICE",
+        //     'p_code' => 'SC_RR',
+        //     'p_unit' => 'Bag',
+        //     'p_quant' => 5,
+        //     'p_price' => 150,
+        // ]);
 
-        prices::create([
-            'p_level' => "FACTORY PRICE",
-            'p_code' => 'SC_SB',
-            'p_unit' => 'Bag',
-            'p_quant' => 15,
-            'p_price' => 180,
-        ]);
+        // prices::create([
+        //     'p_level' => "FACTORY PRICE",
+        //     'p_code' => 'SC_SB',
+        //     'p_unit' => 'Bag',
+        //     'p_quant' => 15,
+        //     'p_price' => 180,
+        // ]);
 
-        prices::create([
-            'p_level' => "FACTORY PRICE",
-            'p_code' => 'MC_SB',
-            'p_unit' => 'Bag',
-            'p_quant' => 15,
-            'p_price' => 180,
-        ]);
+        // prices::create([
+        //     'p_level' => "FACTORY PRICE",
+        //     'p_code' => 'MC_SB',
+        //     'p_unit' => 'Bag',
+        //     'p_quant' => 15,
+        //     'p_price' => 180,
+        // ]);
 
         Branches::create([
             'code' => "CODE 1.26",

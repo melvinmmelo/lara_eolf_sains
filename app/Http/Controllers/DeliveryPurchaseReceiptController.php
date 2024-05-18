@@ -36,9 +36,13 @@ class DeliveryPurchaseReceiptController extends Controller
             'qty' => 'required',
         ]);
 
+        // dd($request->product_code);
+
         $dpr = DeliveryPurchaseReceipt::findOrFail($request->dpr_id);
 
-        $productPrice = prices::where('p_code', $request->product_code)->first()->p_price;
+        $productPrice = prices::getPrice($request->product_code, "FACTORY PRICE");
+
+        // dd($productPrice);
 
         if(!$productPrice){
             return redirect()->back()->with('error', 'Product price not found.');
