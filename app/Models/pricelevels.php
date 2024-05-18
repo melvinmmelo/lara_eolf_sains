@@ -9,6 +9,7 @@ class pricelevels extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'branch_code',
         'pl_name',
         'pl_desc',
         'pl_status'

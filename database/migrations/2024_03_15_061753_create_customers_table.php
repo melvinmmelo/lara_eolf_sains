@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->string('distributor');
+            $table->string('branch_code', 15);
             $table->string('lastname');
             $table->string('firstname');
             $table->string('middlename');
@@ -30,7 +31,11 @@ return new class extends Migration
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
             $table->timestamps();
+
+            $table->index('branch_code');
         });
+
+
     }
 
     /**

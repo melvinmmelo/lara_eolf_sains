@@ -89,7 +89,7 @@
                                         <label class="form-label" for="price_code">Price Level</label>
                                         <select class="form-control" id="price_level" name="price_level">
                                             @foreach ($pricelevels as $pl)
-                                                <option value="{{ $pl->pl_name }}">{{ $pl->pl_desc }}</option>
+                                                <option value="{{ $pl->pl_name }}">{{ $pl->pl_name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

@@ -29,4 +29,9 @@ class Inbound extends Model
     {
         return $this->created_at ? $this->created_at->format('Y-m-d h:s A') : null;
     }
+
+    public function scopeBranch($query, $branch_code)
+    {
+        return $query->where('branch_code', $branch_code);
+    }
 }

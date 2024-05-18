@@ -82,7 +82,7 @@ class DeliveryPurchaseReceiptController extends Controller
     public function index()
     {
         //
-        $deliveryPurchaseReceipts = DeliveryPurchaseReceipt::all();
+        $deliveryPurchaseReceipts = DeliveryPurchaseReceipt::branch(session('branch_code'))->get();
         return view('delivery-purchase-receipts.index', compact('deliveryPurchaseReceipts'));
     }
 

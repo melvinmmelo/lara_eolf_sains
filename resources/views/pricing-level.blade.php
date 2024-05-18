@@ -44,6 +44,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
+                            <th>Branch</th>
                             <th>Name</th>
                             <th>Description</th>
                             <th>Status</th>

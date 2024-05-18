@@ -33,6 +33,7 @@ class PricelevelsController extends Controller
     {
         // dd($request->all());
         $request->validate([
+            'branch_code' => 'required',
             'name' => 'required',
             'Description' => 'required',
             'branch_code' => 'required',

@@ -55,7 +55,7 @@ class InboundController extends Controller
 
         $vehicles = Vehicles::all();
 
-        $inbounds = Inbound::with('driver', 'vehicle')->get();
+        $inbounds = Inbound::with('driver', 'vehicle')->branch(session('branch_code'))->get();
 
         $equipment = Equipment::notAvailable()->get();
 

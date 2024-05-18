@@ -38,25 +38,29 @@ class CustomersController extends Controller
     {
         // Validate the incoming request data
         $request->validate([
+            'branch_code' => 'required',
             'lastname' => 'required',
             'firstname' => 'required',
             'companyname' => 'required',
             'middlename' => 'required',
+            'storename' => 'required',
+
             // Add more validation rules as needed
         ]);
-    
+
         // Retrieve the names of the region, province, city, etc. based on their codes
         $regionName = PhAddr::where('code', $request->region)->value('name');
         $provinceName = PhAddr::where('code', $request->province)->value('name');
         $cityName = PhAddr::where('code', $request->city)->value('name');
         $brgyName = PhAddr::where('code', $request->brgy)->value('name');
-    
+
         $regionName2 = PhAddr::where('code', $request->region2)->value('name');
         $provinceName2 = PhAddr::where('code', $request->province2)->value('name');
         $cityName2 = PhAddr::where('code', $request->city2)->value('name');
         $brgyName2 = PhAddr::where('code', $request->brgy2)->value('name');
         // Create a new Customer instance with the provided data
         $customer = Customer::create([
+            'branch_code' => $request->branch_code,
             'distributor' => $request->distributor,
             'lastname' => $request->lastname,
             'firstname' => $request->firstname,
@@ -74,7 +78,7 @@ class CustomersController extends Controller
             'latitude' => $request->latitude,
             // Add more fields as needed
         ]);
-    
+
         // Create a new store info record related to the customer
         $storeInfo = StoreInfo::create([
             'customer_id' => $customer->id,
@@ -91,11 +95,11 @@ class CustomersController extends Controller
             'length_stay' => $request->length_stay,
             'remarks' => $request->remarks,
         ]);
-    
+
         // Redirect the user back with a success message
         return redirect('/customers')->with('success', 'Customer added successfully!');
     }
-    
+
 
     // public function edit($id)
     // {
