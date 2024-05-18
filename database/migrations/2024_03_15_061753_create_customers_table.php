@@ -34,8 +34,6 @@ return new class extends Migration
 
             $table->index('branch_code');
         });
-
-
     }
 
     /**

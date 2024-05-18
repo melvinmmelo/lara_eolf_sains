@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Branches;
 use App\Models\CompanyDetails;
 use App\Models\Delivery;
 use App\Models\Drivers;
@@ -160,6 +161,20 @@ class DatabaseSeeder extends Seeder
             'p_unit' => 'Bag',
             'p_quant' => 15,
             'p_price' => 180,
+        ]);
+
+        Branches::create([
+            'code' => "CODE 1.26",
+            'name' => "EOLF Food Trading OPC - Cagayan Valley",
+            'address' => 'Tuguegarao City, Cagayan',
+            'office_no' =>  '09123456789',
+        ]);
+
+        Branches::create([
+            'code' => "CODE 1.27",
+            'name' => "EOLF Food Trading OPC - Tarlac",
+            'address' => 'Tarlac',
+            'office_no' =>  '09123456789',
         ]);
     }
 }
