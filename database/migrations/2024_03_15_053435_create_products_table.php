@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('code')->uniqiue();
             $table->string('product_type_code');
             $table->string('product_variant_code');
-            $table->string('quantity');
             $table->tinyInteger('is_active')->default(1);
             $table->timestamps();
 
