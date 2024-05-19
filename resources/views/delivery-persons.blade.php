@@ -92,8 +92,8 @@
                             <div class="form-group">
                                 <div class="row mb-1">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="name">Name</label>
-                                        <input type="text" class="form-control" name="name">
+                                        <label class="form-label" for="name"><i style="color:red">*</i>Name</label>
+                                        <input type="text" class="form-control" name="name" required>
                                     </div>
                                 </div>
                             </div>
@@ -102,8 +102,8 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="address">Address</label>
-                                        <input type="text" class="form-control" name="address">
+                                        <label class="form-label" for="address"><i style="color:red">*</i>Address</label>
+                                        <input type="text" class="form-control" name="address" required>
                                     </div>
                                 </div>
                             </div>
@@ -111,8 +111,9 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="contact">Contact No.</label>
-                                        <input type="text" class="form-control" name="contact">
+                                        <label class="form-label" for="contact"><i style="color:red">*</i>Contact
+                                            No.</label>
+                                        <input type="text" class="form-control" name="contact" required>
                                     </div>
                                 </div>
                             </div>

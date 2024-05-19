@@ -49,8 +49,9 @@
                                 <td>{{ $productType->spoon_pcs_per_bag }}</td>
                                 <td>{{ $productType->is_active == 1 ? 'Yes' : 'No' }}</td>
                                 <td>
-                                    <a href="#" data-toggle="modal" data-target="#modalEditPType" onclick="setToUpdateProduct('{{ $productType->code }}','{{ $productType->name }}','{{ $productType->volume }}','{{ $productType->spoon_pcs_per_bag }}','{{ $productType->is_active }}')"><button type="submit"
-                                            class="btn btn-sm btn-primary">Edit</button></a>
+                                    <a href="#" data-toggle="modal" data-target="#modalEditPType"
+                                        onclick="setToUpdateProduct('{{ $productType->code }}','{{ $productType->name }}','{{ $productType->volume }}','{{ $productType->spoon_pcs_per_bag }}','{{ $productType->is_active }}')"><button
+                                            type="submit" class="btn btn-sm btn-primary">Edit</button></a>
 
                                     <a href="{{ route('productType.toggleStatus', ['id' => $productType->code]) }}"
                                         onclick="return confirmSetInactive();"><button type="submit"
@@ -102,12 +103,12 @@
                             <div class="form-group">
                                 <div class="row mb-2">
                                     <div class="col-sm-3">
-                                        <label class="form-label" for="code">Code</label>
+                                        <label class="form-label" for="code"><i style="color:red">*</i>Code</label>
                                         <input type="text" class="form-control" name="code"
                                             value="{{ old('code') }}">
                                     </div>
                                     <div class="col-sm-9">
-                                        <label class="form-label" for="name">Name</label>
+                                        <label class="form-label" for="name"><i style="color:red">*</i>Name</label>
                                         <input type="text" class="form-control" name="name"
                                             value="{{ old('name') }}">
                                     </div>
@@ -118,13 +119,14 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <label class="form-label" for="volume">Volume</label>
+                                        <label class="form-label" for="volume"><i style="color:red">*</i>Volume</label>
                                         <input type="text" class="form-control" name="volume"
                                             value="{{ old('volume') }}">
                                     </div>
 
                                     <div class="col-sm-3">
-                                        <label class="form-label" for="volume">Spoon PCS/Bag</label>
+                                        <label class="form-label" for="volume"><i style="color:red">*</i>Spoon
+                                            PCS/Bag</label>
                                         <input type="number" class="form-control" name="spoon_pcs_per_bag"
                                             value="{{ old('spoon_pcs_per_bag') ?? 0 }}" value="0">
                                     </div>
@@ -172,7 +174,8 @@
                                 <div class="row mb-2">
                                     <div class="col-sm-3">
                                         <label class="form-label" for="code">Code</label>
-                                        <input type="text" class="form-control" name="e_code" value="{{ old('code') }}" required readonly>
+                                        <input type="text" class="form-control" name="e_code"
+                                            value="{{ old('code') }}" required readonly>
 
                                     </div>
                                     <div class="col-sm-9">

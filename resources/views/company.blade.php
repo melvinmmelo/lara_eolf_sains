@@ -101,7 +101,8 @@
                                     <div class="form-group">
                                         <div class="row mb-2">
                                             <div class="col-sm-12">
-                                                <label class="form-label" for="name">Company Name</label>
+                                                <label class="form-label" for="name"><i style="color:red">*</i>Company
+                                                    Name</label>
                                                 <input type="text" class="form-control" name="name">
                                             </div>
                                         </div>
@@ -109,7 +110,8 @@
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                <label class="form-label" for="address">Address</label>
+                                                <label class="form-label" for="address"><i
+                                                        style="color:red">*</i>Address</label>
                                                 <textarea class="form-control" rows="3" name="address"></textarea>
                                             </div>
                                         </div>
