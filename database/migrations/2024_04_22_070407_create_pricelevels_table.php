@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('pl_name');
             $table->string('pl_desc');
             $table->string('pl_status');
+            $table->string('pl_type', 15);
             $table->timestamps();
-
             $table->index('branch_code');
         });
     }

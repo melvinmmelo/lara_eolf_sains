@@ -12,7 +12,8 @@ class pricelevels extends Model
         'branch_code',
         'pl_name',
         'pl_desc',
-        'pl_status'
+        'pl_status',
+        'pl_type'
         // Add other fillable attributes here if any
     ];
 

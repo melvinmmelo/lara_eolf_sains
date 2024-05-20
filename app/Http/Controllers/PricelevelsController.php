@@ -37,26 +37,39 @@ class PricelevelsController extends Controller
             'name' => 'required',
             'Description' => 'required',
             'branch_code' => 'required',
+            'priceType' => 'required',
             // Add more validation rules as needed
         ]);
 
-        $status = 'NOT ACTIVE';
+        $status = 'ACTIVE';
 
         // Check if the request data is 'on'
         //  if ($request->status === 'on') {
         //      $status = 'ACTIVE';
         //  }
 
+        switch($request->priceType){
+            case 'BAD PRICING':
+                $plName = 'BAD PRICING';
+                break;
+            case 'FACTORY PRICE':
+                $plName = 'FACTORY PRICE';
+                break;
+            default:
+                $plName = $request->name;
+        }
+
         pricelevels::create([
             'branch_code' => $request->branch_code,
-            'pl_name' => $request->name,
+            'pl_name' => $plName,
             'pl_desc' => $request->Description,
             'pl_status' => $status,
-
+            'pl_type' => $request->priceType,
             // Add more fields as needed
         ]);
 
         return redirect('/pricing-level/')->with('success', 'Pricing Level added successfully!');
+
     }
 
     /**

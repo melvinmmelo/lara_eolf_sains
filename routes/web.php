@@ -45,8 +45,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/dpr-save/{id}', [DeliveryPurchaseReceiptController::class, 'saveAndInventoryProduct'])->name('dpr.save');
 
 
-
-
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
@@ -136,6 +134,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/pricing', [PricesController::class, 'index'])->name('pricing.index');
     Route::post('/pricing/store', [PricesController::class, 'store']);
+    Route::patch('/pricing/update', [PricesController::class, 'update'])->name('price.update');
+
 
     Route::get('/product-types', [ProductTypeController::class, 'index'])->name('productType.index');
     Route::post('/product-types', [ProductTypeController::class, 'store'])->name('productType.store');

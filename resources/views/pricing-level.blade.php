@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('custom_css')
+@endsection
+
 @section('contents')
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -28,7 +31,7 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>Branch</th>
+                            {{-- <th>Branch</th> --}}
                             <th>Name</th>
                             <th>Description</th>
                             {{-- <th>Status</th> --}}
@@ -37,7 +40,7 @@
                     <tbody>
                         @foreach ($pricelevels as $pl)
                             <tr>
-                                <td>{{ $pl->branch_code }}</td>
+                                {{-- <td>{{ $pl->branch_code }}</td> --}}
                                 <td>{{ $pl->pl_name }}</td>
                                 <td>{{ $pl->pl_desc }}</td>
                                 {{-- <td>{{ $pl->pl_status }}</td> --}}
@@ -46,7 +49,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>Branch</th>
+                            {{-- <th>Branch</th> --}}
                             <th>Name</th>
                             <th>Description</th>
                             {{-- <th>Status</th> --}}
@@ -102,6 +105,28 @@
                                         <label class="form-label" for="address"><i
                                                 style="color:red">*</i>Description</label>
                                         <textarea class="form-control" rows="3" name="Description"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <h6><i style="color:red">*</i>Price type</h6>
+                                <div class="form-group clearfix">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="radio" id="isForCustomer" name="priceType" value="CUSTOMER" checked>
+                                        <label for="isForCustomer">For customers
+                                        </label>
+                                    </div>
+
+                                    <div class="icheck-primary d-inline">
+                                        <input type="radio" id="isFactoryPrice" name="priceType" value="FACTORY PRICE">
+                                        <label for="isFactoryPrice">Factory Price
+                                        </label>
+                                    </div>
+                                    <div class="icheck-primary d-inline">
+                                        <input type="radio" id="isBadPricing" name="priceType" value="BAD PRICING">
+                                        <label for="isBadPricing"> Bad pricing
+                                        </label>
                                     </div>
                                 </div>
                             </div>

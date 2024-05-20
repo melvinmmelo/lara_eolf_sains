@@ -85,9 +85,23 @@ class PricesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, prices $prices)
+    public function update(Request $request)
     {
-        //
+        $request->validate([
+            'price_id' => 'required',
+            'e_price' => 'required',
+        ]);
+
+        $pricing = prices::find($request->price_id);
+
+        $pricing->update([
+            'p_price' => $request->e_price,
+        ]);
+
+        $pricing->save();
+
+        return redirect('/pricing/')->with('success', 'Price updated successfully!');
+
     }
 
     /**

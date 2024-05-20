@@ -6,9 +6,7 @@
 
 
 <aside class="main-sidebar sidebar-light-primary elevation-1">
-
-
-    <a href="index3.html" class="brand-link">
+    <a href="{{ route('dashboard') }}" class="brand-link">
         <img src="{{ asset('img/eolf_heart_logo.png') }}" alt="EOLF Logo" class="brand-image" style="opacity: .8">
         <span class="brand-text text-primary"><small>EOLF Food Trading OPC</small></span>
     </a>

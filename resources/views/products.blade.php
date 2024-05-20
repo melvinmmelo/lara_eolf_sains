@@ -34,10 +34,8 @@
 
                             <th>Code</th>
                             <th>Name</th>
-                            <th>Active</th>
-
+                            {{-- <th>Active</th> --}}
                             <th></th>
-
                         </tr>
                     </thead>
                     <tbody>
@@ -45,28 +43,27 @@
                             <tr>
                                 <td>{{ $product->code }}</td>
                                 <td>{{ $product->productName }}</td>
-                                <td>{{ $product->is_active == 1 ? 'Yes' : 'No' }}</td>
-                                <td><a href="{{ route('product.toggleStatus', ['id' => $product->id]) }}"
+                                {{-- <td>{{ $product->is_active == 1 ? 'Yes' : 'No' }}</td> --}}
+                                <td>
+
+                                    {{-- <a href="{{ route('product.toggleStatus', ['id' => $product->id]) }}"
                                         onclick="return confirmSetInactive();"><button type="submit"
-                                            class="btn btn-sm {{ $product->is_active ? 'btn-danger' : 'btn-success' }}">{{ $product->is_active ? 'Deactive' : 'Activate' }}</button></a>
+                                            class="btn btn-sm {{ $product->is_active ? 'btn-danger' : 'btn-success' }}">{{ $product->is_active ? 'Deactive' : 'Activate' }}</button></a> --}}
                                 </td>
                             </tr>
                         @endforeach
-
                     </tbody>
+
                     <tfoot>
                         <tr>
                             <th>Code</th>
                             <th>Name</th>
-                            <th>Active</th>
-
+                            {{-- <th>Active</th> --}}
                             <th></th>
 
                         </tr>
                     </tfoot>
                 </table>
-
-
             </div>
             <!-- /.card-body -->
             <div class="card-footer">

@@ -38,7 +38,7 @@
                                     <th>Unit</th>
                                     <th>Quantity</th>
                                     <th>Price</th>
-
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -49,6 +49,11 @@
                                         <td>{{ $price->p_unit }}</td>
                                         <td>{{ $price->p_quant }}</td>
                                         <td>{{ $price->p_price }}</td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-success" data-toggle="modal"
+                                                data-target="#modalEditPrice"
+                                                onclick="setToUpdatePrice('{{ $price->id }}')">Edit</a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -59,6 +64,7 @@
                                     <th>Quantity</th>
                                     <th>Unit</th>
                                     <th>Price</th>
+                                    <th></th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -78,12 +84,10 @@
             <div class="col-sm-3">
                 <div class="card">
                     <div class="card-body">
-
                         <form>
                             <div class="form-group">
                                 <label for="inputField">Level</label>
                                 <select class="form-control" id="price_level" name="price_level">
-
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
@@ -152,19 +156,12 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="row mb-2">
-
-
                                         <div class="col-sm-6">
                                             <label class="form-label" for="price"><i style="color:red">*</i>Price</label>
                                             <input type="text" class="form-control" id="price" name="price">
                                         </div>
-
-
                                     </div>
                                 </div>
-
-
-
 
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-success">Save changes</button>
@@ -176,14 +173,50 @@
                 </div>
                 <!-- /.modal -->
                 </form>
-
-
             </div>
-
-
-
 
             <div>
     </section>
     <!-- /.content -->
+
+
+    <div class="modal fade" id="modalEditPrice">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('price.update') }}">
+                @csrf
+                @method('PATCH')
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"><i style="color:red">*</i>New Price</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <input type="hidden" name="price_id" id="price_id" required readonly>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="e_price" name="e_price">
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Save price</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+        </form>
+    </div>
+@endsection
+
+@section('custom_js')
+    <script>
+        function setToUpdatePrice(price_id) {
+            $('#price_id').val(price_id);
+        }
+    </script>
 @endsection
