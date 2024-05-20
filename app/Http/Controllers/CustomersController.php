@@ -130,6 +130,11 @@ class CustomersController extends Controller
         $cityName = PhAddr::where('code', $request->city)->value('name');
         $brgyName = PhAddr::where('code', $request->brgy)->value('name');
 
+        $regionName2 = PhAddr::where('code', $request->e_region)->value('name');
+        $provinceName2 = PhAddr::where('code', $request->e_province)->value('name');
+        $cityName2 = PhAddr::where('code', $request->e_city)->value('name');
+        $brgyName2 = PhAddr::where('code', $request->e_brgy)->value('name');
+
         $customer->update([
             'distributor' => $request->distributor,
             'lastname' => $request->lastname,

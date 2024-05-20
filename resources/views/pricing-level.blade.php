@@ -23,6 +23,8 @@
         <!-- Default box -->
         <div class="card">
             <div class="card-body">
+
+                @include('layouts.errors')
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -119,7 +121,7 @@
 
 
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-success swalDefaultSuccess">Save changes</button>
+                                <button type="submit" class="btn btn-success">Save changes</button>
                             </div>
                         </div>
                         <!-- /.modal-content -->

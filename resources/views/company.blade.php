@@ -103,7 +103,7 @@
                                             <div class="col-sm-12">
                                                 <label class="form-label" for="name"><i style="color:red">*</i>Company
                                                     Name</label>
-                                                <input type="text" class="form-control" name="name">
+                                                <input type="text" class="form-control" name="name" value=" {{ $company->name }}">
                                             </div>
                                         </div>
                                     </div>
@@ -112,7 +112,7 @@
                                             <div class="col-sm-12">
                                                 <label class="form-label" for="address"><i
                                                         style="color:red">*</i>Address</label>
-                                                <textarea class="form-control" rows="3" name="address"></textarea>
+                                                <textarea class="form-control" rows="3" name="address"> {{ $company->address }}</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -121,11 +121,11 @@
                                         <div class="row mb-2">
                                             <div class="col-sm-6">
                                                 <label class="form-label" for="email">Email</label>
-                                                <input type="text" class="form-control" name="email">
+                                                <input type="text" class="form-control" name="email" value=" {{ $company->email }}">
                                             </div>
                                             <div class="col-sm-6">
                                                 <label class="form-label" for="contact_no">Contact No</label>
-                                                <input type="text" class="form-control" name="contact_no">
+                                                <input type="text" class="form-control" name="contact_no" value=" {{ $company->contact_no }}">
                                             </div>
                                         </div>
 

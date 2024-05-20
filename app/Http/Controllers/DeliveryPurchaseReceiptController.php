@@ -40,7 +40,11 @@ class DeliveryPurchaseReceiptController extends Controller
 
         $dpr = DeliveryPurchaseReceipt::findOrFail($request->dpr_id);
 
-        $productPrice = prices::getPrice($request->product_code, "FACTORY PRICE");
+        $productPrice = prices::getPrice($request->product_code, session('branch_code'));
+
+        if(!$productPrice){
+            return redirect()->back()->with('error', 'Product price not found.');
+        }
 
         // dd($productPrice);
 
@@ -69,6 +73,7 @@ class DeliveryPurchaseReceiptController extends Controller
     public function products(int $dprId)
     {
         $deliveryPurchaseReceipt = DeliveryPurchaseReceipt::findOrFail($dprId);
+        // dd($deliveryPurchaseReceipt);
 
         if( strtolower($deliveryPurchaseReceipt->status) == 'saved'){
             return redirect()->back()->with('error', 'Delivery receipt already saved.');
@@ -85,7 +90,6 @@ class DeliveryPurchaseReceiptController extends Controller
      */
     public function index()
     {
-        //
         $deliveryPurchaseReceipts = DeliveryPurchaseReceipt::branch(session('branch_code'))->get();
         return view('delivery-purchase-receipts.index', compact('deliveryPurchaseReceipts'));
     }

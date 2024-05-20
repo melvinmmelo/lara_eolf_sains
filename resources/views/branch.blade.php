@@ -140,7 +140,7 @@
 
 
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-success swalDefaultSuccess">Save changes</button>
+                                <button type="submit" class="btn btn-success">Save changes</button>
                             </div>
                         </div>
                 </form>

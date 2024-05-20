@@ -6,8 +6,7 @@
 
 
 <aside class="main-sidebar sidebar-light-primary elevation-1">
-    <!-- elevation-4 shadow for sidebar -->
-    <!-- Brand Logo -->
+
 
     <a href="index3.html" class="brand-link">
         <img src="{{ asset('img/eolf_heart_logo.png') }}" alt="EOLF Logo" class="brand-image" style="opacity: .8">
@@ -26,30 +25,12 @@
             </div>
         </div>
 
-        <!-- SidebarSearch Form -->
-        <div class="form-inline">
-            <div class="input-group" data-widget="sidebar-search">
-                <input class="form-control form-control-sidebar" type="search" placeholder="Search"
-                    aria-label="Search">
-                <div class="input-group-append">
-                    <button class="btn btn-sidebar">
-                        <i class="fas fa-search fa-fw"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
         <!-- Sidebar Menu -->
 
         <nav class="mt-2" id="sidebar">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
-                <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-
-
-
                 <li class="nav-item">
-                    <a href="#" class="nav-link {{ Route::currentRouteNamed('dashboard') ? 'active' : '' }}">
+                    <a href="{{ route('dashboard') }}" class="nav-link {{ Route::currentRouteNamed('dashboard') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-gauge" style="color: #74C0FC;"></i>
                         <p>
                             Dashboard
@@ -62,7 +43,7 @@
                     </ul>
                 </li>
 
-                <li class="nav-item {{ Route::currentRouteNamed('company') || Route::currentRouteNamed('branch') || Route::currentRouteNamed('users') || Route::currentRouteNamed('vehicles') || Route::currentRouteNamed('delivery-persons') || Route::currentRouteNamed('customers') || Route::currentRouteNamed('product-types') || Route::currentRouteNamed('products') || Route::currentRouteNamed('product-variants') || Route::currentRouteNamed('pricing-level.index') || Route::currentRouteNamed('pricing.index') || Route::currentRouteNamed('equipment.index') ? 'menu-is-opening menu-open' : '' }}">
+                <li class="nav-item {{ Route::currentRouteNamed('company') || Route::currentRouteNamed('branch') || Route::currentRouteNamed('users') || Route::currentRouteNamed('vehicles') || Route::currentRouteNamed('delivery-persons') || Route::currentRouteNamed('customers') || Route::currentRouteNamed('productType.index') || Route::currentRouteNamed('products.index') || Route::currentRouteNamed('productVariant.index') || Route::currentRouteNamed('pricing-level.index') || Route::currentRouteNamed('pricing.index') || Route::currentRouteNamed('equipment.index') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-user-tie" style="color: #74C0FC;"></i>
                         <p>
@@ -116,14 +97,14 @@
                         </li>
 
                         <li>
-                            <a href="/product-types" class="nav-link {{ Route::currentRouteNamed('product-types') ? 'active' : '' }}">
+                            <a href="/product-types" class="nav-link {{ Route::currentRouteNamed('productType.index') ? 'active' : '' }}">
                                 <i class="fas fa-list nav-icon"></i>
                                 <p>Products Type</p>
                             </a>
                         </li>
 
                         <li>
-                            <a href="/products" class="nav-link {{ Route::currentRouteNamed('products') ? 'active' : '' }}">
+                            <a href="/products" class="nav-link {{ Route::currentRouteNamed('products.index') ? 'active' : '' }}">
                                 <i class="fas fa-ice-cream nav-icon"></i>
                                 <p>Products</p>
                             </a>
@@ -131,7 +112,7 @@
 
 
                         <li>
-                            <a href="/product-variants" class="nav-link {{ Route::currentRouteNamed('product-variants') ? 'active' : '' }}">
+                            <a href="/product-variants" class="nav-link {{ Route::currentRouteNamed('productVariant.index') ? 'active' : '' }}">
                                 <i class="fas fa-list-ol nav-icon"></i>
                                 <p>Product Variants</p>
                             </a>

@@ -27,6 +27,9 @@
 
                 <div class="card">
                     <div class="card-body">
+
+                        @include('layouts.errors')
+
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
@@ -41,7 +44,7 @@
                             <tbody>
                                 @foreach ($pricing as $price)
                                     <tr>
-                                        <td>{{ $price->p_level }}</td>
+                                        <td>{{ $price->pricelevel->pl_name }}</td>
                                         <td>{{ $price->p_code }}</td>
                                         <td>{{ $price->p_unit }}</td>
                                         <td>{{ $price->p_quant }}</td>
@@ -56,8 +59,6 @@
                                     <th>Quantity</th>
                                     <th>Unit</th>
                                     <th>Price</th>
-
-
                                 </tr>
                             </tfoot>
                         </table>
@@ -107,16 +108,16 @@
                                 <div class="form-group">
                                     <div class="row mb-2">
                                         <div class="col-sm-6">
-                                            <label class="form-label" for="price_code">Price Level</label>
-                                            <select class="form-control" id="price_level" name="price_level">
+                                            <label class="form-label" for="pricing_id">Price Level</label>
+                                            <select class="form-control" id="pricing_id" name="pricing_id">
                                                 @foreach ($pricelevels as $pl)
-                                                    <option value="{{ $pl->pl_name }}">{{ $pl->pl_name }}</option>
+                                                    <option value="{{ $pl->id }}">{{ $pl->pl_name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
 
                                         <div class="col-sm-6">
-                                            <label class="form-label" for="price_unit">Product Code</label>
+                                            <label class="form-label" for="price_code">Product Code</label>
                                             <select class="form-control" id="price_code" name="price_code">
                                                 @foreach ($products as $product)
                                                     <option value="{{ $product->code }}">{{ $product->productName }}
@@ -131,7 +132,7 @@
                                     <div class="row mb-2">
 
                                         <div class="col-sm-6">
-                                            <label class="form-label" for="price-quantity">Quantity</label>
+                                            <label class="form-label" for="quant">Quantity</label>
                                             <input type="text" class="form-control" id="quant" name="quant">
                                         </div>
 
@@ -162,7 +163,7 @@
 
 
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-success swalDefaultSuccess">Save changes</button>
+                                    <button type="submit" class="btn btn-success">Save changes</button>
                                 </div>
                             </div>
                             <!-- /.modal-content -->

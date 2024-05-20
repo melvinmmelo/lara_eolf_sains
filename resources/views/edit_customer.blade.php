@@ -17,7 +17,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             // Set default icon
             let icon = 'success';
-            
+
             // Check if success message is "Customer deleted successfully!"
             @if(session('success') == 'Customer deleted successfully!')
                 icon = 'error'; // Set icon to 'error' if message is for deletion
@@ -135,7 +135,7 @@
 
 
 
-                            
+
 <form method="POST" action="/customers/store">
 @csrf
         <div class="row mb-3">
@@ -397,7 +397,7 @@
     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success swalDefaultSuccess">Save changes</button>
+                    <button type="button" class="btn btn-success">Save changes</button>
                 </div>
             </div>
         </div>

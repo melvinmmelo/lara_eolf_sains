@@ -87,16 +87,10 @@
                         <form action="{{ route('delivery-purchase-receipts.store') }}" method="post">
                             @csrf
 
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="user_id">User Id</label>
-                                        <input type="text" class="form-control" name="user_id" id="user_id"
-                                            value="{{ auth()->user()->id }}" required readonly>
 
-                                    </div>
-                                </div>
-                            </div>
+                            <input type="hidden" class="form-control" name="user_id" id="user_id"
+                                value="{{ auth()->user()->id }}" required readonly>
+
 
                             <div class="form-group">
                                 <div class="row">

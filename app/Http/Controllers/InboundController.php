@@ -6,6 +6,7 @@ use App\Models\Inbound;
 use App\Models\Drivers;
 use App\Models\Equipment;
 use App\Models\EquipmentStore;
+use App\Models\ItemMasterData;
 use App\Models\pricelevels;
 use App\Models\prices;
 use App\Models\Product;
@@ -57,7 +58,7 @@ class InboundController extends Controller
 
         $inbounds = Inbound::with('driver', 'vehicle')->branch(session('branch_code'))->get();
 
-        $equipment = Equipment::notAvailable()->get();
+        $equipment = EquipmentStore::all();
 
         return view('order', compact('equipment', 'drivers', 'vehicles', 'inbounds'));
     }
@@ -109,7 +110,7 @@ class InboundController extends Controller
         }
 
         $equipmentStore = EquipmentStore::find($inbound->equipment_id);
-        $customerName = $equipmentStore->store->customer->fullName;
+        $customerName = $equipmentStore->store->customer->fullName ?? 'N/A';
         $branchCode = session('branch_code');
 
         $equipmentSerial = $equipmentStore->equipment->serial_no;
@@ -237,16 +238,18 @@ class InboundController extends Controller
         $inboundProducts = json_decode($inbound->products, true);
 
         foreach ($inboundProducts as $product) {
+
             $message = 'Failed';
 
-            $price = prices::where('p_code', $product['code'])->orderBy('created_at', 'desc')->first();
+            $itemData = ItemMasterData::branch(session('branch_code'))->productCode($product['code'])->first();
 
-            $price->p_quant -= $product['quantity'];
-            $price->save();
+            $itemData->stocks -= $product['quantity'];
+            $itemData->save();
 
             $message = 'Success';
 
             $updatingData[] = ['code' => $product['code'], 'message' => $message];
+
         }
 
         session()->forget('inboundId');
@@ -281,7 +284,6 @@ class InboundController extends Controller
         $summary = $inboundService->summary();
 
         $summary = $inboundService->addSppbinSummary();
-
 
         $inbound->save();
 

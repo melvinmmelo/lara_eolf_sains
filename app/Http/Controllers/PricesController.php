@@ -15,25 +15,21 @@ class PricesController extends Controller
      */
     public function index()
     {
-        $pricelevels = pricelevels::with('prices')->branch(session('branch_code'))->get();
 
+        $branchCode = session('branch_code');
 
-        foreach ($pricelevels as $pricelevel) {
-            $pricing = $pricelevel->prices;
-            dd($pricing);
-        }
+        $pricelevels = pricelevels::branch($branchCode)->get();
 
-        // $pricing = prices::all();
-
-        $pricing = $pricelevels->prices()->get();
+        $pricing = prices::whereHas('pricelevel', function ($query) use ($branchCode) {
+            $query->where('branch_code', $branchCode);
+        })->get();
 
         // Get all products
 
         $products = Product::all();
 
-
         // Pass the vehicles data to the view
-        return view('pricing', compact('pricing','pricelevels','products'));
+        return view('pricing', compact('pricing', 'pricelevels', 'products'));
     }
 
     /**
@@ -49,24 +45,16 @@ class PricesController extends Controller
      */
     public function store(Request $request)
     {
-         // dd($request->all());
-         $request->validate([
+        $request->validate([
             'pricing_id' => 'required',
             'price_code' => 'required',
             'price_unit' => 'required',
             'quant' => 'required',
             'price' => 'required',
-
-            // Add more validation rules as needed
         ]);
-        // $status = 'NOT ACTIVE';
 
-        //  // Check if the request data is 'on'
-        //  if ($request->status === 'on') {
-        //      $status = 'ACTIVE';
-        //  }
         prices::create([
-            'pricing_id' => $request->price_level,
+            'pricelevel_id' => $request->pricing_id,
             'p_code' => $request->price_code,
             'p_unit' => $request->price_unit,
             'p_quant' => $request->quant,

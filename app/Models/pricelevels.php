@@ -24,6 +24,6 @@ class pricelevels extends Model
     // CREATE A RELATIONSHIP BETWEEN PRICELEVELS AND PRICES
     public function prices()
     {
-        return $this->hasMany(prices::class, 'pricelevels_id', 'id');
+        return $this->hasMany(prices::class);
     }
 }

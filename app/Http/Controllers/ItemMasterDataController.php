@@ -13,7 +13,8 @@ class ItemMasterDataController extends Controller
      */
     public function index()
     {
-        return view('item-master-data');
+        $products = ItemMasterData::branch(session('branch_code'))->get();
+        return view('item-master-data', compact('products'));
     }
 
     /**

@@ -2,8 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\prices;
-use App\Models\ProductType;
+use App\Models\ItemMasterData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -66,10 +65,17 @@ class DPRService extends Model
     public function saveAndInventoryProducts()
     {
         foreach ($this->products as $value) {
-            $product = prices::where('p_code', $value['code'])->first();
 
-            if($product){
-                $product->p_quant += $value['quantity'];
+            $product = ItemMasterData::where('branch_code', session('branch_code'))->where('product_code', $value['code'])->first();
+
+            if(!$product){
+                $product = new ItemMasterData();
+                $product->branch_code = session('branch_code');
+                $product->product_code = $value['code'];
+                $product->stocks = $value['quantity'];
+                $product->save();
+            }else{
+                $product->stocks += $value['quantity'];
                 $product->save();
             }
         }

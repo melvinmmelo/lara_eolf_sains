@@ -18,10 +18,7 @@
         </div>
     </section>
 
-    <!-- Main content -->
     <section class="content">
-
-        <!-- Default box -->
         <div class="card">
 
             <div class="card-body">
@@ -31,54 +28,32 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>Branch</th>
                             <th>Product</th>
-                            <th>Quantity</th>
+                            <th>Stocks</th>
                             <th>Date</th>
-
                         </tr>
                     </thead>
                     <tbody>
-
+                        @foreach ($products as $product)
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-
-
+                                <td>{{ $product->product_code }}</td>
+                                <td>{{ $product->stocks }}</td>
+                                <td>{{ $product->updated_at }}</td>
                             </tr>
+                        @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>Branch</th>
                             <th>Product</th>
                             <th>Quantity</th>
                             <th>Date</th>
-
                         </tr>
 
                     </tfoot>
                 </table>
-
-
             </div>
-            <!-- /.card-body -->
             <div class="card-footer">
-                {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-devpersons">
-                    Add New
-                </button> --}}
             </div>
-            <!-- /.card-footer-->
         </div>
-        <!-- /.card -->
-
-
-
-
     </section>
-
-
-
-    <!-- /.content -->
 @endsection

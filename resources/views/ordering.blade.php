@@ -294,14 +294,9 @@
                                                         <tr>
                                                             <th>Product Type</th>
                                                             <th>Quantity</th>
-
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-
-
-
-
                                                         <tr>
                                                             <td colspan="2" class="text-center">No data available</td>
                                                         </tr>

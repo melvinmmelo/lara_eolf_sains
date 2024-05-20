@@ -52,8 +52,6 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
 
-
-
     Route::get('/inventory-items', function () {
         return view('inventory-items');
     });
@@ -96,21 +94,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
 
     Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
-    Route::post('/customers/store', [CustomersController::class, 'store'])->name('customers.store');
-
-
     // Route::get('/customersinfo', [CustomersController::class, 'index'])->name('customersinfo');
-
-
 
     Route::get('/equipment', [EquipmentController::class, 'index'])->name('equipment.index');
     Route::post('/equipment/store', [EquipmentController::class, 'store'])->name('equipment.store');
-    // Route::put('/equipment/{id}', [EquipmentController::class, 'update'])->name('equipment.update');
     Route::delete('/equipment/{id}', [EquipmentController::class, 'destroy'])->name('equipment.destroy');
     Route::get('/equipment/{id}/edit', [EquipmentController::class, 'edit'])->name('equipment.edit');
     Route::patch('/equipment/', [EquipmentController::class, 'update'])->name('equipment.update');
-    // Route::get('/equipment-store', [EquipmentStoreController::class, 'index'])->name('equipment-store.index');
-
 
     Route::get('/get-regions', [PhAddrController::class, 'getRegions']);
     Route::get('/get-provinces/{regionId}', [PhAddrController::class, 'getProvinces']);
@@ -147,7 +137,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/pricing', [PricesController::class, 'index'])->name('pricing.index');
     Route::post('/pricing/store', [PricesController::class, 'store']);
 
-
     Route::get('/product-types', [ProductTypeController::class, 'index'])->name('productType.index');
     Route::post('/product-types', [ProductTypeController::class, 'store'])->name('productType.store');
 
@@ -158,13 +147,11 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('/product-variants', [ProductVariantController::class, 'update'])->name('productVariant.update');
 
-
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::post('/product/store', [ProductController::class, 'store'])->name('product.store');
 
     Route::get('/product/{id}/toggle-status', [ProductController::class, 'toggleStatus'])->name('product.toggleStatus');
     Route::get('/product-type/{id}/toggle-status', [ProductTypeController::class, 'toggleStatus'])->name('productType.toggleStatus');
-
 
     Route::get('/orders', [InboundController::class, 'index'])->name('order.index');
 
