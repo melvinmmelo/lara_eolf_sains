@@ -13,7 +13,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                         <li class="breadcrumb-item active">Inbound Inventory</li>
                     </ol>
                 </div>
@@ -38,7 +38,7 @@
                             <th>Issue Date</th>
                             <th>Status</th>
                             <th>Date</th>
-                            <th>Action</th>
+                            <th></th>
 
                         </tr>
                     </thead>
@@ -62,6 +62,16 @@
                         @endforeach
 
                     </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <th>DR No.</th>
+                            <th>Issue Date</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
             <!-- /.card-body -->

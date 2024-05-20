@@ -10,8 +10,8 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Equipments</li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+                        <li class="breadcrumb-item active">Equipment</li>
                     </ol>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                             <th>Status</th>
                             <th>Date Delivered</th>
                             <th>Date Purchased</th>
-                            <th>Actions</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -91,20 +91,20 @@
                             </tr>
                         @endforeach
                     </tbody>
-                    <!-- <tfoot>
-                    <tr>
-                        <th>Owned</th>
-                        <th>Type</th>
-                        <th>Brand</th>
-                        <th>Price</th>
-                        <th>Serial No.</th>
-                        <th>Code</th>
-                        <th>Distributor</th>
-                        <th>Date Delivered</th>
-                        <th>Date Purchased</th>
-                        <th>Actions</th>
-                    </tr>
-                </tfoot> -->
+                    <tfoot>
+                        <tr>
+                            <th>Owned</th>
+                            <th>Type</th>
+                            <th>Brand</th>
+                            <th>Price</th>
+                            <th>Serial No.</th>
+                            <th>Code</th>
+                            <th>Distributor</th>
+                            <th>Date Delivered</th>
+                            <th>Date Purchased</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
                 </table>
 
 
@@ -212,12 +212,7 @@
             <!-- /.modal-dialog -->
         </div>
         <!-- /.modal -->
-
-
-
-
     </section>
-
 
     <div class="modal fade" id="edit-equipment">
         <div class="modal-dialog">

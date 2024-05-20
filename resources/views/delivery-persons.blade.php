@@ -10,8 +10,8 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Users</li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+                        <li class="breadcrumb-item active">Delivery persons</li>
                     </ol>
                 </div>
             </div>
@@ -34,8 +34,7 @@
                             <th>Name</th>
                             <th>Address</th>
                             <th>Contact No.</th>
-                            <th>Status</th>
-
+                            {{-- <th>Status</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -44,9 +43,7 @@
                                 <td>{{ $driver->name }}</td>
                                 <td>{{ $driver->address }}</td>
                                 <td>{{ $driver->contact }}</td>
-                                <td>{{ $driver->status }}</td>
-
-
+                                {{-- <td>{{ $driver->status }}</td> --}}
                             </tr>
                     </tbody>
                     <tfoot>
@@ -54,8 +51,7 @@
                             <th>Name</th>
                             <th>Address</th>
                             <th>Contact No.</th>
-                            <th>Status</th>
-
+                            {{-- <th>Status</th> --}}
                         </tr>
                         @endforeach
                     </tfoot>

@@ -10,7 +10,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                         <li class="breadcrumb-item active">Price Level</li>
                     </ol>
                 </div>
@@ -31,7 +31,7 @@
                             <th>Branch</th>
                             <th>Name</th>
                             <th>Description</th>
-                            <th>Status</th>
+                            {{-- <th>Status</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -40,7 +40,7 @@
                                 <td>{{ $pl->branch_code }}</td>
                                 <td>{{ $pl->pl_name }}</td>
                                 <td>{{ $pl->pl_desc }}</td>
-                                <td>{{ $pl->pl_status }}</td>
+                                {{-- <td>{{ $pl->pl_status }}</td> --}}
                             </tr>
                         @endforeach
                     </tbody>
@@ -49,7 +49,7 @@
                             <th>Branch</th>
                             <th>Name</th>
                             <th>Description</th>
-                            <th>Status</th>
+                            {{-- <th>Status</th> --}}
                         </tr>
                     </tfoot>
                 </table>
@@ -106,7 +106,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label class="form-label" for="address">Active</label>
@@ -118,7 +118,7 @@
                                         <div style="margin-bottom: 20px"></div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
 
                             <div class="modal-footer">

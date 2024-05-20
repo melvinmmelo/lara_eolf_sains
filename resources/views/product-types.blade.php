@@ -10,7 +10,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                         <li class="breadcrumb-item active">Product Types</li>
                     </ol>
                 </div>
@@ -35,7 +35,7 @@
                             <th>Name</th>
                             <th>Volume</th>
                             <th>Spoon PCS/BAG</th>
-                            <th>Active</th>
+                            {{-- <th>Active</th> --}}
                             <th></th>
 
                         </tr>
@@ -47,15 +47,15 @@
                                 <td>{{ $productType->name }}</td>
                                 <td>{{ $productType->volume }}</td>
                                 <td>{{ $productType->spoon_pcs_per_bag }}</td>
-                                <td>{{ $productType->is_active == 1 ? 'Yes' : 'No' }}</td>
+                                {{-- <td>{{ $productType->is_active == 1 ? 'Yes' : 'No' }}</td> --}}
                                 <td>
                                     <a href="#" data-toggle="modal" data-target="#modalEditPType"
                                         onclick="setToUpdateProduct('{{ $productType->code }}','{{ $productType->name }}','{{ $productType->volume }}','{{ $productType->spoon_pcs_per_bag }}','{{ $productType->is_active }}')"><button
                                             type="submit" class="btn btn-sm btn-primary">Edit</button></a>
 
-                                    <a href="{{ route('productType.toggleStatus', ['id' => $productType->code]) }}"
+                                    {{-- <a href="{{ route('productType.toggleStatus', ['id' => $productType->code]) }}"
                                         onclick="return confirmSetInactive();"><button type="submit"
-                                            class="btn btn-sm {{ $productType->is_active ? 'btn-danger' : 'btn-success' }}">{{ $productType->is_active ? 'Deactive' : 'Activate' }}</button></a>
+                                            class="btn btn-sm {{ $productType->is_active ? 'btn-danger' : 'btn-success' }}">{{ $productType->is_active ? 'Deactive' : 'Activate' }}</button></a> --}}
                                 </td>
                             </tr>
                         @endforeach
@@ -67,7 +67,7 @@
                             <th>Name</th>
                             <th>Volume</th>
                             <th>Spoon PCS/BAG</th>
-                            <th>Active</th>
+                            {{-- <th>Active</th> --}}
                             <th></th>
 
                         </tr>
@@ -200,7 +200,7 @@
                                             value="{{ old('spoon_pcs_per_bag') }} ?? 0" required>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    {{-- <div class="col-sm-3">
                                         <label class="form-label" for="status">Active</label>
                                         <br>
                                         <input type="checkbox" name="e_is_active" id="mySwitch" data-bootstrap-switch
@@ -208,7 +208,7 @@
                                             data-off-color="danger">
 
                                         <div style="margin-bottom: 20px"></div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 

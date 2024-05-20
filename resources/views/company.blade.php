@@ -35,11 +35,8 @@
                 {{-- Sample displaying data --}}
 
 
-                <div class="card card-primary">
-                    <div class="card-header">
+                <div class="card">
 
-                        <h3 class="card-title">Company Info</h3>
-                    </div>
                     <!-- /.card-header -->
                     <div class="card-body">
 

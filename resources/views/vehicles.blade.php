@@ -10,8 +10,8 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Users</li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+                        <li class="breadcrumb-item active">Vehicles</li>
                     </ol>
                 </div>
             </div>
@@ -51,66 +51,21 @@
             <div class="card-body">
 
                 @include('layouts.errors')
-
-                <!-- <table id="example1" class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Plate No.</th>
-                                            <th>Brand</th>
-                                            <th>Type</th>
-                                            <th>Capacity</th>
-                                            <th>Status</th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>aaa</td>
-                                            <td>aaa</td>
-                                            <td>aaa</td>
-                                            <td>aaa</td>
-                                            <td>aaa</td>
-
-                                        </tr>
-
-                                        <tr>
-                                            <td>aaa</td>
-                                            <td>aaa</td>
-                                            <td>aaa</td>
-                                            <td>aaa</td>
-                                            <td>aaa</td>
-
-
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Plate No.</th>
-                                            <th>Brand</th>
-                                            <th>Type</th>
-                                            <th>Capacity</th>
-                                            <th>Status</th>
-
-                                        </tr>
-                                    </tfoot>
-                                </table> -->
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Plate No.</th>
                             <th>Brand</th>
                             <th>Type</th>
                             <th>Size</th>
                             <th>Capacity</th>
                             <th>Status</th>
-                            <th>Actions</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($vehicles as $vehicle)
                             <tr>
-                                <td>{{ $vehicle->id }}</td>
                                 <td>{{ $vehicle->plateno }}</td>
                                 <td>{{ $vehicle->brand }}</td>
                                 <td>{{ $vehicle->type }}</td>
@@ -132,6 +87,18 @@
                             </tr>
                         @endforeach
                     </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <th>Plate No.</th>
+                            <th>Brand</th>
+                            <th>Type</th>
+                            <th>Size</th>
+                            <th>Capacity</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
                 </table>
 
             </div>

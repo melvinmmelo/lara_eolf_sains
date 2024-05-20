@@ -42,10 +42,11 @@ class PricelevelsController extends Controller
 
         $status = 'NOT ACTIVE';
 
-         // Check if the request data is 'on'
-         if ($request->status === 'on') {
-             $status = 'ACTIVE';
-         }
+        // Check if the request data is 'on'
+        //  if ($request->status === 'on') {
+        //      $status = 'ACTIVE';
+        //  }
+
         pricelevels::create([
             'branch_code' => $request->branch_code,
             'pl_name' => $request->name,

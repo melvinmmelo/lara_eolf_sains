@@ -37,10 +37,6 @@
                             <i class="right"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview" id="dashboard-treeview">
-                        <li>
-                        </li>
-                    </ul>
                 </li>
 
                 <li class="nav-item {{ Route::currentRouteNamed('company') || Route::currentRouteNamed('branch') || Route::currentRouteNamed('users') || Route::currentRouteNamed('vehicles') || Route::currentRouteNamed('delivery-persons') || Route::currentRouteNamed('customers') || Route::currentRouteNamed('productType.index') || Route::currentRouteNamed('products.index') || Route::currentRouteNamed('productVariant.index') || Route::currentRouteNamed('pricing-level.index') || Route::currentRouteNamed('pricing.index') || Route::currentRouteNamed('equipment.index') ? 'menu-is-opening menu-open' : '' }}">
