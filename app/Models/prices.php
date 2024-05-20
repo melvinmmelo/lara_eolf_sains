@@ -24,13 +24,21 @@ class prices extends Model
     }
 
     // create a that gets the price of a product that based on the pricing level and product code
-    public static function getPrice($productCode, $branchCode)
+    public static function getPrice($productCode, $branchCode, $priceType)
     {
-        $price = prices::where('p_code', $productCode)->whereHas('pricelevel', function($query) use ($branchCode){
-            $query->where('branch_code', $branchCode);
-        })->first()->p_price;
+        $price = prices::where('p_code', $productCode)->whereHas('pricelevel', function($query) use ($branchCode, $priceType){
+            $query->where('branch_code', $branchCode)->where('pl_type', $priceType);
+        })->first();
 
-        return $price;
+        return ($price) ? $price->p_price : null;
     }
+
+    // create a that gets the price of a product that based on the pricing level and product code
+    public static function getPricePerPriceLevelAndPCode($pricelevelId, $productCode)
+    {
+        $price = prices::where('p_code', $productCode)->where('pricelevel_id', $pricelevelId)->first();
+        return ($price) ? $price: null;
+    }
+
 
 }

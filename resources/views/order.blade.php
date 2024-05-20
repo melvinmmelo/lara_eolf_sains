@@ -119,7 +119,7 @@
                                     <div class="col-sm-12">
                                         <label class="form-label" for="equipment">Equipment</label>
                                         <select class="form-control equipment w-100 select2bs4" name="equipment"
-                                            id="equipment" onchange="setCustomerName(this.value)">
+                                            id="equipment" onchange="setCustomerName(this.value)" required>
                                             <option value="">--Select--</option>
                                             @foreach ($equipment as $equip)
                                                 <option value="{{ $equip->id }}">{{ $equip->type }}</option>
@@ -143,7 +143,7 @@
                                     <div class="col-sm-12">
                                         <label class="form-label" for="deliveryPerson"><i style="color:red">*</i>Delivery
                                             Person</label>
-                                        <select class="form-control" name="deliveryPerson" id="deliveryPerson">
+                                        <select class="form-control" name="deliveryPerson" id="deliveryPerson" required>
                                             @foreach ($drivers as $driver)
                                                 <option value="{{ $driver->id }}">{{ $driver->name }}</option>
                                             @endforeach
@@ -156,9 +156,22 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label class="form-label" for="vehicle"><i style="color:red">*</i>Vehicle</label>
-                                        <select class="form-control" name="vehicle" id="vehicle">
+                                        <select class="form-control" name="vehicle" id="vehicle" required>
                                             @foreach ($vehicles as $vehicle)
                                                 <option value="{{ $vehicle->id }}">{{ $vehicle->plateno }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="form-label" for="pricelevel_id"><i style="color:red">*</i>Pricing</label>
+                                        <select class="form-control" name="pricelevel_id" id="pricelevel_id" required>
+                                            @foreach ($pricing as $plevel)
+                                                <option value="{{ $plevel->id }}">{{ $plevel->pl_name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

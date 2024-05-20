@@ -52,12 +52,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Inventory</h1>
+                    <h1>DPR Add Product</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Inventory</li>
+                        <li class="breadcrumb-item active">DPR add items</li>
                     </ol>
                 </div>
             </div>
@@ -139,6 +139,7 @@
                                                 <th>Quantity</th>
                                                 <th>Unit Price</th>
                                                 <th>Total</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -158,6 +159,9 @@
                                                         <td>{{ $dprProd->quantity }}</td>
                                                         <td>{{ $dprProd->price }}</td>
                                                         <td>{{ $dprProd->quantity * $dprProd->price }}</td>
+                                                        <td>
+                                                            <a href="{{ route('dpr.delete', ['drid' => $deliveryPurchaseReceipt->id, 'pcode' => $dprProd->code ]) }}" onclick="return confirmDeleteProduct()" class="btn btn-sm btn-danger">Delete</a>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
 
@@ -167,7 +171,7 @@
                                                     <td colspan="5" class="d-md-none"><strong>Items</strong></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="align-middle text-center" colspan="4">No data
+                                                    <td class="align-middle text-center" colspan="5">No data
                                                         available.
                                                     </td>
                                                 </tr>
@@ -180,9 +184,10 @@
                                         </tbody>
                                         <tfoot class="desktop-view">
                                             <tr>
-                                                <td colspan="3"></td>
+                                                <td colspan="2"></td>
                                                 <td>Total:</td>
-
+                                                <td></td>
+                                                <td></td>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -205,6 +210,10 @@
 <script>
     function saveDPR(){
         return confirm('Are you sure you want to save this DR?');
+    }
+
+    function confirmDeleteProduct(){
+        return confirm('Are you sure you want to delete this product?');
     }
     </script>
 

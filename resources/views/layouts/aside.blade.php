@@ -136,7 +136,7 @@
                     </ul>
                 </li>
 
-                <li class="nav-item {{Route::currentRouteNamed('order.index') ? 'menu-is-opening menu-open' : '' }}">
+                <li class="nav-item {{Route::currentRouteNamed('order.index') || Route::currentRouteNamed('order.processTwo') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-coins" style="color: #74C0FC;"></i>
                         <p>
@@ -147,7 +147,7 @@
                     <ul class="nav nav-treeview">
 
                         <li>
-                            <a href="/orders" class="nav-link {{ Route::currentRouteNamed('order.index') ? 'active' : '' }}">
+                            <a href="/orders" class="nav-link {{ Route::currentRouteNamed('order.index') || Route::currentRouteNamed('order.processTwo') ? 'active' : '' }}">
                                 <i class="fas fa-circle-left nav-icon"></i>
                                 <p>Outbound</p>
                             </a>
@@ -155,7 +155,7 @@
                     </ul>
                 </li>
 
-                <li class="nav-item {{ Route::currentRouteNamed('delivery-purchase-receipts.index') || Route::currentRouteNamed('itemdata.index')  ? 'menu-is-opening menu-open' : '' }}" ||>
+                <li class="nav-item {{ Route::currentRouteNamed('delivery-purchase-receipts.index') || Route::currentRouteNamed('itemdata.index') || Route::currentRouteNamed('drp.products') ? 'menu-is-opening menu-open' : '' }}" ||>
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-warehouse" style="color: #74C0FC;"></i>
                         <p>
@@ -166,7 +166,7 @@
                     <ul class="nav nav-treeview">
 
                         <li>
-                            <a href="{{ route('delivery-purchase-receipts.index') }}" class="nav-link {{ Route::currentRouteNamed('delivery-purchase-receipts.index') ? 'active' : '' }}">
+                            <a href="{{ route('delivery-purchase-receipts.index') }}" class="nav-link {{ Route::currentRouteNamed('delivery-purchase-receipts.index') || Route::currentRouteNamed('drp.products') ? 'active' : '' }}">
                                 <i class="fas fa-circle-right nav-icon"></i>
                                 <p>Inbound</p>
                             </a>

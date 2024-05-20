@@ -60,7 +60,9 @@ class InboundController extends Controller
 
         $equipment = EquipmentStore::all();
 
-        return view('order', compact('equipment', 'drivers', 'vehicles', 'inbounds'));
+        $pricing = pricelevels::branch(session('branch_code'))->get();
+
+        return view('order', compact('equipment', 'drivers', 'vehicles', 'inbounds', 'pricing'));
     }
 
     public function submitProcessOne(Request $request)
@@ -71,6 +73,7 @@ class InboundController extends Controller
             'equipment' => 'required',
             'deliveryPerson' => 'required',
             'vehicle' => 'required',
+            'pricelevel_id' => 'required'
         ]);
 
         $tempInbound = new Inbound();
@@ -81,7 +84,10 @@ class InboundController extends Controller
         $tempInbound->vehicle_id = $request->vehicle;
         $tempInbound->products = null;
         $tempInbound->status = 'Pending';
+        $tempInbound->pricelevel_id = $request->pricelevel_id;
         $tempInbound->save();
+
+        session()->put('pricelevelId', $request->pricelevel_id);
 
         $inboundId = $tempInbound->id;
 
@@ -118,7 +124,8 @@ class InboundController extends Controller
 
         $vehicle = Vehicles::select('plateno')->find($inbound->vehicle_id);
 
-        $defaultPriceLevel = pricelevels::where('branch_code', $branchCode)->select('pl_name')->orderBy('id', 'desc')->first();
+        $defaultPriceLevel = pricelevels::find($inbound->pricelevel_id);
+        session()->put('pricelevelId', $inbound->pricelevel_id);
 
         $productTypes = ProductType::where('is_active', 1)->get();
 
@@ -144,14 +151,12 @@ class InboundController extends Controller
     {
 
         $allProducts = Product::where('product_type_code', $code)->get();
-
         $products = [];
-
 
         // get the latest price
         foreach ($allProducts as $product) {
 
-            $price = prices::where('p_code', $product->code)->orderBy('created_at', 'desc')->first();
+            $price = prices::getPricePerPriceLevelAndPCode(session('pricelevelId'), $product->code);
 
             if ($price == null) {
                 break;

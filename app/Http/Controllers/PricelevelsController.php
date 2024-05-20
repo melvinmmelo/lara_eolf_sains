@@ -59,6 +59,12 @@ class PricelevelsController extends Controller
                 $plName = $request->name;
         }
 
+        // check if there is a pricing level with the same name
+        $check = pricelevels::where('pl_name', $plName)->where('branch_code', $request->branch_code)->first();
+        if($check){
+            return redirect('/pricing-level/')->with('error', 'Pricing Level already exists!');
+        }
+
         pricelevels::create([
             'branch_code' => $request->branch_code,
             'pl_name' => $plName,

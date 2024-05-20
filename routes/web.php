@@ -44,6 +44,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dpr-save/{id}', [DeliveryPurchaseReceiptController::class, 'saveAndInventoryProduct'])->name('dpr.save');
 
+    Route::get('/dpr-delete/{drid}/{pcode}', [DeliveryPurchaseReceiptController::class, 'delete'])->name('dpr.delete');
+
+
 
     Route::get('/dashboard', function () {
         return view('dashboard');

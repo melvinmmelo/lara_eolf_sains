@@ -40,7 +40,7 @@ class DeliveryPurchaseReceiptController extends Controller
 
         $dpr = DeliveryPurchaseReceipt::findOrFail($request->dpr_id);
 
-        $productPrice = prices::getPrice($request->product_code, session('branch_code'));
+        $productPrice = prices::getPrice($request->product_code, session('branch_code'), 'FACTORY PRICE');
 
         if(!$productPrice){
             return redirect()->back()->with('error', 'Product price not found.');
@@ -138,8 +138,18 @@ class DeliveryPurchaseReceiptController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DeliveryPurchaseReceipt $deliveryPurchaseReceipt)
+    public function delete(Request $request)
     {
-        //
+        $dpr = DeliveryPurchaseReceipt::findOrFail($request->drid);
+
+        $dprService = new DPRService($dpr->products);
+
+        $products = $dprService->deleteProduct($request->pcode);
+
+        $dpr->products = $products;
+
+        $dpr->save();
+
+        return redirect()->back()->with('success', 'Item deleted successfully.');
     }
 }

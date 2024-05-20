@@ -22,7 +22,7 @@ return new class extends Migration
             $table->tinyInteger('with_invoice')->nullable();
             $table->tinyInteger('bad_order')->nullable();
             $table->string('status', 10);
-
+            $table->unsignedInteger('pricelevel_id');
             $table->timestamps();
 
             $table->index('branch_code');
