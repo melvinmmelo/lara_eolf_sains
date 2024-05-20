@@ -108,7 +108,8 @@
                                 <div class="form-group">
                                     <div class="row mb-2">
                                         <div class="col-sm-6">
-                                            <label class="form-label" for="pricing_id">Price Level</label>
+                                            <label class="form-label" for="pricing_id"><i style="color:red">*</i>Price
+                                                Level</label>
                                             <select class="form-control" id="pricing_id" name="pricing_id">
                                                 @foreach ($pricelevels as $pl)
                                                     <option value="{{ $pl->id }}">{{ $pl->pl_name }}</option>
@@ -117,7 +118,8 @@
                                         </div>
 
                                         <div class="col-sm-6">
-                                            <label class="form-label" for="price_code">Product Code</label>
+                                            <label class="form-label" for="price_code"><i style="color:red">*</i>Product
+                                                Code</label>
                                             <select class="form-control" id="price_code" name="price_code">
                                                 @foreach ($products as $product)
                                                     <option value="{{ $product->code }}">{{ $product->productName }}
@@ -132,12 +134,14 @@
                                     <div class="row mb-2">
 
                                         <div class="col-sm-6">
-                                            <label class="form-label" for="quant">Quantity</label>
+                                            <label class="form-label" for="quant"><i
+                                                    style="color:red">*</i>Quantity</label>
                                             <input type="text" class="form-control" id="quant" name="quant">
                                         </div>
 
                                         <div class="col-sm-6">
-                                            <label class="form-label" for="price_unit">Unit</label>
+                                            <label class="form-label" for="price_unit"><i
+                                                    style="color:red">*</i>Unit</label>
                                             <select class="form-control" id="price_unit" name="price_unit">
                                                 <option value="Bag/s">Bag/s</option>
                                                 <option value="Box/es">Box/es</option>
@@ -151,7 +155,7 @@
 
 
                                         <div class="col-sm-6">
-                                            <label class="form-label" for="price">Price</label>
+                                            <label class="form-label" for="price"><i style="color:red">*</i>Price</label>
                                             <input type="text" class="form-control" id="price" name="price">
                                         </div>
 

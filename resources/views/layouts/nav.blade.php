@@ -7,14 +7,15 @@
 
     <ul class="navbar-nav ml-auto">
         <div class="btn-group">
-            <button type="button" class="btn btn-default">{{ ($branch_name) ?? 'Choose branch' }} </button>
-            <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown">
+            <button type="button" class="btn btn-primary">{{ $branch_name ?? 'Choose branch' }} </button>
+            <button type="button" class="btn btn-primary dropdown-toggle dropdown-icon" data-toggle="dropdown">
                 <span class="sr-only">Toggle Dropdown</span>
             </button>
             <div class="dropdown-menu" role="menu">
 
                 @foreach ($gbranches as $gbranch)
-                    <a class="dropdown-item" href="{{ route('branch.setBranchSession',[ $gbranch->code ]) }}">{{ $gbranch->code }}</a>
+                    <a class="dropdown-item"
+                        href="{{ route('branch.setBranchSession', [$gbranch->code]) }}">{{ $gbranch->code }}</a>
                 @endforeach
 
             </div>

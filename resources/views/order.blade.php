@@ -132,7 +132,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="customer">Customer</label>
+                                        <label class="form-label" for="customer"><i style="color:red">*</i>Customer</label>
                                         <textarea class="form-control" rows="3" name="customer" id="customer"></textarea>
                                     </div>
                                 </div>
@@ -141,7 +141,8 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="deliveryPerson">Delivery Person</label>
+                                        <label class="form-label" for="deliveryPerson"><i style="color:red">*</i>Delivery
+                                            Person</label>
                                         <select class="form-control" name="deliveryPerson" id="deliveryPerson">
                                             @foreach ($drivers as $driver)
                                                 <option value="{{ $driver->id }}">{{ $driver->name }}</option>
@@ -154,7 +155,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="vehicle">Vehicle</label>
+                                        <label class="form-label" for="vehicle"><i style="color:red">*</i>Vehicle</label>
                                         <select class="form-control" name="vehicle" id="vehicle">
                                             @foreach ($vehicles as $vehicle)
                                                 <option value="{{ $vehicle->id }}">{{ $vehicle->plateno }}</option>
@@ -182,9 +183,8 @@
 
 @section('custom_js')
     <script>
-
         function setCustomerName(str) {
-            if(str == '') {
+            if (str == '') {
                 return;
             }
 
