@@ -92,19 +92,19 @@
                         @endforeach
                     </tbody>
                     <!-- <tfoot>
-                <tr>
-                    <th>Owned</th>
-                    <th>Type</th>
-                    <th>Brand</th>
-                    <th>Price</th>
-                    <th>Serial No.</th>
-                    <th>Code</th>
-                    <th>Distributor</th>
-                    <th>Date Delivered</th>
-                    <th>Date Purchased</th>
-                    <th>Actions</th>
-                </tr>
-            </tfoot> -->
+                    <tr>
+                        <th>Owned</th>
+                        <th>Type</th>
+                        <th>Brand</th>
+                        <th>Price</th>
+                        <th>Serial No.</th>
+                        <th>Code</th>
+                        <th>Distributor</th>
+                        <th>Date Delivered</th>
+                        <th>Date Purchased</th>
+                        <th>Actions</th>
+                    </tr>
+                </tfoot> -->
                 </table>
 
 
@@ -172,7 +172,8 @@
                             <div class="form-group">
                                 <div class="row mb-2">
                                     <div class="col-sm-6">
-                                        <label class="form-label" for="serial_no">Serial No.</label>
+                                        <label class="form-label" for="serial_no"><i style="color:red">*</i>Serial
+                                            No.</label>
                                         <input type="text" class="form-control" id="serial_no" name="serial_no">
                                     </div>
                                     <div class="col-sm-6">

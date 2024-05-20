@@ -118,20 +118,20 @@
 
                             <div class="form-group">
                                 <div class="row">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <label class="form-label" for="volume"><i style="color:red">*</i>Volume</label>
                                         <input type="text" class="form-control" name="volume"
                                             value="{{ old('volume') }}">
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <label class="form-label" for="volume"><i style="color:red">*</i>Spoon
                                             PCS/Bag</label>
                                         <input type="number" class="form-control" name="spoon_pcs_per_bag"
                                             value="{{ old('spoon_pcs_per_bag') ?? 0 }}" value="0">
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <label class="form-label" for="status">Active</label>
                                         <br>
                                         <input type="checkbox" name="is_active" id="mySwitch" data-bootstrap-switch

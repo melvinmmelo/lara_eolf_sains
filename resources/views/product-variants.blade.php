@@ -90,12 +90,12 @@
                             <div class="form-group">
                                 <div class="row mb-2">
                                     <div class="col-sm-3">
-                                        <label class="form-label" for="code">Code</label>
+                                        <label class="form-label" for="code"><i style="color:red">*</i>Code</label>
                                         <input type="text" class="form-control" name="code"
                                             value="{{ old('code') }}">
                                     </div>
                                     <div class="col-sm-9">
-                                        <label class="form-label" for="name">Name</label>
+                                        <label class="form-label" for="name"><i style="color:red">*</i>Name</label>
                                         <input type="text" class="form-control" name="name"
                                             value="{{ old('name') }}">
                                     </div>

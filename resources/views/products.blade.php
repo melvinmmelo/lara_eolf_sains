@@ -94,7 +94,7 @@
                             <div class="form-group">
                                 <div class="row mb-2">
                                     <div class="col-sm-6">
-                                        <label class="form-label" for="name">Type</label>
+                                        <label class="form-label" for="name"><i style="color:red">*</i>Type</label>
                                         <select class="form-control" id="product_type_code" name="product_type_code">
                                             @foreach ($types as $type)
                                                 <option value="{{ $type->code }}">{{ $type->code }}</option>
@@ -103,7 +103,7 @@
                                     </div>
 
                                     <div class="col-sm-6">
-                                        <label class="form-label" for="name">Variant</label>
+                                        <label class="form-label" for="name"><i style="color:red">*</i>Variant</label>
                                         <select class="form-control" id="product_variant_code" name="product_variant_code">
                                             @foreach ($variants as $variant)
                                                 <option value="{{ $variant->code }}">{{ $variant->code }}</option>

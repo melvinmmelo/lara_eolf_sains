@@ -90,7 +90,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="code">Name</label>
+                                        <label class="form-label" for="code"><i style="color:red">*</i>Name</label>
                                         <input type="text" class="form-control" name="name">
                                     </div>
 
@@ -99,7 +99,8 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="address">Description</label>
+                                        <label class="form-label" for="address"><i
+                                                style="color:red">*</i>Description</label>
                                         <textarea class="form-control" rows="3" name="Description"></textarea>
                                     </div>
                                 </div>
