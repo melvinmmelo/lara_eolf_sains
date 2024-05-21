@@ -80,7 +80,7 @@
                         </div>
                         <div class="modal-body">
 
-                            <div class="form-group">
+                            <div id="branchCodeCon" class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label class="form-label" for="branch_code">Branch Code</label>
@@ -159,4 +159,44 @@
         </div>
     </section>
     <!-- /.content -->
+@endsection
+
+
+@section('custom_js')
+    <script>
+        window.onload = function() {
+
+            var branchCode = document.getElementById('branchCodeCon');
+
+            var forCustomerRadio = document.getElementById('isForCustomer');
+            var factoryPriceRadio = document.getElementById('isFactoryPrice');
+            var badPricingRadio = document.getElementById('isBadPricing');
+            var inputName = document.querySelector('input[name="name"]');
+
+            forCustomerRadio.addEventListener('change', function() {
+                if (this.checked) {
+                    branchCode.style.display = 'block';
+                    inputName.value = '';
+                    inputName.readOnly = false;
+                }
+            });
+
+            factoryPriceRadio.addEventListener('change', function() {
+                if (this.checked) {
+                    branchCode.style.display = 'none';
+                    inputName.value = 'FACTORY PRICE';
+                    inputName.readOnly = true;
+                }
+            });
+
+            badPricingRadio.addEventListener('change', function() {
+                if (this.checked) {
+                    branchCode.style.display = 'block';
+                    inputName.value = 'BAD PRICING';
+                    inputName.readOnly = true;
+                }
+            });
+
+        }
+    </script>
 @endsection

@@ -16,6 +16,8 @@ return new class extends Migration
             $table->integer('user_id');
             $table->string('branch_code', 15);
             $table->string('equipment_id');
+            $table->unsignedInteger('customer_id');
+            $table->unsignedInteger('store_id');
             $table->string('driver_id');
             $table->string('vehicle_id');
             $table->json('products')->nullable();

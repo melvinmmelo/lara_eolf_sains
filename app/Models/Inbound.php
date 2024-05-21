@@ -12,6 +12,22 @@ class Inbound extends Model
 
     protected $appends = ['f_created_at', 'f_updated_at'];
 
+    public function priceLevel() : BelongsTo {
+        return $this->belongsTo(pricelevels::class, 'pricelevel_id');
+    }
+
+    public function customer() : BelongsTo {
+        return $this->belongsTo(Customers::class);
+    }
+
+    public function store() : BelongsTo {
+        return $this->belongsTo(StoreInfo::class);
+    }
+
+    public function equipment() : BelongsTo {
+        return $this->belongsTo(Equipment::class);
+    }
+
     public function driver() : BelongsTo {
         return $this->belongsTo(Drivers::class);
     }

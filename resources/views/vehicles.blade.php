@@ -77,12 +77,12 @@
                                     <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
                                         data-target="#editVehicle"
                                         onclick="setToUpdateVehicle('{{ $vehicle->id }}','{{ $vehicle->plateno }}','{{ $vehicle->brand }}','{{ $vehicle->description }}','{{ $vehicle->type }}','{{ $vehicle->size }}','{{ $vehicle->capacity }}','{{ $vehicle->remarks }}','{{ $vehicle->status }}')">Edit</button>
-                                    <form method="POST" action="{{ route('vehicle.destroy', $vehicle->id) }}"
+                                    {{-- <form method="POST" action="{{ route('vehicle.destroy', $vehicle->id) }}"
                                         style="display: inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                    </form>
+                                    </form> --}}
                                 </td>
                             </tr>
                         @endforeach

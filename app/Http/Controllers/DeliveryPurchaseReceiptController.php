@@ -40,18 +40,11 @@ class DeliveryPurchaseReceiptController extends Controller
 
         $dpr = DeliveryPurchaseReceipt::findOrFail($request->dpr_id);
 
-        $productPrice = prices::getPrice($request->product_code, session('branch_code'), 'FACTORY PRICE');
+        $productPrice = prices::getFactoryPrice($request->product_code);
 
         if(!$productPrice){
-            return redirect()->back()->with('error', 'Product price not found.');
+            return redirect()->back()->withErrors('Price not found.');
         }
-
-        // dd($productPrice);
-
-        if(!$productPrice){
-            return redirect()->back()->with('error', 'Product price not found.');
-        }
-
 
         $newProduct = ['code' => $request->product_code, 'quantity' => $request->qty, 'price' => $productPrice];
 
@@ -107,8 +100,8 @@ class DeliveryPurchaseReceiptController extends Controller
      */
     public function store(StoreDeliveryPurchaseReceiptRequest $request)
     {
-        DeliveryPurchaseReceipt::create($request->validated());
-        return redirect()->back()->with('success', 'Delivery Receipt created successfully.');
+        $dpr = DeliveryPurchaseReceipt::create($request->validated());
+        return redirect()->route('drp.products', [ 'dprId' => $dpr->id  ])->with('success', 'Delivery Receipt created successfully.');
     }
 
     /**

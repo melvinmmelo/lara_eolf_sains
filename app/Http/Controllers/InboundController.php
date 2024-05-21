@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customers;
 use App\Models\Inbound;
 use App\Models\Drivers;
 use App\Models\Equipment;
@@ -73,18 +74,23 @@ class InboundController extends Controller
             'equipment' => 'required',
             'deliveryPerson' => 'required',
             'vehicle' => 'required',
-            'pricelevel_id' => 'required'
+            'pricelevel_id' => 'required',
+            'customer_id' => 'required',
         ]);
+
+        $equipStore = EquipmentStore::find($request->equipment);
 
         $tempInbound = new Inbound();
         $tempInbound->user_id = auth()->user()->id;
         $tempInbound->branch_code = $request->branch_code;
-        $tempInbound->equipment_id = $request->equipment;
+        $tempInbound->equipment_id = $equipStore->equipment->id;
         $tempInbound->driver_id = $request->deliveryPerson;
         $tempInbound->vehicle_id = $request->vehicle;
         $tempInbound->products = null;
         $tempInbound->status = 'Pending';
         $tempInbound->pricelevel_id = $request->pricelevel_id;
+        $tempInbound->customer_id = $request->customer_id;
+        $tempInbound->store_id = $equipStore->store_id;
         $tempInbound->save();
 
         session()->put('pricelevelId', $request->pricelevel_id);
@@ -115,11 +121,11 @@ class InboundController extends Controller
             return redirect()->route('order.index')->withErrors('Your order has been completed.');
         }
 
-        $equipmentStore = EquipmentStore::find($inbound->equipment_id);
-        $customerName = $equipmentStore->store->customer->fullName ?? 'N/A';
+        $equipment = Equipment::find($inbound->equipment_id);
+        $customerName = Customers::find($inbound->customer_id)->fullName;
         $branchCode = session('branch_code');
 
-        $equipmentSerial = $equipmentStore->equipment->serial_no;
+        $equipmentSerial = $equipment->serial_no;
         $deliveryPerson = Drivers::select('name')->find($inbound->driver_id);
 
         $vehicle = Vehicles::select('plateno')->find($inbound->vehicle_id);
@@ -248,7 +254,7 @@ class InboundController extends Controller
 
             $itemData = ItemMasterData::branch(session('branch_code'))->productCode($product['code'])->first();
 
-            $itemData->stocks -= $product['quantity'];
+            $itemData->reserved += $product['quantity'];
             $itemData->save();
 
             $message = 'Success';

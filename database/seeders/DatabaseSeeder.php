@@ -6,6 +6,7 @@ use App\Models\Branches;
 use App\Models\CompanyDetails;
 use App\Models\Delivery;
 use App\Models\Drivers;
+use App\Models\Equipment;
 use App\Models\pricelevels;
 use App\Models\prices;
 use App\Models\Product;
@@ -131,12 +132,13 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // pricelevels::create([
-        //     'branch_code' => "CODE 1.26",
-        //     'pl_name' => "FACTORY PRICE",
-        //     'pl_desc' => 'FP Summer 2024',
-        //     'pl_status' => 'Active',
-        // ]);
+        pricelevels::create([
+            'branch_code' => "CODE 1.26",
+            'pl_name' => "SUMMER 2024",
+            'pl_desc' => 'FP Summer 2024',
+            'pl_status' => 'Active',
+            'pl_type' => 'CUSTOMER'
+        ]);
 
 
         // prices::create([
@@ -175,6 +177,16 @@ class DatabaseSeeder extends Seeder
             'name' => "EOLF Food Trading OPC - Tarlac",
             'address' => 'Tarlac',
             'office_no' =>  '09123456789',
+        ]);
+
+        Equipment::create([
+            'ownership' => "Not-Owned",
+            'type' => "Chest Freezer",
+            'brand' => 'CONDURA',
+            'price' =>  '42000.00',
+            'price' =>  '42000.00',
+            'serial_no' => 'ABC123',
+            'code' => '123456',
         ]);
     }
 }

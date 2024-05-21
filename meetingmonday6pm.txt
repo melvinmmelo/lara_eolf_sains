@@ -1,0 +1,21 @@
+Dashboard
++ Delivery
++ Graphs - sales per date or monthly
++ No. of customers
+
+Customers
+Map
+
+Inbound
+Stocks - Actual
++ Reserve
+
+Outbound
++ Reserve muna after saving
++ Add column of price level
+* Kelan babawas sa actual
+
+Reports
++ Delivery
++ Sales
++ Equipment - Pull out form

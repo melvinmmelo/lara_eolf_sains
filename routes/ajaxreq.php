@@ -8,7 +8,11 @@ Route::middleware('auth')->group(
 
         Route::get('/get-equipmentcustomerstore/{id}', function ($id) {
             $equipment = EquipmentStore::find($id);
-            echo $equipment->store->customer->fullName;
+
+            // return json  response
+            return response()->json(['customer_name' => $equipment->store->customer->fullName, 'customer_id' => $equipment->store->customer->id]);
+
+            // echo $equipment->store->customer->fullName;
         });
     }
 );

@@ -34,10 +34,12 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
+                            <th>Order No.</th>
                             <th>Date created</th>
+                            <th>Price Level</th>
+                            <th>Customer</th>
                             <th>Store</th>
                             <th>Equipment</th>
-                            <th>Order No.</th>
                             <th>Delivery Person</th>
                             <th>Vehicle</th>
                             <th>Status</th>
@@ -48,12 +50,14 @@
                     <tbody>
                         @foreach ($inbounds as $inbound)
                             <tr>
+                                <td>{{ $inbound->id }}</td>
                                 <td>{{ $inbound->f_created_at }}</td>
-                                <td></td>
-                                <td>{{ $inbound->vehicle_id }}</td>
+                                <td>{{ $inbound->priceLevel->pl_name }}</td>
+                                <td>{{ $inbound->customer->fullName }}</td>
+                                <td>{{ $inbound->store->storename }}</td>
+                                <td>{{ $inbound->equipment->serial_no }}</td>
                                 <td>{{ $inbound->driver->name }}</td>
                                 <td>{{ $inbound->vehicle->plateno }}</td>
-                                <td></td>
                                 <td>{{ $inbound->status }}</td>
                                 <td>{{ $inbound->f_updated_at }}</td>
                                 <td>
@@ -67,10 +71,12 @@
                     </tbody>
                     <tfoot>
                         <tr>
+                            <th>Order No.</th>
                             <th>Date</th>
+                            <th>Price Level</th>
+                            <th>Customer</th>
                             <th>Store</th>
                             <th>Equipment</th>
-                            <th>Order No.</th>
                             <th>Delivery Person</th>
                             <th>Total</th>
                             <th>Status</th>
@@ -122,7 +128,7 @@
                                             id="equipment" onchange="setCustomerName(this.value)" required>
                                             <option value="">--Select--</option>
                                             @foreach ($equipment as $equip)
-                                                <option value="{{ $equip->id }}">{{ $equip->type }}</option>
+                                                <option value="{{ $equip->id }}">{{ $equip->type . "-" . $equip->equipment->serial_no }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -133,7 +139,8 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label class="form-label" for="customer"><i style="color:red">*</i>Customer</label>
-                                        <textarea class="form-control" rows="3" name="customer" id="customer"></textarea>
+                                        <input type="hidden" class="form-control" name="customer_id" id="customer_id" required readonly>
+                                        <textarea class="form-control" rows="3" name="customer" id="customer" required readonly></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -168,7 +175,8 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="pricelevel_id"><i style="color:red">*</i>Pricing</label>
+                                        <label class="form-label" for="pricelevel_id"><i
+                                                style="color:red">*</i>Price Level</label>
                                         <select class="form-control" name="pricelevel_id" id="pricelevel_id" required>
                                             @foreach ($pricing as $plevel)
                                                 <option value="{{ $plevel->id }}">{{ $plevel->pl_name }}</option>
@@ -196,24 +204,44 @@
 
 @section('custom_js')
     <script>
+        // function setCustomerName(str) {
+        //     if (str == '') {
+        //         return;
+        //     }
+
+        //     var equipment = document.getElementById('equipment').value;
+
+        //     // document.getElementById('customer').value = equipment;
+
+        //     // get to get who owns the equipment
+        //     var xmlhttp = new XMLHttpRequest();
+        //     xmlhttp.onreadystatechange = function() {
+        //         if (this.readyState == 4 && this.status == 200) {
+        //             // convert the string to json
+
+        //             // this.responseText = JSON.parse(this.responseText);
+
+        //             console.log(this.responseText.customer_name);
+
+
+        //             document.getElementById('customer_id').value = this.responseText.customer_id;
+        //             document.getElementById('customer').value = this.responseText.customer_name;
+        //         }
+        //     };
+        //     xmlhttp.open("GET", "/get-equipmentcustomerstore/" + str, true);
+        //     xmlhttp.send();
+        // }
+
         function setCustomerName(str) {
-            if (str == '') {
-                return;
-            }
-
-            console.log('here');
-            var equipment = document.getElementById('equipment').value;
-            document.getElementById('customer').value = equipment;
-
-            // get to get who owns the equipment
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById('customer').value = this.responseText;
+            $.ajax({
+                type: "GET",
+                url: "/get-equipmentcustomerstore/" + str,
+                success: function(response) {
+                    // console.log(response);
+                    document.getElementById('customer_id').value = response.customer_id;
+                    document.getElementById('customer').value = response.customer_name;
                 }
-            };
-            xmlhttp.open("GET", "/get-equipmentcustomerstore/" + str, true);
-            xmlhttp.send();
+            });
         }
     </script>
 @endsection

@@ -87,20 +87,9 @@
         <div class="card">
             <form action="{{ route('inbound.store') }}" method="POST">
                 @csrf
-
-                <div class="card-header">
-                    <h3 class="card-title mr-2">Ordering Info</h3>
-
-                    <input type="text" name="inboundId" id="inboundId" class="label-input" value="{{ $inboundId }}"
-                        required readonly>
-
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
                 <div class="card-body">
+                      <input type="hidden" name="inboundId" id="inboundId" class="label-input" value="{{ $inboundId }}"
+                        required readonly>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-3">
@@ -260,7 +249,7 @@
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td class="align-middle text-center" colspan="5">No
+                                                                <td class="align-middle text-center" colspan="6">No
                                                                     data
                                                                     available.
                                                                 </td>
@@ -318,11 +307,6 @@
                             <div class="form-checkbox">
                                 <input type="checkbox" id="withInvoice" name="with_invoice" value="on">
                                 <label for="withInvoice">With Invoice</label>
-                            </div>
-
-                            <div class="form-checkbox">
-                                <input type="checkbox" id="badOrder" name="bad_order" value="on">
-                                <label for="badOrder">Bad order</label>
                             </div>
                         </div>
                     </div>

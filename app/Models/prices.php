@@ -40,5 +40,14 @@ class prices extends Model
         return ($price) ? $price: null;
     }
 
+    public static function getFactoryPrice($productCode, $priceType = 'FACTORY PRICE')
+    {
+        $price = prices::where('p_code', $productCode)->whereHas('pricelevel', function ($query) use ($priceType) {
+            $query->where('pl_type', $priceType);
+        })->first();
+
+        return ($price) ? $price->p_price : null;
+    }
+
 
 }

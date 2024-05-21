@@ -29,6 +29,7 @@
                     <thead>
                         <tr>
                             <th>Product</th>
+                            <th>Reserved</th>
                             <th>Stocks</th>
                             <th>Date</th>
                         </tr>
@@ -37,6 +38,7 @@
                         @foreach ($products as $product)
                             <tr>
                                 <td>{{ $product->product_code }}</td>
+                                <td>{{ $product->reserved }}</td>
                                 <td>{{ $product->stocks }}</td>
                                 <td>{{ $product->updated_at }}</td>
                             </tr>
@@ -45,6 +47,7 @@
                     <tfoot>
                         <tr>
                             <th>Product</th>
+                            <th>Reserved</th>
                             <th>Quantity</th>
                             <th>Date</th>
                         </tr>

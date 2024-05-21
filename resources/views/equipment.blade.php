@@ -80,13 +80,13 @@
                                         data-target="#edit-equipment"
                                         onclick="setToUpdateEquipment('{{ $equipment->id }}','{{ $equipment->ownership }}','{{ $equipment->type }}','{{ $equipment->brand }}','{{ $equipment->price }}','{{ $equipment->serial_no }}','{{ $equipment->code }}','{{ $equipment->distributor }}','{{ $equipment->date_delivered }}','{{ $equipment->date_purchased }}')">Edit</button>
 
-                                    <form action="{{ route('equipment.destroy', $equipment->id) }}" method="POST"
+                                    {{-- <form action="{{ route('equipment.destroy', $equipment->id) }}" method="POST"
                                         style="display: inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm"
                                             onclick="return confirm('Are you sure you want to delete this equipment?')">Delete</button>
-                                    </form>
+                                    </form> --}}
                                 </td>
                             </tr>
                         @endforeach
@@ -136,9 +136,9 @@
                                         <label class="form-label" for="ownership"><i
                                                 style="color:red">*</i>Ownership</label>
                                         <select class="form-control" id="ownership" name="ownership" required>
-                                            <option></option>
                                             <option value="Owned">Owned</option>
-                                            <option value="Not-Owned">Not-Owned</option>
+                                            <option value="Leased">Leased</option>
+                                            <option value="Rented">Rented</option>
                                             <!-- Add more options if needed -->
                                         </select>
                                     </div>
@@ -146,11 +146,8 @@
                                     <div class="col-sm-6">
                                         <label class="form-label" for="type"><i style="color:red">*</i>Type</label>
                                         <select class="form-control" id="type" name="type" required>
-                                            <option value="Upright Freezer">Upright Freezer</option>
-                                            <option value="Chest Freezer">Chest Freezer</option>
-                                            <option value="Drawer Freezer">Drawer Freezer</option>
-                                            <option value="Commercial Freezer">Commercial Freezer</option>
-                                            <!-- Add more options if needed -->
+                                            <option value="Hard Top">Hard Top</option>
+                                            <option value="Glass Top">Glass Top</option>
                                         </select>
                                     </div>
                                 </div>
@@ -178,8 +175,7 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <label class="form-label" for="code"><i style="color:red">*</i>Code</label>
-                                        <input type="text" class="form-control" id="code" name="code"
-                                            required>
+                                        <input type="text" class="form-control" id="code" name="code" required>
                                     </div>
                                 </div>
                             </div>
@@ -243,10 +239,8 @@
                                 <div class="col-sm-6">
                                     <label class="form-label" for="edit-type">Type</label>
                                     <select class="form-control" id="edit-type" name="type">
-                                        <option value="Upright Freezer">Upright Freezer</option>
-                                        <option value="Chest Freezer">Chest Freezer</option>
-                                        <option value="Drawer Freezer">Drawer Freezer</option>
-                                        <option value="Commercial Freezer">Commercial Freezer</option>
+                                        <option value="Hard Top">Hard Top</option>
+                                        <option value="Glass Top">Glass Top</option>
                                     </select>
                                 </div>
                             </div>

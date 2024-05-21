@@ -71,6 +71,9 @@
         <div class="card">
 
             <div class="card-body">
+
+                @include('layouts.errors')
+
                 <div>
                     <div id="inboundList">
                         <div class="row">
