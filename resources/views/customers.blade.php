@@ -85,7 +85,9 @@
                                         style="display: inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" onclick="return confirm('Are you sure you want to delete this customer info?')" class="btn btn-danger btn-sm">Delete</button>
+                                        <button type="submit"
+                                            onclick="return confirm('Are you sure you want to delete this customer info?')"
+                                            class="btn btn-danger btn-sm">Delete</button>
                                     </form>
                                 </td>
                             </tr>
@@ -124,18 +126,18 @@
                                 <div class="form-group">
 
                                     <!-- <div class="row mb-3">
-                                        <div class="col-sm-6">
-                                            <label class="form-label" for="cust_dist">Distributor</label>
-                                            <select name="distributor" class="form-control d-block" id="cust_dist"
-                                                onfocus="changeColor('cust_dist')" onblur="resetColor('cust_dist')">
-                                                <option>option 1</option>
-                                                <option>option 2</option>
-                                                <option>option 3</option>
-                                                <option>option 4</option>
-                                                <option>option 5</option>
-                                            </select>
-                                        </div>
-                                    </div> -->
+                                                    <div class="col-sm-6">
+                                                        <label class="form-label" for="cust_dist">Distributor</label>
+                                                        <select name="distributor" class="form-control d-block" id="cust_dist"
+                                                            onfocus="changeColor('cust_dist')" onblur="resetColor('cust_dist')">
+                                                            <option>option 1</option>
+                                                            <option>option 2</option>
+                                                            <option>option 3</option>
+                                                            <option>option 4</option>
+                                                            <option>option 5</option>
+                                                        </select>
+                                                    </div>
+                                                </div> -->
                                     <input type="hidden" name ="distributor" value="n/a">
 
                                     <div class="form-group">
@@ -194,10 +196,10 @@
                                                 <select class="form-control" id="cust_prov" name="province">
                                                     <!-- <option></option> -->
                                                     <!-- <option>option 1</option>
-                                                                <option>option 2</option>
-                                                                <option>option 3</option>
-                                                                <option>option 4</option>
-                                                                <option>option 5</option> -->
+                                                                            <option>option 2</option>
+                                                                            <option>option 3</option>
+                                                                            <option>option 4</option>
+                                                                            <option>option 5</option> -->
                                                 </select>
                                             </div>
                                             <div class="col-sm-3">
@@ -205,10 +207,10 @@
                                                 <select class="form-control" id="cust_city" name="city">
                                                     <!-- <option></option> -->
                                                     <!-- <option>option 1</option>
-                                                                <option>option 2</option>
-                                                                <option>option 3</option>
-                                                                <option>option 4</option>
-                                                                <option>option 5</option> -->
+                                                                            <option>option 2</option>
+                                                                            <option>option 3</option>
+                                                                            <option>option 4</option>
+                                                                            <option>option 5</option> -->
                                                 </select>
                                             </div>
                                         </div>
@@ -221,10 +223,10 @@
                                                     <select class="form-control" id="cust_brgy" name="brgy">
                                                         <!-- <option></option> -->
                                                         <!-- <option>option 1</option>
-                                                                    <option>option 2</option>
-                                                                    <option>option 3</option>
-                                                                    <option>option 4</option>
-                                                                    <option>option 5</option> -->
+                                                                                <option>option 2</option>
+                                                                                <option>option 3</option>
+                                                                                <option>option 4</option>
+                                                                                <option>option 5</option> -->
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-6">
@@ -255,63 +257,63 @@
                 <div class="modal-footer">
                     <!-- Button to open another modal -->
                     <!-- <button type="button" class="btn btn-primary" onclick="toggleModal('storeModal')">Store
-                                                                                                                                                                                        Info</button>
-                                                                                                                                                                                    <button type="button" class="btn btn-success swalDefaultSuccess">Save changes</button> -->
+                                                                                                                                                                                                    Info</button>
+                                                                                                                                                                                                <button type="button" class="btn btn-success swalDefaultSuccess">Save changes</button> -->
 
                     <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#storeModal">Store Info</button> -->
                     <!-- <input type="submit" name="submit" value="submit"> -->
                     <button type="submit" class="btn btn-success">Save changes</button>
                 </div>
             </div>
-            </form>
-        </div>
-    </div>
+
+            <!--maps modal -->
 
 
 
-    <!-- Edit Customer Modal -->
-    <div class="modal fade" id="editCustomerModal" tabindex="-1" aria-labelledby="editCustomerModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editCustomerModalLabel">Edit Customer</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form id="editCustomerForm" method="POST" action="{{ route('customer.update') }}">
-                    @csrf
-                    @method('PATCH')
+            <!-- Edit Customer Modal -->
+            <div class="modal fade" id="editCustomerModal" tabindex="-1" aria-labelledby="editCustomerModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editCustomerModalLabel">Edit Customer</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form id="editCustomerForm" method="POST" action="{{ route('customer.update') }}">
+                            @csrf
+                            @method('PATCH')
 
 
-                    <div class="modal-body">
+                            <div class="modal-body">
 
 
-                        <div class="container-fluid">
+                                <div class="container-fluid">
 
-                            <div class="form-group">
-                                <div class="row mb-3">
-                                    <label for="distributor">Customer ID:</label>
-                                    <input type="text" class="form-control" name="id" id="id" required
-                                        readonly>
-                                </div>
-                            </div>
+                                    <div class="form-group">
+                                        <div class="row mb-3">
+                                            <label for="distributor">Customer ID:</label>
+                                            <input type="text" class="form-control" name="id" id="id"
+                                                required readonly>
+                                        </div>
+                                    </div>
 
-                            <!-- <div class="form-group">
-                                <div class="row mb-3">
-                                    <label for="distributor">Distributor:</label>
-                                    <select name="distributor" class="form-control d-block" id="distributor"
-                                        onfocus="changeColor('cust_dist')" onblur="resetColor('cust_dist')">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                        <option>option 5</option>
-                                    </select>
+                                    <!-- <div class="form-group">
+                                            <div class="row mb-3">
+                                                <label for="distributor">Distributor:</label>
+                                                <select name="distributor" class="form-control d-block" id="distributor"
+                                                    onfocus="changeColor('cust_dist')" onblur="resetColor('cust_dist')">
+                                                    <option>option 1</option>
+                                                    <option>option 2</option>
+                                                    <option>option 3</option>
+                                                    <option>option 4</option>
+                                                    <option>option 5</option>
+                                                </select>
 
-                                </div> -->
-                                <input type="hidden" name ="distributor" id="distributor>
+                                            </div> -->
+                                    <input type="hidden" name ="distributor"
+                                        id="distributor>
                                 <div class="form-group">
                                     <div class="row mb-3">
                                         <div class="col-sm-4">
@@ -362,8 +364,8 @@
                                                 <label class="form-label" for="region">Region</label>
                                                 <select class="form-control" id="region" name="region">
                                                     <!-- <option>Region I (Ilocos Region)</option>
-                                                                <option>Region II (Cagayan Valley)</option>
-                                                                <option>Region IV-A (CALABARZON)</option> -->
+                                                                            <option>Region II (Cagayan Valley)</option>
+                                                                            <option>Region IV-A (CALABARZON)</option> -->
                                                 </select>
                                             </div>
 
@@ -411,12 +413,12 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
                 </form>
             </div>
         </div>
