@@ -61,8 +61,10 @@
                                         No equipment available <!-- Display a message if there are no equipment stores -->
                                     @endif
                                 </td>
-                                <td>{{ $customer->storeinfo->brgy }}, {{ $customer->storeinfo->subdivision }},
-                                    {{ $customer->storeinfo->city }}</td>
+                                <td><a href="#" data-toggle="modal"
+                                        data-target="#exampleModal">{{ $customer->storeinfo->brgy }},
+                                        {{ $customer->storeinfo->subdivision }},
+                                        {{ $customer->storeinfo->city }}</a></td>
                                 <td>
                                     <a class="btn btn-success btn-sm"
                                         href="/equipment-store?store_id={{ $customer->storeinfo->id }}&store_name={{ $customer->storeinfo->storename }}&customer_id={{ $customer->id }}&customer_name={{ $customer->lastname }}, {{ $customer->firstname }} {{ $customer->middlename }}"
@@ -98,6 +100,30 @@
                         </tr>
                     </tfoot>
                 </table>
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">{{ $customer->storeinfo->brgy }},
+                                    {{ $customer->storeinfo->subdivision }},
+                                    {{ $customer->storeinfo->city }}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3022.0452163943947!2d{{ $customer->longitude }}!3d{{ $customer->latitude }}!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQyJzQ2LjAiTiA3NMKwMDBBJzIxLjAiVw!5e0!3m2!1sen!2sus!4v1716257108716!5m2!1sen!2sus"
+                                    width="100%" height="450" style="border:0;" allowfullscreen=""
+                                    loading="lazy"></iframe>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- /.card-body -->
             <div class="card-footer">
@@ -149,17 +175,20 @@
                                             <div class="form-group">
                                                 <div class="row mb-3">
                                                     <div class="col-sm-4">
-                                                        <label class="form-label" for="cust_lname">Last Name:</label>
+                                                        <label class="form-label" for="cust_lname"><i
+                                                                style="color:red">*</i>Last Name:</label>
                                                         <input type="text" class="form-control" id="cust_lname"
                                                             name="lastname">
                                                     </div>
                                                     <div class="col-sm-4">
-                                                        <label class="form-label" for="cust_fname">First Name:</label>
+                                                        <label class="form-label" for="cust_fname"><i
+                                                                style="color:red">*</i>First Name:</label>
                                                         <input type="text" class="form-control" id="cust_fname"
                                                             name="firstname">
                                                     </div>
                                                     <div class="col-sm-4">
-                                                        <label class="form-label" for="cust_mname">Middle Name:</label>
+                                                        <label class="form-label" for="cust_mname"><i
+                                                                style="color:red">*</i>Middle Name:</label>
                                                         <input type="text" class="form-control" id="cust_mname"
                                                             name="middlename">
                                                     </div>
@@ -169,7 +198,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_contact">Contact No.:</label>
+                                                        <label class="form-label" for="cust_contact"><i
+                                                                style="color:red">*</i>Contact No.:</label>
                                                         <input type="text" class="form-control" id="cust_contact"
                                                             name="contact_no">
                                                     </div>
@@ -179,7 +209,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_comp">Company Name:</label>
+                                                        <label class="form-label" for="cust_comp"><i
+                                                                style="color:red">*</i>Company Name:</label>
                                                         <input type="text" class="form-control" id="cust_comp"
                                                             name="companyname">
                                                     </div>
@@ -189,7 +220,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_tin">TIN:</label>
+                                                        <label class="form-label" for="cust_tin"><i
+                                                                style="color:red">*</i>TIN:</label>
                                                         <input type="text" class="form-control" id="cust_tin"
                                                             name="tin">
                                                     </div>
@@ -201,7 +233,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_region">Region</label>
+                                                        <label class="form-label" for="cust_region"><i
+                                                                style="color:red">*</i>Region</label>
                                                         <select class="form-control" id="cust_region" name="region">
                                                             <!-- <option></option> -->
                                                         </select>
@@ -212,7 +245,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_prov">Province</label>
+                                                        <label class="form-label" for="cust_prov"><i
+                                                                style="color:red">*</i>Province</label>
                                                         <select class="form-control" id="cust_prov" name="province">
                                                         </select>
                                                     </div>
@@ -222,7 +256,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_city">City</label>
+                                                        <label class="form-label" for="cust_city"><i
+                                                                style="color:red">*</i>City</label>
                                                         <select class="form-control" id="cust_city" name="city">
                                                         </select>
                                                     </div>
@@ -232,7 +267,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_brgy">Barangay</label>
+                                                        <label class="form-label" for="cust_brgy"><i
+                                                                style="color:red">*</i>Barangay</label>
                                                         <select class="form-control" id="cust_brgy" name="brgy">
                                                         </select>
                                                     </div>
@@ -242,7 +278,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_subd">Subdivision</label>
+                                                        <label class="form-label" for="cust_subd"><i
+                                                                style="color:red">*</i>Subdivision</label>
                                                         <input type="text" class="form-control" id="cust_subd"
                                                             name="subdivision">
                                                     </div>
@@ -251,7 +288,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="latitude">Latitude</label>
+                                                        <label class="form-label" for="latitude"><i
+                                                                style="color:red">*</i>Latitude</label>
                                                         <input type="text" class="form-control" name="latitude">
                                                     </div>
                                                 </div>
@@ -260,7 +298,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="longitude">Longitude</label>
+                                                        <label class="form-label" for="longitude"><i
+                                                                style="color:red">*</i>Longitude</label>
                                                         <input type="text" class="form-control" name="longitude">
                                                     </div>
                                                 </div>
@@ -297,7 +336,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="storename">Store Name</label>
+                                                        <label class="form-label" for="storename"><i
+                                                                style="color:red">*</i>Store Name</label>
                                                         <input type="text" class="form-control" name="storename">
                                                     </div>
                                                 </div>
@@ -306,7 +346,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="contactno2">Contact No.</label>
+                                                        <label class="form-label" for="contactno2"><i
+                                                                style="color:red">*</i>Contact No.</label>
                                                         <input type="text" class="form-control" name="contactno2">
                                                     </div>
                                                 </div>
@@ -318,7 +359,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_region2">Region</label>
+                                                        <label class="form-label" for="cust_region2"><i
+                                                                style="color:red">*</i>Region</label>
                                                         <select class="form-control" id="cust_region2" name="region2">>
                                                         </select>
                                                     </div>
@@ -328,7 +370,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_prov2">Province</label>
+                                                        <label class="form-label" for="cust_prov2"><i
+                                                                style="color:red">*</i>Province</label>
                                                         <select class="form-control" id="cust_prov2" name="province2">
                                                         </select>
                                                     </div>
@@ -338,7 +381,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_city2">City</label>
+                                                        <label class="form-label" for="cust_city2"><i
+                                                                style="color:red">*</i>City</label>
                                                         <select class="form-control" id="cust_city2" name="city2">
                                                         </select>
                                                     </div>
@@ -348,7 +392,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_brgy2">Barangay</label>
+                                                        <label class="form-label" for="cust_brgy2"><i
+                                                                style="color:red">*</i>Barangay</label>
                                                         <select class="form-control" id="cust_brgy2" name="brgy2">
                                                         </select>
                                                     </div>
@@ -358,7 +403,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="subdivision2">Subdivision:</label>
+                                                        <label class="form-label" for="subdivision2"><i
+                                                                style="color:red">*</i>Subdivision:</label>
                                                         <input type="text" class="form-control" id="subdivision2"
                                                             name="subdivision">
                                                     </div>
@@ -368,7 +414,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="latitude2">Latitude:</label>
+                                                        <label class="form-label" for="latitude2"><i
+                                                                style="color:red">*</i>Latitude:</label>
                                                         <input type="text" class="form-control" id="latitude2"
                                                             name="latitude2">
                                                     </div>
@@ -378,7 +425,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="longitude2">Longitude:</label>
+                                                        <label class="form-label" for="longitude2"><i
+                                                                style="color:red">*</i>Longitude:</label>
                                                         <input type="text" class="form-control" id="longitude2"
                                                             name="longitude2">
                                                     </div>
@@ -388,7 +436,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="listype">Least Type:</label>
+                                                        <label class="form-label" for="listype"><i
+                                                                style="color:red">*</i>Least Type:</label>
                                                         <select class="form-control" id="listype" name="listype">
                                                             <option>option 1</option>
                                                             <option>option 2</option>
@@ -402,7 +451,8 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="longitude2">Length of Stay:</label>
+                                                        <label class="form-label" for="longitude2"><i
+                                                                style="color:red">*</i>Length of Stay:</label>
                                                         <input type="text" class="form-control" id="length_stay"
                                                             name="length_stay">
                                                     </div>
@@ -437,7 +487,15 @@
             </div>
             <!-- /.modal -->
 
+
+
+
             </form>
+        </div>
+        </div>
+
+
+        </form>
         </div>
         </div>
 
@@ -757,7 +815,7 @@
         </div>
     </section>
 
-<!-- /.content -->
+    <!-- /.content -->
 @endsection
 
 
@@ -864,12 +922,14 @@
                         });
 
                         $.each(response, function(key, value) {
-                            $('#e_province').append('<option value="' + value.code + '">' + value
+                            $('#e_province').append('<option value="' + value.code + '">' +
+                                value
                                 .name + '</option>');
                         });
 
                         $.each(response, function(key, value) {
-                            $('#e_province2').append('<option value="' + value.code + '">' + value
+                            $('#e_province2').append('<option value="' + value.code + '">' +
+                                value
                                 .name + '</option>');
                         });
                     }
