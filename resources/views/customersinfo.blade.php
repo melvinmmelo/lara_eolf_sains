@@ -61,8 +61,7 @@
                                         No equipment available <!-- Display a message if there are no equipment stores -->
                                     @endif
                                 </td>
-                                <td><a href="#" data-toggle="modal"
-                                        data-target="#exampleModal">{{ $customer->storeinfo->brgy }},
+                                <td><a href="#" onclick="setMapModalInfo('{{ $customer->storeinfo->brgy }}','{{ $customer->storeinfo->subdivision }}','{{ $customer->storeinfo->city }}','{{ $customer->longitude }}', '{{ $customer->latitude }}')">{{ $customer->storeinfo->brgy }},
                                         {{ $customer->storeinfo->subdivision }},
                                         {{ $customer->storeinfo->city }}</a></td>
                                 <td>
@@ -101,29 +100,7 @@
                     </tfoot>
                 </table>
 
-                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-xl" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">{{ $customer->storeinfo->brgy }},
-                                    {{ $customer->storeinfo->subdivision }},
-                                    {{ $customer->storeinfo->city }}</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
 
-                                <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3022.0452163943947!2d{{ $customer->longitude }}!3d{{ $customer->latitude }}!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQyJzQ2LjAiTiA3NMKwMDBBJzIxLjAiVw!5e0!3m2!1sen!2sus!4v1716257108716!5m2!1sen!2sus"
-                                    width="100%" height="450" style="border:0;" allowfullscreen=""
-                                    loading="lazy"></iframe>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
             </div>
             <!-- /.card-body -->
             <div class="card-footer">
@@ -802,11 +779,8 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-success">Save
-                                changes</button>
+                            <button type="submit" class="btn btn-success">Save changes</button>
                         </div>
                     </div>
             </div>
@@ -816,11 +790,44 @@
     </section>
 
     <!-- /.content -->
+
+
+    <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mapModalLabel">
+                        <div class="modalMapInfo"></div></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3022.0452163943947!2d{{ $customer->longitude }}!3d{{ $customer->latitude }}!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQyJzQ2LjAiTiA3NMKwMDBBJzIxLjAiVw!5e0!3m2!1sen!2sus!4v1716257108716!5m2!1sen!2sus"
+                        width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+
+            </div>
+        </div>
+    </div>
 @endsection
 
 
 @section('custom_js')
     <script>
+        function setMapModalInfo(brgy, subd, city, long, lat) {
+            $('.modalMapInfo').html(brgy + ', ' + subd + ', ' + city);
+
+            // update iframe src
+            $('iframe').attr('src', 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3022.0452163943947!2d' + long + '!3d' + lat + '!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQyJzQ2LjAiTiA3NMKwMDBBJzIxLjAiVw!5e0!3m2!1sen!2sus!4v1716257108716!5m2!1sen!2sus');
+
+            // show modal
+            $('#mapModal').modal('show');
+        }
+
         function setToUpdatecustomer(uid, ebcode, ln, fn, mn, con, cm, tin, long, lat, reg, prov, city, brgy, subv,
             store_id,
             storename, contactno, reg2, prov2, city2, brgy2, subv2, lat2, long2, listype, length_stay, remarks) {
