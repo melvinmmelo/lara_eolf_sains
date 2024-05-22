@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('serial');
             $table->string('owned');
             $table->string('pull_status');
+            $table->string('remarks')->nullable();
             $table->timestamps();
 
             // Define foreign key constraints

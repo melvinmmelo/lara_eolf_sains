@@ -119,6 +119,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/equipment-storestore', [EquipmentStoreController::class, 'store'])->name('equipment-store.store');
     Route::patch('/equipment-store/update', [EquipmentStoreController::class, 'update'])->name('equistore-info.update');
     Route::delete('/equipment-store/{id}', [EquipmentStoreController::class, 'destroy'])->name('equipment-store.destroy');
+    Route::post('/equipment-store/update-pull-status', [EquipmentStoreController::class, 'updatePullStatus'])->name('equipment-store.updatePullStatus');
+    
 
     Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
     Route::get('/vehicles/{id}/edit', [VehiclesController::class, 'edit'])->name('vehicle.edit');
