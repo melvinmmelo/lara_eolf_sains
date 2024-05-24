@@ -133,7 +133,7 @@ class DatabaseSeeder extends Seeder
         );
 
         pricelevels::create([
-            'branch_code' => "CODE 1.26",
+            'branch_code' => "EFTO-TAR",
             'pl_name' => "SUMMER 2024",
             'pl_desc' => 'FP Summer 2024',
             'pl_status' => 'Active',
@@ -166,14 +166,14 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         Branches::create([
-            'code' => "CODE 1.26",
+            'code' => "EFTO-CAG",
             'name' => "EOLF Food Trading OPC - Cagayan Valley",
             'address' => 'Tuguegarao City, Cagayan',
             'office_no' =>  '09123456789',
         ]);
 
         Branches::create([
-            'code' => "CODE 1.27",
+            'code' => "EFTO-TAR",
             'name' => "EOLF Food Trading OPC - Tarlac",
             'address' => 'Tarlac',
             'office_no' =>  '09123456789',

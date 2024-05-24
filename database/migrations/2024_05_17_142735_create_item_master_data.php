@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('branch_code', 15);
             $table->string('product_code', 15);
             $table->integer('stocks');
-            $table->integer('reserve');
+            $table->integer('reserved')->default(0);
             $table->timestamps();
         });
     }

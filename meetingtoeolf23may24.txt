@@ -1,0 +1,32 @@
+23-May-2024 7:30PM
+
+Customers
+    Edit details
+
+    Add store
+      - edit details
+
+    * in edit, auto select the existing address
+
+    - import of customers
+
+
+Equipment
+    Pull
+      - add status
+    Pull and replace
+
+    Remove distributor
+    Edit equipment
+
+Order
+    Bad pricing
+      - percentage?
+    Reflect to next order and deduct the bad pricing
+    Order product sorting
+
+Reports
+
+2 Printer for Delivery Purchase Receipt
+
+Receive Payment

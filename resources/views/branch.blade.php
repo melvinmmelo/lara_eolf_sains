@@ -48,6 +48,10 @@
         <div class="card">
 
             <div class="card-body">
+
+                @include('layouts.errors')
+
+
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -55,8 +59,6 @@
                             <th>Branch</th>
                             <th>Contact No.</th>
                             <th>Address</th>
-
-
                         </tr>
                     </thead>
                     <tbody>

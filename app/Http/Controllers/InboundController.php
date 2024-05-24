@@ -133,7 +133,7 @@ class InboundController extends Controller
         $defaultPriceLevel = pricelevels::find($inbound->pricelevel_id);
         session()->put('pricelevelId', $inbound->pricelevel_id);
 
-        $productTypes = ProductType::where('is_active', 1)->get();
+        $productTypes = ProductType::where('is_active', 1)->orderBy('created_at', 'ASC')->get();
 
         // check if inbound has products
         $inboundList = [];
