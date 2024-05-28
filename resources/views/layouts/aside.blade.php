@@ -167,7 +167,7 @@
                         </li>
 
                         <li>
-                            <a href="/orders" class="nav-link">
+                            <a href="/bad-orders" class="nav-link">
                                 <i class="fas fa-circle-left nav-icon"></i>
                                 <p>Bad Order</p>
                             </a>
