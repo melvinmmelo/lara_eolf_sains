@@ -26,12 +26,16 @@ Route::get('/', function () {
 
         if (session('branch_code') == null) {
             return redirect()->route('branch-select');
-        }else{
+        } else {
             return redirect()->route('dashboard');
         }
     }
 
     return view('auth.login');
+});
+
+Route::get('/bad-orders', function () {
+    return view('badorder');
 });
 
 Route::middleware('auth')->group(function () {
@@ -120,7 +124,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/equipment-store/update', [EquipmentStoreController::class, 'update'])->name('equistore-info.update');
     Route::delete('/equipment-store/{id}', [EquipmentStoreController::class, 'destroy'])->name('equipment-store.destroy');
     Route::post('/equipment-store/update-pull-status', [EquipmentStoreController::class, 'updatePullStatus'])->name('equipment-store.updatePullStatus');
-    
+
 
     Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
     Route::get('/vehicles/{id}/edit', [VehiclesController::class, 'edit'])->name('vehicle.edit');

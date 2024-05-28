@@ -124,7 +124,7 @@
                                         <div class="col-sm-6">
                                             <label class="form-label" for="price_code"><i style="color:red">*</i>Product
                                                 Code</label>
-                                            <select class="form-control" id="price_code" name="price_code">
+                                            <select class="form-control select2bs4" id="price_code" name="price_code">
                                                 @foreach ($products as $product)
                                                     <option value="{{ $product->code }}">{{ $product->productName }}
                                                     </option>
