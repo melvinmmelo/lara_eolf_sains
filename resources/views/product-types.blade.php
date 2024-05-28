@@ -125,10 +125,8 @@
                                     </div>
 
                                     <div class="col-sm-4">
-                                        <label class="form-label" for="volume"><i style="color:red">*</i>Spoon
-                                            PCS/Bag</label>
-                                        <input type="number" class="form-control" name="spoon_pcs_per_bag"
-                                            value="{{ old('spoon_pcs_per_bag') ?? 0 }}" value="0">
+                                        <label class="form-label" for="volume">Spoon PCS/Bag</label>
+                                        <input type="number" class="form-control" name="spoon_pcs_per_bag" value="{{ old('spoon_pcs_per_bag') ?? 0 }}" value="0">
                                     </div>
 
                                     <div class="col-sm-4">

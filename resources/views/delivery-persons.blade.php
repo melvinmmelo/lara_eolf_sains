@@ -45,6 +45,8 @@
                                 <td>{{ $driver->contact }}</td>
                                 {{-- <td>{{ $driver->status }}</td> --}}
                             </tr>
+                        @endforeach
+
                     </tbody>
                     <tfoot>
                         <tr>
@@ -53,7 +55,6 @@
                             <th>Contact No.</th>
                             {{-- <th>Status</th> --}}
                         </tr>
-                        @endforeach
                     </tfoot>
                 </table>
 
