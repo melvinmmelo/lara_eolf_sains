@@ -1,0 +1,23 @@
+on: push
+name: 🚀 Deploy website on push
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v3
+
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@4.3.4
+      with:
+        server: ftp.eolffoodtradingopcapps.com
+        username: cicd_user@apps.eolffoodtradingopcapps.com
+        password: ${{ secrets.CICD_EOLF }}
+        port: 21
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/node_modules/**
+          **/vendor/**
+          **/public/**

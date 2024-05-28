@@ -308,6 +308,11 @@
                                 <input type="checkbox" id="withInvoice" name="with_invoice" value="on">
                                 <label for="withInvoice">With Invoice</label>
                             </div>
+
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="isBadPricing" name="bad_order" value="on">
+                                <label for="isBadPricing">Bad order</label>
+                            </div>
                         </div>
                     </div>
 

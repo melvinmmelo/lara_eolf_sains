@@ -65,6 +65,10 @@
                                         <a href="{{ route('order.processTwo', ['inbound' => $inbound->id]) }}"><button
                                                 class="btn btn-primary">Continue</button></a>
                                     @endif
+
+                                    @if ($inbound->status == 'Completed')
+                                        <a href="#" data-target="#modalAddAmountDelivered" data-toggle="modal"><button class="btn btn-danger">Delivered</button></a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -128,7 +132,8 @@
                                             id="equipment" onchange="setCustomerName(this.value)" required>
                                             <option value="">--Select--</option>
                                             @foreach ($equipment as $equip)
-                                                <option value="{{ $equip->id }}">{{ $equip->type . "-" . $equip->equipment->serial_no }}</option>
+                                                <option value="{{ $equip->id }}">
+                                                    {{ $equip->type . '-' . $equip->equipment->serial_no }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -139,7 +144,8 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label class="form-label" for="customer"><i style="color:red">*</i>Customer</label>
-                                        <input type="hidden" class="form-control" name="customer_id" id="customer_id" required readonly>
+                                        <input type="hidden" class="form-control" name="customer_id" id="customer_id"
+                                            required readonly>
                                         <textarea class="form-control" rows="3" name="customer" id="customer" required readonly></textarea>
                                     </div>
                                 </div>
@@ -175,8 +181,8 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="pricelevel_id"><i
-                                                style="color:red">*</i>Price Level</label>
+                                        <label class="form-label" for="pricelevel_id"><i style="color:red">*</i>Price
+                                            Level</label>
                                         <select class="form-control" name="pricelevel_id" id="pricelevel_id" required>
                                             @foreach ($pricing as $plevel)
                                                 <option value="{{ $plevel->id }}">{{ $plevel->pl_name }}</option>
@@ -200,6 +206,9 @@
         </div>
     </section>
     <!-- /.content -->
+
+
+    @include('modalAddAmountDelivered')
 @endsection
 
 @section('custom_js')

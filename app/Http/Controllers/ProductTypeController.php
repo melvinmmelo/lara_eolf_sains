@@ -44,7 +44,7 @@ class ProductTypeController extends Controller
         $productType->name = $request->name;
         $productType->volume = $request->volume;
         $productType->spoon_pcs_per_bag = $request->spoon_pcs_per_bag;
-        $productType->is_active = $request->is_active ?? 0;
+        $productType->is_active = $request->is_active == 'on' ? 1 : 0;
         $productType->save();
 
         return redirect()->back()->with('sucess', 'Data saved!');
