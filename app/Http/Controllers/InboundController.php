@@ -63,6 +63,7 @@ class InboundController extends Controller
 
         $pricing = pricelevels::branch(session('branch_code'))->get();
 
+
         return view('order', compact('equipment', 'drivers', 'vehicles', 'inbounds', 'pricing'));
     }
 
@@ -164,11 +165,20 @@ class InboundController extends Controller
 
             $price = prices::getPricePerPriceLevelAndPCode(session('pricelevelId'), $product->code);
 
+            $item = ItemMasterData::branch(session('branch_code'))->productCode($product->code)->first();
+
+            if($item == null){
+                break;
+                return response()->json(['Not available']);
+            }
+
+            $stocks = $item->stocks ?? 0;
+
             if ($price == null) {
                 break;
             } else {
 
-                $t = ['code' => $product->code, 'price' => $product->price, 'unit' => "0", 'qty' => $price->p_quant];
+                $t = ['code' => $product->code, 'price' => $product->price, 'unit' => "0", 'qty' => $stocks];
 
                 array_push($products, $t);
             }

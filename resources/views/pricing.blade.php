@@ -140,7 +140,7 @@
                                         <div class="col-sm-6">
                                             <label class="form-label" for="quant"><i
                                                     style="color:red">*</i>Quantity</label>
-                                            <input type="text" class="form-control" id="quant" name="quant">
+                                            <input type="number" class="form-control" id="quant" name="quant">
                                         </div>
 
                                         <div class="col-sm-6">
@@ -158,7 +158,7 @@
                                     <div class="row mb-2">
                                         <div class="col-sm-6">
                                             <label class="form-label" for="price"><i style="color:red">*</i>Price</label>
-                                            <input type="text" class="form-control" id="price" name="price">
+                                            <input type="number" class="form-control" id="price" name="price">
                                         </div>
                                     </div>
                                 </div>

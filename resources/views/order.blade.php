@@ -133,7 +133,7 @@
                                             <option value="">--Select--</option>
                                             @foreach ($equipment as $equip)
                                                 <option value="{{ $equip->id }}">
-                                                    {{ $equip->type . '-' . $equip->equipment->serial_no }}</option>
+                                                    {{ $equip->customer->id . '-' . $equip->customer->fullName . "-" . $equip->serial}}</option>
                                             @endforeach
                                         </select>
                                     </div>
