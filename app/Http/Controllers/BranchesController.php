@@ -59,4 +59,22 @@ class BranchesController extends Controller
 
         return redirect('/branch/')->with('success', 'Branch added successfully!');
     }
+
+    public function update(Request $request){
+
+        $request->validate([
+            'e_code' => 'required',
+            'e_name' => 'required|string',
+            'e_address' => 'required|string',
+            'e_office_no' => 'required|string',
+        ]);
+
+        $branch = Branches::where('code', $request->e_code)->first();
+        $branch->name = $request->e_name;
+        $branch->address = $request->e_address;
+        $branch->office_no = $request->e_office_no;
+        $branch->save();
+
+        return redirect('/branch/')->with('success', 'Branch updated successfully!');
+    }
 }

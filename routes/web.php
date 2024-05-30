@@ -187,6 +187,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/item-master-data', [ItemMasterDataController::class, 'index'])->name('itemdata.index');
 
+    Route::put('/branch', [BranchesController::class, 'update'])->name('branch.update');
+
+
 });
 
 require __DIR__ . '/auth.php';
