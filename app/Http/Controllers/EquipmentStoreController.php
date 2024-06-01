@@ -160,39 +160,91 @@ class EquipmentStoreController extends Controller
     // }
     
     
+    // public function updatePullStatus(Request $request)
+    // {
+    //     // Validate the incoming request data
+    //     $request->validate([
+    //         'equipment_id' => 'required|exists:equipment,id',
+    //         'remarks' => 'nullable|string|max:255', // Validate the remarks field
+    //     ]);
+    
+    //     // Get the equipment ID from the request
+    //     $equipmentId = $request->input('equipment_id');
+    
+    //     // Find the EquipmentStore entry based on the provided equipment ID
+    //     $equipmentStore = EquipmentStore::where('equipment_id', $equipmentId)->firstOrFail();
+    
+    //     // Update the pull_status to "yes" and save the remarks
+    //     $equipmentStore->pull_status = 'yes';
+    //     $equipmentStore->remarks = $request->input('remarks'); // Save the remarks
+    //     $equipmentStore->save();
+    
+    //     // Retrieve the equipment by its ID
+    //     $equipment = Equipment::findOrFail($equipmentId);
+    
+    //     // Update the status of the equipment to "available"
+    //     $equipment->status = 'available';
+    //     $equipment->save();
+    
+    //     // Return a success response
+    //     // return response()->json(['success' => true, 'message' => 'Pull status updated successfully.']);
+    //     return redirect()->back()->with('success', 'Pull status updated successfully.');
+    // }
+    
+
+
     public function updatePullStatus(Request $request)
     {
         // Validate the incoming request data
         $request->validate([
-            'equipment_id' => 'required|exists:equipment,id',
+            'pull_equipment_id' => 'required|exists:equipment,id',
+            'replace_equipment_id.*' => 'required|exists:equipment,id',
             'remarks' => 'nullable|string|max:255', // Validate the remarks field
+            'customer_id' => 'required|exists:customers,id',
+            'store_id' => 'required|exists:storeinfo,id',
         ]);
     
-        // Get the equipment ID from the request
-        $equipmentId = $request->input('equipment_id');
+        // Pull out the existing equipment
+        $pullEquipmentId = $request->input('pull_equipment_id');
+        $remarks = $request->input('remarks');
     
-        // Find the EquipmentStore entry based on the provided equipment ID
-        $equipmentStore = EquipmentStore::where('equipment_id', $equipmentId)->firstOrFail();
-    
-        // Update the pull_status to "yes" and save the remarks
+        $equipmentStore = EquipmentStore::where('equipment_id', $pullEquipmentId)->firstOrFail();
         $equipmentStore->pull_status = 'yes';
-        $equipmentStore->remarks = $request->input('remarks'); // Save the remarks
+        $equipmentStore->remarks = $remarks;
         $equipmentStore->save();
     
-        // Retrieve the equipment by its ID
-        $equipment = Equipment::findOrFail($equipmentId);
-    
-        // Update the status of the equipment to "available"
+        $equipment = Equipment::findOrFail($pullEquipmentId);
         $equipment->status = 'available';
         $equipment->save();
     
+        // Replace with new equipment
+        $replaceEquipmentIds = $request->input('replace_equipment_id');
+        $customer_id = $request->input('customer_id');
+        $store_id = $request->input('store_id');
+    
+        foreach ($replaceEquipmentIds as $replaceEquipmentId) {
+            $newEquipment = Equipment::findOrFail($replaceEquipmentId);
+    
+            $newEquipmentStore = new EquipmentStore();
+            $newEquipmentStore->customer_id = $customer_id;
+            $newEquipmentStore->store_id = $store_id;
+            $newEquipmentStore->equipment_id = $replaceEquipmentId;
+            $newEquipmentStore->serial = $newEquipment->serial_no;
+            $newEquipmentStore->type = $newEquipment->type;
+            $newEquipmentStore->brand = $newEquipment->brand;
+            $newEquipmentStore->owned = $newEquipment->ownership;
+            $newEquipmentStore->pull_status = 'no';
+            $newEquipmentStore->save();
+    
+            // Update the status of the new equipment in the Equipment table
+            $newEquipment->status = 'added';
+            $newEquipment->save();
+        }
+    
         // Return a success response
-        // return response()->json(['success' => true, 'message' => 'Pull status updated successfully.']);
-        return redirect()->back()->with('success', 'Pull status updated successfully.');
+        return redirect()->back()->with('success', 'Equipment pulled out and replaced successfully.');
     }
     
-    
-
     
 
 }
