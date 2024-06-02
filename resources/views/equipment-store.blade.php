@@ -146,7 +146,7 @@
 
         <!-- /.modal -->
 
-        <div class="modal fade" id="modal-manageequipment">
+<!-- <div class="modal fade" id="modal-manageequipment">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -156,41 +156,53 @@
                 </button>
             </div>
             <div class="modal-body">
-            <form id="manage-equipment-form" action="{{ route('equipment-store.updatePullStatus') }}" method="POST">
+                <form id="manage-equipment-form" action="{{ route('equipment-store.updatePullStatus') }}" method="POST">
                     @csrf
                     <input type="hidden" name="customer_id" value="{{ request()->query('customer_id') }}">
                     <input type="hidden" name="store_id" value="{{ request()->query('store_id') }}">
                     <input type="hidden" name="equipment_id" id="modal-equipment-id">
+
                     <div class="form-group">
                         <div class="row mb-2">
                             <div class="col-sm-6">
                                 <label class="form-label"><strong>Name of Customer:</strong></label>
-                                <div><label class="form-label" for="ownership">{{ request()->query('customer_name') }}</label></div>
+                                <div>
+                                    <label class="form-label" for="ownership">{{ request()->query('customer_name') }}</label>
+                                </div>
                             </div>
                             <div class="col-sm-6">
                                 <label class="form-label"><strong>Store Name:</strong></label>
-                                <div><label class="form-label" for="ownership">{{ request()->query('store_name') }}</label></div>
+                                <div>
+                                    <label class="form-label" for="ownership">{{ request()->query('store_name') }}</label>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                     <hr>
+
                     <div class="form-group">
                         <div class="row mb-2">
                             <div class="col-sm-12">
                                 <label class="form-label"><strong>Address</strong></label>
-                                <div><label class="form-label" for="ownership">Address:</label></div>
+                                <div>
+                                    <label class="form-label" for="ownership">Address:</label>
+                                </div>
                                 <hr>
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <div class="card card-primary ">
+                                <div class="card card-primary">
                                     <div class="card-header">
                                         <h3 class="card-title">Pull Out</h3>
                                         <div class="card-tools">
-                                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="card-body">
@@ -203,59 +215,158 @@
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <label class="form-label" for="status">Remarks</label>
-                                                <br>
-                                                <!-- <input type="checkbox" id="mySwitch" data-bootstrap-switch data-on-text="Yes" data-off-text="No" data-on-color="success" data-off-color="danger" name="status"> -->
-                                                <input type="text" name = "remarks" class="form-control">
+                                                <input type="text" name="remarks" class="form-control">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="col-sm-6">
-                                <div class="card card-primary collapsed-card">
+
+                            <div class="col-sm-6">
+                                <div class="card card-primary">
                                     <div class="card-header">
                                         <h3 class="card-title">Replace</h3>
                                         <div class="card-tools">
-                                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="card-body">
+                                        <input type="hidden" name="customer_id" value="{{ request()->input('customer_id') }}">
+                                        <input type="hidden" name="store_id" value="{{ request()->input('store_id') }}">
                                         <div class="form-group">
-                                            <label class="form-label">Model/Serial</label>
-                                            <select class="form-control select2bs4" style="width: 100%;">
-                                                <option selected="selected">Alabama</option>
-                                                <option>Alaska</option>
-                                                <option>California</option>
-                                                <option>Delaware</option>
-                                                <option>Tennessee</option>
-                                                <option>Texas</option>
-                                                <option>Washington</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">Freezer Status</label>
-                                            <select name="distributor" class="form-control d-block" id="cust_dist" onfocus="changeColor('cust_dist')" onblur="resetColor('cust_dist')">
-                                                <option>option 1</option>
-                                                <option>option 2</option>
-                                                <option>option 3</option>
-                                                <option>option 4</option>
-                                                <option>option 5</option>
-                                            </select>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <label for="remarks">Equipment List</label>
+                                                    <div class="form-group">
+                                                        <select name="equipment_id[]" class="duallistbox" multiple="multiple" required>
+                                                            @foreach($availableEquipments as $equipment)
+                                                                <option value="{{ $equipment->id }}">{{ $equipment->type }} - {{ $equipment->brand }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
                     </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-success">Pull out!</button>
             </div>
-            </form>
+        </div>
+    </div>
+</div> -->
+
+
+<div class="modal fade" id="modal-manageequipment">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Manage Equipment</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="manage-equipment-form" action="{{ route('equipment-store.updatePullStatus') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="customer_id" value="{{ request()->query('customer_id') }}">
+                    <input type="hidden" name="store_id" value="{{ request()->query('store_id') }}">
+                    <input type="hidden" name="pull_equipment_id" id="modal-equipment-id">
+
+                    <div class="form-group">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <label class="form-label"><strong>Name of Customer:</strong></label>
+                                <div>
+                                    <label class="form-label" for="ownership">{{ request()->query('customer_name') }}</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label"><strong>Store Name:</strong></label>
+                                <div>
+                                    <label class="form-label" for="ownership">{{ request()->query('store_name') }}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="form-group">
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <label class="form-label"><strong>Address</strong></label>
+                                <div>
+                                    <label class="form-label" for="ownership">Address:</label>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="card card-primary mb-3">
+                            <div class="card-header">
+                                <h3 class="card-title">Pull Out</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label class="form-label">Model/Serial:</label>
+                                    <input type="text" name="serial" class="form-control" id="modal-serial" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="status">Remarks</label>
+                                    <input type="text" name="remarks" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Replace</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="replace_equipment_id">Equipment List</label>
+                                    <select name="replace_equipment_id[]" class="duallistbox" multiple="multiple" required>
+                                        @foreach($availableEquipments as $equipment)
+                                            <option value="{{ $equipment->id }}">{{ $equipment->type }} - {{ $equipment->brand }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success">Pull out and Replace</button>
+            </div>
+                </form>
         </div>
     </div>
 </div>
+
+
+
 
         <!-- /.modal -->
 

@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StoreInfo extends Model
 {
-    // Your model code here
+    use HasFactory;
+
     protected $table = 'storeinfo';
 
     protected $fillable = [
         'customer_id',
-        // Add other fillable fields here
         'storename',
         'contactno',
         'region',
@@ -26,8 +29,14 @@ class StoreInfo extends Model
         'remarks',
     ];
 
-    public function customer()
+    public function customer(): BelongsTo
     {
-        return $this->belongsTo(Customers::class);
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function equipmentStores(): HasMany
+    {
+        return $this->hasMany(EquipmentStore::class, 'store_id');
     }
 }
+

@@ -92,13 +92,27 @@ Route::middleware('auth')->group(function () {
     Route::post('/branch/store', [BranchesController::class, 'store']);
     Route::get('/edit-branch/{id}', [BranchesController::class, 'edit'])->name('branch.edit');
 
-    Route::get('/customers', [CustomersController::class, 'index'])->name('customers');
-    Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customer.edit');
-    Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
-    Route::post('/customers/store', [CustomersController::class, 'store'])->name('customers.store'); // Corrected route definition
-    Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
+    // Route::get('/customers', [CustomersController::class, 'index'])->name('customers');
+    // Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customer.edit');
+    // Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
+    // Route::post('/customers/store', [CustomersController::class, 'store'])->name('customers.store'); // Corrected route definition
+    // Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
 
-    Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
+    // Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
+    // Route::delete('/customer/{customer}/store/{store}', [CustomerController::class, 'destroy'])->name('customer.destroy');
+
+
+
+Route::get('/customers', [CustomersController::class, 'index'])->name('customers');
+Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customer.edit');
+Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
+Route::post('/customers/store', [CustomersController::class, 'store'])->name('customers.store'); 
+Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
+Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
+Route::delete('/customers/{customer}/store/{store}', [CustomersController::class, 'destroyStore'])->name('customer.store.destroy');
+
+
+
     // Route::get('/customersinfo', [CustomersController::class, 'index'])->name('customersinfo');
 
     Route::get('/equipment', [EquipmentController::class, 'index'])->name('equipment.index');
