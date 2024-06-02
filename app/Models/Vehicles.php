@@ -20,4 +20,9 @@ class Vehicles extends Model
         'status',
         // Add other fillable attributes here if any
     ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'Active');
+    }
 }

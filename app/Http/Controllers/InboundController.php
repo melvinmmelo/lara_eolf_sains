@@ -53,9 +53,9 @@ class InboundController extends Controller
      */
     public function index()
     {
-        $drivers = Drivers::all();
+        $drivers = Drivers::active()->get();
 
-        $vehicles = Vehicles::all();
+        $vehicles = Vehicles::active()->get();
 
         $inbounds = Inbound::with('driver', 'vehicle')->branch(session('branch_code'))->get();
 

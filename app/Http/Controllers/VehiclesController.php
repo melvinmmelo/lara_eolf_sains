@@ -10,20 +10,16 @@ class VehiclesController extends Controller
 
     public function index()
     {
-        // Fetch all vehicles from the database
         $vehicles = Vehicle::all();
-        // Pass the vehicles data to the view
         return view('vehicles', compact('vehicles'));
     }
 
     public function create()
     {
         $vehicles = Vehicle::all();
-        // dd($vehicles);
         return view('create-vehicle', compact('vehicles'));
 
     }
-
 
     public function store(Request $request)
     {

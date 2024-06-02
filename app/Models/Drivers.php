@@ -15,4 +15,10 @@ class Drivers extends Model
         'status',
         // Add other fillable attributes here if any
     ];
+
+    // scope is active
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'Active');
+    }
 }
