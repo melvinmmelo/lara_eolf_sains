@@ -21,4 +21,9 @@ class Drivers extends Model
     {
         return $query->where('status', 'Active');
     }
+
+    public function priceLevel()
+    {
+        return $this->belongsTo(pricelevels::class, 'default_price_level');
+    }
 }

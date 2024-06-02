@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Drivers;
+use App\Models\pricelevels;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 
@@ -13,9 +14,10 @@ class DriversController extends Controller
      */
     public function index()
     {
-        $drivers = Drivers::all();
+        $drivers = Drivers::with('priceLevel')->get();
         // Pass the vehicles data to the view
-        return view('delivery-persons', compact('drivers'));
+        $priceLevels = pricelevels::all();
+        return view('delivery-persons', compact('drivers', 'priceLevels'));
 
     }
 
@@ -37,22 +39,22 @@ class DriversController extends Controller
             'name' => 'required',
             'address' => 'required',
             'contact' => 'required',
-
-            // Add more validation rules as needed
+            'price_level' => 'required',
         ]);
+
         $status = 'NOT AVAILABLE';
 
          // Check if the request data is 'on'
          if ($request->status === 'on') {
              $status = 'AVAILABLE';
          }
+
         Drivers::create([
             'name' => $request->name,
             'address' => $request->address,
             'contact' => $request->contact,
             'status' => $status,
-
-            // Add more fields as needed
+            'default_price_level' => $request->price_level,
         ]);
 
         return redirect('/delivery-persons/')->with('success', 'Delivery person added successfully!');
@@ -84,13 +86,14 @@ class DriversController extends Controller
             'e_address' => 'required',
             'e_contact' => 'required',
             'e_status' => 'required',
-            // Add more validation rules as needed
+            'e_price_level' => 'required',
         ]);
 
         $dp = Drivers::find($request->e_id);
         $dp->address = $request->e_address;
         $dp->contact = $request->e_contact;
         $dp->status = $request->e_status ? 'Active' : 'Inactive';
+        $dp->default_price_level = $request->e_price_level;
         $dp->save();
 
         return redirect('/delivery-persons/')->with('success', 'Delivery person updated successfully!');

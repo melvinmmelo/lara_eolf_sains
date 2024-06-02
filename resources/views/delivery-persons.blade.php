@@ -35,6 +35,7 @@
                             <th>Address</th>
                             <th>Contact No.</th>
                             <th>Status</th>
+                            <th>Price Level</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -45,6 +46,7 @@
                                 <td>{{ $driver->address }}</td>
                                 <td>{{ $driver->contact }}</td>
                                 <td>{{ $driver->status }}</td>
+                                <td>{{ $driver->priceLevel->pl_name }}</td>
                                 <td>
                                     <button type="button" class="btn btn-primary" data-toggle="modal"
                                         data-target="#modal-edit" onclick="setToUpdate('{{ $driver->id }}',
@@ -62,6 +64,7 @@
                             <th>Address</th>
                             <th>Contact No.</th>
                             <th>Status</th>
+                            <th>Price Level</th>
                             <th></th>
                         </tr>
                     </tfoot>
@@ -124,7 +127,19 @@
                                 </div>
                             </div>
 
-
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="form-label" for="contact"><i style="color:red">*</i>Default Price Level
+                                            </label>
+                                        <select class="form-control" name="price_level" required>
+                                            @foreach ($priceLevels as $priceLevel)
+                                                <option value="{{ $priceLevel->id }}">{{ $priceLevel->pl_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <div class="row">
@@ -201,6 +216,19 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="form-label" for="contact"><i style="color:red">*</i>Default Price Level
+                                            </label>
+                                        <select class="form-control" name="e_price_level" required>
+                                            @foreach ($priceLevels as $priceLevel)
+                                                <option value="{{ $priceLevel->id }}">{{ $priceLevel->pl_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
 
 
                             <div class="form-group">

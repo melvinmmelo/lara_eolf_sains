@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('contact');
             $table->string('status');
+            $table->string('default_price_level')->nullable();
             $table->timestamps();
         });
     }
