@@ -30,7 +30,7 @@ class ProductController extends Controller
         $products = Product::with(['productType', 'productVariant'])->get();
         // dd($products);
         $types = ProductType::all();
-        $variants = ProductVariant::all();
+        $variants = ProductVariant::active()->get();
 
         return view('products', compact('products', 'types', 'variants'));
     }

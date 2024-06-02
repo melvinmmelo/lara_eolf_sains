@@ -33,6 +33,7 @@
                         <tr>
                             <th>Code</th>
                             <th>Name</th>
+                            <th>Status</th>
                             <th></th>
 
                         </tr>
@@ -42,6 +43,7 @@
                             <tr>
                                 <td>{{ $productVariant->code }}</td>
                                 <td>{{ $productVariant->name }}</td>
+                                <td>{{ $productVariant->is_active ? 'Active' : 'Not Active' }}</td>
                                 <td>
                                     <a href="#" data-toggle="modal" data-target="#modalEdit"
                                         onclick="setToUpdateProduct('{{ $productVariant->code }}','{{ $productVariant->name }}')"><button
@@ -55,6 +57,7 @@
                         <tr>
                             <th>Code</th>
                             <th>Name</th>
+                            <th>Status</th>
                             <th></th>
 
                         </tr>
@@ -102,8 +105,6 @@
                                 </div>
                             </div>
 
-
-
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-success">Save changes</button>
                             </div>
@@ -145,6 +146,16 @@
                                             value="{{ old('name') }}" required>
                                     </div>
                                 </div>
+
+                                 <div class="row">
+                                        <div class="col-sm-12">
+                                            <label class="form-label" for="address">Active</label>
+                                            <br>
+                                            <input type="checkbox" id="mySwitch" data-bootstrap-switch data-on-text="on"
+                                                data-off-text="off" data-on-color="success" data-off-color="danger"
+                                                name="e_status">
+                                        </div>
+                                    </div>
                             </div>
 
                             <div class="modal-footer">

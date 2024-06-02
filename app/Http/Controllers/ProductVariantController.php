@@ -67,10 +67,12 @@ class ProductVariantController extends Controller
         $request->validate([
             'e_code' => 'string|max:190',
             'e_name' => 'required|string|max:190',
+            'e_status' => 'string|max:190'
         ]);
 
         $pvar = ProductVariant::find($request->e_code)->first();
         $pvar->name = $request->e_name;
+        $pvar->is_active = $request->e_status == 'on' ? 1 : 0;
         $pvar->save();
 
         return redirect()->back()->with('sucess', 'Data saved!');
