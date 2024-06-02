@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\ItemMasterData;
 use App\Models\ProductType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -42,11 +43,27 @@ class InboundProductsService extends Model
     }
 
     public function addQty($newProductCode, $plusQty){
+
         // check if product is already in the list
         if ($this->products) {
             foreach ($this->products as $key => $value) {
-
                 if ($value['code'] == $newProductCode) {
+
+                    // check stocks
+                    $item = ItemMasterData::branch(session('branch_code'))->productCode($newProductCode)->first();
+
+                    if($item == null){
+                        session()->put('error', 'Product not found in IMD.');
+                        throw new \Exception('Product not found in IMD.');
+                        return $this->products;
+                    }
+
+                    if($item->stocks < $value['quantity'] + $plusQty){
+                        session()->put('error', 'Not enough stocks in IMD.');
+                        throw new \Exception('Not enough stocks in IMD.');
+                        return $this->products;
+                    }
+
                     $this->products[$key]['quantity'] += $plusQty;
                     $this->isExist = true;
                 }

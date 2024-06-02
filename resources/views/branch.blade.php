@@ -116,7 +116,7 @@
                                 <div class="row mb-3">
                                     <div class="col-sm-4">
                                         <label class="form-label" for="code"><i style="color:red">*</i>Code</label>
-                                        <input type="text" class="form-control" name="e_id" required readonly>
+                                        <input type="hidden" class="form-control" name="e_id" required readonly>
                                         <input type="text" class="form-control" name="e_code" required readonly>
                                     </div>
 

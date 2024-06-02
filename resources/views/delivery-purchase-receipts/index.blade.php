@@ -30,12 +30,13 @@
         <!-- Default box -->
         <div class="card">
 
-            <div class="card-body">
+            <div class="card-body table-responsive">
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>DR No.</th>
                             <th>Issue Date</th>
+                            <th>Total</th>
                             <th>Status</th>
                             <th>Date</th>
                             <th></th>
@@ -45,9 +46,20 @@
                     <tbody>
 
                         @foreach ($deliveryPurchaseReceipts as $dr)
+
+                        @php
+                            $total = 0;
+                            if($dr->products){
+                                $products = json_decode($dr->products,true);
+                                foreach($products as $product){
+                                    $total += $product['quantity'] * $product['price'];
+                                }
+                            }
+                        @endphp
                             <tr>
                                 <td>{{ $dr->dr_no }}</td>
                                 <td>{{ $dr->issue_date }}</td>
+                                <td>{{ $total }}</td>
                                 <td>{{ $dr->status }}</td>
                                 <td>{{ $dr->created_at }}</td>
                                 <td>
@@ -68,6 +80,7 @@
                             <th>DR No.</th>
                             <th>Issue Date</th>
                             <th>Status</th>
+                            <th>Total</th>
                             <th>Date</th>
                             <th></th>
                         </tr>

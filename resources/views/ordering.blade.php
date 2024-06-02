@@ -2,10 +2,10 @@
 
 @section('custom_css')
     <style>
-
-        .fixBtn{
+        .fixBtn {
             min-width: 100px;
         }
+
         .input-number {
             text-align: center;
         }
@@ -88,7 +88,7 @@
             <form action="{{ route('inbound.store') }}" method="POST">
                 @csrf
                 <div class="card-body">
-                      <input type="hidden" name="inboundId" id="inboundId" class="label-input" value="{{ $inboundId }}"
+                    <input type="hidden" name="inboundId" id="inboundId" class="label-input" value="{{ $inboundId }}"
                         required readonly>
                     <div class="form-group">
                         <div class="row">
@@ -426,6 +426,11 @@
             } else {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function() {
+                    var jsonRes = JSON.parse(this.responseText);
+                    if (jsonRes.error) {
+                        alert("Error adding product to order.");
+                        return;
+                    }
                     if (this.readyState == 4 && this.status == 200) {
                         document.getElementById("inboundList").innerHTML = this.responseText;
                     }
@@ -438,22 +443,23 @@
         function minusQtyProduct(code) {
             const qty = document.getElementById(code).value;
 
-            if (qty > 1) {
-                document.getElementById(code).value = parseInt(qty) - 1;
+            if (updateQty(code, 'min')) {
+                if (qty > 1) {
+                    document.getElementById(code).value = parseInt(qty) - 1;
 
-                const newQty = parseInt(qty) - 1;
+                    const newQty = parseInt(qty) - 1;
 
-                document.getElementById(code).value = newQty;
+                    document.getElementById(code).value = newQty;
 
-                const pcodePrice = document.getElementById(code + "_price");
-                const pcodeAmt = document.getElementById(code + "_amt");
-                const total = document.getElementById("total");
+                    const pcodePrice = document.getElementById(code + "_price");
+                    const pcodeAmt = document.getElementById(code + "_amt");
+                    const total = document.getElementById("total");
 
-                pcodeAmt.value = parseInt(pcodePrice.value) * newQty;
+                    pcodeAmt.value = parseInt(pcodePrice.value) * newQty;
 
-                total.value = parseInt(total.value) - parseInt(pcodePrice.value);
+                    total.value = parseInt(total.value) - parseInt(pcodePrice.value);
 
-                updateQty(code, 'min');
+                }
             }
 
         }
@@ -461,19 +467,23 @@
         function plusQtyProduct(code) {
             const qty = document.getElementById(code).value;
             if (qty < 99999) {
-                const newQty = parseInt(qty) + 1;
 
-                document.getElementById(code).value = newQty;
+                if (updateQty(code, 'add')) {
+                    const newQty = parseInt(qty) + 1;
 
-                const pcodePrice = document.getElementById(code + "_price");
-                const pcodeAmt = document.getElementById(code + "_amt");
-                const total = document.getElementById("total");
+                    document.getElementById(code).value = newQty;
 
-                pcodeAmt.value = parseInt(pcodePrice.value) * newQty;
+                    const pcodePrice = document.getElementById(code + "_price");
+                    const pcodeAmt = document.getElementById(code + "_amt");
+                    const total = document.getElementById("total");
 
-                total.value = parseInt(total.value) + parseInt(pcodePrice.value);
+                    pcodeAmt.value = parseInt(pcodePrice.value) * newQty;
 
-                updateQty(code, 'add');
+                    total.value = parseInt(total.value) + parseInt(pcodePrice.value);
+                } else {
+                    // alert("Error updating product quantity");
+                }
+
             }
 
         }
@@ -488,7 +498,14 @@
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
+                        var jsonRes = JSON.parse(this.responseText);
+                        if (jsonRes.error) {
+                            alert("Error updating product quantity.");
+                            return;
+                        }
+
                         document.getElementById("orderProductSum").innerHTML = this.responseText;
+                        return true;
                     }
                 };
                 xmlhttp.open("GET", "/inbound-updateProdQty/" + inboundId + "/" + productCode + "/" + action, true);

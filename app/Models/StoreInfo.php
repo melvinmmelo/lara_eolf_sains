@@ -31,7 +31,7 @@ class StoreInfo extends Model
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(Customers::class);
     }
 
     public function equipmentStores(): HasMany
@@ -39,4 +39,3 @@ class StoreInfo extends Model
         return $this->hasMany(EquipmentStore::class, 'store_id');
     }
 }
-

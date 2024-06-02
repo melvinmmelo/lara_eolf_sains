@@ -167,9 +167,11 @@ class InboundController extends Controller
 
             $item = ItemMasterData::branch(session('branch_code'))->productCode($product->code)->first();
 
+            // return response()->json([$price, $item]);
+
             if($item == null){
                 break;
-                return response()->json(['Not available']);
+                return response()->json(['Not stock available.']);
             }
 
             $stocks = $item->stocks ?? 0;
@@ -183,8 +185,6 @@ class InboundController extends Controller
                 array_push($products, $t);
             }
         }
-
-        // dd($products);
 
         return view('productsList', compact('products'));
     }
@@ -209,7 +209,11 @@ class InboundController extends Controller
 
         $inProdService = new InboundProductsService($products);
 
-        $products = $inProdService->addQty($code, $qty);
+        try {
+            $products = $inProdService->addQty($code, $qty);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
 
         $isExist = $inProdService->isExist();
 
@@ -295,9 +299,17 @@ class InboundController extends Controller
         $inboundService = new InboundProductsService($inbound->products);
 
         if ($action == 'add') {
-            $products = $inboundService->addQty($code, 1);
+            try {
+                $products = $inboundService->addQty($code, 1);
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()]);
+            }
         } else {
-            $products = $inboundService->minQty($code);
+            try{
+                $products = $inboundService->minQty($code);
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()]);
+            }
         }
 
         $inbound->products = json_encode($products);

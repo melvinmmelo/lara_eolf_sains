@@ -42,6 +42,7 @@
                             <th>Equipment</th>
                             <th>Delivery Person</th>
                             <th>Vehicle</th>
+                            <th>Total</th>
                             <th>Status</th>
                             <th>Date updated</th>
                             <th></th>
@@ -49,6 +50,20 @@
                     </thead>
                     <tbody>
                         @foreach ($inbounds as $inbound)
+                            @php
+                                if ($inbound->products != null) {
+                                    $products = json_decode($inbound->products, true);
+
+                                    // get sum of index price
+                                    $total = 0;
+                                    foreach ($products as $acProd) {
+                                        $total += $acProd['price'] * $acProd['quantity'];
+                                    }
+                                }else{
+                                    $total = 0;
+                                }
+                            @endphp
+
                             <tr>
                                 <td>{{ $inbound->id }}</td>
                                 <td>{{ $inbound->f_created_at }}</td>
@@ -58,6 +73,7 @@
                                 <td>{{ $inbound->equipment->serial_no }}</td>
                                 <td>{{ $inbound->driver->name }}</td>
                                 <td>{{ $inbound->vehicle->plateno }}</td>
+                                <td><span class="label label-primary">{{ $total }}</span></td>
                                 <td>{{ $inbound->status }}</td>
                                 <td>{{ $inbound->f_updated_at }}</td>
                                 <td>
@@ -67,7 +83,8 @@
                                     @endif
 
                                     @if ($inbound->status == 'Completed')
-                                        <a href="#" data-target="#modalAddAmountDelivered" data-toggle="modal"><button class="btn btn-danger">Delivered</button></a>
+                                        <a href="#" data-target="#modalAddAmountDelivered" data-toggle="modal"><button
+                                                class="btn btn-danger">Update</button></a>
                                     @endif
                                 </td>
                             </tr>
@@ -82,6 +99,7 @@
                             <th>Store</th>
                             <th>Equipment</th>
                             <th>Delivery Person</th>
+                            <th>Vehicle</th>
                             <th>Total</th>
                             <th>Status</th>
                             <th>Created By</th>
@@ -133,7 +151,8 @@
                                             <option value="">--Select--</option>
                                             @foreach ($equipment as $equip)
                                                 <option value="{{ $equip->id }}">
-                                                    {{ $equip->customer->id . '-' . $equip->customer->fullName . "-" . $equip->serial}}</option>
+                                                    {{ $equip->customer->id . '-' . $equip->customer->fullName . '-' . $equip->serial }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>

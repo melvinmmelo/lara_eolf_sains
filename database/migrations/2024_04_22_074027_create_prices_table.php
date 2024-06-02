@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('p_quant');
             $table->float('p_price',2);
             $table->timestamps();
+
+            // create a unique index for the combination of pricelevel_id and p_code
+            $table->unique(['pricelevel_id', 'p_code']);
         });
     }
 
