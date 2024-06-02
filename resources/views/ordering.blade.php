@@ -374,6 +374,9 @@
 
                 // Stop acting like a button
                 e.preventDefault();
+
+                // If is not undefined
+
                 // Get the field name
                 var quantity = parseInt($('#quantity').val());
 
@@ -426,14 +429,21 @@
             } else {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function() {
-                    var jsonRes = JSON.parse(this.responseText);
-                    if (jsonRes.error) {
-                        alert("Error adding product to order.");
-                        return;
+                    try {
+                        var jsonRes = JSON.parse(this.responseText);
+                        if (jsonRes.error) {
+                            alert("Error adding product to order.");
+                            return;
+                        }
+
+
+                    } catch (error) {
+                        if (this.readyState == 4 && this.status == 200) {
+                            document.getElementById("inboundList").innerHTML = this.responseText;
+                            return true;
+                        }
                     }
-                    if (this.readyState == 4 && this.status == 200) {
-                        document.getElementById("inboundList").innerHTML = this.responseText;
-                    }
+
                 };
                 xmlhttp.open("GET", "/inboundin/" + code + "/" + qty, true);
                 xmlhttp.send();
@@ -443,23 +453,17 @@
         function minusQtyProduct(code) {
             const qty = document.getElementById(code).value;
 
-            if (updateQty(code, 'min')) {
-                if (qty > 1) {
-                    document.getElementById(code).value = parseInt(qty) - 1;
+            if (qty > 1) {
 
-                    const newQty = parseInt(qty) - 1;
-
-                    document.getElementById(code).value = newQty;
-
-                    const pcodePrice = document.getElementById(code + "_price");
-                    const pcodeAmt = document.getElementById(code + "_amt");
-                    const total = document.getElementById("total");
-
-                    pcodeAmt.value = parseInt(pcodePrice.value) * newQty;
-
-                    total.value = parseInt(total.value) - parseInt(pcodePrice.value);
-
-                }
+                updateQty(code, 'min')
+                document.getElementById(code).value = parseInt(qty) - 1;
+                const newQty = parseInt(qty) - 1;
+                document.getElementById(code).value = newQty;
+                const pcodePrice = document.getElementById(code + "_price");
+                const pcodeAmt = document.getElementById(code + "_amt");
+                const total = document.getElementById("total");
+                pcodeAmt.value = parseInt(pcodePrice.value) * newQty;
+                total.value = parseInt(total.value) - parseInt(pcodePrice.value);
             }
 
         }
@@ -467,23 +471,14 @@
         function plusQtyProduct(code) {
             const qty = document.getElementById(code).value;
             if (qty < 99999) {
-
-                if (updateQty(code, 'add')) {
-                    const newQty = parseInt(qty) + 1;
-
-                    document.getElementById(code).value = newQty;
-
-                    const pcodePrice = document.getElementById(code + "_price");
-                    const pcodeAmt = document.getElementById(code + "_amt");
-                    const total = document.getElementById("total");
-
-                    pcodeAmt.value = parseInt(pcodePrice.value) * newQty;
-
-                    total.value = parseInt(total.value) + parseInt(pcodePrice.value);
-                } else {
-                    // alert("Error updating product quantity");
-                }
-
+                updateQty(code, 'add')
+                const newQty = parseInt(qty) + 1;
+                document.getElementById(code).value = newQty;
+                const pcodePrice = document.getElementById(code + "_price");
+                const pcodeAmt = document.getElementById(code + "_amt");
+                const total = document.getElementById("total");
+                pcodeAmt.value = parseInt(pcodePrice.value) * newQty;
+                total.value = parseInt(total.value) + parseInt(pcodePrice.value);
             }
 
         }
@@ -498,14 +493,24 @@
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
-                        var jsonRes = JSON.parse(this.responseText);
-                        if (jsonRes.error) {
-                            alert("Error updating product quantity.");
-                            return;
-                        }
+                        console.log("ok");
 
                         document.getElementById("orderProductSum").innerHTML = this.responseText;
                         return true;
+                    }else{
+                        console.log("tset");
+                        try {
+                            var jsonRes = JSON.parse(this.responseText);
+                            if (jsonRes.error) {
+                                alert("Error updating product quantity.");
+
+                                if(action == 'add')
+                                    document.getElementById(productCode).value = parseInt(document.getElementById(productCode).value) - 1;
+                                else if(action == 'min')
+                                    document.getElementById(productCode).value = parseInt(document.getElementById(productCode).value) + 1;
+                            }
+                        } catch (error) {
+                        }
                     }
                 };
                 xmlhttp.open("GET", "/inbound-updateProdQty/" + inboundId + "/" + productCode + "/" + action, true);
