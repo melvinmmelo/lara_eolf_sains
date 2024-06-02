@@ -13,7 +13,6 @@ class DeliveryController extends Controller
     public function index()
     {
         $delivery = Delivery::all();
-        // Pass the vehicles data to the view
         return view('delivery', compact('delivery'));
     }
 

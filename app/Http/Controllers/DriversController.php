@@ -16,7 +16,7 @@ class DriversController extends Controller
         $drivers = Drivers::all();
         // Pass the vehicles data to the view
         return view('delivery-persons', compact('drivers'));
-    
+
     }
 
     /**
@@ -51,7 +51,7 @@ class DriversController extends Controller
             'address' => $request->address,
             'contact' => $request->contact,
             'status' => $status,
-   
+
             // Add more fields as needed
         ]);
 
@@ -77,9 +77,23 @@ class DriversController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Drivers $drivers)
+    public function update(Request $request)
     {
-        //
+        $request->validate([
+            'e_id' => 'required',
+            'e_address' => 'required',
+            'e_contact' => 'required',
+            'e_status' => 'required',
+            // Add more validation rules as needed
+        ]);
+
+        $dp = Drivers::find($request->e_id);
+        $dp->address = $request->e_address;
+        $dp->contact = $request->e_contact;
+        $dp->status = $request->e_status ? 'Active' : 'Inactive';
+        $dp->save();
+
+        return redirect('/delivery-persons/')->with('success', 'Delivery person updated successfully!');
     }
 
     /**

@@ -106,7 +106,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/customers', [CustomersController::class, 'index'])->name('customers');
 Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customer.edit');
 Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
-Route::post('/customers/store', [CustomersController::class, 'store'])->name('customers.store'); 
+Route::post('/customers/store', [CustomersController::class, 'store'])->name('customers.store');
 Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
 Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
 Route::delete('/customers/{customer}/store/{store}', [CustomersController::class, 'destroyStore'])->name('customer.store.destroy');
@@ -150,6 +150,8 @@ Route::delete('/customers/{customer}/store/{store}', [CustomersController::class
 
     Route::get('/delivery-persons', [DriversController::class, 'index'])->name('delivery-persons');
     Route::get('/edit-delivery-person/{id}', [DriversController::class, 'edit'])->name('delivery-person.edit');
+    Route::put('/dp/update', [DriversController::class, 'update'])->name('delivery-person.update');
+
     Route::post('/Drivers/store', [DriversController::class, 'store']);
 
     Route::get('/pricing-level', [PriceLevelsController::class, 'index'])->name('pricing-level.index');
