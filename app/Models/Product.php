@@ -33,6 +33,11 @@ class Product extends Model
         return $this->productType->name . ' ' . $this->productVariant->name;
     }
 
+    public function scopeProductCode($query, $pCode)
+    {
+        return $query->where('code', $pCode);
+    }
+
     protected static function boot()
     {
         parent::boot();

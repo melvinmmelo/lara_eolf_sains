@@ -605,7 +605,7 @@
                                                         <label class="form-label" for="e_region">Region</label>
                                                         <input type="text" id="e_region" name="e_region" class="form-control">
                                                         <!-- <select class="form-control" id="e_region" name="e_region">
-                                                            
+
                                                         </select> -->
                                                     </div>
                                                 </div>
@@ -878,7 +878,7 @@
     //             console.log('subdivision2:', subv2);
     // console.log('latitude2:', lat2);
     // console.log('longitude2:', long2);
-         
+
             document.getElementById("id").value = uid;
 
             document.getElementById("e_branch_code").value = ebcode;
@@ -1377,6 +1377,12 @@
             var cust_city2 = document.querySelector('select[name="city2"]');
             var cust_brgy2 = document.querySelector('select[name="brgy2"]');
 
+            // get latitude and longitude
+            var latitude = document.querySelector('input[name="latitude"]');
+            var longitude = document.querySelector('input[name="longitude"]');
+            var latitude2 = document.querySelector('input[name="latitude2"]');
+            var longitude2 = document.querySelector('input[name="longitude2"]');
+
             checkbox.addEventListener('change', function() {
                 if (this.checked) {
 
@@ -1389,6 +1395,10 @@
                     cust_prov2.value = cust_prov.value;
                     cust_city2.value = cust_city.value;
                     cust_brgy2.value = cust_brgy.value;
+
+                    // set latitude and longitude
+                    latitude2.value = latitude.value;
+                    longitude2.value = longitude.value;
 
                 }
             });

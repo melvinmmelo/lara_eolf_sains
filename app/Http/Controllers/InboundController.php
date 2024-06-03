@@ -222,7 +222,7 @@ class InboundController extends Controller
         $product = Product::where('code', $code)->first();
         $price = prices::where('p_code', $code)->first();
 
-        $data = ['ptype_code' => $product->product_type_code, 'code' => $product->code, 'quantity' => 1, 'price' => $price->p_price, 'unit' => $price->p_unit, 'sppb' => $product->spoon_pcs_per_bag];
+        $data = ['ptype_code' => $product->product_type_code, 'code' => $product->code, 'quantity' => 1, 'price' => $price->p_price, 'unit' => $price->p_unit, 'sppb' => $product->spoon_pcs_per_bag, 'description' => $product->productName];
 
         $products = $inbound->products;
 

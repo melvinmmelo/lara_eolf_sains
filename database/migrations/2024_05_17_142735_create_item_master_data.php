@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('branch_code', 15);
             $table->string('product_code', 15);
+            $table->string('product_description', 99);
+            $table->string('unit', 25);
             $table->integer('stocks');
             $table->integer('reserved')->default(0);
             $table->timestamps();

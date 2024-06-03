@@ -46,7 +46,10 @@ class DeliveryPurchaseReceiptController extends Controller
             return redirect()->back()->withErrors('Price not found.');
         }
 
-        $newProduct = ['code' => $request->product_code, 'quantity' => $request->qty, 'price' => $productPrice];
+        $product = Product::productCode($request->product_code)->first();
+
+
+        $newProduct = ['code' => $request->product_code, 'description' => $product->productName ,'quantity' => $request->qty, 'unit' => $productPrice->p_unit, 'price' => $productPrice->p_price];
 
 
         $dprService = new DPRService($dpr->products);

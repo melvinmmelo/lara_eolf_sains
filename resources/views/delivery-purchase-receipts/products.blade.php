@@ -139,6 +139,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Item</th>
+                                                <th>Unit</th>
                                                 <th>Quantity</th>
                                                 <th>Unit Price</th>
                                                 <th>Total</th>
@@ -152,13 +153,20 @@
                                             @if ($deliveryPurchaseReceipt->products)
 
                                             @php
+                                                $sum  = 0;
                                                 // convert the json string to array
                                                 $dprProducts = json_decode($deliveryPurchaseReceipt->products);
                                             @endphp
 
                                                 @foreach ($dprProducts as $dprProd)
+                                                @php
+                                                    //  get sum
+                                                    $sum += $dprProd->quantity * $dprProd->price;
+
+                                                @endphp
                                                     <tr>
-                                                        <td>{{ $dprProd->code }}</td>
+                                                        <td>{{ $dprProd->code . " " . $dprProd->description }}</td>
+                                                        <td>{{ $dprProd->unit }}</td>
                                                         <td>{{ $dprProd->quantity }}</td>
                                                         <td>{{ $dprProd->price }}</td>
                                                         <td>{{ $dprProd->quantity * $dprProd->price }}</td>
@@ -189,6 +197,7 @@
                                             <tr>
                                                 <td colspan="2"></td>
                                                 <td>Total:</td>
+                                                <td>{{ $sum ?? 0 }}</td>
                                                 <td></td>
                                                 <td></td>
                                             </tr>

@@ -72,7 +72,9 @@ class DPRService extends Model
                 $product = new ItemMasterData();
                 $product->branch_code = session('branch_code');
                 $product->product_code = $value['code'];
+                $product->product_description = $value['description'];
                 $product->stocks = $value['quantity'];
+                $product->unit = $value['unit'];
                 $product->save();
             }else{
                 $product->stocks += $value['quantity'];

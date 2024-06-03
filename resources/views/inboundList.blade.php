@@ -7,8 +7,8 @@
                     <tr>
                         <th></th>
                         <th>Product</th>
-                        <th style="width:20%">Quantity</th>
                         <th>Unit</th>
+                        <th style="width:20%">Quantity</th>
                         <th>Unit Price</th>
                         <th>Amount</th>
                     </tr>
@@ -25,7 +25,8 @@
                     @foreach ($uiProducts as $product)
                         <tr>
                             <td class="align-middle"><button type="button" class="btn btn-xs btn-danger" onclick="deleteProduct('{{ $inboundId }}', `{{ $product['code'] }}`)"><i class="fas fa-trash"></i></button></td>
-                            <td class="align-middle">{{ $product['code'] }} </td>
+                            <td class="align-middle">{{ $product['code'] . " " . $product['description'] }} </td>
+                            <td class="align-middle">{{ $product['unit'] }}</td>
                             <td class="align-middle">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -47,7 +48,6 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="align-middle">{{ $product['unit'] }}</td>
                             <td class="align-middle">
                                 <input type="text" name="pcodeprice" id="{{ $product['code'] . '_price' }}"
                                     class="label-input" value="{{ $product['price'] }}" readonly>

@@ -181,8 +181,8 @@
                                                         <tr>
                                                             <th></th>
                                                             <th>Product</th>
-                                                            <th style="width:20%">Quantity</th>
                                                             <th>Unit</th>
+                                                            <th style="width:20%">Quantity</th>
                                                             <th>Unit Price</th>
                                                             <th>Amount</th>
                                                         </tr>
@@ -195,7 +195,10 @@
                                                                             class="btn btn-xs btn-danger"
                                                                             onclick="deleteProduct('{{ $inboundId }}', `{{ $product['code'] }}`)"><i
                                                                                 class="fas fa-trash"></i></button></td>
-                                                                    <td class="align-middle"> {{ $product['code'] }} </td>
+                                                                    <td class="align-middle">
+                                                                        {{ $product['code'] . ' ' . $product['description'] }}
+                                                                    </td>
+                                                                    <td class="align-middle">{{ $product['unit'] }}</td>
                                                                     <td class="align-middle">
                                                                         <div class="input-group">
 
@@ -225,7 +228,6 @@
                                                                         </div>
 
                                                                     </td>
-                                                                    <td class="align-middle">{{ $product['unit'] }}</td>
                                                                     <td class="align-middle">
                                                                         <input type="text" name="pcodeprice"
                                                                             id="{{ $product['code'] . '_price' }}"
@@ -267,7 +269,9 @@
                                                         <tr>
                                                             <td colspan="4"></td>
                                                             <td>Total:</td>
-                                                            <td></td>
+                                                            <td><input type="text" name="total" id="total"
+                                                                    class="label-input"
+                                                                    value="{{ array_sum($totalAmount) }}" readonly></td>
                                                         </tr>
                                                     </tfoot>
                                                 </table>
@@ -497,20 +501,21 @@
 
                         document.getElementById("orderProductSum").innerHTML = this.responseText;
                         return true;
-                    }else{
+                    } else {
                         console.log("tset");
                         try {
                             var jsonRes = JSON.parse(this.responseText);
                             if (jsonRes.error) {
                                 alert("Error updating product quantity.");
 
-                                if(action == 'add')
-                                    document.getElementById(productCode).value = parseInt(document.getElementById(productCode).value) - 1;
-                                else if(action == 'min')
-                                    document.getElementById(productCode).value = parseInt(document.getElementById(productCode).value) + 1;
+                                if (action == 'add')
+                                    document.getElementById(productCode).value = parseInt(document.getElementById(
+                                        productCode).value) - 1;
+                                else if (action == 'min')
+                                    document.getElementById(productCode).value = parseInt(document.getElementById(
+                                        productCode).value) + 1;
                             }
-                        } catch (error) {
-                        }
+                        } catch (error) {}
                     }
                 };
                 xmlhttp.open("GET", "/inbound-updateProdQty/" + inboundId + "/" + productCode + "/" + action, true);

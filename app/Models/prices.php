@@ -46,7 +46,7 @@ class prices extends Model
             $query->where('pl_type', $priceType);
         })->first();
 
-        return ($price) ? $price->p_price : null;
+        return ($price) ?? null;
     }
 
 

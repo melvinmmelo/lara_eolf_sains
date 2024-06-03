@@ -23,4 +23,15 @@ class ItemMasterData extends Model
         return $query->where('product_code', $productCode);
     }
 
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_code', 'code');
+    }
+
+    // get attribute that returns the product name
+    public function getProductNameAttribute()
+    {
+        return $this->product->productType->name . ' ' . $this->product->productVariant->name;
+    }
+
 }
