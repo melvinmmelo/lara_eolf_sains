@@ -155,22 +155,20 @@
                                     <div class="col-sm-4">
                                         <label class="form-label" for="type"><i style="color:red">*</i>Type</label>
                                         <select class="form-control d-block" name="type">
-                                            <option>option 1</option>
-                                            <option>option 2</option>
-                                            <option>option 3</option>
-                                            <option>option 4</option>
-                                            <option>option 5</option>
+                                            <option value="Van">Van</option>
+                                            <option value="Fridge">Fridge</option>
+                                            <option value="Closed">Closed</option>
+
                                         </select>
                                     </div>
 
                                     <div class="col-sm-4">
                                         <label class="form-label" for="size">Size</label>
                                         <select class="form-control d-block" name="size">
-                                            <option>option 1</option>
-                                            <option>option 2</option>
-                                            <option>option 3</option>
-                                            <option>option 4</option>
-                                            <option>option 5</option>
+                                            <option value="S">Small</option>
+                                            <option value="M">Medium</option>
+                                            <option value="L">Large</option>
+                                            <option value="XL">Extra Large</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-4">

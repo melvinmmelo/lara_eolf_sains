@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 
 class DriversController extends Controller
 {
+
+    public function getDetails($id)
+    {
+        $driver = Drivers::find($id);
+        return response()->json($driver);
+    }
     /**
      * Display a listing of the resource.
      */

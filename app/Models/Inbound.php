@@ -10,6 +10,24 @@ class Inbound extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'branch_code',
+        'equipment_id',
+        'customer_id',
+        'store_id',
+        'driver_id',
+        'vehicle_id',
+        'products',
+        'with_invoice',
+        'bad_order',
+        'status',
+        'pricelevel_id',
+        'payment_type',
+        'ref_no',
+        'delivered_amount',
+    ];
+
     protected $appends = ['f_created_at', 'f_updated_at'];
 
     public function priceLevel() : BelongsTo {

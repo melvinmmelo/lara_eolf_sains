@@ -152,6 +152,9 @@ Route::delete('/customers/{customer}/store/{store}', [CustomersController::class
     Route::get('/edit-delivery-person/{id}', [DriversController::class, 'edit'])->name('delivery-person.edit');
     Route::put('/dp/update', [DriversController::class, 'update'])->name('delivery-person.update');
 
+    Route::get('/dp-details/{id}', [DriversController::class, 'getDetails'])->name('dp.details');
+
+
     Route::post('/Drivers/store', [DriversController::class, 'store']);
 
     Route::get('/pricing-level', [PriceLevelsController::class, 'index'])->name('pricing-level.index');
@@ -191,6 +194,9 @@ Route::delete('/customers/{customer}/store/{store}', [CustomersController::class
 
     // update if done na mag add ng productin
     Route::post('/inbound', [InboundController::class, 'store'])->name('inbound.store');
+
+    Route::patch('/inbound/add-payment', [InboundController::class, 'addPayment'])->name('inbound.addPayment');
+
 
     // update lang quantity
     // para sa add, min button

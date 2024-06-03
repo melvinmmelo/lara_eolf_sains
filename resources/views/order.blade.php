@@ -84,7 +84,7 @@
 
                                     @if ($inbound->status == 'Completed')
                                         <a href="#" data-target="#modalAddAmountDelivered" data-toggle="modal"><button
-                                                class="btn btn-danger">Update</button></a>
+                                                class="btn btn-danger" onclick="setObId(`{{ $inbound->id }}`)">Update</button></a>
                                     @endif
                                 </td>
                             </tr>
@@ -151,7 +151,7 @@
                                             <option value="">--Select--</option>
                                             @foreach ($equipment as $equip)
                                                 <option value="{{ $equip->id }}">
-                                                    {{ $equip->customer->id . '-' . $equip->customer->fullName . '-' . $equip->serial }}
+                                                    {{  $equip->equipment->code . " " . $equip->customer->fullName   }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -176,6 +176,7 @@
                                         <label class="form-label" for="deliveryPerson"><i style="color:red">*</i>Delivery
                                             Person</label>
                                         <select class="form-control" name="deliveryPerson" id="deliveryPerson" required>
+                                            <option value="">--Select--</option>
                                             @foreach ($drivers as $driver)
                                                 <option value="{{ $driver->id }}">{{ $driver->name }}</option>
                                             @endforeach
@@ -189,6 +190,7 @@
                                     <div class="col-sm-12">
                                         <label class="form-label" for="vehicle"><i style="color:red">*</i>Vehicle</label>
                                         <select class="form-control" name="vehicle" id="vehicle" required>
+                                            <option value="">--Select--</option>
                                             @foreach ($vehicles as $vehicle)
                                                 <option value="{{ $vehicle->id }}">{{ $vehicle->plateno }}</option>
                                             @endforeach
@@ -203,6 +205,7 @@
                                         <label class="form-label" for="pricelevel_id"><i style="color:red">*</i>Price
                                             Level</label>
                                         <select class="form-control" name="pricelevel_id" id="pricelevel_id" required>
+                                            <option value="">--Select--</option>
                                             @foreach ($pricing as $plevel)
                                                 <option value="{{ $plevel->id }}">{{ $plevel->pl_name }}</option>
                                             @endforeach
@@ -232,33 +235,7 @@
 
 @section('custom_js')
     <script>
-        // function setCustomerName(str) {
-        //     if (str == '') {
-        //         return;
-        //     }
 
-        //     var equipment = document.getElementById('equipment').value;
-
-        //     // document.getElementById('customer').value = equipment;
-
-        //     // get to get who owns the equipment
-        //     var xmlhttp = new XMLHttpRequest();
-        //     xmlhttp.onreadystatechange = function() {
-        //         if (this.readyState == 4 && this.status == 200) {
-        //             // convert the string to json
-
-        //             // this.responseText = JSON.parse(this.responseText);
-
-        //             console.log(this.responseText.customer_name);
-
-
-        //             document.getElementById('customer_id').value = this.responseText.customer_id;
-        //             document.getElementById('customer').value = this.responseText.customer_name;
-        //         }
-        //     };
-        //     xmlhttp.open("GET", "/get-equipmentcustomerstore/" + str, true);
-        //     xmlhttp.send();
-        // }
 
         function setCustomerName(str) {
             $.ajax({
@@ -271,5 +248,28 @@
                 }
             });
         }
+
+        document.getElementById('deliveryPerson').addEventListener('change', function() {
+            var driver = document.getElementById('deliveryPerson').value;
+            $.ajax({
+                type: "GET",
+                url: "/dp-details/" + driver,
+                success: function(response) {
+                    document.getElementById('pricelevel_id').value = response.default_price_level;
+                }
+            });
+        });
+
+        // set ob id to add payment
+        // $('#modalAddAmountDelivered').on('show.bs.modal', function(e) {
+        //     var ob_id = $(e.relatedTarget).data('id');
+        //     $('#ob_id').val(ob_id);
+        // });
+
+        function setObId(str) {
+            document.getElementById('ob_id').value = str;
+        }
+
+
     </script>
 @endsection

@@ -19,6 +19,27 @@ use Illuminate\Http\Request;
 class InboundController extends Controller
 {
 
+    public function addPayment(Request $request)
+    {
+        $request->validate([
+            'ob_id' => 'required|exists:inbounds,id',
+            'payment_type' => 'required',
+            'ref_no' => 'required|max:30',
+            'delivered_amount' => 'numeric|required',
+        ]);
+
+        $inbound = Inbound::findOrFail($request->ob_id);
+
+        $inbound->payment_type = $request->payment_type;
+        $inbound->ref_no = $request->ref_no;
+        $inbound->delivered_amount = $request->delivered_amount;
+        $inbound->status = $request->status;
+
+        $inbound->save();
+
+        return redirect()->route('order.index')->with('success', 'Payment has been added.');
+    }
+
     // delete product from the list
     public function deleteAInbound($inboundId, $pcode)
     {

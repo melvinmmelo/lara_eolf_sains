@@ -25,6 +25,10 @@ return new class extends Migration
             $table->tinyInteger('bad_order')->nullable();
             $table->string('status', 10);
             $table->unsignedInteger('pricelevel_id');
+            $table->string('payment_type', 30)->nullable();
+            $table->string('ref_no', 30)->nullable();
+            $table->float('delivered_amount', 2)->nullable();
+
             $table->timestamps();
 
             $table->index('branch_code');

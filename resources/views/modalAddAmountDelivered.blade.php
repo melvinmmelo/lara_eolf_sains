@@ -2,23 +2,40 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Enter amount</h4>
+                <h4 class="modal-title">Enter payment</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
 
-                <form action="#" method="post">
+                <form action="{{ route('inbound.addPayment') }}" method="POST">
                     @csrf
+                    @method('PATCH')
+
+                     <div class="form-group">
+                        <label class="form-label" for="payment_type">Payment Type</label>
+                         <input type="hidden" class="form-control" name="ob_id" id="ob_id"
+                            value="" required readonly>
+                        <select name="payment_type" id="payment_type" class="form-control">
+                            <option value="">--Select--</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Cheque">Cheque</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                        </select>
+                    </div>
+
+                     <div class="form-group">
+                        <label class="form-label" for="ref_no">Reference No.</label>
+                        <input type="text" class="form-control" name="ref_no" id="ref_no"
+                            value="" required >
+                    </div>
 
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-12">
-                                <label class="form-label" for="branch_code">Branch Code</label>
-                                <input type="text" class="form-control" name="branch_code" id="branch_code"
-                                    value="{{ session('branch_code') }}" required readonly>
-
+                                <label class="form-label" for="delivered_amount"><i style="color:red">*</i>Amount</label>
+                                <input type="number" class="form-control" name="delivered_amount">
                             </div>
                         </div>
                     </div>
@@ -26,14 +43,18 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-12">
-                                <label class="form-label" for="pricelevel_id"><i style="color:red">*</i>Amount</label>
-                                <input type="amount" class="form-control">
+                                <label class="form-label" for="status"><i style="color:red">*</i>Status</label>
+                                <select name="status" id="status" class="form-control">
+                                    <option value="">--Select--</option>
+                                    <option value="Paid">Paid</option>
+                                    <option value="Unpaid">Unpaid</option>
+                                </select>
                             </div>
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Next</button>
+                        <button type="submit" class="btn btn-success">Save changes</button>
                     </div>
 
                 </form>
