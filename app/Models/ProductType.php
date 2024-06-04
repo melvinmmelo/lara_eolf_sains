@@ -17,5 +17,11 @@ class ProductType extends Model
 
     protected $guarded = [];
 
+    // scope where code is
+    public function scopeCode($query, string $code)
+    {
+        return $query->where('code', $code);
+    }
+
 
 }

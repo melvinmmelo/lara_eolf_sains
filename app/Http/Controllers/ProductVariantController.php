@@ -70,7 +70,7 @@ class ProductVariantController extends Controller
             'e_status' => 'string|max:190'
         ]);
 
-        $pvar = ProductVariant::find($request->e_code)->first();
+        $pvar = ProductVariant::code($request->e_code)->first();
         $pvar->name = $request->e_name;
         $pvar->is_active = $request->e_status == 'on' ? 1 : 0;
         $pvar->save();

@@ -23,4 +23,10 @@ class ProductVariant extends Model
         return $query->where('is_active', 1);
     }
 
+    // scope where code is
+    public function scopeCode($query, string $code)
+    {
+        return $query->where('code', $code);
+    }
+
 }

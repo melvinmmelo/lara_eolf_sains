@@ -89,7 +89,9 @@ class ProductTypeController extends Controller
             'e_is_active' => 'nullable',
         ]);
 
-        $productType = ProductType::find($request->e_code)->first();
+        // dd($request->all());
+
+        $productType = ProductType::code($request->e_code)->first();
         $productType->name = $request->e_name;
         $productType->volume = $request->e_volume;
         $productType->spoon_pcs_per_bag = $request->e_spoon_pcs_per_bag;
