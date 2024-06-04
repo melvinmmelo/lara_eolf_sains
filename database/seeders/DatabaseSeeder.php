@@ -149,7 +149,7 @@ class DatabaseSeeder extends Seeder
             'pl_name' => "FACTORY PRICE",
             'pl_desc' => '2024',
             'pl_status' => 'Active',
-            'pl_type' => 'FACTORY'
+            'pl_type' => 'FACTORY PRICE'
         ]);
 
 
@@ -213,7 +213,7 @@ class DatabaseSeeder extends Seeder
             'branch_code' => "EFTO-CAG",
             'dr_no' => "DR-2024-001",
             'issue_date' => '2024-01-01',
-            'status' => 'Pending',
+            'status' => 'Encoding',
             'user_id' => 1
         ]);
     }
