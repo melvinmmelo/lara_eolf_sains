@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Branches;
 use App\Models\CompanyDetails;
+use App\Models\Customers;
 use App\Models\Delivery;
+use App\Models\DeliveryPurchaseReceipt;
 use App\Models\Drivers;
 use App\Models\Equipment;
 use App\Models\pricelevels;
@@ -62,6 +64,8 @@ class DatabaseSeeder extends Seeder
             'address' => 'Batangas',
             'contact' => '09253652321',
             'status' => 'Active',
+            'default_price_level' => '1',
+
         ]);
 
         Vehicles::create([
@@ -133,37 +137,53 @@ class DatabaseSeeder extends Seeder
         );
 
         pricelevels::create([
-            'branch_code' => "EFTO-TAR",
+            'branch_code' => "EFTO-CAG",
             'pl_name' => "SUMMER 2024",
             'pl_desc' => 'FP Summer 2024',
             'pl_status' => 'Active',
             'pl_type' => 'CUSTOMER'
         ]);
 
+        pricelevels::create([
+            'branch_code' => "EFTO-CAG",
+            'pl_name' => "FACTORY PRICE",
+            'pl_desc' => '2024',
+            'pl_status' => 'Active',
+            'pl_type' => 'FACTORY'
+        ]);
 
-        // prices::create([
-        //     'p_level' => "FACTORY PRICE",
-        //     'p_code' => 'SC_RR',
-        //     'p_unit' => 'Bag',
-        //     'p_quant' => 5,
-        //     'p_price' => 150,
-        // ]);
 
-        // prices::create([
-        //     'p_level' => "FACTORY PRICE",
-        //     'p_code' => 'SC_SB',
-        //     'p_unit' => 'Bag',
-        //     'p_quant' => 15,
-        //     'p_price' => 180,
-        // ]);
+        prices::create([
+            'pricelevel_id' => "1",
+            'p_code' => 'SC_RR',
+            'p_unit' => 'Bag',
+            'p_quant' => 5,
+            'p_price' => 150,
+        ]);
 
-        // prices::create([
-        //     'p_level' => "FACTORY PRICE",
-        //     'p_code' => 'MC_SB',
-        //     'p_unit' => 'Bag',
-        //     'p_quant' => 15,
-        //     'p_price' => 180,
-        // ]);
+        prices::create([
+            'pricelevel_id' => "1",
+            'p_code' => 'SC_SB',
+            'p_unit' => 'Bag',
+            'p_quant' => 15,
+            'p_price' => 180,
+        ]);
+
+        prices::create([
+            'pricelevel_id' => "2",
+            'p_code' => 'SC_RR',
+            'p_unit' => 'Bag',
+            'p_quant' => 5,
+            'p_price' => 100,
+        ]);
+
+        prices::create([
+            'pricelevel_id' => "2",
+            'p_code' => 'SC_SB',
+            'p_unit' => 'Bag',
+            'p_quant' => 15,
+            'p_price' => 120,
+        ]);
 
         Branches::create([
             'code' => "EFTO-CAG",
@@ -187,6 +207,14 @@ class DatabaseSeeder extends Seeder
             'price' =>  '42000.00',
             'serial_no' => 'ABC123',
             'code' => '123456',
+        ]);
+
+        DeliveryPurchaseReceipt::create([
+            'branch_code' => "EFTO-CAG",
+            'dr_no' => "DR-2024-001",
+            'issue_date' => '2024-01-01',
+            'status' => 'Pending',
+            'user_id' => 1
         ]);
     }
 }
