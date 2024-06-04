@@ -188,6 +188,8 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                        @php $totalAmount = []; @endphp
+
                                                         @if (count($inboundList))
                                                             @foreach ($inboundList as $product)
                                                                 <tr>
