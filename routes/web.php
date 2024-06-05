@@ -46,21 +46,20 @@ Route::get('/addbad-orders', function () {
 Route::middleware('auth')->group(function () {
 
     Route::get('/inventory', [DeliveryPurchaseReceiptController::class, 'index'])->name('delivery-purchase-receipts.index');
+
     Route::post('/delivery-purchase-receipts', [DeliveryPurchaseReceiptController::class, 'store'])->name('delivery-purchase-receipts.store');
 
     Route::get('/dpr-products/{dprId}', [DeliveryPurchaseReceiptController::class, 'products'])->name('drp.products');
+
     Route::post('/dpr-product/store', [DeliveryPurchaseReceiptController::class, 'storeProduct'])->name('dpr-product.store');
 
     Route::get('/dpr-save/{id}', [DeliveryPurchaseReceiptController::class, 'saveAndInventoryProduct'])->name('dpr.save');
 
     Route::get('/dpr-delete/{drid}/{pcode}', [DeliveryPurchaseReceiptController::class, 'delete'])->name('dpr.delete');
 
-
-
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-
 
     Route::get('/inventory-items', function () {
         return view('inventory-items');
@@ -69,7 +68,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/loading-ticket', function () {
         return view('loading-ticket');
     });
-
 
     // Route::get('/customersinfo', function () {
     //     return view('customersinfo');
@@ -106,8 +104,6 @@ Route::middleware('auth')->group(function () {
     // Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
     // Route::delete('/customer/{customer}/store/{store}', [CustomerController::class, 'destroy'])->name('customer.destroy');
 
-
-
     Route::get('/customers', [CustomersController::class, 'index'])->name('customers');
     Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customer.edit');
     Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
@@ -115,8 +111,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
     Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
     Route::delete('/customers/{customer}/store/{store}', [CustomersController::class, 'destroyStore'])->name('customer.store.destroy');
-
-
 
     // Route::get('/customersinfo', [CustomersController::class, 'index'])->name('customersinfo');
 
@@ -164,6 +158,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/pricing-level', [PriceLevelsController::class, 'index'])->name('pricing-level.index');
     Route::post('/pricing-level/store', [PriceLevelsController::class, 'store']);
+
+    Route::put('/pricing-level/update', [PriceLevelsController::class, 'update'])->name('pricing-level.update');
+
 
     Route::get('/pricing', [PricesController::class, 'index'])->name('pricing.index');
     Route::post('/pricing/store', [PricesController::class, 'store']);

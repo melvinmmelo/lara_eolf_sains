@@ -34,7 +34,8 @@
                             {{-- <th>Branch</th> --}}
                             <th>Name</th>
                             <th>Description</th>
-                            {{-- <th>Status</th> --}}
+                            <th>Status</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,7 +44,11 @@
                                 {{-- <td>{{ $pl->branch_code }}</td> --}}
                                 <td>{{ $pl->pl_name }}</td>
                                 <td>{{ $pl->pl_desc }}</td>
-                                {{-- <td>{{ $pl->pl_status }}</td> --}}
+                                <td>{{ $pl->pl_status }}</td>
+                                <td>
+                                    <a href="#" data-toggle="modal" data-target="#modalEdit"
+                                        class="btn btn-primary btn-sm" onclick="setToUpdate('{{ $pl->id }}','{{ $pl->pl_name }}','{{ $pl->pl_desc }}','{{ $pl->status }}')">Edit</a>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -52,7 +57,8 @@
                             {{-- <th>Branch</th> --}}
                             <th>Name</th>
                             <th>Description</th>
-                            {{-- <th>Status</th> --}}
+                            <th>Status</th>
+                            <th></th>
                         </tr>
                     </tfoot>
                 </table>
@@ -145,6 +151,88 @@
                                 </div>
                             </div> --}}
 
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Save changes</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+            </form>
+        </div>
+
+        <div class="modal fade" id="modalEdit">
+            <div class="modal-dialog">
+                <form method="POST" action="{{ route('pricing-level.update') }}">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Edit Price Level</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="form-label" for="code"><i style="color:red">*</i>Name</label>
+                                        <input type="hidden" class="form-control" name="e_pricelevel_id" required readonly>
+                                        <input type="text" class="form-control" name="e_name" required>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="form-label" for="address"><i
+                                                style="color:red">*</i>Description</label>
+                                        <textarea class="form-control" rows="3" name="e_description" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <h6><i style="color:red">*</i>Price type</h6>
+                                <div class="form-group clearfix">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="radio" name="e_priceType" id="e_isForCustomer" value="CUSTOMER"
+                                            checked>
+                                        <label for="e_isForCustomer">For customers
+                                        </label>
+                                    </div>
+                                    <div class="icheck-primary d-inline">
+                                        <input type="radio" name="e_priceType" id="e_isFactoryPrice" value="FACTORY PRICE">
+                                        <label for="e_isFactoryPrice">Factory Price
+                                        </label>
+                                    </div>
+                                    <div class="icheck-primary d-inline">
+                                        <input type="radio" name="e_priceType" id="e_isBadPricing" value="BAD PRICING">
+                                        <label for="e_isBadPricing"> Bad pricing
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="form-label" for="e_status">Active</label>
+                                        <br>
+                                        <input type="checkbox" id="mySwitch" data-bootstrap-switch data-on-text="On"
+                                            data-off-text="Off" data-on-color="success" data-off-color="danger"
+                                            name="e_status">
+
+                                        <div style="margin-bottom: 20px"></div>
+                                    </div>
+                                </div>
+                            </div>
+
 
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-success">Save changes</button>
@@ -157,6 +245,7 @@
             <!-- /.modal -->
             </form>
         </div>
+
     </section>
     <!-- /.content -->
 @endsection
@@ -197,6 +286,77 @@
                 }
             });
 
+
+            // ! FOR EDITING
+
+            var e_forCustomerRadio = document.getElementById('e_isForCustomer');
+            var e_factoryPriceRadio = document.getElementById('e_isFactoryPrice');
+            var e_badPricingRadio = document.getElementById('e_isBadPricing');
+            var e_inputName = document.querySelector('input[name="e_name"]');
+
+
+            e_forCustomerRadio.addEventListener('change', function() {
+                if (this.checked) {
+                    branchCode.style.display = 'block';
+                    e_inputName.readOnly = false;
+                }
+            });
+
+            e_factoryPriceRadio.addEventListener('change', function() {
+                if (this.checked) {
+                    branchCode.style.display = 'none';
+                    e_inputName.value = 'FACTORY PRICE';
+                    e_inputName.readOnly = true;
+                }
+            });
+
+            e_badPricingRadio.addEventListener('change', function() {
+                if (this.checked) {
+                    branchCode.style.display = 'block';
+                    e_inputName.value = 'BAD PRICING';
+                    e_inputName.readOnly = true;
+                }
+            });
+
+            // END FOR EDITING
+
+
+
+        }
+
+        function setToUpdate(id, name, description, status) {
+            var inputId = document.querySelector('input[name="e_pricelevel_id"]');
+            var inputName = document.querySelector('input[name="e_name"]');
+            var inputDescription = document.querySelector('textarea[name="e_description"]');
+            var inputStatus = document.querySelector('input[name="e_status"]');
+
+            if(name == 'FACTORY PRICE'){
+                // disable input name
+                inputName.readOnly = true;
+                inputName.value = "FACTORY PRICE";
+                document.getElementById('e_isFactoryPrice').checked = true;
+                document.getElementById('e_isBadPricing').checked = false;
+                document.getElementById('e_isForCustomer').checked = false;
+
+            }else if(name == 'BAD PRICING'){
+                // disable input name
+                inputName.readOnly = true;
+                inputName.value = name;
+                document.getElementById('e_isFactoryPrice').checked = false;
+                document.getElementById('e_isBadPricing').checked = true;
+                document.getElementById('e_isForCustomer').checked = false;
+            }else{
+                // enable input name
+                inputName.readOnly = false;
+                inputName.value = name;
+                document.getElementById('e_isFactoryPrice').checked = false;
+                document.getElementById('e_isBadPricing').checked = false;
+                document.getElementById('e_isForCustomer').checked = true;
+            }
+
+            inputId.value = id;
+            inputDescription.value = description;
+            inputStatus.checked = status == 'ACTIVE' ? true : false;
         }
     </script>
 @endsection

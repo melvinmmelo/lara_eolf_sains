@@ -59,6 +59,7 @@
                             <th>Branch</th>
                             <th>Contact No.</th>
                             <th>Address</th>
+                            <th>Created at</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -70,6 +71,7 @@
                                 <td>{{ $branch->name }}</td>
                                 <td>{{ $branch->office_no }}</td>
                                 <td>{{ $branch->address }}</td>
+                                <td>{{ $branch->date_created }}</td>
                                 <td>
                                     <a href="#" data-toggle="modal" data-target="#modalEdit"
                                         class="btn btn-primary btn-sm" onclick="setToUpdateBranch()">Edit</a>
@@ -83,6 +85,7 @@
                             <th>Branch</th>
                             <th>Contact No.</th>
                             <th>Address</th>
+                            <th>Created at</th>
                             <th></th>
                         </tr>
                     </tfoot>

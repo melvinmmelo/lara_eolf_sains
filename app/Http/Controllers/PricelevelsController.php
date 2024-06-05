@@ -97,9 +97,26 @@ class PricelevelsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, pricelevels $pricelevels)
+    public function update(Request $request)
     {
-        //
+
+        $request->validate([
+            'e_pricelevel_id' => 'required|exists:pricelevels,id',
+            'e_name' => 'required',
+            'e_description' => 'required',
+            'e_priceType' => 'required',
+            'e_status' => 'required',
+        ]);
+
+        $pl = pricelevels::find($request->e_pricelevel_id);
+        $pl->pl_name = $request->e_name;
+        $pl->pl_desc = $request->e_description;
+        $pl->pl_status = $request->e_status == 'on' ? 'Active' : 'Inactive';
+        $pl->pl_type = $request->e_priceType;
+        $pl->save();
+
+        return redirect('/pricing-level/')->with('success', 'Pricing Level updated successfully!');
+
     }
 
     /**
