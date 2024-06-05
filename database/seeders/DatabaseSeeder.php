@@ -64,6 +64,7 @@ class DatabaseSeeder extends Seeder
             'address' => 'Batangas',
             'contact' => '09253652321',
             'status' => 'Active',
+            'designation' => 'Driver',
             'default_price_level' => '1',
 
         ]);
