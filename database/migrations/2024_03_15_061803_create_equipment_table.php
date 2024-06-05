@@ -13,17 +13,18 @@ return new class extends Migration
     {
         Schema::create('equipment', function (Blueprint $table) {
             $table->id();
-            $table->string('ownership'); // Ownership type of the equipment
-            $table->string('type'); // Type of equipment
-            $table->string('brand'); // Brand of the equipment
-            $table->decimal('price', 10, 2); // Price of the equipment
-            $table->string('serial_no')->unique(); // Serial number of the equipment
-            $table->string('code')->nullable(); // Optional code for the equipment
-            $table->string('distributor')->nullable(); // Distributor of the equipment
-            $table->date('date_delivered')->nullable(); // Date the equipment was delivered
-            $table->date('date_purchased')->nullable(); // Date the equipment was purchased
-            $table->string('status')->default('available'); // Date the equipment was purchased
-            
+            $table->string('ownership');
+            $table->string('type');
+            $table->string('brand');
+            $table->decimal('price', 10, 2);
+            $table->string('serial_no')->unique();
+            $table->string('model', 30);
+            $table->string('code')->nullable();
+            $table->string('distributor')->nullable();
+            $table->date('date_delivered')->nullable();
+            $table->date('date_purchased')->nullable();
+            $table->string('status')->default('available');
+
             $table->timestamps();
         });
     }
@@ -36,4 +37,3 @@ return new class extends Migration
         Schema::dropIfExists('equipment');
     }
 };
-

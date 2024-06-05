@@ -56,10 +56,12 @@
                             <th>Brand</th>
                             <th>Price</th>
                             <th>Serial No.</th>
+                            <th>Model</th>
                             <th>Code</th>
                             <th>Status</th>
                             <th>Date Delivered</th>
                             <th>Date Purchased</th>
+                            <th>Created at</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -71,14 +73,16 @@
                                 <td>{{ $equipment->brand }}</td>
                                 <td>{{ $equipment->price }}</td>
                                 <td>{{ $equipment->serial_no }}</td>
+                                <td>{{ $equipment->model }}</td>
                                 <td>{{ $equipment->code }}</td>
                                 <td>{{ $equipment->status }}</td>
                                 <td>{{ $equipment->date_delivered }}</td>
                                 <td>{{ $equipment->date_purchased }}</td>
+                                <td>{{ $equipment->date_created }}</td>
                                 <td>
                                     <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
                                         data-target="#edit-equipment"
-                                        onclick="setToUpdateEquipment('{{ $equipment->id }}','{{ $equipment->ownership }}','{{ $equipment->type }}','{{ $equipment->brand }}','{{ $equipment->price }}','{{ $equipment->serial_no }}','{{ $equipment->code }}','{{ $equipment->distributor }}','{{ $equipment->date_delivered }}','{{ $equipment->date_purchased }}')">Edit</button>
+                                        onclick="setToUpdateEquipment('{{ $equipment->id }}','{{ $equipment->ownership }}','{{ $equipment->type }}','{{ $equipment->brand }}','{{ $equipment->price }}','{{ $equipment->serial_no }}','{{ $equipment->model }}','{{ $equipment->code }}','{{ $equipment->distributor }}','{{ $equipment->date_delivered }}','{{ $equipment->date_purchased }}')">Edit</button>
 
                                     {{-- <form action="{{ route('equipment.destroy', $equipment->id) }}" method="POST"
                                         style="display: inline;">
@@ -98,10 +102,12 @@
                             <th>Brand</th>
                             <th>Price</th>
                             <th>Serial No.</th>
+                            <th>Model</th>
                             <th>Code</th>
-                            <th>Distributor</th>
+                            <th>Status</th>
                             <th>Date Delivered</th>
                             <th>Date Purchased</th>
+                            <th>Created at</th>
                             <th></th>
                         </tr>
                     </tfoot>
@@ -158,29 +164,44 @@
                                         <label class="form-label" for="brand"><i style="color:red">*</i>Brand</label>
                                         <input type="text" class="form-control" id="brand" name="brand" required>
                                     </div>
+
+                                    <div class="col-sm-6">
+                                        <label class="form-label" for="model"><i style="color:red">*</i>Model</label>
+                                        <input type="text" class="form-control" id="model" name="model"
+                                            placeholder="Enter model" required>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row mb-2">
+
                                     <div class="col-sm-6">
                                         <label class="form-label" for="price"><i style="color:red">*</i>Price</label>
                                         <!-- <input type="text" class="form-control" id="price" name="price"> -->
                                         <input type="text" pattern="[0-9]*" inputmode="numeric" class="form-control"
                                             id="price" name="price" placeholder="Enter price" required>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row mb-2">
+
                                     <div class="col-sm-6">
                                         <label class="form-label" for="serial_no"><i style="color:red">*</i>Serial
                                             No.</label>
                                         <input type="text" class="form-control" id="serial_no" name="serial_no">
                                     </div>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row mb-2">
                                     <div class="col-sm-6">
                                         <label class="form-label" for="code"><i style="color:red">*</i>Code</label>
-                                        <input type="text" class="form-control" id="code" name="code" required>
+                                        <input type="text" class="form-control" id="code" name="code"
+                                            required>
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="form-group"> -->
-                            <!-- <label class="form-label" for="distributor">Distributor</label> -->
                             <input type="hidden" class="form-control" id="distributor" name="distributor">
                             <!-- </div> -->
                             <div class="form-group">
@@ -264,15 +285,21 @@
                                     <label class="form-label" for="edit-serial_no">Serial No.</label>
                                     <input type="text" class="form-control" id="edit-serial_no" name="serial_no">
                                 </div>
+
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="edit-model">Model</label>
+                                    <input type="text" class="form-control" id="edit-model" name="model">
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row mb-2">
                                 <div class="col-sm-6">
                                     <label class="form-label" for="edit-code">Code</label>
                                     <input type="text" class="form-control" id="edit-code" name="code">
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="edit-distributor">Distributor</label>
-                            <input type="hidden" class="form-control" id="edit-distributor" name="distributor">
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="edit-date_delivered">Date Delivered</label>
@@ -304,7 +331,7 @@
 
 @section('custom_js')
     <script>
-        function setToUpdateEquipment(id, ownership, type, brand, price, serial_no, code, distributor, date_delivered,
+        function setToUpdateEquipment(id, ownership, type, brand, price, serial_no, model, code, distributor, date_delivered,
             date_purchased) {
             document.getElementById("equipment_id").value = id;
             document.getElementById("edit-ownership").value = ownership;
@@ -312,6 +339,7 @@
             document.getElementById("edit-brand").value = brand;
             document.getElementById("edit-price").value = price;
             document.getElementById("edit-serial_no").value = serial_no;
+            document.getElementById("edit-model").value = model;
             document.getElementById("edit-code").value = code;
             document.getElementById("edit-distributor").value = distributor;
             document.getElementById("edit-date_delivered").value = date_delivered;

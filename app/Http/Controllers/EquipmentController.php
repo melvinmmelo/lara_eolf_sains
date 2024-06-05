@@ -27,7 +27,8 @@ class EquipmentController extends Controller
             'brand' => 'required',
             'price' => 'required|numeric',
             'serial_no' => 'required|unique:equipment',
-            'code' => 'nullable',
+            'model' => 'required',
+            'code' => 'required',
             'distributor' => 'nullable',
             'date_delivered' => 'nullable|date',
             'date_purchased' => 'nullable|date',
@@ -40,6 +41,7 @@ class EquipmentController extends Controller
         $equipment->brand = $request->brand;
         $equipment->price = $request->price;
         $equipment->serial_no = $request->serial_no;
+        $equipment->model = $request->model;
         $equipment->code = $request->code;
         $equipment->distributor = $request->distributor;
         $equipment->date_delivered = $request->date_delivered;
@@ -58,37 +60,38 @@ class EquipmentController extends Controller
         $equipment = Equipment::findOrFail($id);
         return response()->json($equipment);
     }
-    
+
     public function update(Request $request)
     {
         $equipment = Equipment::findOrFail($request->id);
-    
+
         $request->validate([
             'ownership' => 'required',
             'type' => 'required',
             'brand' => 'required',
             'price' => 'required|numeric',
             'serial_no' => 'required',
+            'model' => 'required',
             'code' => 'required',
             'distributor' => 'required',
             'date_delivered' => 'required|date',
             'date_purchased' => 'required|date',
             // Add more validation rules as needed
         ]);
-    
+
         $equipment->update([
             'ownership' => $request->ownership,
             'type' => $request->type,
             'brand' => $request->brand,
             'price' => $request->price,
             'serial_no' => $request->serial_no,
+            'model' => $request->model,
             'code' => $request->code,
             'distributor' => $request->distributor,
             'date_delivered' => $request->date_delivered,
             'date_purchased' => $request->date_purchased,
-            // Add more fields as needed
         ]);
-    
+
         return redirect('/equipment')->with('success', 'Equipment updated successfully!');
     }
 

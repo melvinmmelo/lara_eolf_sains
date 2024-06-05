@@ -204,9 +204,9 @@ class DatabaseSeeder extends Seeder
             'type' => "Chest Freezer",
             'brand' => 'CONDURA',
             'price' =>  '42000.00',
-            'price' =>  '42000.00',
             'serial_no' => 'ABC123',
             'code' => '123456',
+            'model' => 'LG',
         ]);
 
         DeliveryPurchaseReceipt::create([

@@ -20,7 +20,6 @@ class Equipment extends Model
         'distributor',
         'date_delivered',
         'date_purchased',
-        // Add other attributes here as needed
     ];
 
     public function equipmentStore()
@@ -38,5 +37,12 @@ class Equipment extends Model
     public function scopeNotAvailable($query)
     {
         return $query->where('status', 'added');
+    }
+
+    protected $appends = ['date_created'];
+
+    public function getDateCreatedAttribute()
+    {
+        return $this->created_at->format('m-d-Y h:i A');
     }
 }
