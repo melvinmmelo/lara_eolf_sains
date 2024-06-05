@@ -46,6 +46,7 @@ class DriversController extends Controller
             'address' => 'required',
             'contact' => 'required',
             'price_level' => 'required',
+            'designation' => 'required',
         ]);
 
         $status = 'NOT AVAILABLE';
@@ -61,6 +62,7 @@ class DriversController extends Controller
             'contact' => $request->contact,
             'status' => $status,
             'default_price_level' => $request->price_level,
+            'designation' => $request->designation,
         ]);
 
         return redirect('/delivery-persons/')->with('success', 'Delivery person added successfully!');
@@ -93,6 +95,7 @@ class DriversController extends Controller
             'e_contact' => 'required',
             'e_status' => 'required',
             'e_price_level' => 'required',
+            'e_designation' => 'required',
         ]);
 
         $dp = Drivers::find($request->e_id);
@@ -100,6 +103,7 @@ class DriversController extends Controller
         $dp->contact = $request->e_contact;
         $dp->status = $request->e_status ? 'Active' : 'Inactive';
         $dp->default_price_level = $request->e_price_level;
+        $dp->designation = $request->e_designation;
         $dp->save();
 
         return redirect('/delivery-persons/')->with('success', 'Delivery person updated successfully!');

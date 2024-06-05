@@ -35,6 +35,7 @@
                             <th>Address</th>
                             <th>Contact No.</th>
                             <th>Status</th>
+                            <th>Designation</th>
                             <th>Price Level</th>
                             <th>Created at</th>
                             <th></th>
@@ -47,6 +48,7 @@
                                 <td>{{ $driver->address }}</td>
                                 <td>{{ $driver->contact }}</td>
                                 <td>{{ $driver->status }}</td>
+                                <td>{{ $driver->designation }}</td>
                                 <td>{{ $driver->priceLevel->pl_name }}</td>
                                 <td>{{ $driver->date_created }}</td>
                                 <td>
@@ -54,7 +56,7 @@
                                         data-target="#modal-edit"
                                         onclick="setToUpdate('{{ $driver->id }}',
                                         '{{ $driver->name }}', '{{ $driver->address }}', '{{ $driver->contact }}',
-                                        '{{ $driver->status }}')">Edit</button>
+                                        '{{ $driver->status }}', '{{ $driver->designation }}')">Edit</button>
 
                                 </td>
                             </tr>
@@ -67,6 +69,7 @@
                             <th>Address</th>
                             <th>Contact No.</th>
                             <th>Status</th>
+                            <th>Designation</th>
                             <th>Price Level</th>
                             <th>Created at</th>
                             <th></th>
@@ -157,6 +160,20 @@
 
                                         <div style="margin-bottom: 20px"></div>
 
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <label class="form-label" for="designation"><i
+                                                    style="color:red">*</i>Designation
+                                            </label>
+                                            <select class="form-control" name="designation" required>
+                                                <option value="Driver">Driver</option>
+                                                <option value="Salesman">Salesman</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -251,11 +268,24 @@
 
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-success">Save
-                                        changes</button>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="form-label" for="e_designation"><i style="color:red">*</i>Designation
+                                        </label>
+                                        <select class="form-control" name="e_designation" required>
+                                            <option value="Driver">Driver</option>
+                                            <option value="Salesman">Salesman</option>
+                                        </select>
+                                    </div>
                                 </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Save
+                                    changes</button>
                             </div>
                             <!-- /.modal-content -->
                         </div>
@@ -276,11 +306,13 @@
 
 @section('custom_js')
     <script>
-        function setToUpdate(id, name, address, contact, status) {
+        function setToUpdate(id, name, address, contact, status, e_designation) {
             $('input[name="e_id"]').val(id);
             $('input[name="e_name"]').val(name);
             $('input[name="e_address"]').val(address);
             $('input[name="e_contact"]').val(contact);
+            $('input[name="e_designation"]').val(contact);
+
             if (status == 'Active') {
                 $('input[name="e_status"]').bootstrapSwitch('state', true);
             } else {

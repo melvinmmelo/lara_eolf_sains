@@ -129,7 +129,7 @@
                                                 Code</label>
                                             <select class="form-control select2bs4" id="price_code" name="price_code">
                                                 @foreach ($products as $product)
-                                                    <option value="{{ $product->code }}">{{ $product->productName }}
+                                                    <option value="{{ $product->code }}">{{ $product->code . " " . $product->productName }}
                                                     </option>
                                                 @endforeach
                                             </select>

@@ -33,7 +33,8 @@
                         <tr>
 
                             <th>Code</th>
-                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Flavor</th>
                             <th>Created at</th>
                             {{-- <th>Active</th> --}}
                             <th></th>
@@ -43,7 +44,8 @@
                         @foreach ($products as $product)
                             <tr>
                                 <td>{{ $product->code }}</td>
-                                <td>{{ $product->productName }}</td>
+                                <td>{{ $product->productType->name }}</td>
+                                <td>{{ $product->productVariant->name }}</td>
                                 <td>{{ $product->date_created }}</td>
                                 {{-- <td>{{ $product->is_active == 1 ? 'Yes' : 'No' }}</td> --}}
                                 <td>
@@ -59,7 +61,8 @@
                     <tfoot>
                         <tr>
                             <th>Code</th>
-                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Flavor</th>
                             <th>Created at</th>
                             {{-- <th>Active</th> --}}
                             <th></th>
@@ -95,7 +98,7 @@
                                 <div class="row mb-2">
                                     <div class="col-sm-6">
                                         <label class="form-label" for="name"><i style="color:red">*</i>Type</label>
-                                        <select class="form-control" id="product_type_code" name="product_type_code">
+                                        <select class="form-control select2bs4" id="product_type_code" name="product_type_code">
                                             @foreach ($types as $type)
                                                 <option value="{{ $type->code }}">{{ $type->code }}</option>
                                             @endforeach
@@ -104,7 +107,7 @@
 
                                     <div class="col-sm-6">
                                         <label class="form-label" for="name"><i style="color:red">*</i>Variant</label>
-                                        <select class="form-control" id="product_variant_code" name="product_variant_code">
+                                        <select class="form-control select2bs4" id="product_variant_code" name="product_variant_code">
                                             @foreach ($variants as $variant)
                                                 <option value="{{ $variant->code }}">{{ $variant->code }}</option>
                                             @endforeach

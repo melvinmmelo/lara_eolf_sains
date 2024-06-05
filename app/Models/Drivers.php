@@ -13,7 +13,8 @@ class Drivers extends Model
         'address',
         'contact',
         'status',
-        'default_price_level'
+        'default_price_level',
+        'designation',
     ];
 
     // scope is active

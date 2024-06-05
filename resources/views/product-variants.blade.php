@@ -49,7 +49,7 @@
                                 <td>{{ $productVariant->date_created }}</td>
                                 <td>
                                     <a href="#" data-toggle="modal" data-target="#modalEdit"
-                                        onclick="setToUpdateProduct('{{ $productVariant->code }}','{{ $productVariant->name }}')"><button
+                                        onclick="setToUpdateProduct(`{{ $productVariant->code }}`,`{{ $productVariant->name }}`)"><button
                                             type="submit" class="btn btn-sm btn-primary">Edit</button></a>
                                 </td>
                             </tr>

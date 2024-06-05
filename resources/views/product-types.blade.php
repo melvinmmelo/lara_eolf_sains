@@ -31,6 +31,7 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
+                            <th>No</th>
                             <th>Code</th>
                             <th>Name</th>
                             <th>Volume</th>
@@ -44,6 +45,7 @@
                     <tbody>
                         @foreach ($productTypes as $productType)
                             <tr>
+                                <td>{{ $productType->sequence_no }}</td>
                                 <td>{{ $productType->code }}</td>
                                 <td>{{ $productType->name }}</td>
                                 <td>{{ $productType->volume }}</td>
@@ -65,6 +67,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
+                            <th>No</th>
                             <th>Code</th>
                             <th>Name</th>
                             <th>Volume</th>

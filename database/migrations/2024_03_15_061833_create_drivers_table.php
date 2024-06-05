@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('contact');
             $table->string('status');
             $table->string('default_price_level')->nullable();
+            $table->enum('designation',['Driver', 'Salesman'])->nullable();
             $table->timestamps();
         });
     }

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('spoon_pcs_per_bag')->default(0);
             $table->string('bo_pricing')->nullable();
             $table->tinyInteger('is_active')->default(1);
+            $table->integer('sequence_no')->nullable();
             $table->timestamps();
         });
     }

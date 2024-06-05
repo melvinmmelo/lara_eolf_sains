@@ -27,9 +27,8 @@ class ProductController extends Controller
     public function index()
     {
         //
-        $products = Product::with(['productType', 'productVariant'])->get();
-        // dd($products);
-        $types = ProductType::all();
+        $products = Product::with(['productType', 'productVariant'])->get()->sortBy('productType.sequence_no');
+        $types = ProductType::orderBy('sequence_no', 'asc')->get();
         $variants = ProductVariant::active()->get();
 
         return view('products', compact('products', 'types', 'variants'));

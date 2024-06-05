@@ -184,6 +184,7 @@
     <script>
         $(function() {
             $("#example1").DataTable({
+                "order": [],
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
