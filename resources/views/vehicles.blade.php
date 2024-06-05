@@ -60,6 +60,8 @@
                             <th>Size</th>
                             <th>Capacity</th>
                             <th>Status</th>
+                            <th>Created at</th>
+
                             <th></th>
                         </tr>
                     </thead>
@@ -72,6 +74,7 @@
                                 <td>{{ $vehicle->size }}</td>
                                 <td>{{ $vehicle->capacity }}</td>
                                 <td>{{ $vehicle->status }}</td>
+                                <td>{{ $vehicle->date_created }}</td>
                                 <td>
                                     <!-- <a class="btn btn-success btn-sm" href="{{ route('vehicle.edit', $vehicle->id) }}">Edit</a> -->
                                     <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
@@ -96,6 +99,7 @@
                             <th>Size</th>
                             <th>Capacity</th>
                             <th>Status</th>
+                            <th>Created at</th>
                             <th></th>
                         </tr>
                     </tfoot>

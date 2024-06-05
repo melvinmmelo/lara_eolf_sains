@@ -34,6 +34,7 @@
 
                             <th>Code</th>
                             <th>Name</th>
+                            <th>Created at</th>
                             {{-- <th>Active</th> --}}
                             <th></th>
                         </tr>
@@ -43,6 +44,7 @@
                             <tr>
                                 <td>{{ $product->code }}</td>
                                 <td>{{ $product->productName }}</td>
+                                <td>{{ $product->date_created }}</td>
                                 {{-- <td>{{ $product->is_active == 1 ? 'Yes' : 'No' }}</td> --}}
                                 <td>
 
@@ -58,6 +60,7 @@
                         <tr>
                             <th>Code</th>
                             <th>Name</th>
+                            <th>Created at</th>
                             {{-- <th>Active</th> --}}
                             <th></th>
 

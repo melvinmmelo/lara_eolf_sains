@@ -35,6 +35,7 @@
                             <th>Name</th>
                             <th>Description</th>
                             <th>Status</th>
+                            <th>Created at</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -45,9 +46,11 @@
                                 <td>{{ $pl->pl_name }}</td>
                                 <td>{{ $pl->pl_desc }}</td>
                                 <td>{{ $pl->pl_status }}</td>
+                                <td>{{ $pl->date_created }}</td>
                                 <td>
                                     <a href="#" data-toggle="modal" data-target="#modalEdit"
-                                        class="btn btn-primary btn-sm" onclick="setToUpdate('{{ $pl->id }}','{{ $pl->pl_name }}','{{ $pl->pl_desc }}','{{ $pl->status }}')">Edit</a>
+                                        class="btn btn-primary btn-sm"
+                                        onclick="setToUpdate('{{ $pl->id }}','{{ $pl->pl_name }}','{{ $pl->pl_desc }}','{{ $pl->status }}')">Edit</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -58,6 +61,7 @@
                             <th>Name</th>
                             <th>Description</th>
                             <th>Status</th>
+                            <th>Created at</th>
                             <th></th>
                         </tr>
                     </tfoot>
@@ -181,7 +185,8 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label class="form-label" for="code"><i style="color:red">*</i>Name</label>
-                                        <input type="hidden" class="form-control" name="e_pricelevel_id" required readonly>
+                                        <input type="hidden" class="form-control" name="e_pricelevel_id" required
+                                            readonly>
                                         <input type="text" class="form-control" name="e_name" required>
                                     </div>
 
@@ -207,12 +212,14 @@
                                         </label>
                                     </div>
                                     <div class="icheck-primary d-inline">
-                                        <input type="radio" name="e_priceType" id="e_isFactoryPrice" value="FACTORY PRICE">
+                                        <input type="radio" name="e_priceType" id="e_isFactoryPrice"
+                                            value="FACTORY PRICE">
                                         <label for="e_isFactoryPrice">Factory Price
                                         </label>
                                     </div>
                                     <div class="icheck-primary d-inline">
-                                        <input type="radio" name="e_priceType" id="e_isBadPricing" value="BAD PRICING">
+                                        <input type="radio" name="e_priceType" id="e_isBadPricing"
+                                            value="BAD PRICING">
                                         <label for="e_isBadPricing"> Bad pricing
                                         </label>
                                     </div>
@@ -330,7 +337,7 @@
             var inputDescription = document.querySelector('textarea[name="e_description"]');
             var inputStatus = document.querySelector('input[name="e_status"]');
 
-            if(name == 'FACTORY PRICE'){
+            if (name == 'FACTORY PRICE') {
                 // disable input name
                 inputName.readOnly = true;
                 inputName.value = "FACTORY PRICE";
@@ -338,14 +345,14 @@
                 document.getElementById('e_isBadPricing').checked = false;
                 document.getElementById('e_isForCustomer').checked = false;
 
-            }else if(name == 'BAD PRICING'){
+            } else if (name == 'BAD PRICING') {
                 // disable input name
                 inputName.readOnly = true;
                 inputName.value = name;
                 document.getElementById('e_isFactoryPrice').checked = false;
                 document.getElementById('e_isBadPricing').checked = true;
                 document.getElementById('e_isForCustomer').checked = false;
-            }else{
+            } else {
                 // enable input name
                 inputName.readOnly = false;
                 inputName.value = name;

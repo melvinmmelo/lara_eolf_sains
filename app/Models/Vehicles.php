@@ -25,4 +25,11 @@ class Vehicles extends Model
     {
         return $query->where('status', 'Active');
     }
+
+    protected $appends = ['date_created'];
+
+    public function getDateCreatedAttribute()
+    {
+        return $this->created_at->format('m-d-Y h:i A');
+    }
 }
