@@ -18,12 +18,12 @@ class Product extends Model
 
     // protected $with = ['productType', 'productVariant'];
 
-    public function productType() : BelongsTo
+    public function productType(): BelongsTo
     {
         return $this->belongsTo(ProductType::class, 'product_type_code', 'code');
     }
 
-    public function productVariant() : BelongsTo
+    public function productVariant(): BelongsTo
     {
         return $this->belongsTo(ProductVariant::class, 'product_variant_code', 'code');
     }
@@ -45,5 +45,12 @@ class Product extends Model
         static::creating(function ($model) {
             $model->code = $model->product_type_code . '_' . $model->product_variant_code;
         });
+    }
+
+    protected $appends = ['date_created'];
+
+    public function getDateCreatedAttribute()
+    {
+        return $this->created_at->format('m-d-Y h:i A');
     }
 }

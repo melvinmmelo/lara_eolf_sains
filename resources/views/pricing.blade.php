@@ -38,6 +38,7 @@
                                     <th>Unit</th>
                                     <th>Quantity</th>
                                     <th>Price</th>
+                                    <th>Created at</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -49,6 +50,7 @@
                                         <td>{{ $price->p_unit }}</td>
                                         <td>{{ $price->p_quant }}</td>
                                         <td>{{ $price->p_price }}</td>
+                                        <td>{{ $price->date_created }}</td>
                                         <td>
                                             <a href="#" class="btn btn-sm btn-success" data-toggle="modal"
                                                 data-target="#modalEditPrice"
@@ -64,6 +66,7 @@
                                     <th>Quantity</th>
                                     <th>Unit</th>
                                     <th>Price</th>
+                                    <th>Created at</th>
                                     <th></th>
                                 </tr>
                             </tfoot>

@@ -35,6 +35,7 @@
                             <th>Name</th>
                             <th>Volume</th>
                             <th>Spoon PCS/BAG</th>
+                            <th>Created at</th>
                             {{-- <th>Active</th> --}}
                             <th></th>
 
@@ -47,6 +48,7 @@
                                 <td>{{ $productType->name }}</td>
                                 <td>{{ $productType->volume }}</td>
                                 <td>{{ $productType->spoon_pcs_per_bag }}</td>
+                                <td>{{ $productType->date_created }}</td>
                                 {{-- <td>{{ $productType->is_active == 1 ? 'Yes' : 'No' }}</td> --}}
                                 <td>
                                     <a href="#" data-toggle="modal" data-target="#modalEditPType"
@@ -67,6 +69,7 @@
                             <th>Name</th>
                             <th>Volume</th>
                             <th>Spoon PCS/BAG</th>
+                            <th>Created at</th>
                             {{-- <th>Active</th> --}}
                             <th></th>
 
@@ -126,7 +129,8 @@
 
                                     <div class="col-sm-4">
                                         <label class="form-label" for="volume">Spoon PCS/Bag</label>
-                                        <input type="number" class="form-control" name="spoon_pcs_per_bag" value="{{ old('spoon_pcs_per_bag') ?? 0 }}" value="0">
+                                        <input type="number" class="form-control" name="spoon_pcs_per_bag"
+                                            value="{{ old('spoon_pcs_per_bag') ?? 0 }}" value="0">
                                     </div>
 
                                     <div class="col-sm-4">

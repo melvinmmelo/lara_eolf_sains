@@ -28,5 +28,11 @@ class ProductVariant extends Model
     {
         return $query->where('code', $code);
     }
+    protected $appends = ['date_created'];
+
+    public function getDateCreatedAttribute()
+    {
+        return $this->created_at->format('m-d-Y h:i A');
+    }
 
 }
