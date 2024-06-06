@@ -24,7 +24,6 @@ return new class extends Migration
             $table->date('date_delivered')->nullable();
             $table->date('date_purchased')->nullable();
             $table->string('status')->default('available');
-
             $table->timestamps();
         });
     }

@@ -16,6 +16,7 @@ class Equipment extends Model
         'brand',
         'price',
         'serial_no',
+        'model',
         'code',
         'distributor',
         'date_delivered',

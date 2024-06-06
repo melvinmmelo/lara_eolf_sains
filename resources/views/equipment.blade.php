@@ -167,8 +167,16 @@
 
                                     <div class="col-sm-6">
                                         <label class="form-label" for="model"><i style="color:red">*</i>Model</label>
-                                        <input type="text" class="form-control" id="model" name="model"
-                                            placeholder="Enter model" required>
+                                        <select name="model" id="model" class="form-control">
+                                            <option value="EFE-3002">EFE-3002</option>
+                                            <option value="EFE-3802">EFE-3802</option>
+                                            <option value="EFE-4602">EFE-4602</option>
+                                            <option value="BD-650">BD-650</option>
+                                            <option value="EFE-5002">EFE-5002</option>
+                                            <option value="SD-350">SD-350</option>
+                                            <option value="SD-450">SD-450</option>
+                                            <option value="Fujidenzo">Fujidenzo</option>
+                                        </select>
                                     </div>
 
 
@@ -179,7 +187,6 @@
 
                                     <div class="col-sm-6">
                                         <label class="form-label" for="price"><i style="color:red">*</i>Price</label>
-                                        <!-- <input type="text" class="form-control" id="price" name="price"> -->
                                         <input type="text" pattern="[0-9]*" inputmode="numeric" class="form-control"
                                             id="price" name="price" placeholder="Enter price" required>
                                     </div>
@@ -287,8 +294,17 @@
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="edit-model">Model</label>
-                                    <input type="text" class="form-control" id="edit-model" name="model">
+                                    <label class="form-label" for="e_model">Model</label>
+                                    <select name="e_model" id="e_model" class="form-control">
+                                            <option value="EFE-3002">EFE-3002</option>
+                                            <option value="EFE-3802">EFE-3802</option>
+                                            <option value="EFE-4602">EFE-4602</option>
+                                            <option value="BD-650">BD-650</option>
+                                            <option value="EFE-5002">EFE-5002</option>
+                                            <option value="SD-350">SD-350</option>
+                                            <option value="SD-450">SD-450</option>
+                                            <option value="Fujidenzo">Fujidenzo</option>
+                                        </select>
                                 </div>
 
                             </div>
@@ -339,7 +355,9 @@
             document.getElementById("edit-brand").value = brand;
             document.getElementById("edit-price").value = price;
             document.getElementById("edit-serial_no").value = serial_no;
-            document.getElementById("edit-model").value = model;
+            document.getElementById("e_model").value = model;
+
+
             document.getElementById("edit-code").value = code;
             document.getElementById("edit-distributor").value = distributor;
             document.getElementById("edit-date_delivered").value = date_delivered;

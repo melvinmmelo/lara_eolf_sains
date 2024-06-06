@@ -68,7 +68,7 @@
                 </td>
                 <td>
                     @if($store)
-                        <a href="#" onclick="setMapModalInfo('{{ $store->brgy }}','{{ $store->subdivision }}','{{ $store->city }}','{{ $store->longitude }}', '{{ $store->latitude }}')">
+                        <a href="#" onclick="setMapModalInfo(`{{ $store->brgy }}`,`{{ $store->subdivision }}`,`{{ $store->city }}`,`{{ $store->longitude }}`, `{{ $store->latitude }}`)">
                             {{ $store->brgy }}, {{ $store->subdivision }}, {{ $store->city }}
                         </a>
                     @else

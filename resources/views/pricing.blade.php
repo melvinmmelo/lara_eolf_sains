@@ -91,9 +91,13 @@
                             <div class="form-group">
                                 <label for="inputField">Level</label>
                                 <select class="form-control" id="price_level" name="price_level">
+                                    <option value="">--Select--</option>
+                                    @foreach ($pricelevels as $pL)
+                                        <option value="{{ $pL->pl_name }}">{{ $pL->pl_name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" id="clear" class="btn btn-primary">Clear</button>
                         </form>
                     </div>
                 </div>
@@ -113,29 +117,25 @@
                             <div class="modal-body">
 
                                 <div class="form-group">
-                                    <div class="row mb-2">
-                                        <div class="col-sm-6">
-                                            <label class="form-label" for="pricing_id"><i style="color:red">*</i>Price
-                                                Level</label>
-                                            <select class="form-control" id="pricing_id" name="pricing_id">
-                                                @foreach ($pricelevels as $pl)
-                                                    <option value="{{ $pl->id }}">{{ $pl->pl_name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                    <label class="form-label" for="pricing_id"><i style="color:red">*</i>Price
+                                        Level</label>
+                                    <select class="form-control" id="pricing_id" name="pricing_id">
+                                        @foreach ($pricelevels as $pl)
+                                            <option value="{{ $pl->id }}">{{ $pl->pl_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
 
-                                        <div class="col-sm-6">
-                                            <label class="form-label" for="price_code"><i style="color:red">*</i>Product
-                                                Code</label>
-                                            <select class="form-control select2bs4" id="price_code" name="price_code">
-                                                @foreach ($products as $product)
-                                                    <option value="{{ $product->code }}">{{ $product->code . " " . $product->productName }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-
-                                    </div>
+                                    <label class="form-label" for="price_code"><i style="color:red">*</i>Product
+                                        Code</label>
+                                    <select class="form-control select2bs4" id="price_code" name="price_code">
+                                        @foreach ($products as $product)
+                                            <option value="{{ $product->code }}">
+                                                {{ $product->code . ' ' . $product->productName }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <div class="row mb-2">
@@ -221,5 +221,21 @@
         function setToUpdatePrice(price_id) {
             $('#price_id').val(price_id);
         }
+
+        // create a js function that populate datatable example1 search input when select option is changed
+        $(document).ready(function() {
+            $('#price_level').on('change', function() {
+                var value = $(this).val();
+                $('#example1_filter input').val(value).trigger('keyup');
+            });
+        });
+
+        // clear the search input when clear button is clicked
+        $(document).ready(function() {
+            $('#clear').on('click', function() {
+                $('#price_level').val('');
+                $('#example1_filter input').val('').trigger('keyup');
+            });
+        });
     </script>
 @endsection

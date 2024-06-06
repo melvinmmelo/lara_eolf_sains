@@ -72,7 +72,7 @@ class DeliveryPurchaseReceiptController extends Controller
         // dd($deliveryPurchaseReceipt);
 
         if( strtolower($deliveryPurchaseReceipt->status) == 'saved'){
-            return redirect()->back()->with('error', 'Delivery receipt already saved.');
+            // return redirect()->back()->with('error', 'Delivery receipt already saved.');
         }
 
         $originalProducts = Product::all();

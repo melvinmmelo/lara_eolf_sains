@@ -68,6 +68,12 @@
                                                 class="btn btn-primary">
                                                 <i class="fas fa-plus"></i></button></a>
                                     @endif
+
+                                    @if ($dr->status == 'Saved')
+                                        <a href="{{ route('drp.products', ['dprId' => $dr->id]) }}"><button type="button"
+                                                class="btn btn-primary">
+                                                <i class="fas fa-eye"></i></button></a>
+                                    @endif
                                 </td>
 
                             </tr>

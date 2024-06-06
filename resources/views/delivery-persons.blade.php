@@ -258,6 +258,20 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
+                                        <label class="form-label" for="e_designation"><i style="color:red">*</i>Designation
+                                        </label>
+                                        <select class="form-control" name="e_designation" required>
+                                            <option value="Driver">Driver</option>
+                                            <option value="Salesman">Salesman</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
                                         <label class="form-label" for="e_status">Status</label>
                                         <br>
                                         <input type="checkbox" id="mySwitch" data-bootstrap-switch data-on-text="On"
@@ -266,19 +280,6 @@
 
                                         <div style="margin-bottom: 20px"></div>
 
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="e_designation"><i style="color:red">*</i>Designation
-                                        </label>
-                                        <select class="form-control" name="e_designation" required>
-                                            <option value="Driver">Driver</option>
-                                            <option value="Salesman">Salesman</option>
-                                        </select>
                                     </div>
                                 </div>
                             </div>
