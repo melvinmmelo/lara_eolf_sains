@@ -95,7 +95,7 @@
 
                         </div>
 
-                        @if ($deliveryPurchaseReceipt->status == 'Pending')
+                        @if ($deliveryPurchaseReceipt->status == 'Encoding')
                             <form action="{{ route('dpr-product.store') }}" method="POST">
                                 @csrf
                                 <div class="row">
@@ -159,7 +159,13 @@
                                                     $sum = 0;
                                                     // convert the json string to array
                                                     $dprProducts = json_decode($deliveryPurchaseReceipt->products);
+
+                                                    usort($dprProducts, function ($a, $b) {
+                                                        return $a->code <=> $b->code;
+                                                    });
+
                                                 @endphp
+
 
                                                 @foreach ($dprProducts as $dprProd)
                                                     @php
@@ -175,7 +181,7 @@
                                                         <td>{{ $dprProd->quantity * $dprProd->price }}</td>
                                                         <td>
 
-                                                            @if ($deliveryPurchaseReceipt->status == 'Pending')
+                                                            @if ($deliveryPurchaseReceipt->status == 'Encoding')
                                                                 <a href="{{ route('dpr.delete', ['drid' => $deliveryPurchaseReceipt->id, 'pcode' => $dprProd->code]) }}"
                                                                     onclick="return confirmDeleteProduct()"
                                                                     class="btn btn-sm btn-danger">Delete</a>
@@ -213,7 +219,7 @@
                             </div>
                         </div>
                         <!-- /.card-body -->
-                        @if ($deliveryPurchaseReceipt->status == 'Pending')
+                        @if ($deliveryPurchaseReceipt->status == 'Encoding')
                             <div class="card-footer">
                                 <a href="{{ route('dpr.save', ['id' => $deliveryPurchaseReceipt->id]) }}"
                                     onclick="return saveDPR();"><button type="button"
