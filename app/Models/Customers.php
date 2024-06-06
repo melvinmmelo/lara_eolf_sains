@@ -60,8 +60,13 @@ class Customers extends Model
     }
 
     public function storeinfo()
-{
-    return $this->hasOne(StoreInfo::class, 'customer_id');
-}
+    {
+        return $this->hasOne(StoreInfo::class, 'customer_id');
+    }
+
+    public function inbounds()
+    {
+        return $this->hasMany(Inbound::class, 'customer_id');
+    }
 }
 

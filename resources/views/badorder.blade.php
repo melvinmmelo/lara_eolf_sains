@@ -88,14 +88,14 @@
                                 <div class="row mb-2">
                                     <div class="col-sm-12">
                                         <label class="form-label" for="code"><i style="color:red">*</i>Customer</label>
-                                        <select class="form-control select2bs4" id="customer" name="costumer">
+                                        <select class="form-control select2bs4" id="customer" name="customer">
 
                                         </select>
                                     </div>
 
                                     <div class="col-sm-12">
                                         <label class="form-label" for="name"><i style="color:red">*</i>Outbound</label>
-                                        <select class="form-control select2bs4" id="customer" name="costumer">
+                                        <select class="form-control select2bs4" id="outbound" name="outbound">
 
                                         </select>
                                     </div>

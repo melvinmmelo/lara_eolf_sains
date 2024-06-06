@@ -68,4 +68,5 @@ class Inbound extends Model
     {
         return $query->where('branch_code', $branch_code);
     }
+    
 }
