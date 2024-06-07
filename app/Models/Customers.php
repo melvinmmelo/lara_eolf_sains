@@ -26,7 +26,7 @@
 //     {
 //         return "{$this->brgy}, {$this->subdivision}, {$this->city}";
 //     }
-    
+
 //     public function equipmentStores()
 //     {
 //         return $this->hasMany(EquipmentStore::class, 'customer_id', 'id');
@@ -60,8 +60,16 @@ class Customers extends Model
     }
 
     public function storeinfo()
-{
-    return $this->hasOne(StoreInfo::class, 'customer_id');
-}
+    {
+        return $this->hasOne(StoreInfo::class, 'customer_id');
+    }
+
+    protected $appends = ['date_created'];
+
+    public function getDateCreatedAttribute()
+    {
+        return $this->created_at->format('m-d-Y h:i A');
+    }
+
 }
 

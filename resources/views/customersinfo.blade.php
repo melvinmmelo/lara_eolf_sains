@@ -29,108 +29,119 @@
                 @include('layouts.errors')
 
                 <table id="example1" class="table table-bordered table-striped">
-    <thead>
-        <tr>
-        <th>ID</th>
-            <th>Branch</th>
-            <th>Name</th>
-            <th>Contact Nos</th>
-            <th>Tin no.</th>
-            <th>Store ID</th>
-            <th>Store Name</th>
-            <th>Equipments</th>
-            <th>Store Address</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach ($customers as $customer)
-        @foreach ($customer->stores as $store)
-            <tr>
-                <td>{{ $customer->id }}</td>
-                <td>{{ $customer->branch_code }}</td>
-                <td>{{ $customer->lastname }}, {{ $customer->firstname }} {{ $customer->middlename }}</td>
-                <td>{{ $customer->contact_no }}</td>
-                <td>{{ $customer->tin }}</td>
-                <td>{{ $store->id }}</td>
-                <td>{{ $store->storename ?? '' }}</td>
-                <td>
-                    @if ($store->equipmentStores->isNotEmpty())
-                        @foreach ($store->equipmentStores as $equipmentStore)
-                            {{ $equipmentStore->equipment_id }}
-                            @if (!$loop->last)
-                                , <!-- Add comma if it's not the last equipment -->
-                            @endif
-                        @endforeach
-                    @else
-                        No Equipment Assigned
-                    @endif
-                </td>
-                <td>
-                    @if($store)
-                        <a href="#" onclick="setMapModalInfo(`{{ $store->brgy }}`,`{{ $store->subdivision }}`,`{{ $store->city }}`,`{{ $store->longitude }}`, `{{ $store->latitude }}`)">
-                            {{ $store->brgy }}, {{ $store->subdivision }}, {{ $store->city }}
-                        </a>
-                    @else
-                        No address available
-                    @endif
-                </td>
-                <td>
-                    <div class="btn-group" role="group">
-                        <button id="btnGroupDrop1" type="button" class="btn btn-danger btn-sm dropdown-toggle"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Actions
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                            <a class="dropdown-item"
-                                href="/store-info?customer_id={{ $customer->id }}&customer_name={{ urlencode($customer->firstname . ' ' . $customer->lastname) }}"
-                                role="button">Store</a>
-                            <a class="dropdown-item"
-                                href="/equipment-store?store_id={{ $store->id }}&store_name={{ $store->storename }}&customer_id={{ $customer->id }}&customer_name={{ $customer->lastname }}, {{ $customer->firstname }} {{ $customer->middlename }}"
-                                role="button">Equipment</a>
-                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#editModal"
-                                onclick="setToUpdatecustomer('{{ $customer->id }}','{{ $customer->branch_code }}','{{ $customer->lastname }}','{{ $customer->firstname }}','{{ $customer->middlename }}','{{ $customer->contact_no }}','{{ $customer->companyname }}','{{ $customer->tin }}','{{ $customer->longitude }}','{{ $customer->latitude }}','{{ $customer->region }}','{{ $customer->province }}','{{ $customer->city }}','{{ $customer->brgy }}','{{ $customer->subdivision }}','{{ $store->id }}','{{ $store->storename }}','{{ $store->contactno }}','{{ $store->region }}','{{ $store->province }}','{{ $store->city }}','{{ $store->brgy }}','{{ $store->subdivision }}','{{ $store->latitude }}','{{ $store->longitude }}','{{ $store->listype }}','{{ $store->length_stay }}','{{ $store->remarks }}')">Edit</a>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Branch</th>
+                            <th>Name</th>
+                            <th>Contact Nos</th>
+                            <th>Tin no.</th>
+                            <th>Store ID</th>
+                            <th>Store Name</th>
+                            <th>Equipments</th>
+                            <th>Store Address</th>
+                            <th>Created at</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($customers as $customer)
+                            @foreach ($customer->stores as $store)
+                                <tr>
+                                    <td>{{ $customer->id }}</td>
+                                    <td>{{ $customer->branch_code }}</td>
+                                    <td>{{ $customer->lastname }}, {{ $customer->firstname }} {{ $customer->middlename }}
+                                    </td>
+                                    <td>{{ $customer->contact_no }}</td>
+                                    <td>{{ $customer->tin }}</td>
+                                    <td>{{ $store->id }}</td>
+                                    <td>{{ $store->storename ?? '' }}</td>
+                                    <td>
+                                        @if ($store->equipmentStores->isNotEmpty())
+                                            @foreach ($store->equipmentStores as $equipmentStore)
+                                                {{ $equipmentStore->equipment_id }}
+                                                @if (!$loop->last)
+                                                    , <!-- Add comma if it's not the last equipment -->
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            No Equipment Assigned
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($store)
+                                            <a href="#"
+                                                onclick="setMapModalInfo(`{{ $store->brgy }}`,`{{ $store->subdivision }}`,`{{ $store->city }}`,`{{ $store->longitude }}`, `{{ $store->latitude }}`)">
+                                                {{ $store->brgy }}, {{ $store->subdivision }}, {{ $store->city }}
+                                            </a>
+                                        @else
+                                            No address available
+                                        @endif
+                                    </td>
+                                    <td>{{ $customer->date_created }}</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <button id="btnGroupDrop1" type="button"
+                                                class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false">
+                                                Actions
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                                <a class="dropdown-item"
+                                                    href="/store-info?customer_id={{ $customer->id }}&customer_name={{ urlencode($customer->firstname . ' ' . $customer->lastname) }}"
+                                                    role="button">Store</a>
+                                                <a class="dropdown-item"
+                                                    href="/equipment-store?store_id={{ $store->id }}&store_name={{ $store->storename }}&customer_id={{ $customer->id }}&customer_name={{ $customer->lastname }}, {{ $customer->firstname }} {{ $customer->middlename }}"
+                                                    role="button">Equipment</a>
+                                                <a href="#" class="dropdown-item" data-toggle="modal"
+                                                    data-target="#editModal"
+                                                    onclick="setToUpdatecustomer('{{ $customer->id }}','{{ $customer->branch_code }}','{{ $customer->lastname }}','{{ $customer->firstname }}','{{ $customer->middlename }}','{{ $customer->contact_no }}','{{ $customer->companyname }}','{{ $customer->tin }}','{{ $customer->longitude }}','{{ $customer->latitude }}','{{ $customer->region }}','{{ $customer->province }}','{{ $customer->city }}','{{ $customer->brgy }}','{{ $customer->subdivision }}','{{ $store->id }}','{{ $store->storename }}','{{ $store->contactno }}','{{ $store->region }}','{{ $store->province }}','{{ $store->city }}','{{ $store->brgy }}','{{ $store->subdivision }}','{{ $store->latitude }}','{{ $store->longitude }}','{{ $store->listype }}','{{ $store->length_stay }}','{{ $store->remarks }}')">Edit</a>
 
-                            <a href="{{ route('customer.store.destroy', ['customer' => $customer->id, 'store' => $store->id]) }}" class="dropdown-item"
-                                onclick="event.preventDefault();
+                                                <a href="{{ route('customer.store.destroy', ['customer' => $customer->id, 'store' => $store->id]) }}"
+                                                    class="dropdown-item"
+                                                    onclick="event.preventDefault();
                                         if(confirm('Are you sure you want to delete this store?')) {
                                             document.getElementById('delete-store-form-{{ $customer->id }}-{{ $store->id }}').submit();
                                         }">
-                                Delete
-                            </a>
+                                                    Delete
+                                                </a>
 
-                            <form id="delete-store-form-{{ $customer->id }}-{{ $store->id }}" method="POST" action="{{ route('customer.store.destroy', ['customer' => $customer->id, 'store' => $store->id]) }}"
-                                style="display: none;">
-                                @csrf
-                                @method('DELETE')
-                                @foreach ($store->equipmentStores as $equipmentStore)
-                                    <input type="hidden" name="equipment_ids[]" value="{{ $equipmentStore->equipment_id }}">
-                                @endforeach
-                            </form>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        @endforeach
-    @endforeach
+                                                <form id="delete-store-form-{{ $customer->id }}-{{ $store->id }}"
+                                                    method="POST"
+                                                    action="{{ route('customer.store.destroy', ['customer' => $customer->id, 'store' => $store->id]) }}"
+                                                    style="display: none;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    @foreach ($store->equipmentStores as $equipmentStore)
+                                                        <input type="hidden" name="equipment_ids[]"
+                                                            value="{{ $equipmentStore->equipment_id }}">
+                                                    @endforeach
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endforeach
 
 
-    </tbody>
-    <tfoot>
-        <tr>
-        <th>ID</th>
-            <th>Branch</th>
-            <th>Name</th>
-            <th>Contact Nos</th>
-            <th>Tin no.</th>
-            <th>Store ID</th>
-            <th>Store Name</th>
-            <th>Equipments</th>
-            <th>Store Address</th>
-            <th></th>
-        </tr>
-    </tfoot>
-</table>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>ID</th>
+                            <th>Branch</th>
+                            <th>Name</th>
+                            <th>Contact Nos</th>
+                            <th>Tin no.</th>
+                            <th>Store ID</th>
+                            <th>Store Name</th>
+                            <th>Equipments</th>
+                            <th>Store Address</th>
+                            <th>Created at</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
 
 
 
@@ -603,10 +614,11 @@
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="e_region">Region</label>
-                                                        <input type="text" id="e_region" name="e_region" class="form-control">
+                                                        <input type="text" id="e_region" name="e_region"
+                                                            class="form-control">
                                                         <!-- <select class="form-control" id="e_region" name="e_region">
 
-                                                        </select> -->
+                                                            </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -615,9 +627,10 @@
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="e_province">Province</label>
-                                                        <input type="text" id="e_province" name="e_province" class="form-control">
+                                                        <input type="text" id="e_province" name="e_province"
+                                                            class="form-control">
                                                         <!-- <select class="form-control" id="e_province" name="e_province">
-                                                        </select> -->
+                                                            </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -626,9 +639,10 @@
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="e_city">City</label>
-                                                        <input type="text" id="e_city" name="e_city" class="form-control">
+                                                        <input type="text" id="e_city" name="e_city"
+                                                            class="form-control">
                                                         <!-- <select class="form-control" id="e_city" name="e_city">
-                                                        </select> -->
+                                                            </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -637,9 +651,10 @@
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="e_brgy">Barangay</label>
-                                                        <input type="text" id="e_brgy" name="e_brgy" class="form-control">
+                                                        <input type="text" id="e_brgy" name="e_brgy"
+                                                            class="form-control">
                                                         <!-- <select class="form-control" id="e_brgy" name="e_brgy">
-                                                        </select> -->
+                                                            </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -713,9 +728,10 @@
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="e_region2">Region</label>
-                                                        <input type="text" id="e_region2" name="e_region2" class="form-control">
+                                                        <input type="text" id="e_region2" name="e_region2"
+                                                            class="form-control">
                                                         <!-- <select class="form-control" id="e_region2" name="e_region2">
-                                                        </select> -->
+                                                            </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -724,9 +740,10 @@
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="e_province2">Province</label>
-                                                        <input type="text" id="e_province2" name="e_province2" class="form-control">
+                                                        <input type="text" id="e_province2" name="e_province2"
+                                                            class="form-control">
                                                         <!-- <select class="form-control" id="e_province2" name="e_province2">
-                                                        </select> -->
+                                                            </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -735,9 +752,10 @@
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="e_city2">City</label>
-                                                        <input type="text" id="e_city2" name="e_city2" class="form-control">
+                                                        <input type="text" id="e_city2" name="e_city2"
+                                                            class="form-control">
                                                         <!-- <select class="form-control" id="e_city2" name="e_city2">
-                                                        </select> -->
+                                                            </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -746,9 +764,10 @@
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="e_brgy2">Barangay</label>
-                                                        <input type="text" id="e_brgy2" name="e_brgy2" class="form-control">
+                                                        <input type="text" id="e_brgy2" name="e_brgy2"
+                                                            class="form-control">
                                                         <!-- <select class="form-control" id="e_brgy2" name="e_brgy2">
-                                                        </select> -->
+                                                            </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -757,7 +776,8 @@
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="subdivision2">Subdivision:</label>
-                                                        <input type="text" class="form-control" id="subdivision2" name="subdivision2">
+                                                        <input type="text" class="form-control" id="subdivision2"
+                                                            name="subdivision2">
                                                     </div>
                                                 </div>
                                             </div>
@@ -766,7 +786,8 @@
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="latitude2">Latitude:</label>
-                                                        <input type="text" class="form-control" id="latitude2" name="latitude2">
+                                                        <input type="text" class="form-control" id="latitude2"
+                                                            name="latitude2">
                                                     </div>
                                                 </div>
                                             </div>
@@ -775,7 +796,8 @@
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="longitude2">Longitude:</label>
-                                                        <input type="text" class="form-control" id="longitude2" name="longitude2">
+                                                        <input type="text" class="form-control" id="longitude2"
+                                                            name="longitude2">
                                                     </div>
                                                 </div>
                                             </div>
@@ -839,16 +861,16 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="mapModalLabel">
-                        <div class="modalMapInfo"></div></h5>
+                        <div class="modalMapInfo"></div>
+                    </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
 
-                    <iframe
-                        src="#"
-                        width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    <iframe src="#" width="100%" height="450" style="border:0;" allowfullscreen=""
+                        loading="lazy"></iframe>
                 </div>
 
             </div>
@@ -863,7 +885,10 @@
             $('.modalMapInfo').html(brgy + ', ' + subd + ', ' + city);
 
             // update iframe src
-            $('iframe').attr('src', 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3022.0452163943947!2d' + long + '!3d' + lat + '!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQyJzQ2LjAiTiA3NMKwMDBBJzIxLjAiVw!5e0!3m2!1sen!2sus!4v1716257108716!5m2!1sen!2sus');
+            $('iframe').attr('src', 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3022.0452163943947!2d' + long +
+                '!3d' + lat +
+                '!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQyJzQ2LjAiTiA3NMKwMDBBJzIxLjAiVw!5e0!3m2!1sen!2sus!4v1716257108716!5m2!1sen!2sus'
+                );
 
             // show modal
             $('#mapModal').modal('show');
@@ -872,12 +897,12 @@
         // function setToUpdatecustomer(uid, ebcode, ln, fn, mn, con, cm, tin, long, lat, reg, prov, city, brgy, subv,
         //     store_id,
         //     storename, contactno, reg2, prov2, city2, brgy2, subv2, lat2, long2, listype, length_stay, remarks) {
-            // Populate customer information fields
-            function setToUpdatecustomer(uid, ebcode, ln, fn, mn, con, cm, tin, long, lat, reg, prov, city, brgy, subv,
+        // Populate customer information fields
+        function setToUpdatecustomer(uid, ebcode, ln, fn, mn, con, cm, tin, long, lat, reg, prov, city, brgy, subv,
             store_id, storename, contactno, reg2, prov2, city2, brgy2, subv2, lat2, long2, listype, length_stay, remarks) {
-    //             console.log('subdivision2:', subv2);
-    // console.log('latitude2:', lat2);
-    // console.log('longitude2:', long2);
+            //             console.log('subdivision2:', subv2);
+            // console.log('latitude2:', lat2);
+            // console.log('longitude2:', long2);
 
             document.getElementById("id").value = uid;
 

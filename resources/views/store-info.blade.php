@@ -68,6 +68,7 @@
                             <th>Store Name</th>
                             <th>Contact No.</th>
                             <th>Address</th>
+                            <th>Created at</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -78,14 +79,15 @@
                                 <td>{{ $storeinfo->storename }}</td>
                                 <td>{{ $storeinfo->contactno }}</td>
                                 <!-- {{ $storeinfo->firstname }} -->
+
                                 <td></td>
 
-
+                                <td>{{ $storeinfo->date_created }}</td>
                                 <td>
-                                <!-- <a class="btn btn-success btn-sm"
-                                        href="/equipment-store?store_id={{ $storeinfo->id }}&store_name={{ $storeinfo->storename }}"
-                                        role="button">Equipment Info</a> -->
-                                        <a class="btn btn-success btn-sm"
+                                    <!-- <a class="btn btn-success btn-sm"
+                                                href="/equipment-store?store_id={{ $storeinfo->id }}&store_name={{ $storeinfo->storename }}"
+                                                role="button">Equipment Info</a> -->
+                                    <a class="btn btn-success btn-sm"
                                         href="/equipment-store?store_id={{ $storeinfo->id }}&store_name={{ $storeinfo->storename }}&customer_id={{ request()->input('customer_id') }}&customer_name={{ request()->input('customer_name') }}"
                                         role="button">Equipment Info</a>
 
@@ -99,7 +101,8 @@
                                         style="display: inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this store info?')">Delete</button>
+                                        <button type="submit" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Are you sure you want to delete this store info?')">Delete</button>
                                     </form>
 
                                 </td>
@@ -159,30 +162,30 @@
                                             <label class="form-label" for="cust_region">Region</label>
                                             <select class="form-control" id="cust_region" name="region">
                                                 <!-- <option>option 1</option>
-                                                                                        <option>option 2</option>
-                                                                                        <option>option 3</option>
-                                                                                        <option>option 4</option>
-                                                                                        <option>option 5</option> -->
+                                                                                                <option>option 2</option>
+                                                                                                <option>option 3</option>
+                                                                                                <option>option 4</option>
+                                                                                                <option>option 5</option> -->
                                             </select>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="form-label" for="cust_prov">Province</label>
                                             <select class="form-control" id="cust_prov" name="province">
                                                 <!-- <option>option 1</option>
-                                                                                        <option>option 2</option>
-                                                                                        <option>option 3</option>
-                                                                                        <option>option 4</option>
-                                                                                        <option>option 5</option> -->
+                                                                                                <option>option 2</option>
+                                                                                                <option>option 3</option>
+                                                                                                <option>option 4</option>
+                                                                                                <option>option 5</option> -->
                                             </select>
                                         </div>
                                         <div class="col-sm-3">
                                             <label class="form-label" for="cust_city">City</label>
                                             <select class="form-control" id="cust_city" name="city">
                                                 <!-- <option>option 1</option>
-                                                                                        <option>option 2</option>
-                                                                                        <option>option 3</option>
-                                                                                        <option>option 4</option>
-                                                                                        <option>option 5</option> -->
+                                                                                                <option>option 2</option>
+                                                                                                <option>option 3</option>
+                                                                                                <option>option 4</option>
+                                                                                                <option>option 5</option> -->
                                             </select>
                                         </div>
                                     </div>
@@ -193,10 +196,10 @@
                                                 <label class="form-label" for="cust_brgy">Barangay</label>
                                                 <select class="form-control" id="cust_brgy" name="brgy">
                                                     <!-- <option>option 1</option>
-                                                                                            <option>option 2</option>
-                                                                                            <option>option 3</option>
-                                                                                            <option>option 4</option>
-                                                                                            <option>option 5</option> -->
+                                                                                                    <option>option 2</option>
+                                                                                                    <option>option 3</option>
+                                                                                                    <option>option 4</option>
+                                                                                                    <option>option 5</option> -->
                                                 </select>
                                             </div>
                                             <div class="col-sm-6">
@@ -254,30 +257,30 @@
                                     </div>
                                     <!-- <hr> -->
                                     <!-- <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <label for="remarks">Equipment List</label>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <label for="remarks">Equipment List</label>
 
-                                                <div class="form-group">
+                                                        <div class="form-group">
 
-                                                    <select name="duallistbox[]" class="duallistbox" multiple="multiple">
-                                                        <option>Alabama</option>
-                                                        <option>Alaska</option>
-                                                        <option>California</option>
-                                                        <option>Delaware</option>
-                                                        <option>Tennessee</option>
-                                                        <option>Texas</option>
-                                                        <option>Washington</option>
-                                                    </select>
+                                                            <select name="duallistbox[]" class="duallistbox" multiple="multiple">
+                                                                <option>Alabama</option>
+                                                                <option>Alaska</option>
+                                                                <option>California</option>
+                                                                <option>Delaware</option>
+                                                                <option>Tennessee</option>
+                                                                <option>Texas</option>
+                                                                <option>Washington</option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
                                                 </div>
-
-                                            </div>
-                                        </div>
-                                    </div> -->
+                                            </div> -->
                                 </div>
                                 <div class="modal-footer">
                                     <!-- <button type="submit" class="btn btn-success swalDefaultSuccess">Save
-                                                                                changes</button> -->
+                                                                                        changes</button> -->
                                     <button type="submit" class="btn btn-success">Save changes</button>
                                 </div>
                             </div>
@@ -337,30 +340,30 @@
                                             <label class="form-label" for="region">Region</label>
                                             <select class="form-control" id="region" name="region">
                                                 <!-- <option>option 1</option>
-                                                                                        <option>option 2</option>
-                                                                                        <option>option 3</option>
-                                                                                        <option>option 4</option>
-                                                                                        <option>option 5</option> -->
+                                                                                                <option>option 2</option>
+                                                                                                <option>option 3</option>
+                                                                                                <option>option 4</option>
+                                                                                                <option>option 5</option> -->
                                             </select>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="form-label" for="province">Province</label>
                                             <select class="form-control" id="province" name="province">
                                                 <!-- <option>option 1</option>
-                                                                                        <option>option 2</option>
-                                                                                        <option>option 3</option>
-                                                                                        <option>option 4</option>
-                                                                                        <option>option 5</option> -->
+                                                                                                <option>option 2</option>
+                                                                                                <option>option 3</option>
+                                                                                                <option>option 4</option>
+                                                                                                <option>option 5</option> -->
                                             </select>
                                         </div>
                                         <div class="col-sm-3">
                                             <label class="form-label" for="city">City</label>
                                             <select class="form-control" id="city" name="city">
                                                 <!-- <option>option 1</option>
-                                                                                        <option>option 2</option>
-                                                                                        <option>option 3</option>
-                                                                                        <option>option 4</option>
-                                                                                        <option>option 5</option> -->
+                                                                                                <option>option 2</option>
+                                                                                                <option>option 3</option>
+                                                                                                <option>option 4</option>
+                                                                                                <option>option 5</option> -->
                                             </select>
                                         </div>
                                     </div>
@@ -371,10 +374,10 @@
                                                 <label class="form-label" for="brgy">Barangay</label>
                                                 <select class="form-control" id="brgy" name="brgy">
                                                     <!-- <option>option 1</option>
-                                                                                            <option>option 2</option>
-                                                                                            <option>option 3</option>
-                                                                                            <option>option 4</option>
-                                                                                            <option>option 5</option> -->
+                                                                                                    <option>option 2</option>
+                                                                                                    <option>option 3</option>
+                                                                                                    <option>option 4</option>
+                                                                                                    <option>option 5</option> -->
                                                 </select>
                                             </div>
                                             <div class="col-sm-6">
@@ -433,7 +436,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <!-- <button type="submit" class="btn btn-success swalDefaultSuccess">Save
-                                                                                changes</button> -->
+                                                                                        changes</button> -->
                                     <button type="submit" class="btn btn-success">Save changes</button>
                                 </div>
                             </div>
