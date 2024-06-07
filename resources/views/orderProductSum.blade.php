@@ -10,6 +10,13 @@
                 </thead>
                 <tbody>
 
+                    @php
+                        $totalSpCount = [];
+                        $totalSpCountSet = [];
+                        $spCnt = 0;
+                        $spCnt2 = 0;
+                    @endphp
+
                     @if (count($summary))
                         @foreach ($summary as $summ)
                             @if ($summ['ptype_code'] == 'SC')

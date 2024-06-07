@@ -178,8 +178,14 @@ class InboundController extends Controller
     public function ajaxProductList($code)
     {
 
+        $pricelevelId = session('pricelevelId');
+
+        $branchCode = session('branch_code');
+
         $allProducts = Product::where('product_type_code', $code)->get();
         $products = [];
+
+        $pass = '123';
 
         // get the latest price
         foreach ($allProducts as $product) {
@@ -190,24 +196,29 @@ class InboundController extends Controller
 
             // return response()->json([$price, $item]);
 
-            if($item == null){
-                break;
-                return response()->json(['Not stock available.']);
-            }
+            // if($item == null){
+            //     break;
+            //     return response()->json(['Not stock available.']);
+            // }
 
             $stocks = $item->stocks ?? 0;
 
-            if ($price == null) {
-                break;
-            } else {
+            if($stocks != 0){
+                $pass = '456';
 
                 $t = ['code' => $product->code, 'price' => $product->price, 'unit' => "0", 'qty' => $stocks];
 
                 array_push($products, $t);
             }
+
+            // if ($price == null) {
+            // } else {
+
+
+            //}
         }
 
-        return view('productsList', compact('products'));
+        return view('productsList', compact('products', 'pricelevelId', 'branchCode', 'pass'));
     }
 
     // ajax inbound products
@@ -222,7 +233,7 @@ class InboundController extends Controller
         $product = Product::where('code', $code)->first();
         $price = prices::where('p_code', $code)->first();
 
-        $data = ['ptype_code' => $product->product_type_code, 'code' => $product->code, 'quantity' => 1, 'price' => $price->p_price, 'unit' => $price->p_unit, 'sppb' => $product->spoon_pcs_per_bag, 'description' => $product->productName];
+        $data = ['ptype_code' => $product->product_type_code, 'code' => $product->code, 'quantity' => $qty, 'price' => $price->p_price, 'unit' => $price->p_unit, 'sppb' => $product->spoon_pcs_per_bag, 'description' => $product->productName];
 
         $products = $inbound->products;
 

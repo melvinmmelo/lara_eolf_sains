@@ -47,7 +47,7 @@
         }
 
         .product-list {
-            max-height: 250px;
+            max-height: 520px;
             overflow: auto;
         }
 
