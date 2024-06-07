@@ -56,7 +56,7 @@
 
                             <th>Name</th>
                             <th>Company Name</th>
-
+                            <th>Created at</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -67,6 +67,8 @@
 
                                 <td>{{ $customer->lastname }} {{ $customer->firstname }} {{ $customer->middlename }}</td>
                                 <td>{{ $customer->companyname }}</td>
+
+                                <td>{{ $customer->date_created }}</td>
 
                                 <td>
                                     <!-- <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal" data-target="#editCustomerModal" data-id="{{ $customer->id }}">Edit</button> -->
@@ -126,18 +128,18 @@
                                 <div class="form-group">
 
                                     <!-- <div class="row mb-3">
-                                                    <div class="col-sm-6">
-                                                        <label class="form-label" for="cust_dist">Distributor</label>
-                                                        <select name="distributor" class="form-control d-block" id="cust_dist"
-                                                            onfocus="changeColor('cust_dist')" onblur="resetColor('cust_dist')">
-                                                            <option>option 1</option>
-                                                            <option>option 2</option>
-                                                            <option>option 3</option>
-                                                            <option>option 4</option>
-                                                            <option>option 5</option>
-                                                        </select>
-                                                    </div>
-                                                </div> -->
+                                                            <div class="col-sm-6">
+                                                                <label class="form-label" for="cust_dist">Distributor</label>
+                                                                <select name="distributor" class="form-control d-block" id="cust_dist"
+                                                                    onfocus="changeColor('cust_dist')" onblur="resetColor('cust_dist')">
+                                                                    <option>option 1</option>
+                                                                    <option>option 2</option>
+                                                                    <option>option 3</option>
+                                                                    <option>option 4</option>
+                                                                    <option>option 5</option>
+                                                                </select>
+                                                            </div>
+                                                        </div> -->
                                     <input type="hidden" name ="distributor" value="n/a">
 
                                     <div class="form-group">
@@ -196,10 +198,10 @@
                                                 <select class="form-control" id="cust_prov" name="province">
                                                     <!-- <option></option> -->
                                                     <!-- <option>option 1</option>
-                                                                            <option>option 2</option>
-                                                                            <option>option 3</option>
-                                                                            <option>option 4</option>
-                                                                            <option>option 5</option> -->
+                                                                                    <option>option 2</option>
+                                                                                    <option>option 3</option>
+                                                                                    <option>option 4</option>
+                                                                                    <option>option 5</option> -->
                                                 </select>
                                             </div>
                                             <div class="col-sm-3">
@@ -207,10 +209,10 @@
                                                 <select class="form-control" id="cust_city" name="city">
                                                     <!-- <option></option> -->
                                                     <!-- <option>option 1</option>
-                                                                            <option>option 2</option>
-                                                                            <option>option 3</option>
-                                                                            <option>option 4</option>
-                                                                            <option>option 5</option> -->
+                                                                                    <option>option 2</option>
+                                                                                    <option>option 3</option>
+                                                                                    <option>option 4</option>
+                                                                                    <option>option 5</option> -->
                                                 </select>
                                             </div>
                                         </div>
@@ -223,10 +225,10 @@
                                                     <select class="form-control" id="cust_brgy" name="brgy">
                                                         <!-- <option></option> -->
                                                         <!-- <option>option 1</option>
-                                                                                <option>option 2</option>
-                                                                                <option>option 3</option>
-                                                                                <option>option 4</option>
-                                                                                <option>option 5</option> -->
+                                                                                        <option>option 2</option>
+                                                                                        <option>option 3</option>
+                                                                                        <option>option 4</option>
+                                                                                        <option>option 5</option> -->
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-6">
@@ -257,8 +259,8 @@
                 <div class="modal-footer">
                     <!-- Button to open another modal -->
                     <!-- <button type="button" class="btn btn-primary" onclick="toggleModal('storeModal')">Store
-                                                                                                                                                                                                    Info</button>
-                                                                                                                                                                                                <button type="button" class="btn btn-success swalDefaultSuccess">Save changes</button> -->
+                                                                                                                                                                                                            Info</button>
+                                                                                                                                                                                                        <button type="button" class="btn btn-success swalDefaultSuccess">Save changes</button> -->
 
                     <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#storeModal">Store Info</button> -->
                     <!-- <input type="submit" name="submit" value="submit"> -->
@@ -300,18 +302,18 @@
                                     </div>
 
                                     <!-- <div class="form-group">
-                                            <div class="row mb-3">
-                                                <label for="distributor">Distributor:</label>
-                                                <select name="distributor" class="form-control d-block" id="distributor"
-                                                    onfocus="changeColor('cust_dist')" onblur="resetColor('cust_dist')">
-                                                    <option>option 1</option>
-                                                    <option>option 2</option>
-                                                    <option>option 3</option>
-                                                    <option>option 4</option>
-                                                    <option>option 5</option>
-                                                </select>
+                                                    <div class="row mb-3">
+                                                        <label for="distributor">Distributor:</label>
+                                                        <select name="distributor" class="form-control d-block" id="distributor"
+                                                            onfocus="changeColor('cust_dist')" onblur="resetColor('cust_dist')">
+                                                            <option>option 1</option>
+                                                            <option>option 2</option>
+                                                            <option>option 3</option>
+                                                            <option>option 4</option>
+                                                            <option>option 5</option>
+                                                        </select>
 
-                                            </div> -->
+                                                    </div> -->
                                     <input type="hidden" name ="distributor"
                                         id="distributor>
                                 <div class="form-group">
@@ -364,8 +366,8 @@
                                                 <label class="form-label" for="region">Region</label>
                                                 <select class="form-control" id="region" name="region">
                                                     <!-- <option>Region I (Ilocos Region)</option>
-                                                                            <option>Region II (Cagayan Valley)</option>
-                                                                            <option>Region IV-A (CALABARZON)</option> -->
+                                                                                    <option>Region II (Cagayan Valley)</option>
+                                                                                    <option>Region IV-A (CALABARZON)</option> -->
                                                 </select>
                                             </div>
 

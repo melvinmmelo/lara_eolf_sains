@@ -295,15 +295,15 @@
                                 <div class="col-sm-6">
                                     <label class="form-label" for="e_model">Model</label>
                                     <select name="e_model" id="e_model" class="form-control">
-                                            <option value="EFE-3002">EFE-3002</option>
-                                            <option value="EFE-3802">EFE-3802</option>
-                                            <option value="EFE-4602">EFE-4602</option>
-                                            <option value="BD-650">BD-650</option>
-                                            <option value="EFE-5002">EFE-5002</option>
-                                            <option value="SD-350">SD-350</option>
-                                            <option value="SD-450">SD-450</option>
-                                            <option value="Fujidenzo">Fujidenzo</option>
-                                        </select>
+                                        <option value="EFE-3002">EFE-3002</option>
+                                        <option value="EFE-3802">EFE-3802</option>
+                                        <option value="EFE-4602">EFE-4602</option>
+                                        <option value="BD-650">BD-650</option>
+                                        <option value="EFE-5002">EFE-5002</option>
+                                        <option value="SD-350">SD-350</option>
+                                        <option value="SD-450">SD-450</option>
+                                        <option value="Fujidenzo">Fujidenzo</option>
+                                    </select>
                                 </div>
 
                             </div>

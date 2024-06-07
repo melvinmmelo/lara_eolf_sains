@@ -38,4 +38,12 @@ class StoreInfo extends Model
     {
         return $this->hasMany(EquipmentStore::class, 'store_id');
     }
+
+    protected $appends = ['date_created'];
+
+    public function getDateCreatedAttribute()
+    {
+        return $this->created_at->format('m-d-Y h:i A');
+    }
+
 }
