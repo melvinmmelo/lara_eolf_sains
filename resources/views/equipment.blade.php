@@ -75,7 +75,7 @@
                                 <td>{{ $equipment->serial_no }}</td>
                                 <td>{{ $equipment->model }}</td>
                                 <td>{{ $equipment->code }}</td>
-                                <td>{{ $equipment->status }}</td>
+                                <td>{!! statusBadge($equipment->status) !!}</td>
                                 <td>{{ $equipment->date_delivered }}</td>
                                 <td>{{ $equipment->date_purchased }}</td>
                                 <td>{{ $equipment->date_created }}</td>
@@ -252,7 +252,8 @@
                     <form action="{{ route('equipment.update') }}" method="POST">
                         @csrf
                         @method('PATCH')
-                        <input type="hidden" class="form-control" name="id" id="equipment_id" required readonly><br>
+                        <input type="hidden" class="form-control" name="id" id="equipment_id" required
+                            readonly><br>
                         <div class="form-group">
                             <div class="row mb-2">
                                 <div class="col-sm-6">

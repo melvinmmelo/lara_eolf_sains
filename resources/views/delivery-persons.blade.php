@@ -47,7 +47,7 @@
                                 <td>{{ $driver->name }}</td>
                                 <td>{{ $driver->address }}</td>
                                 <td>{{ $driver->contact }}</td>
-                                <td>{{ $driver->status }}</td>
+                                <td>{!! statusBadge($driver->status) !!}</td>
                                 <td>{{ $driver->designation }}</td>
                                 <td>{{ $driver->priceLevel->pl_name }}</td>
                                 <td>{{ $driver->date_created }}</td>
@@ -258,7 +258,8 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="e_designation"><i style="color:red">*</i>Designation
+                                        <label class="form-label" for="e_designation"><i
+                                                style="color:red">*</i>Designation
                                         </label>
                                         <select class="form-control" name="e_designation" required>
                                             <option value="Driver">Driver</option>

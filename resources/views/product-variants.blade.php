@@ -45,7 +45,7 @@
                             <tr>
                                 <td>{{ $productVariant->code }}</td>
                                 <td>{{ $productVariant->name }}</td>
-                                <td>{{ $productVariant->is_active ? 'Active' : 'Not Active' }}</td>
+                                <td>{!! statusBadge($productVariant->is_active ? 'Active' : 'Not Active') !!}</td>
                                 <td>{{ $productVariant->date_created }}</td>
                                 <td>
                                     <a href="#" data-toggle="modal" data-target="#modalEdit"

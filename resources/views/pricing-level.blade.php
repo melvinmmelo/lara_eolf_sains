@@ -35,7 +35,6 @@
                             <th>Name</th>
                             <th>Description</th>
                             <th>Status</th>
-                            <th>Created at</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -45,8 +44,7 @@
                                 {{-- <td>{{ $pl->branch_code }}</td> --}}
                                 <td>{{ $pl->pl_name }}</td>
                                 <td>{{ $pl->pl_desc }}</td>
-                                <td>{{ $pl->pl_status }}</td>
-                                <td>{{ $pl->date_created }}</td>
+                                <td>{!! statusBadge($pl->pl_status) !!}</td>
                                 <td>
                                     <a href="#" data-toggle="modal" data-target="#modalEdit"
                                         class="btn btn-primary btn-sm"
@@ -61,7 +59,6 @@
                             <th>Name</th>
                             <th>Description</th>
                             <th>Status</th>
-                            <th>Created at</th>
                             <th></th>
                         </tr>
                     </tfoot>
