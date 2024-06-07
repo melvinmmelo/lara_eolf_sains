@@ -53,6 +53,15 @@ class PricesController extends Controller
             'price' => 'required',
         ]);
 
+        // check if the price already exists
+        $pricing = prices::where('pricelevel_id', $request->pricing_id)
+            ->where('p_code', $request->price_code)
+            ->first();
+
+        if ($pricing) {
+            return redirect('/pricing/')->withErrors('Price already exists!');
+        }
+
         prices::create([
             'pricelevel_id' => $request->pricing_id,
             'p_code' => $request->price_code,
@@ -89,13 +98,18 @@ class PricesController extends Controller
     {
         $request->validate([
             'price_id' => 'required',
-            'e_price' => 'required',
+            'e_quant' => 'required|numeric',
+            'e_price_unit' => 'required',
+            'e_price' => 'required|numeric',
         ]);
 
         $pricing = prices::find($request->price_id);
 
         $pricing->update([
+            'p_quant' => $request->e_quant,
+            'p_unit' => $request->e_price_unit,
             'p_price' => $request->e_price,
+
         ]);
 
         $pricing->save();

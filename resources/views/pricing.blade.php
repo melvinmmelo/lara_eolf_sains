@@ -34,7 +34,7 @@
                             <thead>
                                 <tr>
                                     <th>Pricing Level</th>
-                                    <th>Product Code</th>
+                                    <th>Product</th>
                                     <th>Unit</th>
                                     <th>Quantity</th>
                                     <th>Price</th>
@@ -46,7 +46,7 @@
                                 @foreach ($pricing as $price)
                                     <tr>
                                         <td>{{ $price->pricelevel->pl_name }}</td>
-                                        <td>{{ $price->p_code }}</td>
+                                        <td>{{ $price->product->productName }}</td>
                                         <td>{{ $price->p_unit }}</td>
                                         <td>{{ $price->p_quant }}</td>
                                         <td>{{ $price->p_price }}</td>
@@ -54,7 +54,7 @@
                                         <td>
                                             <a href="#" class="btn btn-sm btn-success" data-toggle="modal"
                                                 data-target="#modalEditPrice"
-                                                onclick="setToUpdatePrice('{{ $price->id }}')">Edit</a>
+                                                onclick="setToUpdatePrice('{{ $price->id }}', '{{ $price->p_quant }}', '{{ $price->p_unit }}', '{{ $price->p_price }}')">Edit</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -161,7 +161,8 @@
                                     <div class="row mb-2">
                                         <div class="col-sm-6">
                                             <label class="form-label" for="price"><i style="color:red">*</i>Price</label>
-                                            <input type="number" class="form-control" id="price" name="price">
+                                            <input type="number" step=".01" class="form-control" id="price"
+                                                name="price">
                                         </div>
                                     </div>
                                 </div>
@@ -200,7 +201,26 @@
                         <input type="hidden" name="price_id" id="price_id" required readonly>
 
                         <div class="form-group">
-                            <input type="text" class="form-control" id="e_price" name="e_price">
+                            <div class="row mb-2">
+
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="e_quant"><i style="color:red">*</i>Quantity</label>
+                                    <input type="number" class="form-control" id="e_quant" name="e_quant">
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="e_price_unit"><i style="color:red">*</i>Unit</label>
+                                    <select class="form-control" id="e_price_unit" name="e_price_unit">
+                                        <option value="Bag/s">Bag/s</option>
+                                        <option value="Box/es">Box/es</option>
+                                        <option value="Pc/s">Pc/s</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="numeric" step=".01" class="form-control" id="e_price" name="e_price">
                         </div>
 
                         <div class="modal-footer">
@@ -218,8 +238,11 @@
 
 @section('custom_js')
     <script>
-        function setToUpdatePrice(price_id) {
+        function setToUpdatePrice(price_id, qty, unit, price) {
+            $('#e_quant').val(qty);
+            $('#e_price_unit').val(unit);
             $('#price_id').val(price_id);
+            $('#e_price').val(price);
         }
 
         // create a js function that populate datatable example1 search input when select option is changed
