@@ -73,7 +73,9 @@
                                 <td>{{ $vehicle->type }}</td>
                                 <td>{{ $vehicle->size }}</td>
                                 <td>{{ $vehicle->capacity }}</td>
-                                <td>{{ $vehicle->status }}</td>
+                                <td>
+                                    {!! statusBadge($vehicle->status) !!}
+                                </td>
                                 <td>{{ $vehicle->date_created }}</td>
                                 <td>
                                     <!-- <a class="btn btn-success btn-sm" href="{{ route('vehicle.edit', $vehicle->id) }}">Edit</a> -->
