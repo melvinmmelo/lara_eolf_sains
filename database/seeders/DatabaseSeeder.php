@@ -201,7 +201,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Equipment::create([
-            'ownership' => "Not-Owned",
+            'ownership' => "Owned",
             'type' => "Chest Freezer",
             'brand' => 'CONDURA',
             'price' =>  '42000.00',

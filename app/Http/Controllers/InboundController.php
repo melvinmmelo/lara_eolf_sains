@@ -109,7 +109,7 @@ class InboundController extends Controller
         $tempInbound->driver_id = $request->deliveryPerson;
         $tempInbound->vehicle_id = $request->vehicle;
         $tempInbound->products = null;
-        $tempInbound->status = 'Pending';
+        $tempInbound->status = 'Encoding';
         $tempInbound->pricelevel_id = $request->pricelevel_id;
         $tempInbound->customer_id = $request->customer_id;
         $tempInbound->store_id = $equipStore->store_id;

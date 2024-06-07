@@ -252,8 +252,7 @@
                     <form action="{{ route('equipment.update') }}" method="POST">
                         @csrf
                         @method('PATCH')
-                        <input type="text" class="form-control" name="id" id="equipment_id" required
-                            readonly><br>
+                        <input type="hidden" class="form-control" name="id" id="equipment_id" required readonly><br>
                         <div class="form-group">
                             <div class="row mb-2">
                                 <div class="col-sm-6">
@@ -347,7 +346,7 @@
 
 @section('custom_js')
     <script>
-        function setToUpdateEquipment(id, ownership, type, brand, price, serial_no, model, code, distributor, date_delivered,
+        function setToUpdateEquipment(id, ownership, type, brand, price, serial_no, model, code, date_delivered,
             date_purchased) {
             document.getElementById("equipment_id").value = id;
             document.getElementById("edit-ownership").value = ownership;
@@ -357,14 +356,9 @@
             document.getElementById("edit-serial_no").value = serial_no;
             document.getElementById("e_model").value = model;
 
-
             document.getElementById("edit-code").value = code;
-            document.getElementById("edit-distributor").value = distributor;
             document.getElementById("edit-date_delivered").value = date_delivered;
             document.getElementById("edit-date_purchased").value = date_purchased;
-
-            // Open the modal
-            // $('#edit-equipment').modal('show');
         }
     </script>
 

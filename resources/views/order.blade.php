@@ -77,7 +77,7 @@
                                 <td>{{ $inbound->status }}</td>
                                 <td>{{ $inbound->f_updated_at }}</td>
                                 <td>
-                                    @if ($inbound->status == 'Pending')
+                                    @if ($inbound->status == 'Encoding')
                                         <a href="{{ route('order.processTwo', ['inbound' => $inbound->id]) }}"><button
                                                 class="btn btn-primary">Continue</button></a>
                                     @endif

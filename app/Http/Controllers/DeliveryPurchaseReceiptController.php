@@ -16,7 +16,7 @@ class DeliveryPurchaseReceiptController extends Controller
     public function saveAndInventoryProduct(int $dprId){
         $dpr = DeliveryPurchaseReceipt::findOrFail($dprId);
 
-        $dpr->status = 'Saved';
+        $dpr->status = 'Completed';
 
         if($dpr->save()){
             $dprService = new DPRService($dpr->products);
@@ -71,7 +71,7 @@ class DeliveryPurchaseReceiptController extends Controller
         $deliveryPurchaseReceipt = DeliveryPurchaseReceipt::findOrFail($dprId);
         // dd($deliveryPurchaseReceipt);
 
-        if( strtolower($deliveryPurchaseReceipt->status) == 'saved'){
+        if( strtolower($deliveryPurchaseReceipt->status) == 'completed'){
             // return redirect()->back()->with('error', 'Delivery receipt already saved.');
         }
 
