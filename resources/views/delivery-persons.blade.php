@@ -150,19 +150,6 @@
                             </div>
 
                             <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="status">Status</label>
-                                        <br>
-                                        <input type="checkbox" id="mySwitch" data-bootstrap-switch data-on-text="On"
-                                            data-off-text="Off" data-on-color="success" data-off-color="danger"
-                                            name="status">
-
-                                        <div style="margin-bottom: 20px"></div>
-
-                                    </div>
-                                </div>
-
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-12">
@@ -176,6 +163,21 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="form-label" for="status">Active</label>
+                                        <br>
+                                        <input type="checkbox" id="mySwitch" data-bootstrap-switch data-on-text="On"
+                                            data-off-text="Off" data-on-color="success" data-off-color="danger"
+                                            name="status">
+
+                                        <div style="margin-bottom: 20px"></div>
+
+                                    </div>
+                                </div>
+
+
 
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-success">Save
@@ -273,7 +275,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="e_status">Status</label>
+                                        <label class="form-label" for="e_status">Active</label>
                                         <br>
                                         <input type="checkbox" id="mySwitch" data-bootstrap-switch data-on-text="On"
                                             data-off-text="Off" data-on-color="success" data-off-color="danger"

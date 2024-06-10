@@ -60,8 +60,8 @@
                             <th>Size</th>
                             <th>Capacity</th>
                             <th>Status</th>
+                            <th>Remarks</th>
                             <th>Created at</th>
-
                             <th></th>
                         </tr>
                     </thead>
@@ -76,6 +76,7 @@
                                 <td>
                                     {!! statusBadge($vehicle->status) !!}
                                 </td>
+                                <td>{{ $vehicle->remarks }}</td>
                                 <td>{{ $vehicle->date_created }}</td>
                                 <td>
                                     <!-- <a class="btn btn-success btn-sm" href="{{ route('vehicle.edit', $vehicle->id) }}">Edit</a> -->
@@ -101,6 +102,7 @@
                             <th>Size</th>
                             <th>Capacity</th>
                             <th>Status</th>
+                            <th>Remarks</th>
                             <th>Created at</th>
                             <th></th>
                         </tr>
@@ -197,10 +199,10 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="status">Status</label>
+                                        <label class="form-label" for="status">Active</label>
                                         <br>
                                         <input type="checkbox" id="mySwitch" data-bootstrap-switch
-                                            data-on-text="Available" data-off-text="Off" data-on-color="success"
+                                            data-on-text="On" data-off-text="Off" data-on-color="success"
                                             data-off-color="danger" name="status">
 
                                         <div style="margin-bottom: 20px"></div>
@@ -270,29 +272,27 @@
                         <div class="form-group">
                             <div class="row mb-3">
                                 <div class="col-sm-4">
-                                    <label class="form-label" for="type">Type</label>
-                                    <select class="form-control d-block" name="type" id="type">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                        <option>option 5</option>
-                                    </select>
-                                </div>
+                                        <label class="form-label" for="type"><i style="color:red">*</i>Type</label>
+                                        <select class="form-control d-block" name="type" id="e_type">
+                                            <option value="Van">Van</option>
+                                            <option value="Fridge">Fridge</option>
+                                            <option value="Closed">Closed</option>
 
-                                <div class="col-sm-4">
-                                    <label class="form-label" for="size">Size</label>
-                                    <select class="form-control d-block" name="size" id="size">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                        <option>option 5</option>
-                                    </select>
-                                </div>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <label class="form-label" for="size">Size</label>
+                                        <select class="form-control d-block" name="size" id="e_size">
+                                            <option value="S">Small</option>
+                                            <option value="M">Medium</option>
+                                            <option value="L">Large</option>
+                                            <option value="XL">Extra Large</option>
+                                        </select>
+                                    </div>
                                 <div class="col-sm-4">
                                     <label class="form-label" for="capacity">Capacity</label>
-                                    <input type="text" class="form-control" name="capacity" id="capacity">
+                                    <input type="text" class="form-control" name="capacity" id="e_capacity">
                                 </div>
                             </div>
 
@@ -310,9 +310,9 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <label class="form-label" for="status">Status</label>
+                                    <label class="form-label" for="status">Active</label>
                                     <br>
-                                    <input type="checkbox" id="mySwitch" data-bootstrap-switch data-on-text="Available"
+                                    <input type="checkbox" id="mySwitch" data-bootstrap-switch data-on-text="On"
                                         data-off-text="Off" data-on-color="success" data-off-color="danger"
                                         name="status">
 
@@ -348,9 +348,9 @@
             document.getElementById("plateno").value = plateno;
             document.getElementById("brand").value = brand;
             document.getElementById("description").value = description;
-            document.getElementById("type").value = type;
-            document.getElementById("size").value = size;
-            document.getElementById("capacity").value = capacity;
+            document.getElementById("e_type").value = type;
+            document.getElementById("e_size").value = size;
+            document.getElementById("e_capacity").value = capacity;
             document.getElementById("remarks").value = remarks;
             document.getElementById("status").value = status;
 
