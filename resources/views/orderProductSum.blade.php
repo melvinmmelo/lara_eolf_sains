@@ -13,12 +13,15 @@
                     @php
                         $totalSpCount = [];
                         $totalSpCountSet = [];
-                        $spCnt = 0;
-                        $spCnt2 = 0;
                     @endphp
 
                     @if (count($summary))
                         @foreach ($summary as $summ)
+                            @php
+                                $spCnt = 0;
+                                $spCnt2 = 0;
+                            @endphp
+
                             @if ($summ['ptype_code'] == 'SC')
                                 @php
                                     $spCnt = $summ['total'] * $summ['sppb'];
