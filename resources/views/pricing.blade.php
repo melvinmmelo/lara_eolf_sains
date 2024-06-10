@@ -220,6 +220,7 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="form-label" for="e_price_unit"><i style="color:red">*</i>Price</label>
                             <input type="numeric" step=".01" class="form-control" id="e_price" name="e_price">
                         </div>
 
