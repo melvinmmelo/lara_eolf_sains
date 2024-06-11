@@ -53,6 +53,9 @@ Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addba
 Route::get('/get-products/{inboundId}/{customerId}', [addbadorderController::class, 'getProducts']);
 
 
+Route::get('/delivery-receipt', function () {
+    return view('delivery-receipt');
+});
 
 Route::middleware('auth')->group(function () {
 
