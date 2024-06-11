@@ -314,7 +314,8 @@
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="latitude"><i
                                                                 style="color:red">*</i>Latitude</label>
-                                                        <input type="text" class="form-control" name="latitude" id="latitude">
+                                                        <input type="text" class="form-control" name="latitude"
+                                                            id="latitude">
                                                     </div>
                                                 </div>
                                             </div>
@@ -324,9 +325,11 @@
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="longitude"><i
                                                                 style="color:red">*</i>Longitude</label>
-                                                        <input type="text" class="form-control" name="longitude" id="longitude">
+                                                        <input type="text" class="form-control" name="longitude"
+                                                            id="longitude">
 
-                                                <a href="#" data-toggle="modal" data-target="#setLatLongMap">Get</a>
+                                                        <a href="#" data-toggle="modal"
+                                                            data-target="#setLatLongMap">Get</a>
 
                                                     </div>
                                                 </div>
@@ -621,7 +624,7 @@
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_region" name="e_region">
 
-                                                                                                                    </select> -->
+                                                                                                                            </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -633,7 +636,7 @@
                                                         <input type="text" id="e_province" name="e_province"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_province" name="e_province">
-                                                                                                                    </select> -->
+                                                                                                                            </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -645,7 +648,7 @@
                                                         <input type="text" id="e_city" name="e_city"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_city" name="e_city">
-                                                                                                                    </select> -->
+                                                                                                                            </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -657,7 +660,7 @@
                                                         <input type="text" id="e_brgy" name="e_brgy"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_brgy" name="e_brgy">
-                                                                                                                    </select> -->
+                                                                                                                            </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -738,7 +741,7 @@
                                                         <input type="text" id="e_region2" name="e_region2"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_region2" name="e_region2">
-                                                                                                                    </select> -->
+                                                                                                                            </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -750,7 +753,7 @@
                                                         <input type="text" id="e_province2" name="e_province2"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_province2" name="e_province2">
-                                                                                                                    </select> -->
+                                                                                                                            </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -762,7 +765,7 @@
                                                         <input type="text" id="e_city2" name="e_city2"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_city2" name="e_city2">
-                                                                                                                    </select> -->
+                                                                                                                            </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -774,7 +777,7 @@
                                                         <input type="text" id="e_brgy2" name="e_brgy2"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_brgy2" name="e_brgy2">
-                                                                                                                    </select> -->
+                                                                                                                            </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -938,11 +941,21 @@
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map2);
 
-            L.marker([lat, long]).addTo(map2);
+            var marker = L.marker([lat, long]).addTo(map2);
+
+            marker.on('click', function() {
+                loadStreetView(lat, long);
+            });
 
 
             $('#mapModal').modal('show');
 
+        }
+
+        // Function to load street view
+        function loadStreetView(lat, long) {
+            var url = `https://www.openstreetcam.org/map/@${lat}/${long}/17`;
+            window.open(url, '_blank');
         }
 
         $('#mapModal').on('shown.bs.modal', function() {
