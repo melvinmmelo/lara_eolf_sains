@@ -60,9 +60,9 @@ class Customers extends Model
     }
 
     public function storeinfo()
-    {
-        return $this->hasOne(StoreInfo::class, 'customer_id');
-    }
+        {
+            return $this->hasOne(StoreInfo::class, 'customer_id');
+        }
 
     protected $appends = ['date_created'];
 
@@ -71,5 +71,9 @@ class Customers extends Model
         return $this->created_at->format('m-d-Y h:i A');
     }
 
-}
 
+    public function inbounds()
+    {
+        return $this->hasMany(Inbound::class, 'customer_id');
+    }
+}

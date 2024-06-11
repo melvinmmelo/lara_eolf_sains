@@ -20,6 +20,7 @@ use App\Http\Controllers\PhAddrController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentStoreController;
 use App\Http\Controllers\ItemMasterDataController;
+use App\Http\Controllers\addbadorderController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -34,13 +35,23 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/bad-orders', function () {
-    return view('badorder');
-});
+// Route::get('/bad-orders', function () {
+//     return view('addbadorder');
+// });
 
-Route::get('/addbad-orders', function () {
-    return view('addbadorder');
-});
+// Route::get('/addbad-orders', function () {
+//     return view('addbadorder');
+// });
+
+Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');
+Route::get('/api/getCustomerItems/{customerId}', [addbadorderController::class, 'getCustomerItems']);
+Route::get('/fetch-items', [addbadorderController::class, 'fetchItems'])->name('fetch.items');
+
+Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');
+
+
+Route::get('/get-products/{inboundId}/{customerId}', [addbadorderController::class, 'getProducts']);
+
 
 
 Route::middleware('auth')->group(function () {
