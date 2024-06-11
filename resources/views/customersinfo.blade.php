@@ -31,8 +31,8 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Branch</th>
+                            {{-- <th>ID</th>
+                            <th>Branch</th> --}}
                             <th>Name</th>
                             <th>Contact Nos</th>
                             <th>Tin no.</th>
@@ -48,8 +48,8 @@
                         @foreach ($customers as $customer)
                             @foreach ($customer->stores as $store)
                                 <tr>
-                                    <td>{{ $customer->id }}</td>
-                                    <td>{{ $customer->branch_code }}</td>
+                                    {{-- <td>{{ $customer->id }}</td> --}}
+                                    {{-- <td>{{ $customer->branch_code }}</td> --}}
                                     <td>{{ $customer->lastname }}, {{ $customer->firstname }} {{ $customer->middlename }}
                                     </td>
                                     <td>{{ $customer->contact_no }}</td>
@@ -128,8 +128,8 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>ID</th>
-                            <th>Branch</th>
+                            {{-- <th>ID</th>
+                            <th>Branch</th> --}}
                             <th>Name</th>
                             <th>Contact Nos</th>
                             <th>Tin no.</th>
@@ -624,7 +624,7 @@
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_region" name="e_region">
 
-                                                                                                                            </select> -->
+                                                                                                                                </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -636,7 +636,7 @@
                                                         <input type="text" id="e_province" name="e_province"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_province" name="e_province">
-                                                                                                                            </select> -->
+                                                                                                                                </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -648,7 +648,7 @@
                                                         <input type="text" id="e_city" name="e_city"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_city" name="e_city">
-                                                                                                                            </select> -->
+                                                                                                                                </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -660,7 +660,7 @@
                                                         <input type="text" id="e_brgy" name="e_brgy"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_brgy" name="e_brgy">
-                                                                                                                            </select> -->
+                                                                                                                                </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -741,7 +741,7 @@
                                                         <input type="text" id="e_region2" name="e_region2"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_region2" name="e_region2">
-                                                                                                                            </select> -->
+                                                                                                                                </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -753,7 +753,7 @@
                                                         <input type="text" id="e_province2" name="e_province2"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_province2" name="e_province2">
-                                                                                                                            </select> -->
+                                                                                                                                </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -765,7 +765,7 @@
                                                         <input type="text" id="e_city2" name="e_city2"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_city2" name="e_city2">
-                                                                                                                            </select> -->
+                                                                                                                                </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -777,7 +777,7 @@
                                                         <input type="text" id="e_brgy2" name="e_brgy2"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_brgy2" name="e_brgy2">
-                                                                                                                            </select> -->
+                                                                                                                                </select> -->
                                                     </div>
                                                 </div>
                                             </div>

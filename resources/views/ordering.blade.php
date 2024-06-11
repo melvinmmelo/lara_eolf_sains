@@ -55,6 +55,10 @@
         .form-control[readonly] {
             background-color: #edf4fc;
         }
+
+        .btn-warning {
+            background-color: #f5d760 !important;
+        }
     </style>
 @endsection
 

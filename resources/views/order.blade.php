@@ -39,6 +39,7 @@
 
                             <th>Date created</th>
                             <th>Customer</th>
+                            <th>Delivery Person</th>
                             <th>Store</th>
                             <th>Equipment</th>
                             <th>Total</th>
@@ -59,6 +60,7 @@
                                         $total += $acProd['price'] * $acProd['quantity'];
                                     }
                                 } else {
+                                } else {
                                     $total = 0;
                                 }
                             @endphp
@@ -68,6 +70,7 @@
                                 <td>{{ $inbound->driver->name }}</td>
                                 <td>{{ $inbound->f_created_at }}</td>
                                 <td>{{ $inbound->customer->fullName }}</td>
+                                <td>{{ $inbound->driver->name }}</td>
                                 <td>{{ $inbound->store->storename }}</td>
                                 <td>{{ $inbound->equipment->serial_no }}</td>
                                 <td><span class="label label-primary">{{ $total }}</span></td>
@@ -81,6 +84,8 @@
 
                                     @if ($inbound->status == 'Completed')
                                         <a href="#" data-target="#modalAddAmountDelivered" data-toggle="modal"><button
+                                                class="btn btn-danger"
+                                                onclick="setObId(`{{ $inbound->id }}`)">Update</button></a>
                                                 class="btn btn-danger"
                                                 onclick="setObId(`{{ $inbound->id }}`)">Update</button></a>
                                     @endif
@@ -147,6 +152,7 @@
                                             <option value="">--Select--</option>
                                             @foreach ($equipment as $equip)
                                                 <option value="{{ $equip->id }}">
+                                                    {{ $equip->equipment->code . ' ' . $equip->customer->fullName }}
                                                     {{ $equip->equipment->code . ' ' . $equip->customer->fullName }}
                                                 </option>
                                             @endforeach
