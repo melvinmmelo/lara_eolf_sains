@@ -314,7 +314,7 @@
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="latitude"><i
                                                                 style="color:red">*</i>Latitude</label>
-                                                        <input type="text" class="form-control" name="latitude">
+                                                        <input type="text" class="form-control" name="latitude" id="latitude">
                                                     </div>
                                                 </div>
                                             </div>
@@ -324,7 +324,10 @@
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="longitude"><i
                                                                 style="color:red">*</i>Longitude</label>
-                                                        <input type="text" class="form-control" name="longitude">
+                                                        <input type="text" class="form-control" name="longitude" id="longitude">
+
+                                                <a href="#" data-toggle="modal" data-target="#setLatLongMap">Get</a>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -618,7 +621,7 @@
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_region" name="e_region">
 
-                                                            </select> -->
+                                                                                                                    </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -630,7 +633,7 @@
                                                         <input type="text" id="e_province" name="e_province"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_province" name="e_province">
-                                                            </select> -->
+                                                                                                                    </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -642,7 +645,7 @@
                                                         <input type="text" id="e_city" name="e_city"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_city" name="e_city">
-                                                            </select> -->
+                                                                                                                    </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -654,7 +657,7 @@
                                                         <input type="text" id="e_brgy" name="e_brgy"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_brgy" name="e_brgy">
-                                                            </select> -->
+                                                                                                                    </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -671,9 +674,13 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
+
+                                                        <a href="#" data-toggle="modal"
+                                                            data-target="#setLatLongMap">Get</a>
+
                                                         <label class="form-label" for="latitude">Latitude</label>
                                                         <input type="text" class="form-control" name="latitude"
-                                                            id="latitude">
+                                                            id="e_latitude">
                                                     </div>
                                                 </div>
                                             </div>
@@ -683,7 +690,7 @@
                                                     <div class="col-sm-12">
                                                         <label class="form-label" for="longitude">Longitude</label>
                                                         <input type="text" class="form-control" name="longitude"
-                                                            id="longitude">
+                                                            id="e_longitude">
                                                     </div>
                                                 </div>
                                             </div>
@@ -731,7 +738,7 @@
                                                         <input type="text" id="e_region2" name="e_region2"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_region2" name="e_region2">
-                                                            </select> -->
+                                                                                                                    </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -743,7 +750,7 @@
                                                         <input type="text" id="e_province2" name="e_province2"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_province2" name="e_province2">
-                                                            </select> -->
+                                                                                                                    </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -755,7 +762,7 @@
                                                         <input type="text" id="e_city2" name="e_city2"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_city2" name="e_city2">
-                                                            </select> -->
+                                                                                                                    </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -767,7 +774,7 @@
                                                         <input type="text" id="e_brgy2" name="e_brgy2"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_brgy2" name="e_brgy2">
-                                                            </select> -->
+                                                                                                                    </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -869,10 +876,36 @@
                 </div>
                 <div class="modal-body">
 
-                    <iframe src="#" width="100%" height="450" style="border:0;" allowfullscreen=""
-                        loading="lazy"></iframe>
+                    {{-- <iframe src="#" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe> --}}
+
+                    {{-- <iframe src="#" width="100%" height="450" style="border:0;" allowfullscreen=""
+                        loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe> --}}
+
+                    <div id="mapView" style="height: 400px; width: 100%;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"></div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="setLatLongMap" tabindex="-1" role="dialog" aria-labelledby="mapModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mapModalLabel">
+                        <div class="modalMapInfo"></div>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="map" style="height: 400px; width: 100%;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"></div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -881,18 +914,44 @@
 
 @section('custom_js')
     <script>
+        let map2;
+        let map;
+
+
         function setMapModalInfo(brgy, subd, city, long, lat) {
+
+            map2 = L.map('mapView').setView([lat, long], 18);
+
             $('.modalMapInfo').html(brgy + ', ' + subd + ', ' + city);
 
             // update iframe src
-            $('iframe').attr('src', 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3022.0452163943947!2d' + long +
-                '!3d' + lat +
-                '!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQyJzQ2LjAiTiA3NMKwMDBBJzIxLjAiVw!5e0!3m2!1sen!2sus!4v1716257108716!5m2!1sen!2sus'
-                );
+            // $('iframe').attr('src', 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3022.0452163943947!2d' + long + '!3d' + lat + '!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQyJzQ2LjAiTiA3NMKwMDBBJzIxLjAiVw!5e0!3m2!1sen!2sus!4v1716257108716!5m2!1sen!2sus'
+            // );
 
-            // show modal
+            // $('iframe').attr('src', 'https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3861.801149005104!2d' + long +
+            //     '!3d' + lat +
+            //     '!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTTCsDMzJzEyLjEiTiAxMjHCsDAxJzE0LjYiRQ!5e0!3m2!1sen!2sph!4v1718089739967!5m2!1sen!2sph' +
+            //     '&q=' + lat + ',' + long);
+
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map2);
+
+            L.marker([lat, long]).addTo(map2);
+
+
             $('#mapModal').modal('show');
+
         }
+
+        $('#mapModal').on('shown.bs.modal', function() {
+            setTimeout(function() {
+                if (map2) {
+                    map2.invalidateSize();
+                }
+            }, 0);
+        });
 
         // function setToUpdatecustomer(uid, ebcode, ln, fn, mn, con, cm, tin, long, lat, reg, prov, city, brgy, subv,
         //     store_id,
@@ -1428,5 +1487,41 @@
                 }
             });
         }
+
+        $('#setLatLongMap').on('shown.bs.modal', function() {
+            console.log('shown');
+            if (!map) {
+
+                map = L.map('map').setView([17.6022249, 121.6770603], 10);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                map.on('click', function(e) {
+
+                    var lat = e.latlng.lat;
+                    var lng = e.latlng.lng;
+
+                    document.getElementById('latitude').value = lat;
+                    document.getElementById('longitude').value = lng;
+
+                    document.getElementById('latitude2').value = lat;
+                    document.getElementById('longitude2').value = lng;
+
+                    // document.getElementById('cust_latitude2').value = lat;
+                    // document.getElementById('cust_longitude2').value = lng;
+
+                    $('#setLatLongMap').modal('hide');
+
+                });
+            }
+
+            setTimeout(function() {
+                if (!map) {
+                    map.invalidateSize();
+                }
+            }, 0);
+        });
     </script>
 @endsection
