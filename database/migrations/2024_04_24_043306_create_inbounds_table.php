@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('inbounds', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
+            $table->unsignedInteger('user_id');
             $table->string('branch_code', 15);
-            $table->string('equipment_id');
+            $table->unsignedInteger('equipment_id');
             $table->unsignedInteger('customer_id');
             $table->unsignedInteger('store_id');
-            $table->string('driver_id');
-            $table->string('vehicle_id');
+            $table->unsignedInteger('driver_id');
+            $table->unsignedInteger('vehicle_id');
+            $table->unsignedInteger('bad_order_id')->nullable();
             $table->json('products')->nullable();
             $table->tinyInteger('with_invoice')->nullable();
             $table->tinyInteger('bad_order')->nullable();

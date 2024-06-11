@@ -160,9 +160,10 @@
                                                     // convert the json string to array
                                                     $dprProducts = json_decode($deliveryPurchaseReceipt->products);
 
-                                                    usort($dprProducts, function ($a, $b) {
-                                                        return $a->code <=> $b->code;
-                                                    });
+                                                    if($dprProducts)
+                                                        usort($dprProducts, function ($a, $b) {
+                                                            return $a->order <=> $b->order;
+                                                        });
 
                                                 @endphp
 

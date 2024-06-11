@@ -1,8 +1,8 @@
 <div class="row">
     <div class="col-sm-8">
-        <div class="table-responsive">
+        <div class="table-responsive product-list">
 
-            <table class="table table-bordered table-striped">
+            <table class="table table-bordered table-striped ">
                 <thead>
                     <tr>
                         <th></th>

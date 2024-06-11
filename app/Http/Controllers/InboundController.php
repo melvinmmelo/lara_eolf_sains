@@ -171,6 +171,7 @@ class InboundController extends Controller
             $summary = $inboundService->addSppbinSummary(); // ! you need to call summary() first before addSppbinSummary()
         }
 
+
         return view('ordering', compact('inboundId', 'productTypes', 'deliveryPerson', 'vehicle', 'defaultPriceLevel', 'inboundList', 'summary', 'customerName', 'equipmentSerial'));
     }
 
@@ -183,6 +184,7 @@ class InboundController extends Controller
         $branchCode = session('branch_code');
 
         $allProducts = Product::where('product_type_code', $code)->get();
+
         $products = [];
 
         $pass = '123';
@@ -233,7 +235,11 @@ class InboundController extends Controller
         $product = Product::where('code', $code)->first();
         $price = prices::where('p_code', $code)->first();
 
-        $data = ['ptype_code' => $product->product_type_code, 'code' => $product->code, 'quantity' => $qty, 'price' => $price->p_price, 'unit' => $price->p_unit, 'sppb' => $product->spoon_pcs_per_bag, 'description' => $product->productName];
+        // get the first two characters of the product type code
+        $sequence_no = ProductType::code($product->product_type_code)->pluck('sequence_no')->first();
+
+
+        $data = ['order' => $sequence_no, 'ptype_code' => $product->product_type_code, 'code' => $product->code, 'quantity' => $qty, 'price' => $price->p_price, 'unit' => $price->p_unit, 'sppb' => $product->spoon_pcs_per_bag, 'description' => $product->productName, 'created_at' => now()];
 
         $products = $inbound->products;
 
@@ -258,6 +264,10 @@ class InboundController extends Controller
         }
 
         $uiProducts = $products;
+
+        usort($uiProducts, function ($a, $b) {
+            return $a['order'] <=> $b['order'];
+        });
 
         $inbound->products = json_encode($products);
 

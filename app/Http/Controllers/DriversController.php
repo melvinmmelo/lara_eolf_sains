@@ -93,7 +93,7 @@ class DriversController extends Controller
             'e_id' => 'required',
             'e_address' => 'required',
             'e_contact' => 'required',
-            'e_status' => 'required',
+            'e_status' => 'nullable',
             'e_price_level' => 'required',
             'e_designation' => 'required',
         ]);

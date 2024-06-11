@@ -35,13 +35,12 @@
                     <thead>
                         <tr>
                             <th>Order No.</th>
+                            <th>Delivery Person</th>
+
                             <th>Date created</th>
-                            <th>Price Level</th>
                             <th>Customer</th>
                             <th>Store</th>
                             <th>Equipment</th>
-                            <th>Delivery Person</th>
-                            <th>Vehicle</th>
                             <th>Total</th>
                             <th>Status</th>
                             <th>Date updated</th>
@@ -59,20 +58,18 @@
                                     foreach ($products as $acProd) {
                                         $total += $acProd['price'] * $acProd['quantity'];
                                     }
-                                }else{
+                                } else {
                                     $total = 0;
                                 }
                             @endphp
 
                             <tr>
                                 <td>{{ $inbound->id }}</td>
+                                <td>{{ $inbound->driver->name }}</td>
                                 <td>{{ $inbound->f_created_at }}</td>
-                                <td>{{ $inbound->priceLevel->pl_name }}</td>
                                 <td>{{ $inbound->customer->fullName }}</td>
                                 <td>{{ $inbound->store->storename }}</td>
                                 <td>{{ $inbound->equipment->serial_no }}</td>
-                                <td>{{ $inbound->driver->name }}</td>
-                                <td>{{ $inbound->vehicle->plateno }}</td>
                                 <td><span class="label label-primary">{{ $total }}</span></td>
                                 <td>{{ $inbound->status }}</td>
                                 <td>{{ $inbound->f_updated_at }}</td>
@@ -84,7 +81,8 @@
 
                                     @if ($inbound->status == 'Completed')
                                         <a href="#" data-target="#modalAddAmountDelivered" data-toggle="modal"><button
-                                                class="btn btn-danger" onclick="setObId(`{{ $inbound->id }}`)">Update</button></a>
+                                                class="btn btn-danger"
+                                                onclick="setObId(`{{ $inbound->id }}`)">Update</button></a>
                                     @endif
                                 </td>
                             </tr>
@@ -93,13 +91,11 @@
                     <tfoot>
                         <tr>
                             <th>Order No.</th>
+                            <th>Delivery Person</th>
                             <th>Date</th>
-                            <th>Price Level</th>
                             <th>Customer</th>
                             <th>Store</th>
                             <th>Equipment</th>
-                            <th>Delivery Person</th>
-                            <th>Vehicle</th>
                             <th>Total</th>
                             <th>Status</th>
                             <th>Created By</th>
@@ -151,7 +147,7 @@
                                             <option value="">--Select--</option>
                                             @foreach ($equipment as $equip)
                                                 <option value="{{ $equip->id }}">
-                                                    {{  $equip->equipment->code . " " . $equip->customer->fullName   }}
+                                                    {{ $equip->equipment->code . ' ' . $equip->customer->fullName }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -214,6 +210,16 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <label class="form-label" for="bad_order_id"><i style="color:red">*</i>Bad Order</label>
+                                <select class="form-control" name="bad_order_id" id="bad_order_id">
+                                    <option value="">--Select--</option>
+                                    {{-- @foreach ($badOrders as $badOrder)
+                                        <option value="{{ $badOrder->id }}">{{ $badOrder->name }}</option>
+                                    @endforeach --}}
+                                </select>
+                            </div>
+
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-success">Next</button>
                             </div>
@@ -235,8 +241,6 @@
 
 @section('custom_js')
     <script>
-
-
         function setCustomerName(str) {
             $.ajax({
                 type: "GET",
@@ -269,7 +273,5 @@
         function setObId(str) {
             document.getElementById('ob_id').value = str;
         }
-
-
     </script>
 @endsection

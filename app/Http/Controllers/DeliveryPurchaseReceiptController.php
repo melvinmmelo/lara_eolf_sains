@@ -7,6 +7,7 @@ use App\Http\Requests\StoreDeliveryPurchaseReceiptRequest;
 use App\Http\Requests\UpdateDeliveryPurchaseReceiptRequest;
 use App\Models\prices;
 use App\Models\Product;
+use App\Models\ProductType;
 use App\Services\DPRService;
 use Illuminate\Http\Request;
 
@@ -48,8 +49,10 @@ class DeliveryPurchaseReceiptController extends Controller
 
         $product = Product::productCode($request->product_code)->first();
 
+        $sequence_no = ProductType::code($product->product_type_code)->pluck('sequence_no')->first();
 
-        $newProduct = ['code' => $request->product_code, 'description' => $product->productName ,'quantity' => $request->qty, 'unit' => $productPrice->p_unit, 'price' => $productPrice->p_price];
+
+        $newProduct = ['order' => $sequence_no, 'code' => $request->product_code, 'description' => $product->productName ,'quantity' => $request->qty, 'unit' => $productPrice->p_unit, 'price' => $productPrice->p_price, 'created_at' => now()];
 
 
         $dprService = new DPRService($dpr->products);
@@ -76,6 +79,9 @@ class DeliveryPurchaseReceiptController extends Controller
         }
 
         $originalProducts = Product::all();
+        $originalProducts = $originalProducts->sortBy(function($product){
+            return ProductType::code($product->product_type_code)->pluck('sequence_no')->first();
+        });
 
         return view('delivery-purchase-receipts.products', compact('deliveryPurchaseReceipt', 'originalProducts'));
     }
