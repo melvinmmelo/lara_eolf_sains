@@ -48,8 +48,16 @@ class EquipmentStore extends Model
     {
         return $this->belongsTo(StoreInfo::class, 'store_id');
     }
+
     public function customer()
-{
-    return $this->belongsTo(Customers::class, 'customer_id', 'id');
-}
+    {
+        return $this->belongsTo(Customers::class, 'customer_id', 'id');
+    }
+
+    protected $appends = ['date_created'];
+
+    public function getDateCreatedAttribute()
+    {
+        return $this->created_at->format('m-d-Y h:i A');
+    }
 }

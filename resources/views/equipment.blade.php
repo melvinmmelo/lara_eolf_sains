@@ -51,34 +51,24 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>Owned</th>
-                            <th>Type</th>
-                            <th>Brand</th>
-                            <th>Price</th>
-                            <th>Serial No.</th>
                             <th>Model</th>
+                            <th>Serial No.</th>
                             <th>Code</th>
+                            <th>Customer</th>
                             <th>Status</th>
-                            <th>Date Delivered</th>
-                            <th>Date Purchased</th>
-                            <th>Created at</th>
+                            <th>Date Assigned</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($equipments as $equipment)
                             <tr>
-                                <td>{{ $equipment->ownership }}</td>
-                                <td>{{ $equipment->type }}</td>
-                                <td>{{ $equipment->brand }}</td>
-                                <td>{{ $equipment->price }}</td>
-                                <td>{{ $equipment->serial_no }}</td>
                                 <td>{{ $equipment->model }}</td>
+                                <td>{{ $equipment->serial_no }}</td>
                                 <td>{{ $equipment->code }}</td>
+                                <td>{{ $equipment->equipmentStore->customer->fullName ?? '' }}</td>
                                 <td>{!! statusBadge($equipment->status) !!}</td>
-                                <td>{{ $equipment->date_delivered }}</td>
-                                <td>{{ $equipment->date_purchased }}</td>
-                                <td>{{ $equipment->date_created }}</td>
+                                <td>{{ $equipment->equipmentStore->dateCreated ?? '' }}</td>
                                 <td>
                                     <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
                                         data-target="#edit-equipment"
@@ -97,17 +87,12 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>Owned</th>
-                            <th>Type</th>
-                            <th>Brand</th>
-                            <th>Price</th>
-                            <th>Serial No.</th>
                             <th>Model</th>
+                            <th>Serial No.</th>
                             <th>Code</th>
+                            <th>Customer</th>
                             <th>Status</th>
-                            <th>Date Delivered</th>
-                            <th>Date Purchased</th>
-                            <th>Created at</th>
+                            <th>Date Assigned</th>
                             <th></th>
                         </tr>
                     </tfoot>
