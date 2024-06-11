@@ -42,6 +42,9 @@ Route::get('/addbad-orders', function () {
     return view('addbadorder');
 });
 
+Route::get('/delivery-receipt', function () {
+    return view('delivery-receipt');
+});
 
 Route::middleware('auth')->group(function () {
 
