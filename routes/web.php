@@ -43,6 +43,10 @@ Route::get('/', function () {
 //     return view('addbadorder');
 // });
 
+Route::get('/deliveryreceipt', function () {
+    return view('deliveryreceipt');
+});
+
 Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');
 Route::get('/api/getCustomerItems/{customerId}', [addbadorderController::class, 'getCustomerItems']);
 Route::get('/fetch-items', [addbadorderController::class, 'fetchItems'])->name('fetch.items');
