@@ -52,7 +52,8 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Inbound Inventory - {{ $deliveryPurchaseReceipt->status == 'Completed' ? 'Encode' : 'View' }} Products</h1>
+                    <h1>Inbound Inventory - {{ $deliveryPurchaseReceipt->status == 'Completed' ? 'Encode' : 'View' }}
+                        Products</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -99,7 +100,7 @@
                             <form action="{{ route('dpr-product.store') }}" method="POST">
                                 @csrf
                                 <div class="row">
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-6">
                                         <div class="form-group">
                                             <label class="form-label">Items</label>
                                             <select class="form-control select2bs4" name="product_code" style="width: 100%;"
@@ -108,7 +109,8 @@
                                                 <option value="">--Select--</option>
 
                                                 @foreach ($originalProducts as $product)
-                                                    <option value="{{ $product->code }}">{{ $product->code }}</option>
+                                                    <option value="{{ $product->code }}">
+                                                        {{ $product->code . ' ' . $product->productName }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -160,10 +162,11 @@
                                                     // convert the json string to array
                                                     $dprProducts = json_decode($deliveryPurchaseReceipt->products);
 
-                                                    if($dprProducts)
+                                                    if ($dprProducts) {
                                                         usort($dprProducts, function ($a, $b) {
                                                             return $a->order <=> $b->order;
                                                         });
+                                                    }
 
                                                 @endphp
 
@@ -177,7 +180,13 @@
                                                     <tr>
                                                         <td>{{ $dprProd->code . ' ' . $dprProd->description }}</td>
                                                         <td>{{ $dprProd->unit }}</td>
-                                                        <td>{{ $dprProd->quantity }}</td>
+                                                        <td>{{ $dprProd->quantity }}
+
+                                                            @if ($dprProd->hold)
+                                                                <span class="badge badge-danger">Hold:
+                                                                    {{ $dprProd->hold }}</span>
+                                                            @endif
+                                                        </td>
                                                         <td>{{ $dprProd->price }}</td>
                                                         <td>{{ $dprProd->quantity * $dprProd->price }}</td>
                                                         <td>
@@ -186,6 +195,10 @@
                                                                 <a href="{{ route('dpr.delete', ['drid' => $deliveryPurchaseReceipt->id, 'pcode' => $dprProd->code]) }}"
                                                                     onclick="return confirmDeleteProduct()"
                                                                     class="btn btn-sm btn-danger">Delete</a>
+
+                                                                <a href="#"
+                                                                    onclick="holdProduct(`{{ $deliveryPurchaseReceipt->id }}`,`{{ $dprProd->code }}`)"
+                                                                    class="btn btn-sm btn-danger">Hold</a>
                                                             @endif
                                                         </td>
                                                     </tr>
@@ -232,6 +245,42 @@
                     <!-- /.card -->
 
     </section>
+
+
+    <div class="modal fade" id="modal-hold-product">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="{{ route('dpr.holdProduct') }}" method="post">
+
+                    <div class="modal-body">
+                        @csrf
+
+                        <input type="hidden" class="form-control" name="hold_dpr_id" id="hold_dpr_id" value=""
+                            required readonly>
+
+                        <input type="hidden" class="form-control" name="hold_pcode" id="hold_pcode" value="" required
+                            readonly>
+
+                        <div class="form-group">
+                            <label class="form-label" for="customer"><i style="color:red">*</i>Quantity to hold</label>
+                            <input type="number" class="form-control" name="hold_qty" id="hold_qty" value=""
+                                required>
+                        </div>
+
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </div>
+
+                </form>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+    </div>
     <!-- /.content -->
 @endsection
 
@@ -243,6 +292,15 @@
 
         function confirmDeleteProduct() {
             return confirm('Are you sure you want to delete this product?');
+        }
+
+        function holdProduct(dpr_id, product_code) {
+
+            $('#hold_dpr_id').val(dpr_id);
+            $('#hold_pcode').val(product_code);
+
+            $('#modal-hold-product').modal('show');
+
         }
     </script>
 @endsection

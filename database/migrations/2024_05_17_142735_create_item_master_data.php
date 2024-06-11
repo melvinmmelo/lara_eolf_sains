@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('unit', 25);
             $table->integer('stocks');
             $table->integer('reserved')->default(0);
+            $table->integer('hold_quantity')->default(0);
+            $table->json('hold_details')->nullable(); // save the DR ID, PCODE, AND QUANTITY, DATE;
             $table->timestamps();
         });
     }

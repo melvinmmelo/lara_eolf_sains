@@ -31,6 +31,7 @@
                             <th>Product</th>
                             <th>Unit</th>
                             <th>Reserved</th>
+                            <th>Hold</th>
                             <th>Stocks</th>
                             <th>Date</th>
                         </tr>
@@ -41,6 +42,7 @@
                                 <td>{{ $product->product_code . " " . $product->product_description }}</td>
                                 <td>{{ $product->unit}}</td>
                                 <td>{{ $product->reserved }}</td>
+                                <td>{{ $product->hold }}</td>
                                 <td>{{ $product->stocks }}</td>
                                 <td>{{ $product->updated_at }}</td>
                             </tr>
@@ -51,6 +53,7 @@
                             <th>Product</th>
                             <th>Unit</th>
                             <th>Reserved</th>
+                            <th>Hold</th>
                             <th>Quantity</th>
                             <th>Date</th>
                         </tr>

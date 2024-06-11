@@ -75,6 +75,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dpr-delete/{drid}/{pcode}', [DeliveryPurchaseReceiptController::class, 'delete'])->name('dpr.delete');
 
+    Route::get('/dpr-delete/{drid}/{pcode}', [DeliveryPurchaseReceiptController::class, 'delete'])->name('dpr.delete');
+
+    Route::post('/dpr-hold', [DeliveryPurchaseReceiptController::class, 'holdProduct'])->name('dpr.holdProduct');
+
+
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');

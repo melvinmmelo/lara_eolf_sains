@@ -19,8 +19,8 @@ class CustomersController extends Controller
 
         // $customers = Customer::with('storeinfo')->get();
         // $customers = Customer::with(['storeinfo', 'equipmentStores'])->get();
-        $customers = Customer::with(['stores.equipmentStores'])->get();
-        
+        $customers = Customer::with(['stores.equipmentStores'])->branchCode(session('branch_code'))->get();
+
         return view('customersinfo', compact('customers'));
 
     }

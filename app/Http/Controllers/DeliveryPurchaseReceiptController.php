@@ -24,6 +24,10 @@ class DeliveryPurchaseReceiptController extends Controller
             $dprService->saveAndInventoryProducts();
         }
 
+        $dpr->products = $dprService->getNewProducts();
+        $dpr->save();
+
+
         return redirect()->route('delivery-purchase-receipts.index')->with('success', 'Delivery Receipt saved successfully.');
 
     }
@@ -52,7 +56,7 @@ class DeliveryPurchaseReceiptController extends Controller
         $sequence_no = ProductType::code($product->product_type_code)->pluck('sequence_no')->first();
 
 
-        $newProduct = ['order' => $sequence_no, 'code' => $request->product_code, 'description' => $product->productName ,'quantity' => $request->qty, 'unit' => $productPrice->p_unit, 'price' => $productPrice->p_price, 'created_at' => now()];
+        $newProduct = ['order' => $sequence_no, 'code' => $request->product_code, 'description' => $product->productName ,'quantity' => $request->qty, 'unit' => $productPrice->p_unit, 'price' => $productPrice->p_price, 'hold' => '0', 'created_at' => now()];
 
 
         $dprService = new DPRService($dpr->products);
@@ -146,12 +150,34 @@ class DeliveryPurchaseReceiptController extends Controller
 
         $dprService = new DPRService($dpr->products);
 
-        $products = $dprService->deleteProduct($request->pcode);
+        $dprService->deleteProduct($request->pcode);
+
+        $dpr->products =  $dprService->getNewProducts();
+
+        $dpr->save();
+
+        return redirect()->back()->with('success', 'Item deleted successfully.');
+    }
+
+    public function holdProduct(Request $request)
+    {
+
+        $request->validate([
+            'hold_dpr_id' => 'required|exists:delivery_purchase_receipts,id',
+            'hold_pcode' => 'required',
+            'hold_qty' => 'required',
+        ]);
+
+        $dpr = DeliveryPurchaseReceipt::findOrFail($request->hold_dpr_id);
+
+        $dprService = new DPRService($dpr->products);
+
+        $products = $dprService->holdProduct($request->hold_pcode, $request->hold_qty);
 
         $dpr->products = $products;
 
         $dpr->save();
 
-        return redirect()->back()->with('success', 'Item deleted successfully.');
+        return redirect()->back()->with('success', 'Item hold successfully.');
     }
 }
