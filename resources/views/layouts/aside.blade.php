@@ -172,6 +172,13 @@
                                 <p>Bad Order</p>
                             </a>
                         </li>
+
+                        <li>
+                            <a href="/deliveryreceipt" class="nav-link">
+                                <i class="fas fa-print nav-icon"></i>
+                                <p>Delivery Receipt</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
@@ -214,7 +221,8 @@
                             Logout
                         </p>
 
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                            style="display: none;">
                             @csrf
                         </form>
                     </a>

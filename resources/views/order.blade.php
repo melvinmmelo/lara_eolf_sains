@@ -36,12 +36,13 @@
                         <tr>
                             <th>Order No.</th>
                             <th>Date created</th>
-                            <th>Price Level</th>
+                            {{-- <th>Price Level</th> --}}
                             <th>Customer</th>
+                            <th>Delivery Person</th>
                             <th>Store</th>
                             <th>Equipment</th>
-                            <th>Delivery Person</th>
-                            <th>Vehicle</th>
+
+                            {{-- <th>Vehicle</th> --}}
                             <th>Total</th>
                             <th>Status</th>
                             <th>Date updated</th>
@@ -59,7 +60,7 @@
                                     foreach ($products as $acProd) {
                                         $total += $acProd['price'] * $acProd['quantity'];
                                     }
-                                }else{
+                                } else {
                                     $total = 0;
                                 }
                             @endphp
@@ -67,12 +68,13 @@
                             <tr>
                                 <td>{{ $inbound->id }}</td>
                                 <td>{{ $inbound->f_created_at }}</td>
-                                <td>{{ $inbound->priceLevel->pl_name }}</td>
+                                {{-- <td>{{ $inbound->priceLevel->pl_name }}</td> --}}
                                 <td>{{ $inbound->customer->fullName }}</td>
+                                <td>{{ $inbound->driver->name }}</td>
                                 <td>{{ $inbound->store->storename }}</td>
                                 <td>{{ $inbound->equipment->serial_no }}</td>
-                                <td>{{ $inbound->driver->name }}</td>
-                                <td>{{ $inbound->vehicle->plateno }}</td>
+
+                                {{-- <td>{{ $inbound->vehicle->plateno }}</td> --}}
                                 <td><span class="label label-primary">{{ $total }}</span></td>
                                 <td>{{ $inbound->status }}</td>
                                 <td>{{ $inbound->f_updated_at }}</td>
@@ -84,7 +86,8 @@
 
                                     @if ($inbound->status == 'Completed')
                                         <a href="#" data-target="#modalAddAmountDelivered" data-toggle="modal"><button
-                                                class="btn btn-danger" onclick="setObId(`{{ $inbound->id }}`)">Update</button></a>
+                                                class="btn btn-danger"
+                                                onclick="setObId(`{{ $inbound->id }}`)">Update</button></a>
                                     @endif
                                 </td>
                             </tr>
@@ -94,12 +97,12 @@
                         <tr>
                             <th>Order No.</th>
                             <th>Date</th>
-                            <th>Price Level</th>
+                            {{-- <th>Price Level</th> --}}
                             <th>Customer</th>
                             <th>Store</th>
                             <th>Equipment</th>
                             <th>Delivery Person</th>
-                            <th>Vehicle</th>
+                            {{-- <th>Vehicle</th> --}}
                             <th>Total</th>
                             <th>Status</th>
                             <th>Created By</th>
@@ -151,7 +154,7 @@
                                             <option value="">--Select--</option>
                                             @foreach ($equipment as $equip)
                                                 <option value="{{ $equip->id }}">
-                                                    {{  $equip->equipment->code . " " . $equip->customer->fullName   }}
+                                                    {{ $equip->equipment->code . ' ' . $equip->customer->fullName }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -235,8 +238,6 @@
 
 @section('custom_js')
     <script>
-
-
         function setCustomerName(str) {
             $.ajax({
                 type: "GET",
@@ -269,7 +270,5 @@
         function setObId(str) {
             document.getElementById('ob_id').value = str;
         }
-
-
     </script>
 @endsection
