@@ -1,4 +1,4 @@
-        <div id="orderProductSum">
+        <div class="product-list" id="orderProductSum">
 
             <table class="table table-bordered table-striped">
                 <thead>
@@ -62,7 +62,9 @@
 
             </table>
 
-            @if (count($summary))
+
+        </div>
+                    @if (count($summary))
                 <div>
                     <label for="spoon_count">Spoon Count</label>
                     <input type="text" name="sum_spoon_count" id="sum_spoon_count" class="form-control w-100"
@@ -72,5 +74,4 @@
                     <input type="text" name="sum_set_spoon" id="sum_set_spoon" class="form-control w-100"
                         value="{{ number_format(array_sum($totalSpCountSet)) }}" readonly>
                 </div>
-        </div>
         @endif

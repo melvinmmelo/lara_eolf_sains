@@ -47,7 +47,7 @@
         }
 
         .product-list {
-            max-height: 520px;
+            max-height: 580px;
             overflow: auto;
         }
 
@@ -175,7 +175,7 @@
                                 <div id="inboundList">
                                     <div class="row">
                                         <div class="col-sm-8">
-                                            <div class="table-responsive">
+                                            <div class="table-responsive product-list">
                                                 <table class="table table-bordered table-striped">
                                                     <thead>
                                                         <tr>
