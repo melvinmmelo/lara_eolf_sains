@@ -36,7 +36,6 @@
                             <th>Name</th>
                             <th>Contact Nos</th>
                             <th>Tin no.</th>
-                            <th>Store ID</th>
                             <th>Store Name</th>
                             <th>Equipments</th>
                             <th>Store Address</th>
@@ -54,7 +53,6 @@
                                     </td>
                                     <td>{{ $customer->contact_no }}</td>
                                     <td>{{ $customer->tin }}</td>
-                                    <td>{{ $store->id }}</td>
                                     <td>{{ $store->storename ?? '' }}</td>
                                     <td>
                                         @if ($store->equipmentStores->isNotEmpty())
@@ -133,7 +131,6 @@
                             <th>Name</th>
                             <th>Contact Nos</th>
                             <th>Tin no.</th>
-                            <th>Store ID</th>
                             <th>Store Name</th>
                             <th>Equipments</th>
                             <th>Store Address</th>
