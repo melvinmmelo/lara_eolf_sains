@@ -82,8 +82,6 @@
                                         <a href="#" data-target="#modalAddAmountDelivered" data-toggle="modal"><button
                                                 class="btn btn-danger"
                                                 onclick="setObId(`{{ $inbound->id }}`)">Update</button></a>
-                                                class="btn btn-danger"
-                                                onclick="setObId(`{{ $inbound->id }}`)">Update</button></a>
                                     @endif
                                 </td>
                             </tr>

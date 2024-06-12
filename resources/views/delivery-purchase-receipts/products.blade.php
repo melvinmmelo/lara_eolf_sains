@@ -262,7 +262,7 @@
                             readonly>
 
                         <div class="form-group">
-                            <label class="form-label" for="customer"><i style="color:red">*</i>Quantity to hold</label>
+                            <label class="form-label" for="hold_qty"><i style="color:red">*</i>Quantity to hold</label>
                             <input type="number" class="form-control" name="hold_qty" id="hold_qty" value=""
                                 required>
                         </div>

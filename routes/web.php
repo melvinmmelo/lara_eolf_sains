@@ -234,6 +234,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/item-master-data', [ItemMasterDataController::class, 'index'])->name('itemdata.index');
 
+    Route::post('/idm-addQtyFromHold', [ItemMasterDataController::class, 'addQtyFromHold'])->name('imd.addQtyFromHold');
+
     Route::put('/branch', [BranchesController::class, 'update'])->name('branch.update');
 
 

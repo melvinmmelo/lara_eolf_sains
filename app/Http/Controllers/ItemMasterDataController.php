@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ItemMasterData;
 use App\Http\Requests\StoreItemMasterDataRequest;
 use App\Http\Requests\UpdateItemMasterDataRequest;
+use Illuminate\Http\Request;
 
 class ItemMasterDataController extends Controller
 {
@@ -63,5 +64,22 @@ class ItemMasterDataController extends Controller
     public function destroy(ItemMasterData $itemMasterData)
     {
         //
+    }
+
+    public function addQtyFromHold(Request $request)
+    {
+
+        $request->validate([
+            'imd_id' => 'required',
+            'quantity' => 'required|numeric',
+        ]);
+
+        $product = ItemMasterData::find($request->imd_id);
+        $product->stocks += $request->quantity;
+        $product->hold_quantity -= $request->quantity;
+        $product->save();
+
+        return redirect()->back()->with('success', 'Quantity added successfully.');
+
     }
 }
