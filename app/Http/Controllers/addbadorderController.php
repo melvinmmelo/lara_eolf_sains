@@ -6,7 +6,8 @@ use App\Models\Customers;
 use App\Models\Inbound;
 use App\Models\TempBadOrder;
 use App\Models\BadOrder; // Ensure this is correct
-
+use App\Models\PriceLevels;
+use App\Models\Prices;
 use Illuminate\Http\Request;
 
 class addbadorderController extends Controller
@@ -32,8 +33,10 @@ class addbadorderController extends Controller
     {
         $inbounds = Inbound::with('customer.storeinfo')->get();
         $customers = Customers::with('storeinfo')->get();
+        $badPricing = PriceLevels::where('pl_name', 'BAD PRICING')->first();
 
-        return view('addbadorder', compact('inbounds', 'customers'));
+        // return view('addbadorder', compact('inbounds', 'customers'));
+        return view('addbadorder', compact('inbounds', 'customers', 'badPricing'));
     }
 
     public function getCustomerItems($customerId)
@@ -128,4 +131,15 @@ class addbadorderController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function getPrice($pricelevel_id, $p_code)
+    {
+        $price = Prices::where('pricelevel_id', $pricelevel_id)
+                    ->where('p_code', $p_code)
+                    ->first();
+
+        return response()->json($price);
+    }
+
+
 }

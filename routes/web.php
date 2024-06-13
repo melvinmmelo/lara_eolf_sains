@@ -58,6 +58,7 @@ Route::get('/fetch-items', [addbadorderController::class, 'fetchItems'])->name('
 // Route::post('/save-bad-orders', [addbadorderController::class, 'store'])->name('addbadorder.store');
 
 Route::get('/get-products/{inboundId}/{customerId}', [addbadorderController::class, 'getProducts']);
+Route::get('/get-price/{pricelevel_id}/{p_code}', [addbadorderController::class, 'getPrice']);
 
 
 Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');

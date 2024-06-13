@@ -196,23 +196,33 @@ document.addEventListener('DOMContentLoaded', function () {
     // Event listener for item selection
     itemSelect.on('change', function() {
         const selectedOption = $(this).find(':selected');
-        const price = selectedOption.data('price');
-        const quantity = selectedOption.data('quantity');
+        const p_code = selectedOption.val();
+        const pricelevel_id = {{ $badPricing->id }};
 
-        // Set quantity and price inputs
-        priceInput.val(price);
-        quantityInput.val(quantity);
+        // Fetch price from prices table
+        fetch(`/get-price/${pricelevel_id}/${p_code}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.p_price) {
+                    priceInput.val(data.p_price);
+                    quantityInput.val(data.p_quant || 1); // Default quantity to 1 if not provided
+                } else {
+                    console.error('Price not found for selected item');
+                }
+            })
+            .catch(error => console.error('Error fetching price:', error));
     });
 
-    // Event listener for Add button
-    addButton.on('click', function() {
-        const selectedItem = itemSelect.find(':selected');
-        const description = selectedItem.text();
-        const ptypeCode = selectedItem.data('ptypeCode');
-        const code = selectedItem.data('code');
-        const unit = selectedItem.data('unit');
-        const quantity = quantityInput.val();
-        const price = priceInput.val();
+
+    // Event listener for Add Item button
+    addButton.on('click', function () {
+        const selectedOption = itemSelect.find(':selected');
+        const ptypeCode = selectedOption.data('ptype-code');
+        const code = selectedOption.data('code');
+        const description = selectedOption.text();
+        const quantity = parseFloat(quantityInput.val());
+        const unit = selectedOption.data('unit');
+        const price = parseFloat(priceInput.val());
         const amount = quantity * price;
 
         // Save the item to the temporary table via AJAX
