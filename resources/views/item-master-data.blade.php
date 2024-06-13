@@ -44,7 +44,9 @@
                                 <td>{{ $product->reserved }}</td>
                                 <td>
                                     @if ($product->hold_quantity > 0)
-                                        <a href="#" onclick="unholdProduct(`{{ $product->id }}`, `{{ $product->hold_quantity }}`);" class="btn btn-danger btn-sm">{{ $product->hold_quantity }}</a>
+                                        <a href="#"
+                                            onclick="unholdProduct(`{{ $product->id }}`, `{{ $product->hold_quantity }}`);"
+                                            class="btn btn-danger btn-sm">{{ $product->hold_quantity }}</a>
                                     @endif
                                 </td>
                                 <td>{{ $product->stocks }}</td>
