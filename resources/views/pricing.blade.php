@@ -328,6 +328,10 @@
 
                 }
             });
+
+            $('#modal-price').on('shown.bs.modal', function() {
+                $('#pricing_id').val($('#pricing_id option:first').val());
+            });
         });
     </script>
 @endsection
