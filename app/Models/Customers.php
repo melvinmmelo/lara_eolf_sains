@@ -82,4 +82,9 @@ class Customers extends Model
     {
         return $query->where('branch_code', $branchCode);
     }
+
+    public function badOrders()
+    {
+        return $this->hasMany(BadOrder::class, 'customer_id');
+    }
 }
