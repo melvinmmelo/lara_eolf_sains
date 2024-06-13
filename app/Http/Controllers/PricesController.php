@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\prices;
 use App\Models\pricelevels;
 use App\Models\Product;
+use App\Models\ProductType;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 
@@ -28,8 +29,10 @@ class PricesController extends Controller
 
         $products = Product::all();
 
+        $productTypes = ProductType::all()->sortBy('sequence_no');
+
         // Pass the vehicles data to the view
-        return view('pricing', compact('pricing', 'pricelevels', 'products'));
+        return view('pricing', compact('pricing', 'pricelevels', 'products', 'productTypes'));
     }
 
     /**
@@ -45,32 +48,52 @@ class PricesController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
             'pricing_id' => 'required',
-            'price_code' => 'required',
-            'price_unit' => 'required',
-            'quant' => 'required',
-            'price' => 'required',
         ]);
 
-        // check if the price already exists
-        $pricing = prices::where('pricelevel_id', $request->pricing_id)
-            ->where('p_code', $request->price_code)
-            ->first();
+        $pricing = pricelevels::find($request->pricing_id);
 
-        if ($pricing) {
-            return redirect('/pricing/')->withErrors('Price already exists!');
+        if (!$pricing) {
+            return redirect('/pricing/')->withErrors('Pricing level not found!');
         }
 
-        prices::create([
-            'pricelevel_id' => $request->pricing_id,
-            'p_code' => $request->price_code,
-            'p_unit' => $request->price_unit,
-            'p_quant' => $request->quant,
-            'p_price' => $request->price,
+        if ($pricing->pl_name == 'BAD PRICING') {
 
-            // Add more fields as needed
-        ]);
+            $request->validate([
+                'product_type' => 'required',
+                'price' => 'required',
+            ]);
+
+            prices::create([
+                'pricelevel_id' => $request->pricing_id,
+                'p_code' => $request->product_type,
+                'p_price' => $request->price,
+            ]);
+
+
+        } else {
+
+            $request->validate([
+                'price_code' => 'required',
+                'price_unit' => 'required',
+                'quant' => 'required',
+                'price' => 'required',
+            ]);
+
+            prices::create([
+                'pricelevel_id' => $request->pricing_id,
+                'p_code' => $request->price_code,
+                'p_unit' => $request->price_unit,
+                'p_quant' => $request->quant,
+                'p_price' => $request->price,
+
+                // Add more fields as needed
+            ]);
+
+        }
+
 
         return redirect('/pricing/')->with('success', 'Pricing added successfully!');
     }
@@ -115,7 +138,6 @@ class PricesController extends Controller
         $pricing->save();
 
         return redirect('/pricing/')->with('success', 'Price updated successfully!');
-
     }
 
     /**

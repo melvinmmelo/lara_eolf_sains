@@ -20,9 +20,11 @@ class DriversController extends Controller
      */
     public function index()
     {
+
         $drivers = Drivers::with('priceLevel')->get();
-        // Pass the vehicles data to the view
-        $priceLevels = pricelevels::all();
+
+        $priceLevels = pricelevels::getPriceLevels(session('branch_code'));
+
         return view('delivery-persons', compact('drivers', 'priceLevels'));
 
     }

@@ -46,7 +46,7 @@
                                 @foreach ($pricing as $price)
                                     <tr>
                                         <td>{{ $price->pricelevel->pl_name }}</td>
-                                        <td>{{ $price->product->productName }}</td>
+                                        <td>{{ $price->product->productName ?? $price->productType->name }}</td>
                                         <td>{{ $price->p_unit }}</td>
                                         <td>{{ $price->p_quant }}</td>
                                         <td>{{ $price->p_price }}</td>
@@ -105,25 +105,30 @@
             <!-- /.card -->
             <div class="modal fade" id="modal-price">
                 <div class="modal-dialog">
-                    <form method="POST" action="/pricing/store">
-                        @csrf
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title">Add Pricing</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Add Pricing</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div>
+                                <label class="form-label" for="pricing_id"><i style="color:red">*</i>Price
+                                    Level</label>
+                                <select class="form-control" id="pricing_id">
+                                    <option value="">--Select--</option>
+                                    @foreach ($pricelevels as $pl)
+                                        <option value="{{ $pl->id }}">{{ $pl->pl_name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="modal-body">
+                            <form id="ifNotBadPricing" method="POST" action="/pricing/store">
+                                @csrf
 
                                 <div class="form-group">
-                                    <label class="form-label" for="pricing_id"><i style="color:red">*</i>Price
-                                        Level</label>
-                                    <select class="form-control" id="pricing_id" name="pricing_id">
-                                        @foreach ($pricelevels as $pl)
-                                            <option value="{{ $pl->id }}">{{ $pl->pl_name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <input type="hidden" name="pricing_id" id="nb_pricing_id" class="form-control" required readonly>
                                 </div>
                                 <div class="form-group">
 
@@ -160,26 +165,54 @@
                                 <div class="form-group">
                                     <div class="row mb-2">
                                         <div class="col-sm-6">
-                                            <label class="form-label" for="price"><i style="color:red">*</i>Price</label>
+                                            <label class="form-label" for="price"><i
+                                                    style="color:red">*</i>Price</label>
                                             <input type="number" step=".01" class="form-control" id="price"
                                                 name="price">
                                         </div>
                                     </div>
                                 </div>
+                                <button type="submit" class="btn btn-success">Save changes</button>
+                            </form>
 
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-success">Save changes</button>
+                            <form id="ifBadPricing" method="POST" action="/pricing/store">
+                                @csrf
+
+                                <div class="form-group">
+                                    <input type="hidden" name="pricing_id" id="b_pricing_id" class="form-control" required readonly>
                                 </div>
-                            </div>
-                            <!-- /.modal-content -->
+
+                                <div class="form-group">
+
+                                    <label class="form-label" for="product_type"><i style="color:red">*</i>Product Type</label>
+                                    <select class="form-control select2bs4" id="product_type" name="product_type">
+                                        @foreach ($productTypes as $pType)
+                                            <option value="{{ $pType->code }}">
+                                                {{ $pType->code . ' ' . $pType->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="row mb-2">
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="price"><i
+                                                    style="color:red">*</i>Price</label>
+                                            <input type="number" step=".01" class="form-control" id="price"
+                                                name="price">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-success">Save changes</button>
+                            </form>
                         </div>
-                        <!-- /.modal-dialog -->
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
                 </div>
                 <!-- /.modal -->
-                </form>
             </div>
-
-            <div>
     </section>
     <!-- /.content -->
 
@@ -259,6 +292,37 @@
             $('#clear').on('click', function() {
                 $('#price_level').val('');
                 $('#example1_filter input').val('').trigger('keyup');
+            });
+        });
+
+        $(document).ready(function() {
+
+            // hide the ifBadPricing form
+            $('#ifBadPricing').hide();
+
+            $('#pricing_id').on('change', function() {
+
+                var value = $(this).val();
+
+                // how to get the text of the selected option
+                var selectedPricingText = $("#pricing_id option:selected").text();
+
+                console.log(selectedPricingText);
+
+                if (selectedPricingText != 'BAD PRICING') {
+
+                    $('#ifNotBadPricing').show();
+                    $('#ifBadPricing').hide();
+
+                    $('#nb_pricing_id').val(value);
+
+                } else {
+
+                    $('#ifNotBadPricing').hide();
+                    $('#ifBadPricing').show();
+                    $('#b_pricing_id').val(value);
+
+                }
             });
         });
     </script>

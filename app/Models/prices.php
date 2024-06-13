@@ -27,6 +27,11 @@ class prices extends Model
         return $this->belongsTo(pricelevels::class);
     }
 
+    public function productType()
+    {
+        return $this->belongsTo(ProductType::class, 'p_code', 'code');
+    }
+
     public static function getPrice($productCode, $branchCode, $priceType)
     {
         $price = prices::where('p_code', $productCode)->whereHas('pricelevel', function ($query) use ($branchCode, $priceType) {

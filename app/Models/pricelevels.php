@@ -35,4 +35,10 @@ class pricelevels extends Model
         return $this->created_at->format('m-d-Y h:i A');
     }
 
+    // get all price levels by branch code that is not bad pricing and is active
+    public static function getPriceLevels($branchCode)
+    {
+        return pricelevels::branch($branchCode)->where('pl_name', '!=', 'BAD PRICING')->where('pl_status', 'Active')->get();
+    }
+
 }

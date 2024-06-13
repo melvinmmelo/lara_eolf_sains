@@ -82,8 +82,7 @@ class InboundController extends Controller
 
         $equipment = EquipmentStore::all();
 
-        $pricing = pricelevels::branch(session('branch_code'))->get();
-
+        $pricing = pricelevels::getPriceLevels(session('branch_code'));
 
         return view('order', compact('equipment', 'drivers', 'vehicles', 'inbounds', 'pricing'));
     }

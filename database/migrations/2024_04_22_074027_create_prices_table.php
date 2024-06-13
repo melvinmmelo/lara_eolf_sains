@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('prices', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('pricelevel_id');
-            $table->string('p_code');
-            $table->string('p_unit');
-            $table->string('p_quant');
+            $table->string('p_code')->comment('can be the ptype code cz of the bad pricing');
+            $table->string('p_unit')->nullable();
+            $table->string('p_quant')->nullable();
             $table->float('p_price',2);
             $table->timestamps();
 
