@@ -128,7 +128,8 @@
                                 @csrf
 
                                 <div class="form-group">
-                                    <input type="hidden" name="pricing_id" id="nb_pricing_id" class="form-control" required readonly>
+                                    <input type="hidden" name="pricing_id" id="nb_pricing_id" class="form-control" required
+                                        readonly>
                                 </div>
                                 <div class="form-group">
 
@@ -165,8 +166,7 @@
                                 <div class="form-group">
                                     <div class="row mb-2">
                                         <div class="col-sm-6">
-                                            <label class="form-label" for="price"><i
-                                                    style="color:red">*</i>Price</label>
+                                            <label class="form-label" for="price"><i style="color:red">*</i>Price</label>
                                             <input type="number" step=".01" class="form-control" id="price"
                                                 name="price">
                                         </div>
@@ -179,12 +179,14 @@
                                 @csrf
 
                                 <div class="form-group">
-                                    <input type="hidden" name="pricing_id" id="b_pricing_id" class="form-control" required readonly>
+                                    <input type="hidden" name="pricing_id" id="b_pricing_id" class="form-control"
+                                        required readonly>
                                 </div>
 
                                 <div class="form-group">
 
-                                    <label class="form-label" for="product_type"><i style="color:red">*</i>Product Type</label>
+                                    <label class="form-label" for="product_type"><i style="color:red">*</i>Product
+                                        Type</label>
                                     <select class="form-control select2bs4" id="product_type" name="product_type">
                                         @foreach ($productTypes as $pType)
                                             <option value="{{ $pType->code }}">
@@ -237,12 +239,12 @@
                             <div class="row mb-2">
 
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="e_quant"><i style="color:red">*</i>Quantity</label>
+                                    <label class="form-label" for="e_quant">Quantity</label>
                                     <input type="number" class="form-control" id="e_quant" name="e_quant">
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="e_price_unit"><i style="color:red">*</i>Unit</label>
+                                    <label class="form-label" for="e_price_unit">Unit</label>
                                     <select class="form-control" id="e_price_unit" name="e_price_unit">
                                         <option value="Bag/s">Bag/s</option>
                                         <option value="Box/es">Box/es</option>
@@ -257,9 +259,11 @@
                             <input type="numeric" step=".01" class="form-control" id="e_price" name="e_price">
                         </div>
 
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-success">Save price</button>
-                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Save price</button>
                     </div>
                     <!-- /.modal-content -->
                 </div>

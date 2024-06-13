@@ -71,8 +71,6 @@ class PricesController extends Controller
                 'p_code' => $request->product_type,
                 'p_price' => $request->price,
             ]);
-
-
         } else {
 
             $request->validate([
@@ -88,10 +86,7 @@ class PricesController extends Controller
                 'p_unit' => $request->price_unit,
                 'p_quant' => $request->quant,
                 'p_price' => $request->price,
-
-                // Add more fields as needed
             ]);
-
         }
 
 
@@ -121,21 +116,39 @@ class PricesController extends Controller
     {
         $request->validate([
             'price_id' => 'required',
-            'e_quant' => 'required|numeric',
-            'e_price_unit' => 'required',
-            'e_price' => 'required|numeric',
         ]);
 
         $pricing = prices::find($request->price_id);
 
-        $pricing->update([
-            'p_quant' => $request->e_quant,
-            'p_unit' => $request->e_price_unit,
-            'p_price' => $request->e_price,
+        if ($pricing->priceLevel->pl_name == 'BAD PRICING') {
 
-        ]);
+            $request->validate([
+                'e_price' => 'required|numeric',
+            ]);
 
-        $pricing->save();
+            $pricing->p_price = $request->e_price;
+            $pricing->save();
+
+        } else {
+
+            $request->validate([
+                'price_id' => 'required',
+                'e_quant' => 'required|numeric',
+                'e_price_unit' => 'required',
+                'e_price' => 'required|numeric',
+            ]);
+
+            if ($request->e_price_unit == '0') {
+                return redirect('/pricing/')->withErrors('Please select a price unit!');
+            }
+
+            $pricing->update([
+                'p_quant' => $request->e_quant,
+                'p_unit' => $request->e_price_unit,
+                'p_price' => $request->e_price,
+            ]);
+
+        }
 
         return redirect('/pricing/')->with('success', 'Price updated successfully!');
     }
