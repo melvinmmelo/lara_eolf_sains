@@ -45,6 +45,8 @@ class CompanyDetailsController extends Controller
         $companyDetails->logo = $logoPath;
         $companyDetails->save();
 
+        activity()->log("User updates the company details.");
+
         return redirect()->back()->with('success', 'Company details saved!');
     }
 }
