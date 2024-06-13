@@ -21,7 +21,8 @@ use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentStoreController;
 use App\Http\Controllers\ItemMasterDataController;
 use App\Http\Controllers\addbadorderController;
-
+use App\Http\Controllers\TempBadOrderController;
+use App\Http\Controllers\BadOrderController;
 Route::get('/', function () {
     if (auth()->check()) {
 
@@ -35,9 +36,9 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-// Route::get('/bad-orders', function () {
-//     return view('addbadorder');
-// });
+Route::get('/bad-orders-list', function () {
+    return view('badorder');
+});
 
 // Route::get('/addbad-orders', function () {
 //     return view('addbadorder');
@@ -51,11 +52,26 @@ Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addba
 Route::get('/api/getCustomerItems/{customerId}', [addbadorderController::class, 'getCustomerItems']);
 Route::get('/fetch-items', [addbadorderController::class, 'fetchItems'])->name('fetch.items');
 
-Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');
 
+// Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');
+// // Route::post('/save-bad-orders', [addbadorderController::class, 'save'])->name('save-bad-orders');
+// Route::post('/save-bad-orders', [addbadorderController::class, 'store'])->name('addbadorder.store');
 
 Route::get('/get-products/{inboundId}/{customerId}', [addbadorderController::class, 'getProducts']);
 
+
+Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');
+Route::post('/bad-orders', [addbadorderController::class, 'store'])->name('addbadorder.store');
+// Route::get('/get-products/{inboundId}/{customerId}', [addbadorderController::class, 'getProducts'])->name('getProducts');
+
+
+
+Route::get('/bad-orders-list', [BadOrderController::class, 'index'])->name('badOrders.index');
+
+
+
+Route::post('/save-temp-bad-order', [TempBadOrderController::class, 'store']);
+Route::post('/clear-temp-bad-orders', [TempBadOrderController::class, 'clear']);
 
 Route::get('/delivery-receipt', function () {
     return view('delivery-receipt');

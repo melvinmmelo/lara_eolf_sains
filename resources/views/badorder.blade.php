@@ -31,37 +31,44 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-
                             <th>BO Id</th>
                             <th>Customer</th>
-                            <th>Outbound</th>
-                            <th>Amount</th>
-                            <th>Status</th>
+                            <th>Created Date</th>
+                            <th>Total Amount</th>
+                            <th>Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                    @foreach($badOrders as $badOrder)
+                        <tr>
+                            <td>{{ $badOrder['bo_id'] }}</td>
+                            <td>
+                                {{ optional($badOrder['customer'])->firstname }} 
+                                {{ optional($badOrder['customer'])->lastname }} 
+                                ({{ optional($badOrder['storeinfo'])->storename }})
+                            </td>
+                            <td>{{ $badOrder['created_at'] }}</td>
+                            <td>{{ $badOrder['amount'] }}</td>
+                            <td>{{ $badOrder['remarks'] }}</td>
+                        </tr>
+                    @endforeach
                     </tbody>
-
                     <tfoot>
                         <tr>
                             <th>BO Id</th>
                             <th>Customer</th>
-                            <th>Outbound</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-
+                            <th>Created Date</th>
+                            <th>Total Amount</th>
+                            <th>Remarks</th>
                         </tr>
                     </tfoot>
                 </table>
+
             </div>
             <!-- /.card-body -->
             <div class="card-footer">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-badorder">
+                <button type="button" class="btn btn-primary"  
+                        onclick="window.location.href='{{ route('addbadorder.create') }}'">
                     Add New
                 </button>
             </div>
@@ -116,11 +123,7 @@
 
     </section>
 
-
-
-    <!-- /.content -->
 @endsection
-
 
 @section('custom_js')
     <script>

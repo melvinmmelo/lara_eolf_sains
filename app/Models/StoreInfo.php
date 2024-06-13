@@ -45,5 +45,9 @@ class StoreInfo extends Model
     {
         return $this->created_at->format('m-d-Y h:i A');
     }
-
+    
+    public function badOrders()
+    {
+        return $this->hasMany(BadOrder::class, 'store_id');
+    }
 }
