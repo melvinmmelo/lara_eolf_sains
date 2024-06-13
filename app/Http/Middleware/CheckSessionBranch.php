@@ -16,12 +16,20 @@ class CheckSessionBranch
     public function handle(Request $request, Closure $next): Response
     {
 
-        if($request->route()->getName() != 'branch.setBranchSession' and session('branch_code') === null) {
-            return redirect()->route('branch.setBranchSession');
+        // if ($request->route()->getName() === 'branch-select' and session('branch_code') === null or $request->route()->getName() === 'branch.setBranchSession' or $request->route()->getName() === 'login') {
+        //     return $next($request);
+        // }
+
+        if($request->route()->getName() === 'login' or $request->route()->getName() === 'branch.setBranchSession'){
+            return $next($request);
+        }
+
+
+        if (auth()->check() and (session('branch_code') === null or session('branch_code') == '') and $request->route()->getName() !== 'branch-select'){
+            return redirect()->route('branch-select');
         }
 
         return $next($request);
-
 
     }
 }
