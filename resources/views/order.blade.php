@@ -34,15 +34,18 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>Order No.</th>
-                            <th>Delivery Person</th>
+
+                            {{-- <th>Delivery Person</th> --}}
                             <th>Date created</th>
+                            <th>Order No.</th>
+                            <th>Degic No.</th>
                             <th>Customer</th>
-                            <th>Store</th>
-                            <th>Equipment</th>
-                            <th>Total</th>
+                            {{-- <th>Store</th> --}}
+
+                            <th>Invoice Amount</th>
+                            <th>Balance Due</th>
                             <th>Status</th>
-                            <th>Date updated</th>
+                            <th>Days Overdue</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -63,15 +66,19 @@
                             @endphp
 
                             <tr>
-                                <td>{{ $inbound->id }}</td>
-                                <td>{{ $inbound->driver->name }}</td>
+
+                                {{-- <td>{{ $inbound->driver->name }}</td> --}}
                                 <td>{{ $inbound->f_created_at }}</td>
-                                <td>{{ $inbound->customer->fullName }}</td>
-                                <td>{{ $inbound->store->storename }}</td>
+                                <td>{{ $inbound->id }}</td>
                                 <td>{{ $inbound->equipment->serial_no }}</td>
+                                <td>{{ $inbound->customer->fullName }}</td>
+                                {{-- <td>{{ $inbound->store->storename }}</td> --}}
+
                                 <td><span class="label label-primary">{{ $total }}</span></td>
+                                <td> </td>
                                 <td>{{ $inbound->status }}</td>
-                                <td>{{ $inbound->f_updated_at }}</td>
+                                <td> </td>
+                                {{-- <td>{{ $inbound->f_updated_at }}</td> --}}
                                 <td>
                                     @if ($inbound->status == 'Encoding')
                                         <a href="{{ route('order.processTwo', ['inbound' => $inbound->id]) }}"><button
@@ -89,15 +96,18 @@
                     </tbody>
                     <tfoot>
                         <tr>
+
+                            <th>Date Created</th>
                             <th>Order No.</th>
-                            <th>Delivery Person</th>
-                            <th>Date</th>
+                            {{-- <th>Delivery Person</th> --}}
+                            <th>Degic No.</th>
                             <th>Customer</th>
-                            <th>Store</th>
-                            <th>Equipment</th>
-                            <th>Total</th>
+                            {{-- <th>Store</th> --}}
+
+                            <th>Invoice Amount</th>
+                            <th>Balance Due</th>
                             <th>Status</th>
-                            <th>Created By</th>
+                            <th>Days Overdue</th>
                             <th></th>
                         </tr>
                     </tfoot>
