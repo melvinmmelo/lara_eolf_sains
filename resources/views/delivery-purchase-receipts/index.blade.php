@@ -31,6 +31,12 @@
         <div class="card">
 
             <div class="card-body table-responsive">
+
+                <div class="pb-2">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-inventory"">
+                        Add New
+                    </button>
+                </div>
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -46,16 +52,15 @@
                     <tbody>
 
                         @foreach ($deliveryPurchaseReceipts as $dr)
-
-                        @php
-                            $total = 0;
-                            if($dr->products){
-                                $products = json_decode($dr->products,true);
-                                foreach($products as $product){
-                                    $total += $product['quantity'] * $product['price'];
+                            @php
+                                $total = 0;
+                                if ($dr->products) {
+                                    $products = json_decode($dr->products, true);
+                                    foreach ($products as $product) {
+                                        $total += $product['quantity'] * $product['price'];
+                                    }
                                 }
-                            }
-                        @endphp
+                            @endphp
                             <tr>
                                 <td>{{ $dr->dr_no }}</td>
                                 <td>{{ $dr->issue_date }}</td>

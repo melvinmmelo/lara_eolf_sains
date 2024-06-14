@@ -71,6 +71,7 @@
         <div class="card">
 
             <div class="card-body">
+
                 <div>
                     <div id="inboundList">
                         <div class="row">

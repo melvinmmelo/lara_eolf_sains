@@ -27,7 +27,11 @@
             <div class="card-body">
 
                 @include('layouts.errors')
-
+                <div class="pb-2">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-products">
+                        Add New
+                    </button>
+                </div>
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -98,7 +102,8 @@
                                 <div class="row mb-2">
                                     <div class="col-sm-6">
                                         <label class="form-label" for="name"><i style="color:red">*</i>Type</label>
-                                        <select class="form-control select2bs4" id="product_type_code" name="product_type_code">
+                                        <select class="form-control select2bs4" id="product_type_code"
+                                            name="product_type_code">
                                             @foreach ($types as $type)
                                                 <option value="{{ $type->code }}">{{ $type->code }}</option>
                                             @endforeach
@@ -107,7 +112,8 @@
 
                                     <div class="col-sm-6">
                                         <label class="form-label" for="name"><i style="color:red">*</i>Variant</label>
-                                        <select class="form-control select2bs4" id="product_variant_code" name="product_variant_code">
+                                        <select class="form-control select2bs4" id="product_variant_code"
+                                            name="product_variant_code">
                                             @foreach ($variants as $variant)
                                                 <option value="{{ $variant->code }}">{{ $variant->code }}</option>
                                             @endforeach

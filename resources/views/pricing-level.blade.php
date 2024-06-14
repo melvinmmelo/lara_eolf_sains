@@ -28,6 +28,11 @@
             <div class="card-body">
 
                 @include('layouts.errors')
+                <div class="pb-2">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-price-level">
+                        Add New
+                    </button>
+                </div>
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>

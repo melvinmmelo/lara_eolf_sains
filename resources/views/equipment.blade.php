@@ -47,7 +47,13 @@
         <!-- Default box -->
         <div class="card">
             @include('layouts.errors')
+
             <div class="card-body">
+                <div class="pb-2">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
+                        Add New
+                    </button>
+                </div>
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
