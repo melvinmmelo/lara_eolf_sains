@@ -34,7 +34,7 @@
                             {{-- <th>ID</th>
                             <th>Branch</th> --}}
                             <th>Name</th>
-                            <th>Contact Nos</th>
+                            <th>Contact No.</th>
                             <th>Tin no.</th>
                             <th>Store Name</th>
                             <th>Equipments</th>
@@ -129,7 +129,7 @@
                             {{-- <th>ID</th>
                             <th>Branch</th> --}}
                             <th>Name</th>
-                            <th>Contact Nos</th>
+                            <th>Contact No.</th>
                             <th>Tin no.</th>
                             <th>Store Name</th>
                             <th>Equipments</th>
@@ -196,20 +196,17 @@
                                             <div class="form-group">
                                                 <div class="row mb-3">
                                                     <div class="col-sm-4">
-                                                        <label class="form-label" for="cust_lname"><i
-                                                                style="color:red">*</i>Last Name:</label>
+                                                        <label class="form-label" for="cust_lname">Last Name:</label>
                                                         <input type="text" class="form-control" id="cust_lname"
                                                             name="lastname">
                                                     </div>
                                                     <div class="col-sm-4">
-                                                        <label class="form-label" for="cust_fname"><i
-                                                                style="color:red">*</i>First Name:</label>
+                                                        <label class="form-label" for="cust_fname">First Name:</label>
                                                         <input type="text" class="form-control" id="cust_fname"
                                                             name="firstname">
                                                     </div>
                                                     <div class="col-sm-4">
-                                                        <label class="form-label" for="cust_mname"><i
-                                                                style="color:red">*</i>Middle Name:</label>
+                                                        <label class="form-label" for="cust_mname">Middle Name:</label>
                                                         <input type="text" class="form-control" id="cust_mname"
                                                             name="middlename">
                                                     </div>
@@ -219,8 +216,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_contact"><i
-                                                                style="color:red">*</i>Contact No.:</label>
+                                                        <label class="form-label" for="cust_contact">Contact No.:</label>
                                                         <input type="text" class="form-control" id="cust_contact"
                                                             name="contact_no">
                                                     </div>
@@ -230,8 +226,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_comp"><i
-                                                                style="color:red">*</i>Company Name:</label>
+                                                        <label class="form-label" for="cust_comp">Company Name:</label>
                                                         <input type="text" class="form-control" id="cust_comp"
                                                             name="companyname">
                                                     </div>
@@ -241,8 +236,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_tin"><i
-                                                                style="color:red">*</i>TIN:</label>
+                                                        <label class="form-label" for="cust_tin">TIN:</label>
                                                         <input type="text" class="form-control" id="cust_tin"
                                                             name="tin">
                                                     </div>
@@ -254,8 +248,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_region"><i
-                                                                style="color:red">*</i>Region</label>
+                                                        <label class="form-label" for="cust_region">Region</label>
                                                         <select class="form-control" id="cust_region" name="region">
                                                             <!-- <option></option> -->
                                                         </select>
@@ -266,8 +259,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_prov"><i
-                                                                style="color:red">*</i>Province</label>
+                                                        <label class="form-label" for="cust_prov">Province</label>
                                                         <select class="form-control" id="cust_prov" name="province">
                                                         </select>
                                                     </div>
@@ -277,8 +269,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_city"><i
-                                                                style="color:red">*</i>City</label>
+                                                        <label class="form-label" for="cust_city">City</label>
                                                         <select class="form-control" id="cust_city" name="city">
                                                         </select>
                                                     </div>
@@ -288,8 +279,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_brgy"><i
-                                                                style="color:red">*</i>Barangay</label>
+                                                        <label class="form-label" for="cust_brgy">Barangay</label>
                                                         <select class="form-control" id="cust_brgy" name="brgy">
                                                         </select>
                                                     </div>
@@ -299,8 +289,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_subd"><i
-                                                                style="color:red">*</i>Subdivision</label>
+                                                        <label class="form-label" for="cust_subd">Subdivision</label>
                                                         <input type="text" class="form-control" id="cust_subd"
                                                             name="subdivision">
                                                     </div>
@@ -309,8 +298,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="latitude"><i
-                                                                style="color:red">*</i>Latitude</label>
+                                                        <label class="form-label" for="latitude">Latitude</label>
                                                         <input type="text" class="form-control" name="latitude"
                                                             id="latitude">
                                                     </div>
@@ -320,8 +308,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="longitude"><i
-                                                                style="color:red">*</i>Longitude</label>
+                                                        <label class="form-label" for="longitude">Longitude</label>
                                                         <input type="text" class="form-control" name="longitude"
                                                             id="longitude">
 
@@ -363,8 +350,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="storename"><i
-                                                                style="color:red">*</i>Store Name</label>
+                                                        <label class="form-label" for="storename">Store Name</label>
                                                         <input type="text" class="form-control" name="storename">
                                                     </div>
                                                 </div>
@@ -373,8 +359,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="contactno2"><i
-                                                                style="color:red">*</i>Contact No.</label>
+                                                        <label class="form-label" for="contactno2">Contact No.</label>
                                                         <input type="text" class="form-control" name="contactno2">
                                                     </div>
                                                 </div>
@@ -386,8 +371,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_region2"><i
-                                                                style="color:red">*</i>Region</label>
+                                                        <label class="form-label" for="cust_region2">Region</label>
                                                         <select class="form-control" id="cust_region2" name="region2">>
                                                         </select>
                                                     </div>
@@ -397,8 +381,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_prov2"><i
-                                                                style="color:red">*</i>Province</label>
+                                                        <label class="form-label" for="cust_prov2">Province</label>
                                                         <select class="form-control" id="cust_prov2" name="province2">
                                                         </select>
                                                     </div>
@@ -408,8 +391,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_city2"><i
-                                                                style="color:red">*</i>City</label>
+                                                        <label class="form-label" for="cust_city2">City</label>
                                                         <select class="form-control" id="cust_city2" name="city2">
                                                         </select>
                                                     </div>
@@ -419,8 +401,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_brgy2"><i
-                                                                style="color:red">*</i>Barangay</label>
+                                                        <label class="form-label" for="cust_brgy2">Barangay</label>
                                                         <select class="form-control" id="cust_brgy2" name="brgy2">
                                                         </select>
                                                     </div>
@@ -430,8 +411,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="subdivision2"><i
-                                                                style="color:red">*</i>Subdivision:</label>
+                                                        <label class="form-label" for="subdivision2">Subdivision:</label>
                                                         <input type="text" class="form-control" id="cust_subdivision2"
                                                             name="subdivision2">
                                                     </div>
@@ -441,8 +421,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="latitude2"><i
-                                                                style="color:red">*</i>Latitude:</label>
+                                                        <label class="form-label" for="latitude2">Latitude:</label>
                                                         <input type="text" class="form-control" id="cust_latitude2"
                                                             name="latitude2">
                                                     </div>
@@ -452,8 +431,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="longitude2"><i
-                                                                style="color:red">*</i>Longitude:</label>
+                                                        <label class="form-label" for="longitude2">Longitude:</label>
                                                         <input type="text" class="form-control" id="cust_longitude2"
                                                             name="longitude2">
                                                     </div>
@@ -463,8 +441,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="listype"><i
-                                                                style="color:red">*</i>Least Type:</label>
+                                                        <label class="form-label" for="listype">Least Type:</label>
                                                         <select class="form-control" id="listype" name="listype">
                                                             <option>option 1</option>
                                                             <option>option 2</option>
@@ -478,8 +455,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="longitude2"><i
-                                                                style="color:red">*</i>Length of Stay:</label>
+                                                        <label class="form-label" for="longitude2">Length of Stay:</label>
                                                         <input type="text" class="form-control" id="length_stay"
                                                             name="length_stay">
                                                     </div>
@@ -621,7 +597,7 @@
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_region" name="e_region">
 
-                                                                                                                                </select> -->
+                                                                                                                                        </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -633,7 +609,7 @@
                                                         <input type="text" id="e_province" name="e_province"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_province" name="e_province">
-                                                                                                                                </select> -->
+                                                                                                                                        </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -645,7 +621,7 @@
                                                         <input type="text" id="e_city" name="e_city"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_city" name="e_city">
-                                                                                                                                </select> -->
+                                                                                                                                        </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -657,7 +633,7 @@
                                                         <input type="text" id="e_brgy" name="e_brgy"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_brgy" name="e_brgy">
-                                                                                                                                </select> -->
+                                                                                                                                        </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -738,7 +714,7 @@
                                                         <input type="text" id="e_region2" name="e_region2"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_region2" name="e_region2">
-                                                                                                                                </select> -->
+                                                                                                                                        </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -750,7 +726,7 @@
                                                         <input type="text" id="e_province2" name="e_province2"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_province2" name="e_province2">
-                                                                                                                                </select> -->
+                                                                                                                                        </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -762,7 +738,7 @@
                                                         <input type="text" id="e_city2" name="e_city2"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_city2" name="e_city2">
-                                                                                                                                </select> -->
+                                                                                                                                        </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -774,7 +750,7 @@
                                                         <input type="text" id="e_brgy2" name="e_brgy2"
                                                             class="form-control">
                                                         <!-- <select class="form-control" id="e_brgy2" name="e_brgy2">
-                                                                                                                                </select> -->
+                                                                                                                                        </select> -->
                                                     </div>
                                                 </div>
                                             </div>
