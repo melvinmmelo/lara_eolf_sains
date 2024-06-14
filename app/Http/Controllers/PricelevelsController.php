@@ -14,7 +14,6 @@ class PricelevelsController extends Controller
     public function index()
     {
         $pricelevels = pricelevels::branch(session('branch_code'))->get();
-        // Pass the vehicles data to the view
         return view('pricing-level', compact('pricelevels'));
     }
 
@@ -31,22 +30,15 @@ class PricelevelsController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'branch_code' => 'required',
             'name' => 'required',
             'Description' => 'required',
             'branch_code' => 'required',
             'priceType' => 'required',
-            // Add more validation rules as needed
         ]);
 
         $status = 'ACTIVE';
-
-        // Check if the request data is 'on'
-        //  if ($request->status === 'on') {
-        //      $status = 'ACTIVE';
-        //  }
 
         switch($request->priceType){
             case 'BAD PRICING':
@@ -73,6 +65,12 @@ class PricelevelsController extends Controller
             'pl_type' => $request->priceType,
             // Add more fields as needed
         ]);
+
+        activity()
+            ->performedOn(new pricelevels())
+            ->causedBy(auth()->user())
+            ->withProperties($request->all())
+            ->log('Added a new pricing level');
 
         return redirect('/pricing-level/')->with('success', 'Pricing Level added successfully!');
 
@@ -114,6 +112,12 @@ class PricelevelsController extends Controller
         $pl->pl_status = ($request->e_status) ? 'Active' : 'Inactive';
         $pl->pl_type = $request->e_priceType;
         $pl->save();
+
+        activity()
+            ->performedOn($pl)
+            ->causedBy(auth()->user())
+            ->withProperties($request->all())
+            ->log('Updated a pricing level');
 
         return redirect('/pricing-level/')->with('success', 'Pricing Level updated successfully!');
 

@@ -79,6 +79,11 @@ class ItemMasterDataController extends Controller
         $product->hold_quantity -= $request->quantity;
         $product->save();
 
+        activity()
+            ->performedOn($product)
+            ->withProperties(['quantity' => $request->quantity])
+            ->log('Quantity added from hold.');
+
         return redirect()->back()->with('success', 'Quantity added successfully.');
 
     }

@@ -27,6 +27,10 @@ class DeliveryPurchaseReceiptController extends Controller
         $dpr->products = $dprService->getNewProducts();
         $dpr->save();
 
+        activity()
+            ->performedOn($dpr)
+            ->log('Inbound completed.');
+
 
         return redirect()->route('delivery-purchase-receipts.index')->with('success', 'Delivery Receipt saved successfully.');
 
@@ -66,6 +70,10 @@ class DeliveryPurchaseReceiptController extends Controller
         $dpr->products = $dprService->getNewProducts();
 
         $dpr->save();
+
+        activity()
+            ->performedOn($dpr)
+            ->log('Product added to inbound.');
 
         return redirect()->back()->with('success', 'Product added to Delivery Receipt successfully.');
     }
@@ -114,6 +122,11 @@ class DeliveryPurchaseReceiptController extends Controller
     public function store(StoreDeliveryPurchaseReceiptRequest $request)
     {
         $dpr = DeliveryPurchaseReceipt::create($request->validated());
+
+        activity()
+            ->performedOn($dpr)
+            ->log('Inbound created.');
+
         return redirect()->route('drp.products', [ 'dprId' => $dpr->id  ])->with('success', 'Delivery Receipt created successfully.');
     }
 
@@ -156,6 +169,10 @@ class DeliveryPurchaseReceiptController extends Controller
 
         $dpr->save();
 
+        activity()
+            ->performedOn($dpr)
+            ->log('Product deleted from inbound.');
+
         return redirect()->back()->with('success', 'Item deleted successfully.');
     }
 
@@ -177,6 +194,10 @@ class DeliveryPurchaseReceiptController extends Controller
         $dpr->products = $products;
 
         $dpr->save();
+
+        activity()
+            ->performedOn($dpr)
+            ->log('Product hold from inbound.');
 
         return redirect()->back()->with('success', 'Item hold successfully.');
     }

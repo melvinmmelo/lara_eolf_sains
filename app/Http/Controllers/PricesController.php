@@ -25,8 +25,6 @@ class PricesController extends Controller
             $query->where('branch_code', $branchCode);
         })->get();
 
-        // Get all products
-
         $products = Product::all();
 
         $productTypes = ProductType::all()->sortBy('sequence_no');
@@ -88,7 +86,6 @@ class PricesController extends Controller
                 'price' => 'required',
             ]);
 
-            // check if pricelevel id and product type already exists
             $price = prices::where('pricelevel_id', $request->pricing_id)
                 ->where('p_code', $request->product_type)
                 ->first();
@@ -105,6 +102,12 @@ class PricesController extends Controller
                 'p_price' => $request->price,
             ]);
         }
+
+        activity()
+            ->causedBy(auth()->user())
+            ->performedOn($pricing)
+            ->withProperties($request->all())
+            ->log('Price added.');
 
 
         return redirect('/pricing/')->with('success', 'Pricing added successfully!');
@@ -164,6 +167,12 @@ class PricesController extends Controller
                 'p_price' => $request->e_price,
             ]);
         }
+
+        activity()
+            ->causedBy(auth()->user())
+            ->performedOn($pricing)
+            ->withProperties($request->all())
+            ->log('Price updated.');
 
         return redirect('/pricing/')->with('success', 'Price updated successfully!');
     }

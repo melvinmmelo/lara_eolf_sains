@@ -37,6 +37,10 @@ class InboundController extends Controller
 
         $inbound->save();
 
+        activity()
+            ->performedOn($inbound)
+            ->log('Payment added.');
+
         return redirect()->route('order.index')->with('success', 'Payment has been added.');
     }
 
@@ -64,6 +68,10 @@ class InboundController extends Controller
         $inbound->products = json_encode($products);
 
         $inbound->save();
+
+        activity()
+            ->performedOn($inbound)
+            ->log('Order deleted.');
 
         return view('inboundList', compact('inboundId', 'inbound', 'uiProducts', 'summary'));
 
@@ -123,6 +131,10 @@ class InboundController extends Controller
         $data = json_encode($request->except('_token'));
 
         session()->put('orderDetails', $data);
+
+        activity()
+            ->performedOn($tempInbound)
+            ->log('Order created.');
 
 
         return redirect()->route('order.processTwo', ['inbound' => $inboundId]);
@@ -186,8 +198,6 @@ class InboundController extends Controller
 
         $products = [];
 
-        $pass = '123';
-
         // get the latest price
         foreach ($allProducts as $product) {
 
@@ -205,18 +215,12 @@ class InboundController extends Controller
             $stocks = $item->stocks ?? 0;
 
             if($stocks != 0){
-                $pass = '456';
 
                 $t = ['code' => $product->code, 'price' => $product->price, 'unit' => "0", 'qty' => $stocks];
 
                 array_push($products, $t);
             }
 
-            // if ($price == null) {
-            // } else {
-
-
-            //}
         }
 
         return view('productsList', compact('products', 'pricelevelId', 'branchCode', 'pass'));
@@ -284,6 +288,7 @@ class InboundController extends Controller
 
     public function store(Request $request)
     {
+
         $request->validate([
             'inboundId' => 'required|exists:inbounds,id',
 
@@ -323,6 +328,10 @@ class InboundController extends Controller
         // create a session for variable updatingData
         session()->put('updatingDataResults', $updatingData);
 
+        activity()
+            ->performedOn($inbound)
+            ->log('Order completed.');
+
 
         return redirect()->route('order.index')->with('success', 'Your order has been completed.');
     }
@@ -361,13 +370,22 @@ class InboundController extends Controller
 
         $inbound->save();
 
+        activity()
+            ->performedOn($inbound)
+            ->log('Ordered products has been updated.');
+
         return view('orderProductSum', compact('summary'));
     }
 
     // create delete inbound function
     public function destroy($inbound)
     {
-        $inbound = Inbound::destroy($inbound);
+        Inbound::destroy($inbound);
+
+        activity()
+            ->performedOn($inbound)
+            ->log('Inbound deleted.');
+
         return redirect()->route('order.index')->with('success', 'An inbound has been deleted.');
     }
 }

@@ -47,6 +47,10 @@ class ProductTypeController extends Controller
         $productType->is_active = $request->is_active == 'on' ? 1 : 0;
         $productType->save();
 
+        activity()
+            ->performedOn($productType)
+            ->log('Product type created.');
+
         return redirect()->back()->with('sucess', 'Data saved!');
     }
 
@@ -97,6 +101,13 @@ class ProductTypeController extends Controller
         $productType->spoon_pcs_per_bag = $request->e_spoon_pcs_per_bag;
         $productType->is_active = !$request->e_is_active;
         $productType->save();
+
+        $changes = $productType->getChanges();
+
+        activity()
+            ->performedOn($productType)
+            ->withProperties($changes)
+            ->log('Product type updated.');
 
         return redirect()->back()->with('sucess', 'Data saved!');
 
