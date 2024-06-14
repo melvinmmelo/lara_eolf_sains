@@ -7,6 +7,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>Customers Info</h1>
+
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -27,7 +28,11 @@
             <div class="card-body">
 
                 @include('layouts.errors')
-
+                <div class="pb-2">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-customer">
+                        Add New
+                    </button>
+                </div>
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>

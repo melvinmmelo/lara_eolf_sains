@@ -29,7 +29,11 @@
                     <div class="card-body">
 
                         @include('layouts.errors')
-
+                        <div class="pb-2">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-price">
+                                Add New
+                            </button>
+                        </div>
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
@@ -166,7 +170,8 @@
                                 <div class="form-group">
                                     <div class="row mb-2">
                                         <div class="col-sm-6">
-                                            <label class="form-label" for="price"><i style="color:red">*</i>Price</label>
+                                            <label class="form-label" for="price"><i
+                                                    style="color:red">*</i>Price</label>
                                             <input type="number" step=".01" class="form-control" id="price"
                                                 name="price">
                                         </div>
