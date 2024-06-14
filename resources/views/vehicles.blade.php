@@ -343,7 +343,7 @@
 
 @section('custom_js')
     <script>
-        function setToUpdateVehicle(uid, plateno, brand, description, type, size, capacity, remarks, status) {
+        function setToUpdateVehicle(uid, plateno, brand, description, type, size, capacity, remarks) {
             document.getElementById("id").value = uid;
             document.getElementById("plateno").value = plateno;
             document.getElementById("brand").value = brand;
@@ -352,9 +352,6 @@
             document.getElementById("e_size").value = size;
             document.getElementById("e_capacity").value = capacity;
             document.getElementById("remarks").value = remarks;
-            document.getElementById("status").value = status;
-
-
         }
     </script>
 @endsection

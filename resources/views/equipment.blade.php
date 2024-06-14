@@ -121,6 +121,10 @@
                     <div class="modal-body">
                         <form action="{{ route('equipment.store') }}" method="POST">
                             @csrf
+
+                            <input type="hidden" class="form-control" name="branch_code" id="branch_code"
+                            value="{{ session('branch_code') }}" required readonly>
+
                             <div class="form-group">
                                 <div class="row mb-2">
                                     <div class="col-sm-6">
@@ -156,11 +160,12 @@
                                             <option value="EFE-3002">EFE-3002</option>
                                             <option value="EFE-3802">EFE-3802</option>
                                             <option value="EFE-4602">EFE-4602</option>
-                                            <option value="BD-650">BD-650</option>
                                             <option value="EFE-5002">EFE-5002</option>
+                                            <option value="BD-650">BD-650</option>
                                             <option value="SD-350">SD-350</option>
                                             <option value="SD-450">SD-450</option>
                                             <option value="Fujidenzo">Fujidenzo</option>
+                                            <option value="EFL-6005">EFL-6005</option>
                                         </select>
                                     </div>
 
@@ -237,8 +242,11 @@
                     <form action="{{ route('equipment.update') }}" method="POST">
                         @csrf
                         @method('PATCH')
-                        <input type="hidden" class="form-control" name="id" id="equipment_id" required
-                            readonly><br>
+                        <input type="hidden" class="form-control" name="id" id="equipment_id" required readonly>
+
+                        <input type="hidden" class="form-control" name="branch_code" id="branch_code"
+                            value="{{ session('branch_code') }}" required readonly>
+
                         <div class="form-group">
                             <div class="row mb-2">
                                 <div class="col-sm-6">
@@ -284,16 +292,17 @@
                                         <option value="EFE-3002">EFE-3002</option>
                                         <option value="EFE-3802">EFE-3802</option>
                                         <option value="EFE-4602">EFE-4602</option>
-                                        <option value="BD-650">BD-650</option>
                                         <option value="EFE-5002">EFE-5002</option>
+                                        <option value="BD-650">BD-650</option>
                                         <option value="SD-350">SD-350</option>
                                         <option value="SD-450">SD-450</option>
                                         <option value="Fujidenzo">Fujidenzo</option>
+                                        <option value="EFL-6005">EFL-6005</option>
                                     </select>
                                 </div>
-
                             </div>
                         </div>
+
                         <div class="form-group">
                             <div class="row mb-2">
                                 <div class="col-sm-6">
@@ -323,12 +332,8 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
-
-
-
     <!-- /.content -->
 @endsection
-
 
 @section('custom_js')
     <script>

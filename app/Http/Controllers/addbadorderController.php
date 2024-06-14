@@ -17,15 +17,15 @@ class addbadorderController extends Controller
     {
         // Get the latest bo_id from the database
         $latestBoOrder = BadOrder::latest()->first();
-    
+
         // If there are no existing orders, start with 1
         if (!$latestBoOrder) {
             return 1;
         }
-    
+
         // Increment the latest bo_id by 1
         $nextBoId = $latestBoOrder->bo_id + 1;
-    
+
         return $nextBoId;
     }
 
@@ -56,23 +56,23 @@ class addbadorderController extends Controller
         $inbounds = Inbound::where('id', $inboundId)
                            ->where('customer_id', $customerId)
                            ->get();
-        
+
         $products = [];
-        
+
         foreach ($inbounds as $inbound) {
             $inboundProducts = $inbound->products;
-    
+
             if (is_string($inboundProducts)) {
                 $decodedProducts = json_decode($inboundProducts, true);
             } else {
                 $decodedProducts = $inboundProducts;
             }
-        
+
             if (is_array($decodedProducts)) {
                 $products = array_merge($products, $decodedProducts);
             }
         }
-        
+
         return response()->json($products);
     }
 
@@ -98,7 +98,7 @@ class addbadorderController extends Controller
             if ($tempBadOrders->isEmpty()) {
                 return response()->json(['error' => 'No temp bad orders found for the given customer and inbound ID'], 404);
             }
-            
+
             // Generate a unique bo_id
             $bo_id = $this->generateUniqueBoId();
 
@@ -120,7 +120,7 @@ class addbadorderController extends Controller
                     'amount' => $tempOrder->amount,
                 ]);
             }
-            
+
             TempBadOrder::where('customer_id', $customer_id)
                         ->where('inbound_id', $inbound_id)
                         ->delete();
@@ -140,6 +140,4 @@ class addbadorderController extends Controller
 
         return response()->json($price);
     }
-
-
 }

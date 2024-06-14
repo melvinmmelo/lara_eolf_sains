@@ -6,16 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>EOLF</title>
 
-    <!-- Theme style -->
-
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-
     <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }} ">
     <script src="https://kit.fontawesome.com/133d51430d.js" crossorigin="anonymous"></script>
-
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
-
     <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
@@ -29,6 +24,7 @@
     <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     <!-- Forms label CSS Style -->
@@ -44,11 +40,7 @@
         {
         background-color: #f0f0f0;
         }
-    </style>
 
-    <!-- Modal Scrollbar and backdrop -->
-
-    <style>
         /* Add custom CSS to control modal content height and scrollbar */
         .modal-body {
             max-height: calc(100vh - 200px);
@@ -56,7 +48,6 @@
             overflow-y: auto;
         }
 
-        <style>
 
         /* Add custom CSS to control modal content height and scrollbar */
         .modal-body {
@@ -95,10 +86,7 @@
         .label-input:focus {
             outline: none;
         }
-    </style>
 
-
-    <style>
         /* Change the background color of the export buttons */
         .dataTables_wrapper .dt-buttons .btn {
             background-color: #ffffff;
@@ -117,12 +105,9 @@
         }
     </style>
 
-
     @yield('custom_css')
 
 </head>
-
-
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <!-- Site wrapper -->
@@ -154,17 +139,11 @@
     </div>
     <!-- ./wrapper -->
 
-
     <!-- jQuery -->
-    <!-- Include SweetAlert and Toast JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.1.2/sweetalert2.min.js"></script>
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
-    <!-- Bootstrap 4 -->
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
-    <!-- SweetAlert2 -->
     <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
-
     <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
@@ -180,12 +159,12 @@
     <script src="{{ asset('plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
     <script src="{{ asset('plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.js') }}"></script>
     <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
 
-
-
-    <!-- Page specific script -->
     <script>
+
         $(function() {
+
             $("#example1").DataTable({
                 "order": [],
                 "responsive": true,
@@ -193,6 +172,7 @@
                 "autoWidth": false,
                 "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
             $('#example2').DataTable({
                 "paging": true,
                 "lengthChange": false,
@@ -202,61 +182,38 @@
                 "autoWidth": false,
                 "responsive": true,
             });
-        });
-    </script>
-    <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
-    <!-- SweetAlert2 -->
-    <script src="../../plugins/sweetalert2/sweetalert2.min.js"></script>
 
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
 
+            $('.swalDefaultSuccess').click(function() {
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Data Added'
+                })
+            });
 
-    <!-- Toast script for saving forms -->
-    <script>
-        // Initialize SweetAlert
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        });
-
-        // Click event handler for the button
-        $('.swalDefaultSuccess').click(function() {
-            Toast.fire({
-                icon: 'success',
-                title: 'Data Added'
-            })
-        });
-    </script>
-
-    <script>
-        $(function() {
-            // Initialize Bootstrap Switch
             $("[data-bootstrap-switch]").bootstrapSwitch();
-        });
-    </script>
 
+            $('.duallistbox').bootstrapDualListbox()
 
-    <script>
-        //Bootstrap Duallistbox
-        $('.duallistbox').bootstrapDualListbox()
-    </script>
-
-    <script>
-        $(function() {
-            //Initialize Select2 Elements
             $('.select2').select2()
 
-            //Initialize Select2 Elements
             $('.select2bs4').select2({
                 theme: 'bootstrap4'
             })
-        })
+
+        });
+
     </script>
 
     @yield('custom_js')
@@ -264,5 +221,4 @@
     <script src="{{ asset('js/editcustomeraddress.js') }}"></script>
 
 </body>
-
 </html>

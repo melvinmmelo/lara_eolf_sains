@@ -13,17 +13,18 @@ return new class extends Migration
     {
         Schema::create('equipment', function (Blueprint $table) {
             $table->id();
+            $table->string('branch_code', 15);
             $table->string('ownership');
             $table->string('type');
             $table->string('brand');
             $table->decimal('price', 10, 2);
             $table->string('serial_no')->unique();
             $table->string('model', 30);
-            $table->string('code')->nullable();
+            $table->string('code');
             $table->string('distributor')->nullable();
             $table->date('date_delivered')->nullable();
             $table->date('date_purchased')->nullable();
-            $table->string('status')->default('available');
+            $table->string('status')->default('Active');
             $table->timestamps();
         });
     }

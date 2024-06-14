@@ -9,7 +9,7 @@ class EquipmentController extends Controller
 {
     public function index()
     {
-        $equipments = Equipment::all();
+        $equipments = Equipment::branchCode(session('branch_code'))->get();
         return view('equipment', compact('equipments'));
     }
 
@@ -22,6 +22,7 @@ class EquipmentController extends Controller
     {
         // Validate the incoming request data
         $request->validate([
+            'branch_code' => 'required',
             'ownership' => 'required',
             'type' => 'required',
             'brand' => 'required',
@@ -36,6 +37,7 @@ class EquipmentController extends Controller
 
         // Create a new equipment instance
         $equipment = new Equipment();
+        $equipment->branch_code = $request->branch_code;
         $equipment->ownership = $request->ownership;
         $equipment->type = $request->type;
         $equipment->brand = $request->brand;
@@ -73,8 +75,8 @@ class EquipmentController extends Controller
             'serial_no' => 'required',
             'e_model' => 'required',
             'code' => 'required',
-            'date_delivered' => 'required|date',
-            'date_purchased' => 'required|date',
+            'date_delivered' => 'nullable|date',
+            'date_purchased' => 'nullable|date',
             // Add more validation rules as needed
         ]);
 

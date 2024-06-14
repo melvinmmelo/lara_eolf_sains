@@ -36,49 +36,47 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/bad-orders-list', function () {
-    return view('badorder');
-});
-
-// Route::get('/addbad-orders', function () {
-//     return view('addbadorder');
-// });
-
-Route::get('/deliveryreceipt', function () {
-    return view('deliveryreceipt');
-});
-
-Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');
-Route::get('/api/getCustomerItems/{customerId}', [addbadorderController::class, 'getCustomerItems']);
-Route::get('/fetch-items', [addbadorderController::class, 'fetchItems'])->name('fetch.items');
-
-
-// Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');
-// // Route::post('/save-bad-orders', [addbadorderController::class, 'save'])->name('save-bad-orders');
-// Route::post('/save-bad-orders', [addbadorderController::class, 'store'])->name('addbadorder.store');
-
-Route::get('/get-products/{inboundId}/{customerId}', [addbadorderController::class, 'getProducts']);
-Route::get('/get-price/{pricelevel_id}/{p_code}', [addbadorderController::class, 'getPrice']);
-
-
-Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');
-Route::post('/bad-orders', [addbadorderController::class, 'store'])->name('addbadorder.store');
-// Route::get('/get-products/{inboundId}/{customerId}', [addbadorderController::class, 'getProducts'])->name('getProducts');
-
-
-
-Route::get('/bad-orders-list', [BadOrderController::class, 'index'])->name('badOrders.index');
-
-
-
-Route::post('/save-temp-bad-order', [TempBadOrderController::class, 'store']);
-Route::post('/clear-temp-bad-orders', [TempBadOrderController::class, 'clear']);
 
 Route::get('/delivery-receipt', function () {
     return view('delivery-receipt');
 });
 
+Route::get('/deliveryreceipt', function () {
+    return view('deliveryreceipt');
+});
+
+Route::get('/loading-ticket', function () {
+    return view('loading-ticket');
+});
+
+
 Route::middleware('auth')->group(function () {
+
+    Route::get('/bad-orders-list', function () {
+        return view('badorder');
+    })->name('badorderslist');
+
+
+
+    Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');
+
+    Route::get('/api/getCustomerItems/{customerId}', [addbadorderController::class, 'getCustomerItems']);
+
+    Route::get('/fetch-items', [addbadorderController::class, 'fetchItems'])->name('fetch.items');
+
+    Route::get('/get-products/{inboundId}/{customerId}', [addbadorderController::class, 'getProducts']);
+
+    Route::get('/get-price/{pricelevel_id}/{p_code}', [addbadorderController::class, 'getPrice']);
+
+    Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');
+
+    Route::post('/bad-orders', [addbadorderController::class, 'store'])->name('addbadorder.store');
+
+    Route::get('/bad-orders-list', [BadOrderController::class, 'index'])->name('badOrders.index');
+
+    Route::post('/save-temp-bad-order', [TempBadOrderController::class, 'store']);
+
+    Route::post('/clear-temp-bad-orders', [TempBadOrderController::class, 'clear']);
 
     Route::get('/inventory', [DeliveryPurchaseReceiptController::class, 'index'])->name('delivery-purchase-receipts.index');
 
@@ -105,13 +103,7 @@ Route::middleware('auth')->group(function () {
         return view('inventory-items');
     });
 
-    Route::get('/loading-ticket', function () {
-        return view('loading-ticket');
-    });
 
-    // Route::get('/customersinfo', function () {
-    //     return view('customersinfo');
-    // });
 
     Route::get('/branch-select', function () {
         return view('branch-select');

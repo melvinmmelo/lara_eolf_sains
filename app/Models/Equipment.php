@@ -9,8 +9,8 @@ class Equipment extends Model
 {
     use HasFactory;
 
-
     protected $fillable = [
+        'branch_code',
         'ownership',
         'type',
         'brand',
@@ -28,13 +28,11 @@ class Equipment extends Model
         return $this->hasOne(EquipmentStore::class);
     }
 
-    // create a scope for available equipment
     public function scopeAvailable($query)
     {
         return $query->where('status', 'available');
     }
 
-    // CREATE A SCOPE FOR NOT AVAILABLE EQUIPMENT
     public function scopeNotAvailable($query)
     {
         return $query->where('status', 'added');
@@ -45,5 +43,10 @@ class Equipment extends Model
     public function getDateCreatedAttribute()
     {
         return $this->created_at->format('m-d-Y h:i A');
+    }
+
+    public function scopeBranchCode($query, $branch_code)
+    {
+        return $query->where('branch_code', $branch_code);
     }
 }
