@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 13, 2024 at 05:40 AM
+-- Generation Time: Jun 17, 2024 at 08:49 AM
 -- Server version: 5.7.26
 -- PHP Version: 7.2.18
 
@@ -20,6 +20,61 @@ SET time_zone = "+00:00";
 --
 -- Database: `eolf`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `activity_log`
+--
+
+DROP TABLE IF EXISTS `activity_log`;
+CREATE TABLE IF NOT EXISTS `activity_log` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `log_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `subject_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `event` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `subject_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `causer_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `causer_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `properties` json DEFAULT NULL,
+  `batch_uuid` char(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `subject` (`subject_type`,`subject_id`),
+  KEY `causer` (`causer_type`,`causer_id`),
+  KEY `activity_log_log_name_index` (`log_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bad_orders`
+--
+
+DROP TABLE IF EXISTS `bad_orders`;
+CREATE TABLE IF NOT EXISTS `bad_orders` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `bo_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `inbound_id` bigint(20) UNSIGNED NOT NULL,
+  `customer_id` bigint(20) UNSIGNED NOT NULL,
+  `store_id` bigint(20) UNSIGNED NOT NULL,
+  `re_dr` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `bo_percentage` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remarks` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ptype_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` double NOT NULL,
+  `unit` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `amount` double NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `bad_orders_inbound_id_foreign` (`inbound_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -555,25 +610,6 @@ INSERT INTO `item_master_data` (`id`, `branch_code`, `product_code`, `product_de
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jobs`
---
-
-DROP TABLE IF EXISTS `jobs`;
-CREATE TABLE IF NOT EXISTS `jobs` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `queue` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `attempts` tinyint(3) UNSIGNED NOT NULL,
-  `reserved_at` int(10) UNSIGNED DEFAULT NULL,
-  `available_at` int(10) UNSIGNED NOT NULL,
-  `created_at` int(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `jobs_queue_index` (`queue`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `job_batches`
 --
 
@@ -604,7 +640,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=314 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=319 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `migrations`
@@ -639,7 +675,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (310, '2024_04_26_004316_create_ph_addrs', 2),
 (311, '2024_05_01_054802_create_equipment_store_table', 2),
 (312, '2024_05_06_120431_create_delivery_purchase_receipts_table', 2),
-(313, '2024_05_17_142735_create_item_master_data', 2);
+(313, '2024_05_17_142735_create_item_master_data', 2),
+(314, '2024_06_12_005849_create_bad_orders_table', 3),
+(315, '2024_06_12_122146_create_temp_bad_orders', 3),
+(316, '2024_06_13_164819_create_activity_log_table', 3),
+(317, '2024_06_13_164820_add_event_column_to_activity_log_table', 3),
+(318, '2024_06_13_164821_add_batch_uuid_column_to_activity_log_table', 3);
 
 -- --------------------------------------------------------
 
@@ -39956,9 +39997,9 @@ INSERT INTO `ph_addrs` (`id`, `code`, `name`, `g_level`) VALUES
 (39185, '1402711008', 'Panubtuban', 'Bgy'),
 (39186, '1402711009', 'Pula', 'Bgy'),
 (39187, '1402711010', 'Liwon', 'Bgy'),
-(39188, '1403200000', 'Kalinga', 'Prov'),
+(39188, '1403200000', 'kalinga', 'Prov'),
 (39189, '1403201000', 'Balbalan', 'Mun'),
-(39190, '1403201001', 'Ababa-an', 'Bgy'),
+(39190, '1403201001', 'City of Tabuk ', 'Bgy'),
 (39191, '1403201002', 'Balantoy', 'Bgy'),
 (39192, '1403201003', 'Balbalan Proper', 'Bgy'),
 (39193, '1403201004', 'Balbalasang', 'Bgy'),
@@ -40036,7 +40077,7 @@ INSERT INTO `ph_addrs` (`id`, `code`, `name`, `g_level`) VALUES
 (39265, '1403211017', 'Romualdez', 'Bgy'),
 (39266, '1403211018', 'San Francisco', 'Bgy'),
 (39267, '1403211019', 'San Pedro', 'Bgy'),
-(39268, '1403213000', 'City of Tabuk ', 'City'),
+(39268, '1403213000', 'City of Tabuk ', 'Mun'),
 (39269, '1403213001', 'Agbannawag', 'Bgy'),
 (39270, '1403213002', 'Amlao', 'Bgy'),
 (39271, '1403213003', 'Appas', 'Bgy'),
@@ -45247,6 +45288,7 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 ('IIZ20f7dNDWWzPe2G7mmZaKvnRWFIhjYaFX9KHxz', NULL, '136.158.65.81', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiMjhmTjRwdnBIQm11QTF3WEVUUHhOWnhPcGZ3NDV1TXY1aHNJYzJYaSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9fQ==', 1717747746),
 ('ivAWGMJuLIHkZj7rDxQrON8jGrFt2IwvWqSAEauD', NULL, '1.37.67.199', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWGEwN1VGSmpKcXlwM3NhTUJOd1poMmRtY2VvQkdPY1luT1VSVTVMVyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NzoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vdmVoaWNsZXMiO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czo0NDoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1717590088),
 ('JY6uiQyRu7anYFycYzu4E6BsWarkCCuhJaRDWXrG', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiM2ViZ3ljRnhWR3J0QVhvZWhnWElhVFgzSHU3Sld3VlVkR1g5dDJseiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyOToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL3ByaWNpbmciO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyODoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL29yZGVycyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO30=', 1718256370),
+('K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiNHQ2OW1CWmI5Y1BFN1lxRm45Qkp0ZXc5Z1FMSzY4eVRWVGlBckRMbSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozMToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2N1c3RvbWVycyI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjI4OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvb3JkZXJzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTtzOjExOiJicmFuY2hfY29kZSI7czo4OiJFRlRPLUNBRyI7fQ==', 1718614141),
 ('mvCoQipb8Bjhosv6bna7RkUyhPO5TrCrb9jyQK9b', NULL, '122.52.233.63', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiSnJSbG85cnNqTldhTFFianc5RTlEdm1KTlpTemZHS2RuSEp1WDNJTiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9fQ==', 1717559653),
 ('OUg8gVWtlkyU5xSeThzvVyWlMqxweB7CiW3ASQmj', NULL, '65.154.226.167', 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiWW5abVZwUDVDQnhKTDNzaU5FY0NvY05NU2FKT0J5eUtGUHJxeDJBZCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2JhZC1vcmRlcnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1717475742),
 ('P7VguN7VteFSXVW4ytXcNsf6smcKeVHeyFX5GlU2', NULL, '209.35.172.174', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/601.2.4 (KHTML, like Gecko) Version/9.0.1 Safari/601.2.4 facebookexternalhit/1.1 Facebot Twitterbot/1.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZ3NsbkV6SHVkUzMyQzVKdjNkVjlCYjd2NGNlNGE0dzhsOUhZQ3lSNyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZGFzaGJvYXJkIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717750389),
@@ -45303,6 +45345,32 @@ INSERT INTO `storeinfo` (`id`, `customer_id`, `storename`, `contactno`, `region`
 (12, 12, 'ALL-IN-JUAN MINI GROCERY', '0955-830-7175', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caritan Sur', NULL, '17°39\'22.73\"N', '121°44\'43.22\"E', 'option 1', NULL, NULL, '2024-06-09 05:36:07', '2024-06-09 05:36:07'),
 (13, 13, 'Isagani Store', '0916-578-1701', 'Region II (Cagayan Valley)', 'Cagayan', 'Camalaniugan', 'Catotoran Norte', 'Stall No 8 Public Market', '18°15\'44.74\"N', '121°41\'16.19\"E', 'option 1', NULL, NULL, '2024-06-09 05:41:36', '2024-06-09 05:41:36'),
 (14, 14, 'MLC Minimart', '0917-622-0136', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 2 ', 'Arellano St', '17°36\'40.36\"N', '121°43\'32.64\"E', 'option 1', NULL, NULL, '2024-06-09 05:44:17', '2024-06-09 05:44:17');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `temp_bad_orders`
+--
+
+DROP TABLE IF EXISTS `temp_bad_orders`;
+CREATE TABLE IF NOT EXISTS `temp_bad_orders` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `customer_id` bigint(20) UNSIGNED NOT NULL,
+  `inbound_id` bigint(20) UNSIGNED NOT NULL,
+  `store_id` bigint(20) UNSIGNED NOT NULL,
+  `ptype_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `unit` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` decimal(8,2) NOT NULL,
+  `amount` decimal(8,2) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `temp_bad_orders_customer_id_foreign` (`customer_id`),
+  KEY `temp_bad_orders_inbound_id_foreign` (`inbound_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -45392,12 +45460,10 @@ INSERT INTO `vehicles` (`id`, `plateno`, `brand`, `description`, `type`, `size`,
 --
 
 --
--- Constraints for table `equipment_store`
+-- Constraints for table `bad_orders`
 --
-ALTER TABLE `equipment_store`
-  ADD CONSTRAINT `equipment_store_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `equipment_store_equipment_id_foreign` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `equipment_store_store_id_foreign` FOREIGN KEY (`store_id`) REFERENCES `storeinfo` (`id`) ON DELETE CASCADE;
+ALTER TABLE `bad_orders`
+  ADD CONSTRAINT `bad_orders_inbound_id_foreign` FOREIGN KEY (`inbound_id`) REFERENCES `inbounds` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `model_has_permissions`
@@ -45423,6 +45489,13 @@ ALTER TABLE `role_has_permissions`
 --
 ALTER TABLE `storeinfo`
   ADD CONSTRAINT `storeinfo_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `temp_bad_orders`
+--
+ALTER TABLE `temp_bad_orders`
+  ADD CONSTRAINT `temp_bad_orders_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `temp_bad_orders_inbound_id_foreign` FOREIGN KEY (`inbound_id`) REFERENCES `inbounds` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

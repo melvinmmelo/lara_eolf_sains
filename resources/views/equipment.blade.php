@@ -140,7 +140,7 @@
                                             <option value="Owned">Owned</option>
                                             <option value="Leased">Leased</option>
                                             <option value="Rented">Rented</option>
-                                            <!-- Add more options if needed -->
+                                            <option value="Customer-Owned">Customer-Owned</option>
                                         </select>
                                     </div>
 
@@ -162,7 +162,8 @@
 
                                     <div class="col-sm-6">
                                         <label class="form-label" for="model"><i style="color:red">*</i>Model</label>
-                                        <select name="model" id="model" class="form-control">
+                                        <select name="model" id="model" class="form-control" required>
+                                            <option value="">--Select--</option>
                                             <option value="EFE-3002">EFE-3002</option>
                                             <option value="EFE-3802">EFE-3802</option>
                                             <option value="EFE-4602">EFE-4602</option>
@@ -172,6 +173,7 @@
                                             <option value="SD-450">SD-450</option>
                                             <option value="Fujidenzo">Fujidenzo</option>
                                             <option value="EFL-6005">EFL-6005</option>
+                                            <option value="Others">Others</option>
                                         </select>
                                     </div>
 
@@ -210,14 +212,12 @@
                             <div class="form-group">
                                 <label class="form-label" for="date_delivered"><i style="color:red">*</i>Date
                                     Delivered</label>
-                                <input type="date" class="form-control" id="date_delivered" name="date_delivered"
-                                    required>
+                                <input type="date" class="form-control" id="date_delivered" name="date_delivered">
                             </div>
                             <div class="form-group">
                                 <label class="form-label" for="date_purchased"><i style="color:red">*</i>Date
                                     Purchased</label>
-                                <input type="date" class="form-control" id="date_purchased" name="date_purchased"
-                                    required>
+                                <input type="date" class="form-control" id="date_purchased" name="date_purchased">
                             </div>
                     </div>
                     <!-- /.modal-body -->
@@ -261,6 +261,7 @@
                                         <option value="Owned">Owned</option>
                                         <option value="Leased">Leased</option>
                                         <option value="Rented">Rented</option>
+                                        <option value="Customer-Owned">Customer-Owned</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-6">
@@ -294,7 +295,8 @@
 
                                 <div class="col-sm-6">
                                     <label class="form-label" for="e_model">Model</label>
-                                    <select name="e_model" id="e_model" class="form-control">
+                                    <select name="e_model" id="e_model" class="form-control" required>
+                                        <option value="">--Select--</option>
                                         <option value="EFE-3002">EFE-3002</option>
                                         <option value="EFE-3802">EFE-3802</option>
                                         <option value="EFE-4602">EFE-4602</option>
@@ -304,6 +306,7 @@
                                         <option value="SD-450">SD-450</option>
                                         <option value="Fujidenzo">Fujidenzo</option>
                                         <option value="EFL-6005">EFL-6005</option>
+                                        <option value="Others">Others</option>
                                     </select>
                                 </div>
                             </div>

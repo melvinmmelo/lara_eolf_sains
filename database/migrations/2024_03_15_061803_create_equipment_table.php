@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('ownership');
             $table->string('type');
             $table->string('brand');
-            $table->decimal('price', 10, 2);
+            $table->decimal('price', 10, 2)->nullable();
             $table->string('serial_no')->unique();
-            $table->string('model', 30);
+            $table->string('model', 30)->nullable();
             $table->string('code');
             $table->string('distributor')->nullable();
             $table->date('date_delivered')->nullable();

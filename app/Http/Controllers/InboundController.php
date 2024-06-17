@@ -14,6 +14,7 @@ use App\Models\Product;
 use App\Models\ProductType;
 use App\Models\Vehicles;
 use App\Services\InboundProductsService;
+use App\Services\InboundService;
 use Illuminate\Http\Request;
 
 class InboundController extends Controller
@@ -30,6 +31,16 @@ class InboundController extends Controller
 
         $inbound = Inbound::findOrFail($request->ob_id);
 
+        $total = InboundService::getTotalOfInboundProducts($inbound->id);
+
+        if($request->delivered_amount > $total){
+            return redirect()->route('order.index')->withErrors('Delivered amount is greater than the total amount.');
+        }
+
+        // if($inbound->status == 'Completed'){
+        //     return redirect()->route('order.index')->withErrors('Your order has been completed.');
+        // }
+
         $inbound->payment_type = $request->payment_type;
         $inbound->ref_no = $request->ref_no;
         $inbound->delivered_amount = $request->delivered_amount;
@@ -37,8 +48,11 @@ class InboundController extends Controller
 
         $inbound->save();
 
+        $changes = ['payment_type' => $request->payment_type, 'ref_no' => $request->ref_no, 'delivered_amount' => $request->delivered_amount, 'status' => $request->status];
+
         activity()
             ->performedOn($inbound)
+            ->withProperties($changes)
             ->log('Payment added.');
 
         return redirect()->route('order.index')->with('success', 'Payment has been added.');
@@ -91,6 +105,11 @@ class InboundController extends Controller
         $equipment = EquipmentStore::all();
 
         $pricing = pricelevels::getPriceLevels(session('branch_code'));
+
+        $inbounds->map(function($inbound){
+            $inbound->is_with_badOrder = InboundService::isWithBadOrder($inbound->id);
+            return $inbound;
+        });
 
         return view('order', compact('equipment', 'drivers', 'vehicles', 'inbounds', 'pricing'));
     }
@@ -223,7 +242,7 @@ class InboundController extends Controller
 
         }
 
-        return view('productsList', compact('products', 'pricelevelId', 'branchCode', 'pass'));
+        return view('productsList', compact('products', 'pricelevelId', 'branchCode'));
     }
 
     // ajax inbound products

@@ -33,9 +33,16 @@ class BadOrder extends Model
     {
         return $this->belongsTo(Customers::class, 'customer_id');
     }
+
     public function storeinfo()
     {
         return $this->belongsTo(StoreInfo::class, 'store_id');
+    }
+
+    // scope to get all bad orders of inbound id
+    public function scopeOfInboundId($query, $inboundId)
+    {
+        return $query->where('inbound_id', $inboundId);
     }
 
 }

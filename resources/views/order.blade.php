@@ -39,14 +39,10 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-
-                            {{-- <th>Delivery Person</th> --}}
                             <th>Date created</th>
                             <th>Order No.</th>
                             <th>Degic No.</th>
                             <th>Customer</th>
-                            {{-- <th>Store</th> --}}
-
                             <th>Invoice Amount</th>
                             <th>Balance Due</th>
                             <th>Status</th>
@@ -71,19 +67,14 @@
                             @endphp
 
                             <tr>
-
-                                {{-- <td>{{ $inbound->driver->name }}</td> --}}
                                 <td>{{ $inbound->f_created_at }}</td>
                                 <td>{{ $inbound->id }}</td>
                                 <td>{{ $inbound->equipment->serial_no }}</td>
                                 <td>{{ $inbound->customer->fullName }}</td>
-                                {{-- <td>{{ $inbound->store->storename }}</td> --}}
-
                                 <td><span class="label label-primary">{{ $total }}</span></td>
-                                <td> </td>
+                                <td>{{ $total - $inbound->delivered_amount }}</td>
                                 <td>{{ $inbound->status }}</td>
-                                <td> </td>
-                                {{-- <td>{{ $inbound->f_updated_at }}</td> --}}
+                                <td>{{ number_format($inbound->created_at->diffInDays(now()), 0) }}</td>
                                 <td>
                                     @if ($inbound->status == 'Encoding')
                                         <a href="{{ route('order.processTwo', ['inbound' => $inbound->id]) }}"><button
@@ -95,20 +86,20 @@
                                                 class="btn btn-danger"
                                                 onclick="setObId(`{{ $inbound->id }}`)">Update</button></a>
                                     @endif
+
+                                    @if ($inbound->is_with_badOrder)
+                                        <button class="btn btn-xs btn-danger">W/ BO</button>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
-
-                            <th>Date Created</th>
+                            <th>Date created</th>
                             <th>Order No.</th>
-                            {{-- <th>Delivery Person</th> --}}
                             <th>Degic No.</th>
                             <th>Customer</th>
-                            {{-- <th>Store</th> --}}
-
                             <th>Invoice Amount</th>
                             <th>Balance Due</th>
                             <th>Status</th>
@@ -162,7 +153,6 @@
                                             @foreach ($equipment as $equip)
                                                 <option value="{{ $equip->id }}">
                                                     {{ $equip->equipment->code . ' ' . $equip->customer->fullName }}
-                                                    {{ $equip->equipment->code . ' ' . $equip->customer->fullName }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -199,7 +189,8 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="vehicle"><i style="color:red">*</i>Vehicle</label>
+                                        <label class="form-label" for="vehicle"><i
+                                                style="color:red">*</i>Vehicle</label>
                                         <select class="form-control" name="vehicle" id="vehicle" required>
                                             <option value="">--Select--</option>
                                             @foreach ($vehicles as $vehicle)
@@ -225,15 +216,15 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label class="form-label" for="bad_order_id"><i style="color:red">*</i>Bad Order</label>
                                 <select class="form-control" name="bad_order_id" id="bad_order_id">
                                     <option value="">--Select--</option>
-                                    {{-- @foreach ($badOrders as $badOrder)
+                                    @foreach ($badOrders as $badOrder)
                                         <option value="{{ $badOrder->id }}">{{ $badOrder->name }}</option>
-                                    @endforeach --}}
+                                    @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
 
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-success">Next</button>

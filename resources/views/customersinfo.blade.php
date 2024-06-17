@@ -529,10 +529,8 @@
                                 readonly>
 
 
-                            Customer ID <input type="text" class="form-control" name="id" id="id"
-                                required readonly><br>
-                            Store ID <input type="text" class="form-control" name="store_id" id="store_id" required
-                                readonly><br>
+                            Customer ID <input type="hidden" class="form-control" name="id" id="id" required readonly><br>
+                            Store ID <input type="hidden" class="form-control" name="store_id" id="store_id" required readonly><br>
                             <div class="row mb-2">
                                 {{-- customer info card --}}
                                 <div class="col-sm-6">

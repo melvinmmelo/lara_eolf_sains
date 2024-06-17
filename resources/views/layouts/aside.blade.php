@@ -148,7 +148,7 @@
                 </li>
 
                 <li
-                    class="nav-item {{ Route::currentRouteNamed('order.index') || Route::currentRouteNamed('order.processTwo') ? 'menu-is-opening menu-open' : '' }}">
+                    class="nav-item {{ Route::currentRouteNamed('order.index') || Route::currentRouteNamed('order.processTwo') || Route::currentRouteNamed('badOrders.index') || Route::currentRouteNamed('addbadorder.create')  ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-coins" style="color: #74C0FC;"></i>
                         <p>
@@ -167,7 +167,7 @@
                         </li>
 
                         <li>
-                            <a href="/bad-orders-list" class="nav-link {{ Route::currentRouteNamed('badorderslist') || Route::currentRouteNamed('addbadorder.create') ? 'active' : '' }}">
+                            <a href="/bad-orders-list" class="nav-link {{ Route::currentRouteNamed('badOrders.index') || Route::currentRouteNamed('addbadorder.create') ? 'active' : '' }}">
                                 <i class="fas fa-circle-left nav-icon"></i>
                                 <p>Bad Order</p>
                             </a>
