@@ -36,6 +36,7 @@
                             <th>Created Date</th>
                             <th>Total Amount</th>
                             <th>Remarks</th>
+                            <th>Action</th> 
                         </tr>
                     </thead>
                     <tbody>
@@ -50,6 +51,13 @@
                             <td>{{ $badOrder['created_at'] }}</td>
                             <td>{{ $badOrder['amount'] }}</td>
                             <td>{{ $badOrder['remarks'] }}</td>
+                            <td> <!-- Add a delete button -->
+                                <form method="POST" action="{{ route('badOrders.destroy', $badOrder['bo_id']) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">Delete</button>
+                                </form>
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -60,6 +68,7 @@
                             <th>Created Date</th>
                             <th>Total Amount</th>
                             <th>Remarks</th>
+                            <th>Action</th> 
                         </tr>
                     </tfoot>
                 </table>

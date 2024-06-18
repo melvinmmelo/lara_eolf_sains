@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TempBadOrder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class TempBadOrderController extends Controller
 {
@@ -11,8 +12,7 @@ class TempBadOrderController extends Controller
     {
         $validated = $request->validate([
             'customer_id' => 'required|exists:customers,id',
-            'inbound_id' => 'required|exists:inbounds,id',
-            'store_id' => 'required|exists:storeinfo,id', // Change to store_id
+            'store_id' => 'required|exists:storeinfo,id',
             'ptype_code' => 'required|string',
             'code' => 'required|string',
             'description' => 'required|string',
@@ -21,7 +21,9 @@ class TempBadOrderController extends Controller
             'unit' => 'required|string',
             'amount' => 'required|numeric',
         ]);
-    
+
+        // Add session_id to validated data
+        $validated['session_id'] = session()->getId();
 
         TempBadOrder::create($validated);
 
@@ -30,7 +32,7 @@ class TempBadOrderController extends Controller
 
     public function clear()
     {
-        TempBadOrder::truncate();
+        TempBadOrder::where('session_id', session()->getId())->delete();
 
         return response()->json(['message' => 'Temporary table cleared'], 200);
     }

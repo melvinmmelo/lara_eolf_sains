@@ -33,12 +33,17 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <label class="form-label" for="customer"><i style="color:red">*</i>Customer</label>
-                            <select id="customer" class="form-control select2bs4" name="customer_id">
-                                <option value="0">-- Select Customer --</option>
+                            <select id="customer" class="form-control select2" name="customer_id">
+                                <option value="0" data-inbound-id="0">-- Select Customer --</option>
                                 @foreach($customers as $customer)
-                                    <option value="{{ $customer->id }}" data-store-id="{{ $customer->storeinfo->id ?? '' }}">
-                                        {{ $customer->firstname }} {{ $customer->lastname }} ({{ $customer->storeinfo->storename ?? 'No Store Info' }})
-                                    </option>
+                                    @php
+                                        $inbound = $customer->inbounds->first();
+                                    @endphp
+                                    @if ($inbound)
+                                        <option value="{{ $customer->id }}" data-inbound-id="{{ $inbound->id }}" data-store-id="{{ $customer->storeinfo->id ?? '' }}">
+                                            {{ $inbound->id }} - {{ $customer->firstname }} {{ $customer->lastname }} ({{ $customer->storeinfo->storename ?? 'No Store Info' }})
+                                        </option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
@@ -64,12 +69,7 @@
                     <div class="col-sm-6">
                         <label class="form-label" for="item"><i style="color:red">*</i>Item</label>
                         <select class="form-control select2bs4" id="item" name="item">
-                            <option>-- Select Item --</option>
-                            @foreach($items as $item)
-                                <option value="{{ $item->p_code }}" data-ptype-code="{{ $item->ptype_code }}" data-price="{{ $item->p_price }}" data-unit="{{ $item->p_unit }}" data-quantity="{{ $item->p_quant }}">
-                                    {{ $item->description }}
-                                </option>
-                            @endforeach
+                            <!-- Options will be populated by JavaScript -->
                         </select>
                     </div>
 
@@ -94,7 +94,7 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <!-- <th>ptype_code</th> -->
+                            <th>ptype_code</th>
                             <th>code</th>
                             <th>Item</th>
                             <th>Quantity</th>
@@ -107,7 +107,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="4" style="text-align:right">Total:</th>
+                            <th colspan="5" style="text-align:right">Total:</th>
                             <th id="totalAmount"></th>
                         </tr>
                     </tfoot>
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    const sessionId = '{{ session()->getId() }}'; // Get session ID from Laravel
+
     // Select DOM elements
     const customerSelect = $('#customer');
     const itemSelect = $('#item');
@@ -145,92 +145,145 @@ document.addEventListener('DOMContentLoaded', function () {
     const totalAmount = $('#totalAmount');
     let total = 0;
 
-    // Initialize select2 for customer and item selection
-    // customerSelect.select2();
-    // itemSelect.select2();
+    // Initialize select2 for customer selection
+    customerSelect.select2();
 
+    // Event listener for customer selection
     customerSelect.on('select2:select', function (e) {
         const data = e.params.data;
         const selectedOption = data.element;
         const customerId = selectedOption.value;
+        const inboundId = selectedOption.getAttribute('data-inbound-id');
         const storeId = selectedOption.getAttribute('data-store-id');
 
         console.log(`Selected Customer ID: ${customerId}`);
+        console.log(`Selected Inbound ID: ${inboundId}`);
         console.log(`Selected Store ID: ${storeId}`);
+
+        if (!customerId || !inboundId || customerId === "0" || inboundId === "0") {
+            console.error('Customer ID or Inbound ID is missing or invalid');
+            itemSelect.html(''); // Clear items dropdown if no valid selection
+            return;
+        }
+
+        // Fetch products based on customer ID and inbound ID
+        fetch(`/get-products/${inboundId}/${customerId}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Fetched products:', data);
+                itemSelect.html(''); // Clear previous options
+
+                if (Array.isArray(data)) {
+                    data.forEach(product => {
+                        const option = new Option(
+                            `${product.description}`,
+                            product.code
+                        );
+                        option.dataset.ptypeCode = product.ptype_code;
+                        option.dataset.code = product.code;
+                        option.dataset.price = product.price;
+                        option.dataset.quantity = product.quantity;
+                        option.dataset.unit = product.unit;
+                        itemSelect.append(option);
+                    });
+                } else {
+                    console.error('Fetched data is not an array:', data);
+                }
+            })
+            .catch(error => console.error('Error fetching products:', error));
     });
 
     // Event listener for item selection
     itemSelect.on('change', function() {
         const selectedOption = $(this).find(':selected');
-        const price = selectedOption.data('price');
-        const quantity = selectedOption.data('quantity');
-        priceInput.val(price);
-        quantityInput.val(quantity);
+        const p_code = selectedOption.val();
+        const pricelevel_id = {{ $badPricing->id }};
+
+        // Fetch price from prices table
+        fetch(`/get-price/${pricelevel_id}/${p_code}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.p_price) {
+                    priceInput.val(data.p_price);
+                    quantityInput.val(data.p_quant || 1); // Default quantity to 1 if not provided
+                } else {
+                    console.error('Price not found for selected item');
+                }
+            })
+            .catch(error => console.error('Error fetching price:', error));
     });
 
-    // Event listener for Add button
-    addButton.on('click', function() {
-        const selectedItem = itemSelect.find(':selected');
-        const description = selectedItem.text();
-        const ptypeCode = selectedItem.data('ptypeCode');
-        const code = selectedItem.val(); // Get the value of the selected item (p_code)
-        const unit = selectedItem.data('unit');
-        const quantity = quantityInput.val();
-        const price = priceInput.val();
-        const amount = quantity * price;
 
-        // Save the item to the temporary table via AJAX
-        const tempData = {
-            customer_id: customerSelect.val(),
-            store_id: customerSelect.find(':selected').data('store-id'),
-            ptype_code: ptypeCode,
-            code: code,
-            description: description,
-            quantity: quantity,
-            price: price,
-            amount: amount,
-            unit: unit,
-            session_id: sessionId // Include the session ID
-        };
+// Event listener for Add button
+addButton.on('click', function() {
+    const selectedItem = itemSelect.find(':selected');
+    const description = selectedItem.text();
+    const ptypeCode = selectedItem.data('ptypeCode');
+    const code = selectedItem.val(); // Get the value of the selected item (p_code)
+    const unit = selectedItem.data('unit');
+    const quantity = quantityInput.val();
+    const price = priceInput.val();
+    const amount = quantity * price;
+    const storeId = customerSelect.find(':selected').data('store-id'); // Get store_id
 
-        $.ajax({
-            url: '/save-temp-bad-order',
-            method: 'POST',
-            data: tempData,
-            success: function(response) {
-                console.log('Item saved to temporary table');
-                const newRow = `<tr>
-                                    <td>${code}</td>
-                                    <td>${description}</td>
-                                    <td>${quantity}</td>
-                                    <td>${price}</td>
-                                    <td>${amount}</td>
-                                </tr>`;
-                tableBody.append(newRow);
+    // Save the item to the temporary table via AJAX
+    const tempData = {
+        customer_id: customerSelect.val(),
+        store_id: storeId, // Include store_id
+        ptype_code: ptypeCode,
+        code: code, // Include the code (p_code) of the selected item
+        description: description,
+        quantity: quantity,
+        price: price,
+        amount: amount,
+        unit: unit
+    };
 
-                total += amount;
-                totalAmount.text(total.toFixed(2));
+    $.ajax({
+        url: '/save-temp-bad-order',
+        method: 'POST',
+        data: tempData,
+        success: function(response) {
+            console.log('Item saved to temporary table');
+            const newRow = `<tr>
+                                <td>${ptypeCode}</td>
+                                <td>${code}</td>
+                                <td>${description}</td>
+                                <td>${quantity}</td>
+                                <td>${price}</td>
+                                <td>${amount}</td>
+                            </tr>`;
+            tableBody.append(newRow);
 
-                // Clear inputs
-                priceInput.val('');
-                quantityInput.val('');
-            },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-            }
-        });
+            total += amount;
+            totalAmount.text(total.toFixed(2));
+
+            // Clear inputs
+            priceInput.val('');
+            quantityInput.val('');
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+        }
     });
+});
+
 
     // Event listener for form submission
     $('#finalSaveForm').on('submit', function(e) {
         e.preventDefault();
+
+        // Get selected customer option
         const selectedOption = $('#customer').find('option:selected');
         const customer_id = selectedOption.val();
+        const inbound_id = selectedOption.data('inbound-id');
         const store_id = selectedOption.data('store-id');
 
         // Ensure these values are included in the form submission
         $(this).append('<input type="hidden" name="customer_id" value="' + customer_id + '">');
+        $(this).append('<input type="hidden" name="inbound_id" value="' + inbound_id + '">');
         $(this).append('<input type="hidden" name="store_id" value="' + store_id + '">');
+        
         const formData = $(this).serialize();
 
         $.ajax({
@@ -247,6 +300,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-
-
 @endsection

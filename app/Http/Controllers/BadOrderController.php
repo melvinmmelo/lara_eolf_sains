@@ -36,6 +36,21 @@ class BadOrderController extends Controller
         return view('badorder', ['badOrders' => $summarizedBadOrders]);
     }
 
+
+    public function destroy($bo_id)
+    {
+        try {
+            $affectedRows = BadOrder::where('bo_id', $bo_id)->delete();
+            if ($affectedRows > 0) {
+                return redirect()->route('badOrders.index')->with('success', 'Bad orders deleted successfully.');
+            } else {
+                return back()->withErrors(['error' => 'Bad orders not found.']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Failed to delete bad orders.']);
+        }
+    }
+
     public function fetchLastBadOrderOfCustomer($customerId, $storeId)
     {
 
