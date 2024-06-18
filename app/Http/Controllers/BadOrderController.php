@@ -6,12 +6,13 @@ use App\Models\BadOrder;
 use App\Models\Customers;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class BadOrderController extends Controller
 {
     // public function index()
     // {
     //     $badOrders = BadOrder::all(); // Retrieve all bad orders from the database
-    
+
     //     return view('badorder', compact('badOrders'));
 
     // }
@@ -19,7 +20,7 @@ class BadOrderController extends Controller
     public function index()
     {
         $badOrders = BadOrder::with('customer')->get();
-    
+
         // Group by bo_id and summarize the total amount
         $summarizedBadOrders = $badOrders->groupBy('bo_id')->map(function ($group) {
             return [
@@ -31,10 +32,27 @@ class BadOrderController extends Controller
                 'remarks' => $group->first()->remarks,
             ];
         });
-    
+
         return view('badorder', ['badOrders' => $summarizedBadOrders]);
     }
 
+    public function fetchLastBadOrderOfCustomer($customerId, $storeId)
+    {
+
+        $badOrder = BadOrder::where('customer_id', $customerId)
+            ->whereHas('customer', function ($query) use ($storeId) {
+                $query->where('store_id', $storeId);
+            })
+            ->where('is_active', 1)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if(!$badOrder) {
+            return response()->json(['id' => null, 'amount' => 0]);
+        }
+
+        $lastBadOrderTotal = BadOrder::where('bo_id', $badOrder->bo_id)->sum('amount');
+
+        return response()->json(['id' => $badOrder->bo_id, 'amount' => $lastBadOrderTotal]);
+    }
 }
-
-

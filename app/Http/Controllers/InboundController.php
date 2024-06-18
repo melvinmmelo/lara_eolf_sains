@@ -202,7 +202,7 @@ class InboundController extends Controller
         }
 
 
-        return view('ordering', compact('inboundId', 'productTypes', 'deliveryPerson', 'vehicle', 'defaultPriceLevel', 'inboundList', 'summary', 'customerName', 'equipmentSerial'));
+        return view('ordering', compact('inboundId', 'productTypes', 'deliveryPerson', 'vehicle', 'defaultPriceLevel', 'inboundList', 'summary', 'customerName', 'equipmentSerial', 'inbound'));
     }
 
     // ajax products list
@@ -300,7 +300,6 @@ class InboundController extends Controller
             $summary = $inProdService->summary();
             $summary = $inProdService->addSppbinSummary();
         }
-
 
         return view('inboundList', compact('inboundId','inbound', 'uiProducts', 'summary'));
     }

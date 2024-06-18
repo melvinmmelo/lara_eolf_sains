@@ -56,7 +56,7 @@ Route::middleware('auth')->group(function () {
         return view('badorder');
     })->name('badorderslist');
 
-
+    Route::get('/lastBadOrderOfCustomer/{customerId}/{storeId}', [BadOrderController::class, 'fetchLastBadOrderOfCustomer']);
 
     Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');
 

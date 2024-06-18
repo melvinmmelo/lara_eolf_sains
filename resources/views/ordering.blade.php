@@ -348,6 +348,10 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
+        const total = document.getElementById("total").value ?? 0;
+
+        let totalBadOrder = 0;
+
         function deleteProduct(inboundId, pcode) {
             if (inboundId == "" || pcode == "") {
                 return;
@@ -373,11 +377,55 @@
             return confirm('Are you sure you want to discard this order?');
         }
 
-        $(document).ready(function() {
-            document.getElementById("productsListContainer").display = "none";
+        function fetchLastInsertedBadPricing(customerId, storeId) {
+
+            if (customerId == "" || storeId == "") {
+                return;
+            }
+
+            if (totalBadOrder > 0) {
+                var newTotal = total - totalBadOrder;
+                document.getElementById("total").value = newTotal;
+                console.log(newTotal + " deducted.");
+            } {
+
+                fetch(`/lastBadOrderOfCustomer/${customerId}/${storeId}`)
+                    .then(response => response.text())
+                    .then(data => {
+
+                        data = JSON.parse(data);
+                        console.log(data);
+
+                        if(data == 0){
+                            alert("No bad order found.");
+                            return;
+                        }
+
+                        const badOrderId = data.id;
+                        totalBadOrder = data.amount; // ! update this
+                        var newTotal = total - totalBadOrder;
+
+                        document.getElementById("total").value = newTotal;
+                        console.log(newTotal + " deducted.");
+                    });
+            }
+        }
+
+        document.getElementById("isBadPricing").addEventListener('click', function() {
+            if (this.checked) {
+                fetchLastInsertedBadPricing("{{ $inbound->customer_id }}", "{{ $inbound->store_id }}");
+            } else {
+                var total = document.getElementById("total").value;
+                var newTotal = parseInt(total) + parseInt(totalBadOrder);
+                document.getElementById("total").value = newTotal;
+                console.log(newTotal + " added.");
+            }
         });
 
+
         $(document).ready(function() {
+
+            document.getElementById("productsListContainer").display = "none";
 
             var quantitiy = 0;
             $('.quantity-right-plus').click(function(e) {
