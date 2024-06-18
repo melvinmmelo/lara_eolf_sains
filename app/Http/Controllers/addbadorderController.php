@@ -47,10 +47,10 @@ class addbadorderController extends Controller
     //     $inbounds = Inbound::with('customer.storeinfo')->get();
     //     $customers = Customers::with('storeinfo')->get();
     //     $badPricing = PriceLevels::where('pl_name', 'BAD PRICING')->first();
-    
+
     //     // Fetch prices based on bad pricing level
     //     $prices = Prices::where('pricelevel_id', $badPricing->id)->get();
-    
+
     //     return view('addbadorder', compact('inbounds', 'customers', 'badPricing', 'prices'));
     // }
 
@@ -59,12 +59,12 @@ class addbadorderController extends Controller
     //     // $inbounds = Inbound::with('customer.storeinfo')->get();
     //     $customers = Customers::with('storeinfo')->get();
     //     $badPricing = PriceLevels::where('pl_name', 'BAD PRICING')->first();
-    
+
     //     // Fetch prices with product descriptions
     //     $prices = Prices::with('productType')
     //                     ->where('pricelevel_id', $badPricing->id)
     //                     ->get();
-    
+
     //     // return view('addbadorder', compact('inbounds', 'customers', 'badPricing', 'prices'));
     //     return view('addbadorder', compact('customers', 'badPricing', 'prices'));
     // }
@@ -74,12 +74,13 @@ class addbadorderController extends Controller
     {
         $customers = Customers::with('storeinfo')->get();
         $badPricing = PriceLevels::where('pl_name', 'BAD PRICING')->first();
-    
+
         $items = Prices::where('pricelevel_id', $badPricing->id)
             ->join('product_types', 'prices.p_code', '=', 'product_types.code')
             ->select('prices.*', 'product_types.name as description', 'product_types.code as ptype_code')
+            ->orderBy('product_types.sequence_no')
             ->get();
-    
+
         return view('addbadorder', compact('customers', 'badPricing', 'items'));
     }
 
@@ -125,27 +126,27 @@ class addbadorderController extends Controller
     {
         try {
             $session_id = $request->session()->getId(); // Get session ID
-    
+
             $customer_id = $request->input('customer_id');
             $store_id = $request->input('store_id');
             $re_dr = $request->input('re_dr');
             $bo_percentage = $request->input('bo_percentage');
             $remarks = $request->input('remarks');
-    
+
             if (!$customer_id || !$re_dr) {
                 return response()->json(['error' => 'Required fields are missing'], 400);
             }
-    
+
             $tempBadOrders = TempBadOrder::where('session_id', $session_id)
                                          ->where('customer_id', $customer_id)
                                          ->get();
-    
+
             if ($tempBadOrders->isEmpty()) {
                 return response()->json(['error' => 'No temp bad orders found for the given session and customer'], 404);
             }
-    
+
             $bo_id = $this->generateUniqueBoId();
-    
+
             foreach ($tempBadOrders as $tempOrder) {
                 BadOrder::create([
                     'bo_id' => $bo_id,
@@ -163,22 +164,22 @@ class addbadorderController extends Controller
                     'amount' => $tempOrder->amount,
                 ]);
             }
-    
+
             // Clear previous temp data for this session
             TempBadOrder::where('session_id', $session_id)
                         ->where('customer_id', $customer_id)
                         ->delete();
-    
+
             // Redirect to the appropriate route after successful storage
             return redirect()->route('badOrders.index')->with('success', 'BO added successfully!');
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    
-    
-    
-    
+
+
+
+
 
     // public function getPrice($pricelevel_id, $p_code)
     // {
@@ -201,9 +202,9 @@ class addbadorderController extends Controller
     //         'amount' => 'required|numeric',
     //         'unit' => 'required|string',
     //     ]);
-    
+
     //     TempBadOrder::create($validated);
-    
+
     //     return response()->json(['success' => true]);
     // }
 

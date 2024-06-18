@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BadOrder;
 use App\Models\Customers;
 use App\Models\Inbound;
 use App\Models\Drivers;
@@ -33,7 +34,7 @@ class InboundController extends Controller
 
         $total = InboundService::getTotalOfInboundProducts($inbound->id);
 
-        if($request->delivered_amount > $total){
+        if ($request->delivered_amount > $total) {
             return redirect()->route('order.index')->withErrors('Delivered amount is greater than the total amount.');
         }
 
@@ -72,7 +73,7 @@ class InboundController extends Controller
 
         $summary = [];
 
-        if($inbound->products){
+        if ($inbound->products) {
 
             $summary = $inboundService->summary();
 
@@ -88,7 +89,6 @@ class InboundController extends Controller
             ->log('Order deleted.');
 
         return view('inboundList', compact('inboundId', 'inbound', 'uiProducts', 'summary'));
-
     }
 
     /**
@@ -106,7 +106,7 @@ class InboundController extends Controller
 
         $pricing = pricelevels::getPriceLevels(session('branch_code'));
 
-        $inbounds->map(function($inbound){
+        $inbounds->map(function ($inbound) {
             $inbound->is_with_badOrder = InboundService::isWithBadOrder($inbound->id);
             return $inbound;
         });
@@ -233,13 +233,12 @@ class InboundController extends Controller
 
             $stocks = $item->stocks ?? 0;
 
-            if($stocks != 0){
+            if ($stocks != 0) {
 
                 $t = ['code' => $product->code, 'price' => $product->price, 'unit' => "0", 'qty' => $stocks];
 
                 array_push($products, $t);
             }
-
         }
 
         return view('productsList', compact('products', 'pricelevelId', 'branchCode'));
@@ -301,7 +300,7 @@ class InboundController extends Controller
             $summary = $inProdService->addSppbinSummary();
         }
 
-        return view('inboundList', compact('inboundId','inbound', 'uiProducts', 'summary'));
+        return view('inboundList', compact('inboundId', 'inbound', 'uiProducts', 'summary'));
     }
 
     public function store(Request $request)
@@ -309,8 +308,11 @@ class InboundController extends Controller
 
         $request->validate([
             'inboundId' => 'required|exists:inbounds,id',
-
+            'bad_order_id' => 'nullable',
+            'bo_amount' => 'nullable',
         ]);
+        // dd($request->all());
+
 
         $inbound = Inbound::find($request->inboundId);
 
@@ -320,11 +322,23 @@ class InboundController extends Controller
 
         $inbound->bad_order = $request->bad_order == 'on' ? 1 : 0;
 
+        if ($request->bad_order_id) {
+
+            BadOrder::where('bo_id', $request->bad_order_id)->update(['is_active' => 0]);
+
+            $inbound->bad_order_id = $request->bad_order_id;
+
+            $inbound->bo_amount = $request->bo_amount;
+
+        }
+
         $inbound->save();
 
         $updatingData = [];
 
         $inboundProducts = json_decode($inbound->products, true);
+
+
 
         foreach ($inboundProducts as $product) {
 
@@ -338,7 +352,6 @@ class InboundController extends Controller
             $message = 'Success';
 
             $updatingData[] = ['code' => $product['code'], 'message' => $message];
-
         }
 
         session()->forget('inboundId');
@@ -373,7 +386,7 @@ class InboundController extends Controller
                 return response()->json(['error' => $e->getMessage()]);
             }
         } else {
-            try{
+            try {
                 $products = $inboundService->minQty($code);
             } catch (\Exception $e) {
                 return response()->json(['error' => $e->getMessage()]);

@@ -14,10 +14,10 @@ class InboundService extends Model
     // check if inbound is existing in bad order table
     public static function isWithBadOrder($inboundId)
     {
-        $badOrder = BadOrder::where('inbound_id', $inboundId)->first();
-        if($badOrder){
-            return true;
-        }
+        // $badOrder = BadOrder::where('inbound_id', $inboundId)->first();
+        // if($badOrder){
+        //     return true;
+        // }
         return false;
     }
 

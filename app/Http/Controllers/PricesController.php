@@ -146,6 +146,7 @@ class PricesController extends Controller
                 'e_price' => 'required|numeric',
             ]);
 
+            $pricing->p_unit = 'Pc/s';
             $pricing->p_price = $request->e_price;
             $pricing->save();
         } else {

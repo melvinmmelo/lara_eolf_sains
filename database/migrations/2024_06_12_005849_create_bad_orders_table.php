@@ -13,15 +13,12 @@ return new class extends Migration
     {
         Schema::create('bad_orders', function (Blueprint $table) {
             $table->id();
-            $table->string('bo_id'); 
-            // $table->unsignedBigInteger('inbound_id');
-            $table->unsignedBigInteger('customer_id'); // Add this line to create the column
+            $table->string('bo_id');
+            $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('store_id');
-
             $table->string('re_dr');
             $table->string('bo_percentage')->nullable();
             $table->string('remarks')->nullable();
-
             $table->string('ptype_code');
             $table->string('code');
             $table->integer('quantity');
@@ -29,8 +26,7 @@ return new class extends Migration
             $table->string('unit');
             $table->string('description');
             $table->float('amount');
-            
-            // $table->foreign('inbound_id')->references('id')->on('inbounds')->onDelete('cascade');
+            $table->tinyInteger('is_active')->default(1);
             $table->timestamps();
         });
     }

@@ -118,6 +118,10 @@
                                 <label class="form-label" for="price-quantity">Customer</label>
                                 <input type="text" class="form-control" id="#" name="#"
                                     value="{{ $equipmentSerial }} {{ $customerName }}" readonly>
+
+                                <input type="text" class="form-control" id="bad_order_id" name="bad_order_id" value="" readonly>
+                                <input type="text" class="form-control" id="bo_amount" name="bo_amount" value="" readonly>
+
                             </div>
                         </div>
                     </div>
@@ -404,6 +408,9 @@
                         const badOrderId = data.id;
                         totalBadOrder = data.amount; // ! update this
                         var newTotal = total - totalBadOrder;
+
+                        document.getElementById("bad_order_id").value = badOrderId;
+                        document.getElementById("bo_amount").value = totalBadOrder;
 
                         document.getElementById("total").value = newTotal;
                         console.log(newTotal + " deducted.");

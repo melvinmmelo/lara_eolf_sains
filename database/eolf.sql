@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 17, 2024 at 08:49 AM
+-- Generation Time: Jun 18, 2024 at 09:10 AM
 -- Server version: 5.7.26
 -- PHP Version: 7.2.18
 
@@ -45,7 +45,18 @@ CREATE TABLE IF NOT EXISTS `activity_log` (
   KEY `subject` (`subject_type`,`subject_id`),
   KEY `causer` (`causer_type`,`causer_id`),
   KEY `activity_log_log_name_index` (`log_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `activity_log`
+--
+
+INSERT INTO `activity_log` (`id`, `log_name`, `description`, `subject_type`, `event`, `subject_id`, `causer_type`, `causer_id`, `properties`, `batch_uuid`, `created_at`, `updated_at`) VALUES
+(1, 'default', 'Order completed.', 'App\\Models\\Inbound', NULL, 4, 'App\\Models\\User', 1, '[]', NULL, '2024-06-18 09:01:06', '2024-06-18 09:01:06'),
+(2, 'default', 'Order completed.', 'App\\Models\\Inbound', NULL, 4, 'App\\Models\\User', 1, '[]', NULL, '2024-06-18 09:02:18', '2024-06-18 09:02:18'),
+(3, 'default', 'Order completed.', 'App\\Models\\Inbound', NULL, 4, 'App\\Models\\User', 1, '[]', NULL, '2024-06-18 09:03:41', '2024-06-18 09:03:41'),
+(4, 'default', 'Order completed.', 'App\\Models\\Inbound', NULL, 4, 'App\\Models\\User', 1, '[]', NULL, '2024-06-18 09:04:43', '2024-06-18 09:04:43'),
+(5, 'default', 'Order completed.', 'App\\Models\\Inbound', NULL, 4, 'App\\Models\\User', 1, '[]', NULL, '2024-06-18 09:07:35', '2024-06-18 09:07:35');
 
 -- --------------------------------------------------------
 
@@ -57,7 +68,6 @@ DROP TABLE IF EXISTS `bad_orders`;
 CREATE TABLE IF NOT EXISTS `bad_orders` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `bo_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `inbound_id` bigint(20) UNSIGNED NOT NULL,
   `customer_id` bigint(20) UNSIGNED NOT NULL,
   `store_id` bigint(20) UNSIGNED NOT NULL,
   `re_dr` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -70,11 +80,20 @@ CREATE TABLE IF NOT EXISTS `bad_orders` (
   `unit` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `amount` double NOT NULL,
+  `is_active` tinyint(4) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `bad_orders_inbound_id_foreign` (`inbound_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `bad_orders`
+--
+
+INSERT INTO `bad_orders` (`id`, `bo_id`, `customer_id`, `store_id`, `re_dr`, `bo_percentage`, `remarks`, `ptype_code`, `code`, `quantity`, `price`, `unit`, `description`, `amount`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, '1', 2, 2, '123456', '100', NULL, 'SC', 'SC', 5, 10.2, 'Pc/s', '90ml SMALL CUP REGULAR (3.0-oz)', 51, 0, '2024-06-18 08:49:18', '2024-06-18 09:07:35'),
+(2, '1', 2, 2, '123456', '100', NULL, 'MC', 'MC', 10, 13.4, 'Pc/s', '135ml MEDIUM CUP SPECIAL (4.5-oz)', 134, 0, '2024-06-18 08:49:18', '2024-06-18 09:07:35'),
+(3, '1', 2, 2, '123456', '100', NULL, 'BC', 'BC', 150, 17.8, 'Pc/s', '180ml BIG CUP (6.0-oz)', 2670, 0, '2024-06-18 08:49:18', '2024-06-18 09:07:35');
 
 -- --------------------------------------------------------
 
@@ -508,6 +527,8 @@ CREATE TABLE IF NOT EXISTS `inbounds` (
   `products` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
   `with_invoice` tinyint(4) DEFAULT NULL,
   `bad_order` tinyint(4) DEFAULT NULL,
+  `bad_order_id` int(11) DEFAULT NULL,
+  `bo_amount` float DEFAULT NULL,
   `status` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
   `pricelevel_id` int(10) UNSIGNED NOT NULL,
   `payment_type` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -523,11 +544,11 @@ CREATE TABLE IF NOT EXISTS `inbounds` (
 -- Dumping data for table `inbounds`
 --
 
-INSERT INTO `inbounds` (`id`, `user_id`, `branch_code`, `equipment_id`, `customer_id`, `store_id`, `driver_id`, `vehicle_id`, `products`, `with_invoice`, `bad_order`, `status`, `pricelevel_id`, `payment_type`, `ref_no`, `delivered_amount`, `created_at`, `updated_at`) VALUES
-(1, 1, 'EFTO-CAG', '1', 1, 1, '1', '1', '[{\"ptype_code\":\"PT\",\"code\":\"PT_BM\",\"quantity\":\"4\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Buko Melon\"},{\"ptype_code\":\"PT\",\"code\":\"PT_CS\",\"quantity\":\"4\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Cheese\"},{\"ptype_code\":\"PT\",\"code\":\"PT_HH\",\"quantity\":\"4\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Halo halo\"},{\"ptype_code\":\"PT\",\"code\":\"PT_MG\",\"quantity\":12,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Mango\"},{\"ptype_code\":\"BC\",\"code\":\"BC_CS\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cheese\"},{\"ptype_code\":\"BC\",\"code\":\"BC_HH\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Halo halo\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CF\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Chocofi\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CNC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CS\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cheese\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MG\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Mango\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MOC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CNC\",\"quantity\":4,\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CS\",\"quantity\":4,\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cheese\"},{\"ptype_code\":\"SPS\",\"code\":\"SPS_MK\",\"quantity\":\"2\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Milk\"}]', NULL, NULL, 'Encoding', 2, NULL, NULL, NULL, '2024-06-04 19:06:32', '2024-06-08 21:35:12'),
-(2, 1, 'EFTO-CAG', '6', 2, 2, '7', '4', '[{\"ptype_code\":\"SC\",\"code\":\"SC_BM\",\"quantity\":1,\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Melon\"},{\"ptype_code\":\"SC\",\"code\":\"SC_BP\",\"quantity\":1,\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan\"},{\"ptype_code\":\"BC\",\"code\":\"BC_CNC\",\"quantity\":1,\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cookies N\' Cream\"},{\"ptype_code\":\"HG\",\"code\":\"HG_BM\",\"quantity\":1,\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Buko Melon\"}]', 1, 0, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 19:25:45', '2024-06-07 22:07:38'),
-(3, 1, 'EFTO-CAG', '6', 2, 2, '7', '3', '[{\"ptype_code\":\"SC\",\"code\":\"SC_BP\",\"quantity\":\"1\",\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan\"},{\"ptype_code\":\"MC\",\"code\":\"MC_CS\",\"quantity\":\"1\",\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese\"},{\"ptype_code\":\"BC\",\"code\":\"BC_CNC\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cookies N\' Cream\"},{\"ptype_code\":\"ICC\",\"code\":\"ICC_RR\",\"quantity\":\"1\",\"price\":468,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"ICE CREAM CONES Rocky Road\"},{\"ptype_code\":\"PT\",\"code\":\"PT_HH\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Halo halo\"}]', 1, 0, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 22:27:22', '2024-06-07 23:23:42'),
-(4, 2, 'EFTO-CAG', '6', 2, 2, '7', '2', '[{\"ptype_code\":\"SC\",\"code\":\"SC_BP\",\"quantity\":1,\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan\"},{\"ptype_code\":\"MC\",\"code\":\"MC_CS\",\"quantity\":2,\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese\"},{\"ptype_code\":\"BC\",\"code\":\"BC_CS\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cheese\"},{\"ptype_code\":\"SPS\",\"code\":\"SPS_CHO\",\"quantity\":\"1\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Chocolate\"},{\"ptype_code\":\"SPS\",\"code\":\"SPS_MK\",\"quantity\":\"1\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Milk\"},{\"ptype_code\":\"PT\",\"code\":\"PT_BM\",\"quantity\":4,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Buko Melon\"},{\"ptype_code\":\"PT\",\"code\":\"PT_CNC\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Cookies N\' Cream\"},{\"ptype_code\":\"PT\",\"code\":\"PT_CS\",\"quantity\":5,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Cheese\"},{\"ptype_code\":\"PT\",\"code\":\"PT_HH\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Halo halo\"},{\"ptype_code\":\"PT\",\"code\":\"PT_MG\",\"quantity\":5,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Mango\"},{\"ptype_code\":\"PT\",\"code\":\"PT_MOC\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Coffee Mocha Fudge\"},{\"ptype_code\":\"PT\",\"code\":\"PT_VNL\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Vanilla\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CNC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CF\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Chocofi\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CS\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cheese\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MG\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Mango\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MOC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CNC\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CS\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cheese\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_MOC\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_SS\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Strawberry Strawberry\"},{\"ptype_code\":\"HG\",\"code\":\"HG_BM\",\"quantity\":\"10\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Buko Melon\"},{\"ptype_code\":\"HG\",\"code\":\"HG_MG\",\"quantity\":\"10\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Mango\"},{\"ptype_code\":\"HG\",\"code\":\"HG_VNL\",\"quantity\":\"10\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Vanilla\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_CNC\",\"quantity\":9,\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Cookies N\' Cream\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_CS\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Cheese\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_HH\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Halo halo\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_MG\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Mango\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_MOC\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_VNL\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Vanilla\"}]', 0, 0, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 23:07:13', '2024-06-07 23:21:47');
+INSERT INTO `inbounds` (`id`, `user_id`, `branch_code`, `equipment_id`, `customer_id`, `store_id`, `driver_id`, `vehicle_id`, `products`, `with_invoice`, `bad_order`, `bad_order_id`, `bo_amount`, `status`, `pricelevel_id`, `payment_type`, `ref_no`, `delivered_amount`, `created_at`, `updated_at`) VALUES
+(1, 1, 'EFTO-CAG', '1', 1, 1, '1', '1', '[{\"ptype_code\":\"PT\",\"code\":\"PT_BM\",\"quantity\":\"4\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Buko Melon\"},{\"ptype_code\":\"PT\",\"code\":\"PT_CS\",\"quantity\":\"4\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Cheese\"},{\"ptype_code\":\"PT\",\"code\":\"PT_HH\",\"quantity\":\"4\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Halo halo\"},{\"ptype_code\":\"PT\",\"code\":\"PT_MG\",\"quantity\":12,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Mango\"},{\"ptype_code\":\"BC\",\"code\":\"BC_CS\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cheese\"},{\"ptype_code\":\"BC\",\"code\":\"BC_HH\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Halo halo\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CF\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Chocofi\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CNC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CS\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cheese\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MG\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Mango\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MOC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CNC\",\"quantity\":4,\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CS\",\"quantity\":4,\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cheese\"},{\"ptype_code\":\"SPS\",\"code\":\"SPS_MK\",\"quantity\":\"2\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Milk\"}]', NULL, NULL, NULL, NULL, 'Encoding', 2, NULL, NULL, NULL, '2024-06-04 19:06:32', '2024-06-08 21:35:12'),
+(2, 1, 'EFTO-CAG', '6', 2, 2, '7', '4', '[{\"ptype_code\":\"SC\",\"code\":\"SC_BM\",\"quantity\":1,\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Melon\"},{\"ptype_code\":\"SC\",\"code\":\"SC_BP\",\"quantity\":1,\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan\"},{\"ptype_code\":\"BC\",\"code\":\"BC_CNC\",\"quantity\":1,\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cookies N\' Cream\"},{\"ptype_code\":\"HG\",\"code\":\"HG_BM\",\"quantity\":1,\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Buko Melon\"}]', 1, 0, NULL, NULL, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 19:25:45', '2024-06-07 22:07:38'),
+(3, 1, 'EFTO-CAG', '6', 2, 2, '7', '3', '[{\"ptype_code\":\"SC\",\"code\":\"SC_BP\",\"quantity\":\"1\",\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan\"},{\"ptype_code\":\"MC\",\"code\":\"MC_CS\",\"quantity\":\"1\",\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese\"},{\"ptype_code\":\"BC\",\"code\":\"BC_CNC\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cookies N\' Cream\"},{\"ptype_code\":\"ICC\",\"code\":\"ICC_RR\",\"quantity\":\"1\",\"price\":468,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"ICE CREAM CONES Rocky Road\"},{\"ptype_code\":\"PT\",\"code\":\"PT_HH\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Halo halo\"}]', 1, 0, NULL, NULL, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 22:27:22', '2024-06-07 23:23:42'),
+(4, 2, 'EFTO-CAG', '6', 2, 2, '7', '2', '[{\"ptype_code\":\"SC\",\"code\":\"SC_BP\",\"quantity\":1,\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan\"},{\"ptype_code\":\"MC\",\"code\":\"MC_CS\",\"quantity\":2,\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese\"},{\"ptype_code\":\"BC\",\"code\":\"BC_CS\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cheese\"},{\"ptype_code\":\"SPS\",\"code\":\"SPS_CHO\",\"quantity\":\"1\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Chocolate\"},{\"ptype_code\":\"SPS\",\"code\":\"SPS_MK\",\"quantity\":\"1\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Milk\"},{\"ptype_code\":\"PT\",\"code\":\"PT_BM\",\"quantity\":4,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Buko Melon\"},{\"ptype_code\":\"PT\",\"code\":\"PT_CNC\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Cookies N\' Cream\"},{\"ptype_code\":\"PT\",\"code\":\"PT_CS\",\"quantity\":5,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Cheese\"},{\"ptype_code\":\"PT\",\"code\":\"PT_HH\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Halo halo\"},{\"ptype_code\":\"PT\",\"code\":\"PT_MG\",\"quantity\":5,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Mango\"},{\"ptype_code\":\"PT\",\"code\":\"PT_MOC\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Coffee Mocha Fudge\"},{\"ptype_code\":\"PT\",\"code\":\"PT_VNL\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Vanilla\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CNC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CF\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Chocofi\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CS\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cheese\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MG\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Mango\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MOC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CNC\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CS\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cheese\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_MOC\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_SS\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Strawberry Strawberry\"},{\"ptype_code\":\"HG\",\"code\":\"HG_BM\",\"quantity\":\"10\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Buko Melon\"},{\"ptype_code\":\"HG\",\"code\":\"HG_MG\",\"quantity\":\"10\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Mango\"},{\"ptype_code\":\"HG\",\"code\":\"HG_VNL\",\"quantity\":\"10\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Vanilla\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_CNC\",\"quantity\":9,\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Cookies N\' Cream\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_CS\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Cheese\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_HH\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Halo halo\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_MG\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Mango\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_MOC\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_VNL\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Vanilla\"}]', 0, 1, 1, NULL, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 23:07:13', '2024-06-18 09:07:35');
 
 -- --------------------------------------------------------
 
@@ -570,42 +591,42 @@ CREATE TABLE IF NOT EXISTS `item_master_data` (
 INSERT INTO `item_master_data` (`id`, `branch_code`, `product_code`, `product_description`, `unit`, `stocks`, `reserved`, `created_at`, `updated_at`) VALUES
 (1, 'EFTO-CAG', 'SC_RR', 'Small Cup Rocky Road', 'Bag/s', 50, 0, '2024-06-04 19:07:48', '2024-06-04 19:07:48'),
 (2, 'EFTO-CAG', 'SC_BM', '90ml SMALL CUP REGULAR (3.0-oz) Buko Melon', 'Bag/s', 30, 1, '2024-06-06 05:10:24', '2024-06-07 22:07:38'),
-(3, 'EFTO-CAG', 'SC_BP', '90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan', 'Bag/s', 26, 3, '2024-06-06 05:10:24', '2024-06-07 23:23:42'),
+(3, 'EFTO-CAG', 'SC_BP', '90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan', 'Bag/s', 26, 8, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
 (4, 'EFTO-CAG', 'SC_BU', '90ml SMALL CUP REGULAR (3.0-oz) Buko Ube', 'Bag/s', 26, 0, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
 (5, 'EFTO-CAG', 'SC_MG', '90ml SMALL CUP REGULAR (3.0-oz) Mango', 'Bag/s', 30, 0, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
-(6, 'EFTO-CAG', 'MC_CS', '135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese', 'Bag/s', 112, 3, '2024-06-06 05:10:24', '2024-06-07 23:23:42'),
+(6, 'EFTO-CAG', 'MC_CS', '135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese', 'Bag/s', 112, 13, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
 (7, 'EFTO-CAG', 'BC_CNC', '180ml BIG CUP (6.0-oz) Cookies N\' Cream', 'Bag/s', 26, 2, '2024-06-06 05:10:24', '2024-06-07 23:23:42'),
-(8, 'EFTO-CAG', 'BC_CS', '180ml BIG CUP (6.0-oz) Cheese', 'Bag/s', 168, 1, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
+(8, 'EFTO-CAG', 'BC_CS', '180ml BIG CUP (6.0-oz) Cheese', 'Bag/s', 168, 6, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
 (9, 'EFTO-CAG', 'BC_HH', '180ml BIG CUP (6.0-oz) Halo halo', 'Bag/s', 30, 0, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
-(10, 'EFTO-CAG', 'SPS_CHO', 'SPECIAL STICKS Chocolate', 'Bag/s', 38, 1, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(11, 'EFTO-CAG', 'SPS_MK', 'SPECIAL STICKS Milk', 'Bag/s', 42, 1, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
+(10, 'EFTO-CAG', 'SPS_CHO', 'SPECIAL STICKS Chocolate', 'Bag/s', 38, 6, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(11, 'EFTO-CAG', 'SPS_MK', 'SPECIAL STICKS Milk', 'Bag/s', 42, 6, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
 (12, 'EFTO-CAG', 'ICC_RR', 'ICE CREAM CONES Rocky Road', 'Bag/s', 162, 1, '2024-06-06 05:10:24', '2024-06-07 23:23:42'),
-(13, 'EFTO-CAG', 'PT_BM', 'PINT Buko Melon', 'Pc/s', 171, 4, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(14, 'EFTO-CAG', 'PT_CNC', 'PINT Cookies N\' Cream', 'Pc/s', 171, 2, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(15, 'EFTO-CAG', 'PT_CS', 'PINT Cheese', 'Pc/s', 399, 5, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(16, 'EFTO-CAG', 'PT_HH', 'PINT Halo halo', 'Pc/s', 171, 4, '2024-06-06 05:10:24', '2024-06-07 23:23:42'),
-(17, 'EFTO-CAG', 'PT_MG', 'PINT Mango', 'Pc/s', 171, 5, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(18, 'EFTO-CAG', 'PT_MOC', 'PINT Coffee Mocha Fudge', 'Pc/s', 171, 2, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(19, 'EFTO-CAG', '1L_CF', '1 LITER Chocofi', 'Pc/s', 72, 2, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(20, 'EFTO-CAG', '1L_CNC', '1 LITER Cookies N\' Cream', 'Pc/s', 72, 2, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(21, 'EFTO-CAG', '1L_CS', '1 LITER Cheese', 'Pc/s', 504, 2, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(22, 'EFTO-CAG', '1L_MG', '1 LITER Mango', 'Bag/s', 72, 2, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(23, 'EFTO-CAG', '1L_MOC', '1 LITER Coffee Mocha Fudge', 'Bag/s', 72, 2, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(24, 'EFTO-CAG', '1.7L_CNC', '1.7 LITER Cookies N\' Cream', 'Pc/s', 210, 5, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(25, 'EFTO-CAG', '1.7L_CS', '1.7 LITER Cheese', 'Pc/s', 945, 5, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(26, 'EFTO-CAG', '1.7L_MOC', '1.7 LITER Coffee Mocha Fudge', 'Pc/s', 105, 5, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(27, 'EFTO-CAG', '1.7L_SS', '1.7 LITER Strawberry Strawberry', 'Pc/s', 105, 5, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(28, 'EFTO-CAG', 'HG_BM', 'HALF GALLON (1.89L) Buko Melon', 'Pc/s', 180, 11, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(29, 'EFTO-CAG', 'HG_MG', 'HALF GALLON (1.89L) Mango', 'Pc/s', 270, 10, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(30, 'EFTO-CAG', 'HG_VNL', 'HALF GALLON (1.89L) Vanilla', 'Pc/s', 180, 10, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(31, 'EFTO-CAG', '3.6L_CNC', '3.6 LITER Cookies N\' Cream', 'Pc/s', 108, 9, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(32, 'EFTO-CAG', '3.6L_CS', '3.6 LITER Cheese', 'Pc/s', 276, 5, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(33, 'EFTO-CAG', '3.6L_HH', '3.6 LITER Halo halo', 'Pc/s', 48, 5, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(34, 'EFTO-CAG', '3.6L_MG', '3.6 LITER Mango', 'Pc/s', 156, 5, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(35, 'EFTO-CAG', '3.6L_MOC', '3.6 LITER Coffee Mocha Fudge', 'Pc/s', 60, 5, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
+(13, 'EFTO-CAG', 'PT_BM', 'PINT Buko Melon', 'Pc/s', 171, 24, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(14, 'EFTO-CAG', 'PT_CNC', 'PINT Cookies N\' Cream', 'Pc/s', 171, 12, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(15, 'EFTO-CAG', 'PT_CS', 'PINT Cheese', 'Pc/s', 399, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(16, 'EFTO-CAG', 'PT_HH', 'PINT Halo halo', 'Pc/s', 171, 14, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(17, 'EFTO-CAG', 'PT_MG', 'PINT Mango', 'Pc/s', 171, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(18, 'EFTO-CAG', 'PT_MOC', 'PINT Coffee Mocha Fudge', 'Pc/s', 171, 12, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(19, 'EFTO-CAG', '1L_CF', '1 LITER Chocofi', 'Pc/s', 72, 12, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(20, 'EFTO-CAG', '1L_CNC', '1 LITER Cookies N\' Cream', 'Pc/s', 72, 12, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(21, 'EFTO-CAG', '1L_CS', '1 LITER Cheese', 'Pc/s', 504, 12, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(22, 'EFTO-CAG', '1L_MG', '1 LITER Mango', 'Bag/s', 72, 12, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(23, 'EFTO-CAG', '1L_MOC', '1 LITER Coffee Mocha Fudge', 'Bag/s', 72, 12, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(24, 'EFTO-CAG', '1.7L_CNC', '1.7 LITER Cookies N\' Cream', 'Pc/s', 210, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(25, 'EFTO-CAG', '1.7L_CS', '1.7 LITER Cheese', 'Pc/s', 945, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(26, 'EFTO-CAG', '1.7L_MOC', '1.7 LITER Coffee Mocha Fudge', 'Pc/s', 105, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(27, 'EFTO-CAG', '1.7L_SS', '1.7 LITER Strawberry Strawberry', 'Pc/s', 105, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(28, 'EFTO-CAG', 'HG_BM', 'HALF GALLON (1.89L) Buko Melon', 'Pc/s', 180, 61, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(29, 'EFTO-CAG', 'HG_MG', 'HALF GALLON (1.89L) Mango', 'Pc/s', 270, 60, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(30, 'EFTO-CAG', 'HG_VNL', 'HALF GALLON (1.89L) Vanilla', 'Pc/s', 180, 60, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(31, 'EFTO-CAG', '3.6L_CNC', '3.6 LITER Cookies N\' Cream', 'Pc/s', 108, 54, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(32, 'EFTO-CAG', '3.6L_CS', '3.6 LITER Cheese', 'Pc/s', 276, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(33, 'EFTO-CAG', '3.6L_HH', '3.6 LITER Halo halo', 'Pc/s', 48, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(34, 'EFTO-CAG', '3.6L_MG', '3.6 LITER Mango', 'Pc/s', 156, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(35, 'EFTO-CAG', '3.6L_MOC', '3.6 LITER Coffee Mocha Fudge', 'Pc/s', 60, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
 (36, 'EFTO-CAG', '3.6L_SS', '3.6 LITER Strawberry Strawberry', 'Pc/s', 48, 0, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
-(37, 'EFTO-CAG', '3.6L_VNL', '3.6 LITER Vanilla', 'Pc/s', 60, 5, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(38, 'EFTO-CAG', 'PT_VNL', 'PINT Vanilla', 'Pc/s', 171, 2, '2024-06-06 05:10:24', '2024-06-07 23:21:47');
+(37, 'EFTO-CAG', '3.6L_VNL', '3.6 LITER Vanilla', 'Pc/s', 60, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(38, 'EFTO-CAG', 'PT_VNL', 'PINT Vanilla', 'Pc/s', 171, 12, '2024-06-06 05:10:24', '2024-06-18 09:07:35');
 
 -- --------------------------------------------------------
 
@@ -640,7 +661,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=319 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=331 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `migrations`
@@ -671,16 +692,16 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (306, '2024_04_22_070407_create_pricelevels_table', 2),
 (307, '2024_04_22_074027_create_prices_table', 2),
 (308, '2024_04_24_043306_create_inbounds_table', 2),
-(309, '2024_04_24_080214_create_temp_inbounds_table', 2),
 (310, '2024_04_26_004316_create_ph_addrs', 2),
 (311, '2024_05_01_054802_create_equipment_store_table', 2),
 (312, '2024_05_06_120431_create_delivery_purchase_receipts_table', 2),
 (313, '2024_05_17_142735_create_item_master_data', 2),
-(314, '2024_06_12_005849_create_bad_orders_table', 3),
-(315, '2024_06_12_122146_create_temp_bad_orders', 3),
-(316, '2024_06_13_164819_create_activity_log_table', 3),
-(317, '2024_06_13_164820_add_event_column_to_activity_log_table', 3),
-(318, '2024_06_13_164821_add_batch_uuid_column_to_activity_log_table', 3);
+(325, '2024_04_24_080214_create_temp_inbounds_table', 3),
+(326, '2024_06_12_005849_create_bad_orders_table', 3),
+(327, '2024_06_12_122146_create_temp_bad_orders', 3),
+(328, '2024_06_13_164819_create_activity_log_table', 3),
+(329, '2024_06_13_164820_add_event_column_to_activity_log_table', 3),
+(330, '2024_06_13_164821_add_batch_uuid_column_to_activity_log_table', 3);
 
 -- --------------------------------------------------------
 
@@ -44625,7 +44646,7 @@ CREATE TABLE IF NOT EXISTS `prices` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `prices_pricelevel_id_p_code_unique` (`pricelevel_id`,`p_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=286 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=289 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `prices`
@@ -44906,7 +44927,10 @@ INSERT INTO `prices` (`id`, `pricelevel_id`, `p_code`, `p_unit`, `p_quant`, `p_p
 (282, 4, 'N3.6L_VNL', 'Pc/s', '1', 404, '2024-06-07 21:53:08', '2024-06-07 21:53:08'),
 (283, 4, '3.6L_SS', 'Pc/s', '1', 404, '2024-06-07 21:55:52', '2024-06-07 21:55:52'),
 (284, 4, '3.6L_UBE', 'Pc/s', '1', 404, '2024-06-07 21:56:08', '2024-06-07 21:56:08'),
-(285, 2, 'SC', NULL, '0', 10.2, '2024-06-13 05:04:01', '2024-06-13 05:08:24');
+(285, 2, 'SC', 'Pc/s', '0', 10.2, '2024-06-13 05:04:01', '2024-06-13 05:08:24'),
+(286, 2, 'MC', 'Pc/s', '0', 13.4, '2024-06-18 08:34:21', '2024-06-18 08:34:21'),
+(287, 2, 'BC', 'Pc/s', '0', 17.8, '2024-06-18 08:34:30', '2024-06-18 08:34:30'),
+(288, 2, 'LOL', 'Pc/s', '0', 4.92, '2024-06-18 08:34:41', '2024-06-18 08:34:41');
 
 -- --------------------------------------------------------
 
@@ -45288,7 +45312,7 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 ('IIZ20f7dNDWWzPe2G7mmZaKvnRWFIhjYaFX9KHxz', NULL, '136.158.65.81', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiMjhmTjRwdnBIQm11QTF3WEVUUHhOWnhPcGZ3NDV1TXY1aHNJYzJYaSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9fQ==', 1717747746),
 ('ivAWGMJuLIHkZj7rDxQrON8jGrFt2IwvWqSAEauD', NULL, '1.37.67.199', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWGEwN1VGSmpKcXlwM3NhTUJOd1poMmRtY2VvQkdPY1luT1VSVTVMVyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NzoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vdmVoaWNsZXMiO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czo0NDoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1717590088),
 ('JY6uiQyRu7anYFycYzu4E6BsWarkCCuhJaRDWXrG', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiM2ViZ3ljRnhWR3J0QVhvZWhnWElhVFgzSHU3Sld3VlVkR1g5dDJseiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyOToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL3ByaWNpbmciO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyODoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL29yZGVycyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO30=', 1718256370),
-('K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiNHQ2OW1CWmI5Y1BFN1lxRm45Qkp0ZXc5Z1FMSzY4eVRWVGlBckRMbSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozMToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2N1c3RvbWVycyI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjI4OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvb3JkZXJzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTtzOjExOiJicmFuY2hfY29kZSI7czo4OiJFRlRPLUNBRyI7fQ==', 1718614141),
+('K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo4OntzOjY6Il90b2tlbiI7czo0MDoiNHQ2OW1CWmI5Y1BFN1lxRm45Qkp0ZXc5Z1FMSzY4eVRWVGlBckRMbSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozMToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2N1c3RvbWVycyI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjI4OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvb3JkZXJzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTtzOjExOiJicmFuY2hfY29kZSI7czo4OiJFRlRPLUNBRyI7czoxMjoicHJpY2VsZXZlbElkIjtpOjQ7czoxOToidXBkYXRpbmdEYXRhUmVzdWx0cyI7YTozMDp7aTowO2E6Mjp7czo0OiJjb2RlIjtzOjU6IlNDX0JQIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MTthOjI6e3M6NDoiY29kZSI7czo1OiJNQ19DUyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjI7YToyOntzOjQ6ImNvZGUiO3M6NToiQkNfQ1MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aTozO2E6Mjp7czo0OiJjb2RlIjtzOjc6IlNQU19DSE8iO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aTo0O2E6Mjp7czo0OiJjb2RlIjtzOjY6IlNQU19NSyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjU7YToyOntzOjQ6ImNvZGUiO3M6NToiUFRfQk0iO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aTo2O2E6Mjp7czo0OiJjb2RlIjtzOjY6IlBUX0NOQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjc7YToyOntzOjQ6ImNvZGUiO3M6NToiUFRfQ1MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aTo4O2E6Mjp7czo0OiJjb2RlIjtzOjU6IlBUX0hIIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6OTthOjI6e3M6NDoiY29kZSI7czo1OiJQVF9NRyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjEwO2E6Mjp7czo0OiJjb2RlIjtzOjY6IlBUX01PQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjExO2E6Mjp7czo0OiJjb2RlIjtzOjY6IlBUX1ZOTCI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjEyO2E6Mjp7czo0OiJjb2RlIjtzOjY6IjFMX0NOQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjEzO2E6Mjp7czo0OiJjb2RlIjtzOjU6IjFMX0NGIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MTQ7YToyOntzOjQ6ImNvZGUiO3M6NToiMUxfQ1MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToxNTthOjI6e3M6NDoiY29kZSI7czo1OiIxTF9NRyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjE2O2E6Mjp7czo0OiJjb2RlIjtzOjY6IjFMX01PQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjE3O2E6Mjp7czo0OiJjb2RlIjtzOjg6IjEuN0xfQ05DIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MTg7YToyOntzOjQ6ImNvZGUiO3M6NzoiMS43TF9DUyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjE5O2E6Mjp7czo0OiJjb2RlIjtzOjg6IjEuN0xfTU9DIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MjA7YToyOntzOjQ6ImNvZGUiO3M6NzoiMS43TF9TUyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjIxO2E6Mjp7czo0OiJjb2RlIjtzOjU6IkhHX0JNIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MjI7YToyOntzOjQ6ImNvZGUiO3M6NToiSEdfTUciO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToyMzthOjI6e3M6NDoiY29kZSI7czo2OiJIR19WTkwiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToyNDthOjI6e3M6NDoiY29kZSI7czo4OiIzLjZMX0NOQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjI1O2E6Mjp7czo0OiJjb2RlIjtzOjc6IjMuNkxfQ1MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToyNjthOjI6e3M6NDoiY29kZSI7czo3OiIzLjZMX0hIIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6Mjc7YToyOntzOjQ6ImNvZGUiO3M6NzoiMy42TF9NRyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjI4O2E6Mjp7czo0OiJjb2RlIjtzOjg6IjMuNkxfTU9DIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6Mjk7YToyOntzOjQ6ImNvZGUiO3M6ODoiMy42TF9WTkwiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9fX0=', 1718701688),
 ('mvCoQipb8Bjhosv6bna7RkUyhPO5TrCrb9jyQK9b', NULL, '122.52.233.63', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiSnJSbG85cnNqTldhTFFianc5RTlEdm1KTlpTemZHS2RuSEp1WDNJTiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9fQ==', 1717559653),
 ('OUg8gVWtlkyU5xSeThzvVyWlMqxweB7CiW3ASQmj', NULL, '65.154.226.167', 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiWW5abVZwUDVDQnhKTDNzaU5FY0NvY05NU2FKT0J5eUtGUHJxeDJBZCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2JhZC1vcmRlcnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1717475742),
 ('P7VguN7VteFSXVW4ytXcNsf6smcKeVHeyFX5GlU2', NULL, '209.35.172.174', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/601.2.4 (KHTML, like Gecko) Version/9.0.1 Safari/601.2.4 facebookexternalhit/1.1 Facebot Twitterbot/1.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZ3NsbkV6SHVkUzMyQzVKdjNkVjlCYjd2NGNlNGE0dzhsOUhZQ3lSNyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZGFzaGJvYXJkIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717750389),
@@ -45356,7 +45380,6 @@ DROP TABLE IF EXISTS `temp_bad_orders`;
 CREATE TABLE IF NOT EXISTS `temp_bad_orders` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `customer_id` bigint(20) UNSIGNED NOT NULL,
-  `inbound_id` bigint(20) UNSIGNED NOT NULL,
   `store_id` bigint(20) UNSIGNED NOT NULL,
   `ptype_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -45365,12 +45388,12 @@ CREATE TABLE IF NOT EXISTS `temp_bad_orders` (
   `quantity` int(11) NOT NULL,
   `price` decimal(8,2) NOT NULL,
   `amount` decimal(8,2) NOT NULL,
+  `session_id` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `temp_bad_orders_customer_id_foreign` (`customer_id`),
-  KEY `temp_bad_orders_inbound_id_foreign` (`inbound_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `temp_bad_orders_customer_id_foreign` (`customer_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -45382,7 +45405,7 @@ DROP TABLE IF EXISTS `temp_inbounds`;
 CREATE TABLE IF NOT EXISTS `temp_inbounds` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `session` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `product_code` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `product_code` json NOT NULL,
   `quantity` int(11) NOT NULL,
   `status` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -45460,12 +45483,6 @@ INSERT INTO `vehicles` (`id`, `plateno`, `brand`, `description`, `type`, `size`,
 --
 
 --
--- Constraints for table `bad_orders`
---
-ALTER TABLE `bad_orders`
-  ADD CONSTRAINT `bad_orders_inbound_id_foreign` FOREIGN KEY (`inbound_id`) REFERENCES `inbounds` (`id`) ON DELETE CASCADE;
-
---
 -- Constraints for table `model_has_permissions`
 --
 ALTER TABLE `model_has_permissions`
@@ -45494,8 +45511,7 @@ ALTER TABLE `storeinfo`
 -- Constraints for table `temp_bad_orders`
 --
 ALTER TABLE `temp_bad_orders`
-  ADD CONSTRAINT `temp_bad_orders_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `temp_bad_orders_inbound_id_foreign` FOREIGN KEY (`inbound_id`) REFERENCES `inbounds` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `temp_bad_orders_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
