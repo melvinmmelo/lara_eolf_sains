@@ -15,7 +15,6 @@ class BadOrder extends Model
     protected $fillable = [
         'bo_id', // Add this line to the fillable array
         'customer_id',
-        'inbound_id',
         'store_id',
         're_dr',
         'bo_percentage',

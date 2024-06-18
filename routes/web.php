@@ -52,11 +52,13 @@ Route::get('/loading-ticket', function () {
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/bad-orders-list', function () {
-        return view('badorder');
-    })->name('badorderslist');
+    // Route::get('/bad-orders-list', function () {
+    //     return view('badorder');
+    // })->name('badorderslist');
 
-
+    // Route::get('/bad-orders-list', function () {
+    //     return view('badorder');
+    // })->name('badorderslist');
 
     Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');
 
@@ -73,6 +75,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/bad-orders', [addbadorderController::class, 'store'])->name('addbadorder.store');
 
     Route::get('/bad-orders-list', [BadOrderController::class, 'index'])->name('badOrders.index');
+    Route::delete('/bad-orders/{id}', [BadOrderController::class, 'destroy'])->name('badOrders.destroy');
+
 
     Route::post('/save-temp-bad-order', [TempBadOrderController::class, 'store']);
 
@@ -108,6 +112,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/branch-select', function () {
         return view('branch-select');
     })->name('branch-select');
+
+
+    Route::get('/addbadorder/create', [addbadorderController::class, 'create'])->name('addbadorder.create');
+Route::post('/addbadorder/store', [addbadorderController::class, 'store'])->name('addbadorder.store');
+// Route::post('/save-temp-bad-order', [addbadorderController::class, 'saveTempBadOrder']);
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit'); // views
