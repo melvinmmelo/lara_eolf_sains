@@ -74,6 +74,11 @@ class Inbound extends Model
     {
         $total = 0;
         $products = json_decode($this->products, true);
+
+        if($products == null) {
+            return 0;
+        }
+
         foreach ($products as $product) {
             $total += $product['quantity'] * $product['price'];
         }

@@ -6,8 +6,8 @@ use App\Models\Customers;
 use App\Models\Inbound;
 use App\Models\TempBadOrder;
 use App\Models\BadOrder; // Ensure this is correct
-use App\Models\PriceLevels;
-use App\Models\Prices;
+use App\Models\pricelevels as PriceLevels;
+use App\Models\prices as Prices;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Redirect;
@@ -31,44 +31,6 @@ class addbadorderController extends Controller
 
         return $nextBoId;
     }
-
-    // public function create()
-    // {
-    //     $inbounds = Inbound::with('customer.storeinfo')->get();
-    //     $customers = Customers::with('storeinfo')->get();
-    //     $badPricing = PriceLevels::where('pl_name', 'BAD PRICING')->first();
-
-    //     // return view('addbadorder', compact('inbounds', 'customers'));
-    //     return view('addbadorder', compact('inbounds', 'customers', 'badPricing'));
-    // }
-
-    // public function create()
-    // {
-    //     $inbounds = Inbound::with('customer.storeinfo')->get();
-    //     $customers = Customers::with('storeinfo')->get();
-    //     $badPricing = PriceLevels::where('pl_name', 'BAD PRICING')->first();
-
-    //     // Fetch prices based on bad pricing level
-    //     $prices = Prices::where('pricelevel_id', $badPricing->id)->get();
-
-    //     return view('addbadorder', compact('inbounds', 'customers', 'badPricing', 'prices'));
-    // }
-
-    // public function create()
-    // {
-    //     // $inbounds = Inbound::with('customer.storeinfo')->get();
-    //     $customers = Customers::with('storeinfo')->get();
-    //     $badPricing = PriceLevels::where('pl_name', 'BAD PRICING')->first();
-
-    //     // Fetch prices with product descriptions
-    //     $prices = Prices::with('productType')
-    //                     ->where('pricelevel_id', $badPricing->id)
-    //                     ->get();
-
-    //     // return view('addbadorder', compact('inbounds', 'customers', 'badPricing', 'prices'));
-    //     return view('addbadorder', compact('customers', 'badPricing', 'prices'));
-    // }
-
 
     public function create()
     {
@@ -176,55 +138,5 @@ class addbadorderController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-
-
-
-
-    // public function getPrice($pricelevel_id, $p_code)
-    // {
-    //     $price = Prices::where('pricelevel_id', $pricelevel_id)
-    //                 ->where('p_code', $p_code)
-    //                 ->first();
-
-    //     return response()->json($price);
-    // }
-
-    // public function store(Request $request)
-    // {
-    //     $validated = $request->validate([
-    //         'customer_id' => 'required|exists:customers,id',
-    //         'ptype_code' => 'required|string',
-    //         'code' => 'required|string',
-    //         'description' => 'required|string',
-    //         'quantity' => 'required|numeric',
-    //         'price' => 'required|numeric',
-    //         'amount' => 'required|numeric',
-    //         'unit' => 'required|string',
-    //     ]);
-
-    //     TempBadOrder::create($validated);
-
-    //     return response()->json(['success' => true]);
-    // }
-
-    // public function saveTempBadOrder(Request $request)
-    // {
-    //     $validated = $request->validate([
-    //         'customer_id' => 'required|exists:customers,id',
-    //         'store_id' => 'required|exists:storeinfo,id',
-    //         'ptype_code' => 'required|string',
-    //         'code' => 'required|string',
-    //         'description' => 'required|string',
-    //         'quantity' => 'required|numeric',
-    //         'price' => 'required|numeric',
-    //         'amount' => 'required|numeric',
-    //         'unit' => 'required|string',
-    //     ]);
-
-    //     TempBadOrder::create($validated);
-
-    //     return response()->json(['success' => true]);
-    // }
 
 }

@@ -59,7 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/lastBadOrderOfCustomer/{customerId}/{storeId}', [BadOrderController::class, 'fetchLastBadOrderOfCustomer']);
     Route::get('/getBoDetails', [BadOrderController::class, 'getBoDetails']);
 
-    Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');
+    // Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');
 
     Route::get('/api/getCustomerItems/{customerId}', [addbadorderController::class, 'getCustomerItems']);
 
