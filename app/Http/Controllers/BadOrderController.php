@@ -67,6 +67,7 @@ class BadOrderController extends Controller
         }
 
         $lastBadOrderTotal = BadOrder::where('bo_id', $badOrder->bo_id)->sum('amount');
+        $lastBadOrderTotal = $lastBadOrderTotal - ($lastBadOrderTotal * ($badOrder->bo_percentage/100));
 
         return response()->json(['id' => $badOrder->bo_id, 'amount' => $lastBadOrderTotal]);
     }

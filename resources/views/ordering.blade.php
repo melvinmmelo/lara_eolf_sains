@@ -119,7 +119,14 @@
                                 <input type="text" class="form-control" id="#" name="#"
                                     value="{{ $equipmentSerial }} {{ $customerName }}" readonly>
 
-                                <input type="text" class="form-control" id="bad_order_id" name="bad_order_id" value="" readonly>
+
+                            </div>
+                        </div>
+
+                        <div id="BOContainer" class="row">
+                            <div class="col-sm-3">
+                                <label for="bad_order_id">BO Amount</label>
+                                <input type="hidden" class="form-control" id="bad_order_id" name="bad_order_id" value="" readonly>
                                 <input type="text" class="form-control" id="bo_amount" name="bo_amount" value="" readonly>
 
                             </div>
@@ -352,6 +359,8 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
+
+
         const total = document.getElementById("total").value ?? 0;
 
         let totalBadOrder = 0;
@@ -421,7 +430,12 @@
         document.getElementById("isBadPricing").addEventListener('click', function() {
             if (this.checked) {
                 fetchLastInsertedBadPricing("{{ $inbound->customer_id }}", "{{ $inbound->store_id }}");
+                document.getElementById("BOContainer").style.display = "block";
+
             } else {
+
+                document.getElementById("BOContainer").style.display = "none";
+
                 var total = document.getElementById("total").value;
                 var newTotal = parseInt(total) + parseInt(totalBadOrder);
                 document.getElementById("total").value = newTotal;
