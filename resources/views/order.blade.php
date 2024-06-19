@@ -52,18 +52,9 @@
                     </thead>
                     <tbody>
                         @foreach ($inbounds as $inbound)
-                            @php
-                                if ($inbound->products != null) {
-                                    $products = json_decode($inbound->products, true);
 
-                                    // get sum of index price
-                                    $total = 0;
-                                    foreach ($products as $acProd) {
-                                        $total += $acProd['price'] * $acProd['quantity'];
-                                    }
-                                } else {
-                                    $total = 0;
-                                }
+                            @php
+                                $total = $inbound->totalAmount;
                             @endphp
 
                             <tr>

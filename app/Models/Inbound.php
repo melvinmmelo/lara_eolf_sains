@@ -68,5 +68,16 @@ class Inbound extends Model
     {
         return $query->where('branch_code', $branch_code);
     }
-    
+
+    // get the total amount of the products
+    public function getTotalAmountAttribute()
+    {
+        $total = 0;
+        $products = json_decode($this->products, true);
+        foreach ($products as $product) {
+            $total += $product['quantity'] * $product['price'];
+        }
+        return $total - $this->bo_amount;
+    }
+
 }
