@@ -68,6 +68,7 @@
                     </thead>
                     <tbody>
                         @foreach ($equipments as $equipmentSt)
+                        
                             <tr>
 
                                 <td>{{ $equipmentSt->type }}</td>
@@ -329,7 +330,7 @@
                                     <div class="col-sm-12">
                                         <label class="form-label"><strong>Address</strong></label>
                                         <div>
-                                            <label class="form-label" for="ownership">Address:</label>
+                                            <label class="form-label" for="ownership">{{ $equipments[0]->storeinfo->subdivision }}, {{ $equipments[0]->storeinfo->brgy }}, {{ $equipments[0]->storeinfo->city }}</label>
                                         </div>
                                         <hr>
                                     </div>
@@ -354,7 +355,15 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label" for="status">Remarks</label>
-                                            <input type="text" name="remarks" class="form-control">
+                                            <!-- <input type="text" name="remarks" class="form-control"> -->
+                                            <select class="form-control" name="remarks" required>
+                                                <option value="DEFFECTIVE COMPRESSOR">DEFFECTIVE COMPRESSOR</option>
+                                                <option value="NOT COOLING">NOT COOLING</option>
+                                                <option value="STOP SELLING">STOP SELLING</option>
+                                                <option value="SYSTEM LEAK">SYSTEM LEAK</option>
+                                                <option value="CONDEMNED">CONDEMNED</option>
+                                                <option value="RETURN TO SUPPLIER">RETURN TO SUPPLIER</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>

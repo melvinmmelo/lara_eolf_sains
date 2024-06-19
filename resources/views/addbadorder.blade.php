@@ -104,6 +104,7 @@
                     </thead>
                     <tbody id="itemsTableBody">
                         <!-- Dynamic rows will be appended here -->
+                        
                     </tbody>
                     <tfoot>
                         <tr>

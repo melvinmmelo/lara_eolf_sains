@@ -25,9 +25,11 @@ class EquipmentStoreController extends Controller
         $store_id = $request->input('store_id');
 
         // Retrieve all equipment store entries for the specified customer and store
-        $equipments = EquipmentStore::where('customer_id', $customer_id)
+       $equipments = EquipmentStore::with('storeinfo')
+        ->where('customer_id', $customer_id)
                                     ->where('store_id', $store_id)
                                     ->get();
+                            //dd($equipments); 
 
         // Retrieve available equipment from the equipment table
         $availableEquipments = Equipment::where('status', 'available')->get();

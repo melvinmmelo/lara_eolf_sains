@@ -49,6 +49,11 @@ class EquipmentStore extends Model
         return $this->belongsTo(StoreInfo::class, 'store_id');
     }
 
+    public function storeinfo()
+    {
+        return $this->belongsTo(StoreInfo::class, 'store_id');
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customers::class, 'customer_id', 'id');
