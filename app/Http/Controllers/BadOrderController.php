@@ -71,4 +71,14 @@ class BadOrderController extends Controller
 
         return response()->json(['id' => $badOrder->bo_id, 'amount' => $lastBadOrderTotal]);
     }
+
+    public function getBoDetails(Request $request)
+    {
+        $boId = $request->query('boId');
+        $details = BadOrder::with('customer')
+        ->where('bo_id', $boId)
+            ->get();
+
+        return response()->json($details);
+    }
 }
