@@ -50,7 +50,7 @@
 
                         <div class="col-sm-12">
                             <label class="form-label" for="bo_percentage">BO Percentage</label>
-                            <input type="text" class="form-control" id="bo_percentage" name="bo_percentage">
+                            <input type="number" class="form-control" id="bo_percentage" name="bo_percentage" max="100">
                         </div>
 
                         <div class="col-sm-12">
@@ -95,7 +95,7 @@
                     <thead>
                         <tr>
                             <!-- <th>ptype_code</th> -->
-                            <th>code</th>
+                            <th>Code</th>
                             <th>Item</th>
                             <th>Quantity</th>
                             <th>Unit Price</th>
@@ -103,9 +103,9 @@
                         </tr>
                     </thead>
                     <tbody id="itemsTableBody">
-                        <!-- Dynamic rows will be appended here -->
-                        
+
                     </tbody>
+
                     <tfoot>
                         <tr>
                             <th colspan="4" style="text-align:right">Total:</th>
@@ -126,6 +126,10 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM fully loaded and parsed');
 
@@ -166,7 +170,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const price = selectedOption.data('price');
         const quantity = selectedOption.data('quantity');
         priceInput.val(price);
-        quantityInput.val(quantity);
+
+        // focus on quantity input
+        quantityInput.focus();
+
+
     });
 
     // Event listener for Add button

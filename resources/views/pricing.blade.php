@@ -121,7 +121,7 @@
                             <div>
                                 <label class="form-label" for="pricing_id"><i style="color:red">*</i>Price
                                     Level</label>
-                                <select class="form-control" id="pricing_id">
+                                <select class="form-control" id="pricing_id" required>
                                     <option value="">--Select--</option>
                                     @foreach ($pricelevels as $pl)
                                         <option value="{{ $pl->id }}">{{ $pl->pl_name }}</option>

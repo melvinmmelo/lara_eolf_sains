@@ -75,6 +75,7 @@ class PricesController extends Controller
             prices::create([
                 'pricelevel_id' => $request->pricing_id,
                 'p_code' => $request->product_type,
+                'p_unit' => 'Pc/s',
                 'p_price' => $request->price,
             ]);
         } else {
