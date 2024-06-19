@@ -39,7 +39,7 @@
                 </li>
 
                 <li
-                    class="nav-item {{ Route::currentRouteNamed('company') || Route::currentRouteNamed('branch') || Route::currentRouteNamed('users') || Route::currentRouteNamed('vehicles') || Route::currentRouteNamed('delivery-persons') || Route::currentRouteNamed('customers') || Route::currentRouteNamed('productType.index') || Route::currentRouteNamed('products.index') || Route::currentRouteNamed('productVariant.index') || Route::currentRouteNamed('pricing-level.index') || Route::currentRouteNamed('pricing.index') || Route::currentRouteNamed('equipment.index') ? 'menu-is-opening menu-open' : '' }}">
+                    class="nav-item {{ Route::currentRouteNamed('company') || Route::currentRouteNamed('branch') || Route::currentRouteNamed('users') || Route::currentRouteNamed('vehicles') || Route::currentRouteNamed('delivery-persons') || Route::currentRouteNamed('customers') || Route::currentRouteNamed('productType.index') || Route::currentRouteNamed('products.index') || Route::currentRouteNamed('productVariant.index') || Route::currentRouteNamed('pricing-level.index') || Route::currentRouteNamed('pricing.index') || Route::currentRouteNamed('equipment.index') || Route::currentRouteNamed('equipment-store.index') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-user-tie" style="color: #74C0FC;"></i>
                         <p>
@@ -89,7 +89,7 @@
 
                         <li>
                             <a href="/customers"
-                                class="nav-link {{ Route::currentRouteNamed('customers') ? 'active' : '' }}">
+                                class="nav-link {{ Route::currentRouteNamed('customers') || Route::currentRouteNamed('equipment-store.index') ? 'active' : '' }}">
                                 <i class="fas fa-id-card nav-icon"></i>
                                 <p>Customers</p>
                             </a>

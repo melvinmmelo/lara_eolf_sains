@@ -51,7 +51,7 @@ class InboundController extends Controller
 
         $changes = ['payment_type' => $request->payment_type, 'ref_no' => $request->ref_no, 'delivered_amount' => $request->delivered_amount, 'status' => $request->status];
 
-        activity()
+        activity('outbound')
             ->performedOn($inbound)
             ->withProperties($changes)
             ->log('Payment added.');
@@ -84,7 +84,7 @@ class InboundController extends Controller
 
         $inbound->save();
 
-        activity()
+        activity('outbound')
             ->performedOn($inbound)
             ->log('Order deleted.');
 
@@ -151,7 +151,7 @@ class InboundController extends Controller
 
         session()->put('orderDetails', $data);
 
-        activity()
+        activity('outbound')
             ->performedOn($tempInbound)
             ->log('Order created.');
 
@@ -311,7 +311,6 @@ class InboundController extends Controller
             'bad_order_id' => 'nullable',
             'bo_amount' => 'nullable',
         ]);
-        // dd($request->all());
 
 
         $inbound = Inbound::find($request->inboundId);
@@ -322,7 +321,7 @@ class InboundController extends Controller
 
         $inbound->bad_order = $request->bad_order == 'on' ? 1 : 0;
 
-        if ($request->bad_order_id) {
+        if ($inbound->bad_order == 1) {
 
             BadOrder::where('bo_id', $request->bad_order_id)->update(['is_active' => 0]);
 
@@ -359,7 +358,7 @@ class InboundController extends Controller
         // create a session for variable updatingData
         session()->put('updatingDataResults', $updatingData);
 
-        activity()
+        activity('outbound')
             ->performedOn($inbound)
             ->log('Order completed.');
 
@@ -401,7 +400,7 @@ class InboundController extends Controller
 
         $inbound->save();
 
-        activity()
+        activity('outbound')
             ->performedOn($inbound)
             ->log('Ordered products has been updated.');
 
@@ -413,7 +412,7 @@ class InboundController extends Controller
     {
         Inbound::destroy($inbound);
 
-        activity()
+        activity('outbound')
             ->performedOn($inbound)
             ->log('Inbound deleted.');
 

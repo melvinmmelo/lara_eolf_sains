@@ -68,7 +68,7 @@
                     </thead>
                     <tbody>
                         @foreach ($equipments as $equipmentSt)
-                        
+
                             <tr>
 
                                 <td>{{ $equipmentSt->type }}</td>
@@ -330,7 +330,7 @@
                                     <div class="col-sm-12">
                                         <label class="form-label"><strong>Address</strong></label>
                                         <div>
-                                            <label class="form-label" for="ownership">{{ $equipments[0]->storeinfo->subdivision }}, {{ $equipments[0]->storeinfo->brgy }}, {{ $equipments[0]->storeinfo->city }}</label>
+                                            <label class="form-label" for="ownership">{{ $equipments[0]->storeinfo->subdivision ?? '' }}, {{ $equipments[0]->storeinfo->brgy ?? ''}}, {{ $equipments[0]->storeinfo->city ?? '' }}</label>
                                         </div>
                                         <hr>
                                     </div>

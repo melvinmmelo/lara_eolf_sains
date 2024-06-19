@@ -46,6 +46,7 @@
         @endif
         <!-- Default box -->
         <div class="card">
+
             @include('layouts.errors')
 
             <div class="card-body">

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 18, 2024 at 09:10 AM
+-- Generation Time: Jun 19, 2024 at 08:13 AM
 -- Server version: 5.7.26
 -- PHP Version: 7.2.18
 
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `activity_log` (
   KEY `subject` (`subject_type`,`subject_id`),
   KEY `causer` (`causer_type`,`causer_id`),
   KEY `activity_log_log_name_index` (`log_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `activity_log`
@@ -56,7 +56,13 @@ INSERT INTO `activity_log` (`id`, `log_name`, `description`, `subject_type`, `ev
 (2, 'default', 'Order completed.', 'App\\Models\\Inbound', NULL, 4, 'App\\Models\\User', 1, '[]', NULL, '2024-06-18 09:02:18', '2024-06-18 09:02:18'),
 (3, 'default', 'Order completed.', 'App\\Models\\Inbound', NULL, 4, 'App\\Models\\User', 1, '[]', NULL, '2024-06-18 09:03:41', '2024-06-18 09:03:41'),
 (4, 'default', 'Order completed.', 'App\\Models\\Inbound', NULL, 4, 'App\\Models\\User', 1, '[]', NULL, '2024-06-18 09:04:43', '2024-06-18 09:04:43'),
-(5, 'default', 'Order completed.', 'App\\Models\\Inbound', NULL, 4, 'App\\Models\\User', 1, '[]', NULL, '2024-06-18 09:07:35', '2024-06-18 09:07:35');
+(5, 'default', 'Order completed.', 'App\\Models\\Inbound', NULL, 4, 'App\\Models\\User', 1, '[]', NULL, '2024-06-18 09:07:35', '2024-06-18 09:07:35'),
+(6, 'default', 'Order completed.', 'App\\Models\\Inbound', NULL, 4, 'App\\Models\\User', 1, '[]', NULL, '2024-06-19 02:02:33', '2024-06-19 02:02:33'),
+(7, 'default', 'equipment store entry deleted', NULL, NULL, NULL, 'App\\Models\\User', 1, '{\"equipment_id\": \"5\", \"equipment_store_id\": \"7\"}', NULL, '2024-06-19 07:49:52', '2024-06-19 07:49:52'),
+(8, 'default', 'equipment store entry deleted', NULL, NULL, NULL, 'App\\Models\\User', 1, '{\"equipment_id\": \"3\", \"equipment_store_id\": \"6\"}', NULL, '2024-06-19 07:49:55', '2024-06-19 07:49:55'),
+(9, 'default', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 1, '{\"store_id\": \"15\", \"customer_id\": \"15\", \"equipment_ids\": [\"3\", \"5\"], \"pull_statuses\": null}', NULL, '2024-06-19 07:50:02', '2024-06-19 07:50:02'),
+(10, 'default', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 1, '{\"store_id\": \"15\", \"customer_id\": \"15\", \"equipment_ids\": [\"3\", \"5\"], \"pull_statuses\": null}', NULL, '2024-06-19 07:52:44', '2024-06-19 07:52:44'),
+(11, 'equipment-store', 'equipment store entry deleted', NULL, NULL, NULL, 'App\\Models\\User', 1, '{\"equipment_id\": \"5\", \"equipment_store_id\": \"9\"}', NULL, '2024-06-19 07:58:27', '2024-06-19 07:58:27');
 
 -- --------------------------------------------------------
 
@@ -84,16 +90,14 @@ CREATE TABLE IF NOT EXISTS `bad_orders` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `bad_orders`
 --
 
 INSERT INTO `bad_orders` (`id`, `bo_id`, `customer_id`, `store_id`, `re_dr`, `bo_percentage`, `remarks`, `ptype_code`, `code`, `quantity`, `price`, `unit`, `description`, `amount`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, '1', 2, 2, '123456', '100', NULL, 'SC', 'SC', 5, 10.2, 'Pc/s', '90ml SMALL CUP REGULAR (3.0-oz)', 51, 0, '2024-06-18 08:49:18', '2024-06-18 09:07:35'),
-(2, '1', 2, 2, '123456', '100', NULL, 'MC', 'MC', 10, 13.4, 'Pc/s', '135ml MEDIUM CUP SPECIAL (4.5-oz)', 134, 0, '2024-06-18 08:49:18', '2024-06-18 09:07:35'),
-(3, '1', 2, 2, '123456', '100', NULL, 'BC', 'BC', 150, 17.8, 'Pc/s', '180ml BIG CUP (6.0-oz)', 2670, 0, '2024-06-18 08:49:18', '2024-06-18 09:07:35');
+(4, '2', 1, 1, '55254', '50', NULL, 'SC', 'SC', 5, 10.2, 'Pc/s', '90ml SMALL CUP REGULAR (3.0-oz)', 51, 1, '2024-06-19 06:25:01', '2024-06-19 06:25:01');
 
 -- --------------------------------------------------------
 
@@ -219,7 +223,7 @@ CREATE TABLE IF NOT EXISTS `customers` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `customers_branch_code_index` (`branch_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `customers`
@@ -237,7 +241,8 @@ INSERT INTO `customers` (`id`, `distributor`, `branch_code`, `lastname`, `firstn
 (11, 'n/a', 'EFTO-CAG', 'Ang', 'Elsie', 'Y', 'Elsie Y Ang Store', '939-738-953', '0977-125-5034', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuao', 'Poblacion II', NULL, NULL, NULL, '2024-06-09 05:33:24', '2024-06-09 05:33:24'),
 (12, 'n/a', 'EFTO-CAG', 'Perez', 'Erickson John', 'Q', 'ALL-IN-JUAN MINI GROCERY', '216-590-445', '0955-830-7175', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caritan Sur', NULL, NULL, NULL, '2024-06-09 05:36:07', '2024-06-09 05:36:07'),
 (13, 'n/a', 'EFTO-CAG', 'Publico', 'Isagani', 'C', 'Isagani Store', 'N/A', '0916-578-1701', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Camalaniugan', 'Catotoran Norte', NULL, NULL, NULL, '2024-06-09 05:41:36', '2024-06-09 05:41:36'),
-(14, 'n/a', 'EFTO-CAG', 'Calimaran', 'Francis Angelica', 'L', 'MLC Minimart', '339-747-008', '0917-622-0136', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 2 ', 'Arellano St', NULL, NULL, '2024-06-09 05:44:17', '2024-06-09 05:44:17');
+(14, 'n/a', 'EFTO-CAG', 'Calimaran', 'Francis Angelica', 'L', 'MLC Minimart', '339-747-008', '0917-622-0136', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 2 ', 'Arellano St', NULL, NULL, '2024-06-09 05:44:17', '2024-06-09 05:44:17'),
+(15, 'n/a', 'EFTO-CAG', 'SANTOS', 'AI', 'L', 'UB', NULL, '123456', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'kalinga', 'City of Tabuk ', 'Agbannawag', NULL, '17.60619760468376', '121.72787291779376', '2024-06-19 07:24:23', '2024-06-19 07:24:23');
 
 -- --------------------------------------------------------
 
@@ -345,6 +350,7 @@ CREATE TABLE IF NOT EXISTS `employees` (
 DROP TABLE IF EXISTS `equipment`;
 CREATE TABLE IF NOT EXISTS `equipment` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `branch_code` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `ownership` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `brand` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -366,80 +372,80 @@ CREATE TABLE IF NOT EXISTS `equipment` (
 -- Dumping data for table `equipment`
 --
 
-INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no`, `code`, `distributor`, `date_delivered`, `date_purchased`, `status`, `model`, `created_at`, `updated_at`) VALUES
-(1, 'Not-Owned', 'Chest Freezer', 'CONDURA', 42000.00, 'ABC123', '123456', NULL, NULL, NULL, 'added', NULL, '2024-06-04 18:57:43', '2024-06-04 19:03:32'),
-(2, 'Owned', 'Hard Top', 'HINO', 13400.00, 'H2022-047153', '8475.2021', NULL, '2022-05-04', '2022-05-04', 'available', NULL, '2024-06-05 01:18:25', '2024-06-05 01:18:25'),
-(3, 'Owned', 'Hard Top', 'HINO', 13400.00, 'H2022-047154', '8476.2021', NULL, '2022-05-04', '2022-05-04', 'available', NULL, '2024-06-05 01:19:00', '2024-06-05 01:19:00'),
-(4, 'Owned', 'Glass Top', 'LIEBHERR', 26800.00, 'L61.420.558.7', '8471.2021', NULL, '2022-05-04', '2022-05-04', 'available', NULL, '2024-06-05 01:19:43', '2024-06-07 18:49:44'),
-(5, 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047164', '8486.2021', NULL, '2022-06-05', '2021-02-12', 'available', 'BD-650', '2024-06-07 18:45:21', '2024-06-07 18:45:21'),
-(6, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.989.074.3', '4394.110818', NULL, '2022-04-05', '2018-03-04', 'added', 'EFE-3802', '2024-06-07 18:48:01', '2024-06-07 19:13:20'),
-(7, 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047155', '8477.2021', NULL, '2022-05-01', '2022-04-01', 'available', 'BD-650', '2024-06-07 19:07:45', '2024-06-07 19:07:45'),
-(8, 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047156', '8478.2021', NULL, '2022-05-01', '2022-04-01', 'available', 'BD-650', '2024-06-07 19:09:04', '2024-06-07 19:09:04'),
-(9, 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047157', '8479.2021', NULL, '2022-05-01', '2022-04-01', 'available', 'BD-650', '2024-06-07 19:10:04', '2024-06-07 19:10:04'),
-(10, 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.558.7', '8471.2021', NULL, '2022-05-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:12:02', '2024-06-07 19:12:02'),
-(11, 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.572.3', '8472.2021', NULL, '2023-11-04', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:13:18', '2024-06-07 19:13:18'),
-(12, 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.53.1', '8473.2021', NULL, '2022-07-07', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:14:34', '2024-06-07 19:14:34'),
-(13, 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.565.5', '8474.2021', NULL, '2022-07-07', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:15:47', '2024-06-07 19:15:47'),
-(14, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.271.344.2', '6972.2020', NULL, '2022-05-01', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:21:57', '2024-06-07 19:21:57'),
-(15, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61271.379.4', '6964.2022', NULL, '2024-03-19', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:23:19', '2024-06-07 19:23:19'),
-(16, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L661.506.412.1', '9681.2020', NULL, '2023-09-21', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:24:38', '2024-06-07 19:24:38'),
-(17, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.390.9', '8916.2022', NULL, '2022-09-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:26:32', '2024-06-07 19:26:32'),
-(18, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.343.5', '8917.2022', NULL, '2022-09-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:28:03', '2024-06-07 19:28:03'),
-(19, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.533.3', '8918.2022', NULL, '2022-09-10', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:29:26', '2024-06-07 19:29:26'),
-(20, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.339.8', '8919.2022', NULL, '2022-09-15', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:30:58', '2024-06-07 19:30:58'),
-(21, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.399.2', '8920.2022', NULL, '2022-10-03', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:32:19', '2024-06-07 19:32:19'),
-(22, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.396.1', '8921.2022', NULL, '2022-11-03', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:33:11', '2024-06-07 19:33:11'),
-(23, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.422.78', '8922.2022', NULL, '2022-11-03', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:38:48', '2024-06-07 19:38:48'),
-(24, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.409.8', '8923.2022', NULL, '2022-12-08', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:39:38', '2024-06-07 19:39:38'),
-(25, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.424.1', '8924.2022', NULL, '2023-02-06', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:40:41', '2024-06-07 19:40:41'),
-(26, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.418.0', '8925.2022', NULL, '2023-02-08', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:41:28', '2024-06-07 19:41:28'),
-(27, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.407.4', '8926.2022', NULL, '2024-03-04', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:42:23', '2024-06-07 19:42:23'),
-(28, 'Owned', 'Hard Top', 'LEIBHERR', 12250.00, 'L61.493.428.9', '8927.2022', NULL, '2023-03-01', '2024-04-01', 'available', 'EFE-3002', '2024-06-07 21:04:02', '2024-06-07 21:04:02'),
-(29, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.337', '8928.2022', NULL, '2023-03-07', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:05:21', '2024-06-07 21:05:21'),
-(30, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.435.7', '8929.2022', NULL, '2024-04-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:08:49', '2024-06-07 21:08:49'),
-(31, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.39.6', '8930.2022', NULL, '2023-07-22', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:11:36', '2024-06-07 21:11:36'),
-(32, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.340.4', '8931.2022', NULL, '2023-03-12', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:12:38', '2024-06-07 21:12:38'),
-(33, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.350.3', '9305.2022', NULL, '2023-03-21', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:15:36', '2024-06-07 21:15:36'),
-(34, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.425.8', '9306', NULL, '2023-04-11', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:23:26', '2024-06-07 21:23:26'),
-(35, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.368.8', '9307.2022', NULL, '2023-05-19', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:24:15', '2024-06-07 21:24:15'),
-(36, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.369.5', '9308.2022', NULL, '2023-05-10', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:25:42', '2024-06-07 21:25:42'),
-(37, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.345.9', '9309.2022', NULL, '2023-07-26', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:26:45', '2024-06-07 21:26:45'),
-(38, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.356.5', '9310.2022', NULL, '2023-07-14', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:27:47', '2024-06-07 21:27:47'),
-(39, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.443.5', '9680.2022', NULL, '2023-08-14', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:30:04', '2024-06-07 21:30:04'),
-(40, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.412.1', '9681.2022', NULL, '2023-09-21', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:32:50', '2024-06-07 21:32:50'),
-(41, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.241.7', '9682.2022', NULL, '2024-01-15', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:34:07', '2024-06-07 21:34:07'),
-(42, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.296.3', '9940.2022', NULL, '2024-01-29', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:35:16', '2024-06-07 21:35:16'),
-(43, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.179.3', '9941.2022', NULL, '2024-01-29', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:36:03', '2024-06-07 21:36:03'),
-(44, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.209.7', '9942.2022', NULL, '2024-02-14', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:36:56', '2024-06-07 21:36:56'),
-(45, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.174.8', '9943.2022', NULL, '2024-02-14', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:37:46', '2024-06-07 21:37:46'),
-(46, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.205.9', '9944.2022', NULL, '2024-04-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:39:38', '2024-06-07 21:39:38'),
-(47, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.169.4', '9945.2022', NULL, '2024-04-08', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:40:33', '2024-06-07 21:40:33'),
-(48, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.366.2', '10400.2022', NULL, '2024-04-25', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:41:33', '2024-06-07 21:41:33'),
-(49, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.151.9', '10401.2022', NULL, '2024-04-26', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:42:27', '2024-06-07 21:42:27'),
-(50, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.341.9', '10402.2022', NULL, '2024-05-01', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:43:52', '2024-06-07 21:43:52'),
-(51, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.589.0', '10403.2022', NULL, '2024-06-07', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:44:42', '2024-06-07 21:44:42'),
-(52, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.357', '10404.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:46:30', '2024-06-07 21:46:30'),
-(53, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.344.0', '10405.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:47:22', '2024-06-07 21:47:22'),
-(54, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.365.5', '10406.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:48:47', '2024-06-07 21:48:47'),
-(55, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'l61.631.349.5', '10407.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:52:15', '2024-06-07 21:52:15'),
-(56, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.625.5', '10408.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:53:06', '2024-06-07 21:53:06'),
-(57, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.350.1', '10409.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:53:45', '2024-06-07 21:53:45'),
-(58, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.352.5', '10410.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:54:35', '2024-06-07 21:54:35'),
-(59, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.342.5', '10411.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:55:31', '2024-06-07 21:55:31'),
-(60, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.762.7', '8256.2021', NULL, '2022-05-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-07 22:14:22', '2024-06-07 22:14:22'),
-(61, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.763.4', '8257.2021', NULL, '2022-05-02', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:17:10', '2024-06-07 22:17:10'),
-(62, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.764.1', '8258.2021', NULL, '2022-05-20', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:18:13', '2024-06-07 22:18:13'),
-(63, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.765.8', '8259.2O21', NULL, '2022-05-02', '2021-03-01', 'available', 'EFE-4602', '2024-06-07 22:20:04', '2024-06-07 22:20:04'),
-(64, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.766.5', '8260.2021', NULL, '2022-05-02', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:21:06', '2024-06-07 22:21:06'),
-(65, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.769.6', '8263.2021', NULL, '2022-05-02', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:22:56', '2024-06-07 22:22:56'),
-(66, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.401.772.6', '8266.2021', NULL, '2024-04-05', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:27:12', '2024-06-07 22:27:12'),
-(67, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.771.9', '8265.2021', NULL, '2022-05-31', '2021-03-01', 'available', 'EFE-3002', '2024-06-07 22:31:58', '2024-06-07 22:31:58'),
-(68, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.773.3', '8267.2021', NULL, '2022-06-08', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:33:22', '2024-06-07 22:33:22'),
-(69, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.774.0', '8268.2021', NULL, '2022-06-08', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:34:49', '2024-06-07 22:34:49'),
-(70, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.775.7', '8269.2021', NULL, '2022-06-08', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:37:21', '2024-06-07 22:37:21'),
-(71, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.491.848.7', '9327.2022', NULL, '2023-03-17', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:39:15', '2024-06-07 22:39:15'),
-(72, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.505.652.2', '9461.2022', NULL, '2022-03-31', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:41:09', '2024-06-07 22:41:09'),
-(73, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.505.665.2', '9462.2022', NULL, '2023-04-02', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:43:18', '2024-06-07 22:43:18');
+INSERT INTO `equipment` (`id`, `branch_code`, `ownership`, `type`, `brand`, `price`, `serial_no`, `code`, `distributor`, `date_delivered`, `date_purchased`, `status`, `model`, `created_at`, `updated_at`) VALUES
+(1, 'EFTO-CAG', 'Not-Owned', 'Chest Freezer', 'CONDURA', 42000.00, 'ABC123', '123456', NULL, NULL, NULL, 'added', NULL, '2024-06-04 18:57:43', '2024-06-04 19:03:32'),
+(2, 'EFTO-CAG', 'Owned', 'Hard Top', 'HINO', 13400.00, 'H2022-047153', '8475.2021', NULL, '2022-05-04', '2022-05-04', 'available', NULL, '2024-06-05 01:18:25', '2024-06-05 01:18:25'),
+(3, 'EFTO-CAG', 'Owned', 'Hard Top', 'HINO', 13400.00, 'H2022-047154', '8476.2021', NULL, '2022-05-04', '2022-05-04', 'added', NULL, '2024-06-05 01:19:00', '2024-06-19 07:52:44'),
+(4, 'EFTO-CAG', 'Owned', 'Glass Top', 'LIEBHERR', 26800.00, 'L61.420.558.7', '8471.2021', NULL, '2022-05-04', '2022-05-04', 'available', NULL, '2024-06-05 01:19:43', '2024-06-07 18:49:44'),
+(5, 'EFTO-CAG', 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047164', '8486.2021', NULL, '2022-06-05', '2021-02-12', 'available', 'BD-650', '2024-06-07 18:45:21', '2024-06-19 07:58:27'),
+(6, 'EFTO-CAG', 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.989.074.3', '4394.110818', NULL, '2022-04-05', '2018-03-04', 'added', 'EFE-3802', '2024-06-07 18:48:01', '2024-06-07 19:13:20'),
+(7, 'EFTO-CAG', 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047155', '8477.2021', NULL, '2022-05-01', '2022-04-01', 'available', 'BD-650', '2024-06-07 19:07:45', '2024-06-07 19:07:45'),
+(8, 'EFTO-CAG', 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047156', '8478.2021', NULL, '2022-05-01', '2022-04-01', 'available', 'BD-650', '2024-06-07 19:09:04', '2024-06-07 19:09:04'),
+(9, 'EFTO-CAG', 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047157', '8479.2021', NULL, '2022-05-01', '2022-04-01', 'available', 'BD-650', '2024-06-07 19:10:04', '2024-06-07 19:10:04'),
+(10, 'EFTO-CAG', 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.558.7', '8471.2021', NULL, '2022-05-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:12:02', '2024-06-07 19:12:02'),
+(11, 'EFTO-CAG', 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.572.3', '8472.2021', NULL, '2023-11-04', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:13:18', '2024-06-07 19:13:18'),
+(12, 'EFTO-CAG', 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.53.1', '8473.2021', NULL, '2022-07-07', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:14:34', '2024-06-07 19:14:34'),
+(13, 'EFTO-CAG', 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.565.5', '8474.2021', NULL, '2022-07-07', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:15:47', '2024-06-07 19:15:47'),
+(14, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.271.344.2', '6972.2020', NULL, '2022-05-01', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:21:57', '2024-06-07 19:21:57'),
+(15, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61271.379.4', '6964.2022', NULL, '2024-03-19', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:23:19', '2024-06-07 19:23:19'),
+(16, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L661.506.412.1', '9681.2020', NULL, '2023-09-21', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:24:38', '2024-06-07 19:24:38'),
+(17, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.390.9', '8916.2022', NULL, '2022-09-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:26:32', '2024-06-07 19:26:32'),
+(18, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.343.5', '8917.2022', NULL, '2022-09-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:28:03', '2024-06-07 19:28:03'),
+(19, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.533.3', '8918.2022', NULL, '2022-09-10', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:29:26', '2024-06-07 19:29:26'),
+(20, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.339.8', '8919.2022', NULL, '2022-09-15', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:30:58', '2024-06-07 19:30:58'),
+(21, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.399.2', '8920.2022', NULL, '2022-10-03', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:32:19', '2024-06-07 19:32:19'),
+(22, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.396.1', '8921.2022', NULL, '2022-11-03', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:33:11', '2024-06-07 19:33:11'),
+(23, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.422.78', '8922.2022', NULL, '2022-11-03', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:38:48', '2024-06-07 19:38:48'),
+(24, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.409.8', '8923.2022', NULL, '2022-12-08', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:39:38', '2024-06-07 19:39:38'),
+(25, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.424.1', '8924.2022', NULL, '2023-02-06', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:40:41', '2024-06-07 19:40:41'),
+(26, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.418.0', '8925.2022', NULL, '2023-02-08', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:41:28', '2024-06-07 19:41:28'),
+(27, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.407.4', '8926.2022', NULL, '2024-03-04', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:42:23', '2024-06-07 19:42:23'),
+(28, 'EFTO-CAG', 'Owned', 'Hard Top', 'LEIBHERR', 12250.00, 'L61.493.428.9', '8927.2022', NULL, '2023-03-01', '2024-04-01', 'available', 'EFE-3002', '2024-06-07 21:04:02', '2024-06-07 21:04:02'),
+(29, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.337', '8928.2022', NULL, '2023-03-07', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:05:21', '2024-06-07 21:05:21'),
+(30, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.435.7', '8929.2022', NULL, '2024-04-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:08:49', '2024-06-07 21:08:49'),
+(31, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.39.6', '8930.2022', NULL, '2023-07-22', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:11:36', '2024-06-07 21:11:36'),
+(32, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.340.4', '8931.2022', NULL, '2023-03-12', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:12:38', '2024-06-07 21:12:38'),
+(33, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.350.3', '9305.2022', NULL, '2023-03-21', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:15:36', '2024-06-07 21:15:36'),
+(34, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.425.8', '9306', NULL, '2023-04-11', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:23:26', '2024-06-07 21:23:26'),
+(35, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.368.8', '9307.2022', NULL, '2023-05-19', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:24:15', '2024-06-07 21:24:15'),
+(36, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.369.5', '9308.2022', NULL, '2023-05-10', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:25:42', '2024-06-07 21:25:42'),
+(37, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.345.9', '9309.2022', NULL, '2023-07-26', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:26:45', '2024-06-07 21:26:45'),
+(38, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.356.5', '9310.2022', NULL, '2023-07-14', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:27:47', '2024-06-07 21:27:47'),
+(39, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.443.5', '9680.2022', NULL, '2023-08-14', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:30:04', '2024-06-07 21:30:04'),
+(40, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.412.1', '9681.2022', NULL, '2023-09-21', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:32:50', '2024-06-07 21:32:50'),
+(41, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.241.7', '9682.2022', NULL, '2024-01-15', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:34:07', '2024-06-07 21:34:07'),
+(42, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.296.3', '9940.2022', NULL, '2024-01-29', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:35:16', '2024-06-07 21:35:16'),
+(43, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.179.3', '9941.2022', NULL, '2024-01-29', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:36:03', '2024-06-07 21:36:03'),
+(44, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.209.7', '9942.2022', NULL, '2024-02-14', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:36:56', '2024-06-07 21:36:56'),
+(45, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.174.8', '9943.2022', NULL, '2024-02-14', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:37:46', '2024-06-07 21:37:46'),
+(46, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.205.9', '9944.2022', NULL, '2024-04-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:39:38', '2024-06-07 21:39:38'),
+(47, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.169.4', '9945.2022', NULL, '2024-04-08', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:40:33', '2024-06-07 21:40:33'),
+(48, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.366.2', '10400.2022', NULL, '2024-04-25', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:41:33', '2024-06-07 21:41:33'),
+(49, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.151.9', '10401.2022', NULL, '2024-04-26', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:42:27', '2024-06-07 21:42:27'),
+(50, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.341.9', '10402.2022', NULL, '2024-05-01', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:43:52', '2024-06-07 21:43:52'),
+(51, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.589.0', '10403.2022', NULL, '2024-06-07', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:44:42', '2024-06-07 21:44:42'),
+(52, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.357', '10404.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:46:30', '2024-06-07 21:46:30'),
+(53, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.344.0', '10405.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:47:22', '2024-06-07 21:47:22'),
+(54, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.365.5', '10406.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:48:47', '2024-06-07 21:48:47'),
+(55, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'l61.631.349.5', '10407.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:52:15', '2024-06-07 21:52:15'),
+(56, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.625.5', '10408.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:53:06', '2024-06-07 21:53:06'),
+(57, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.350.1', '10409.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:53:45', '2024-06-07 21:53:45'),
+(58, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.352.5', '10410.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:54:35', '2024-06-07 21:54:35'),
+(59, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.342.5', '10411.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:55:31', '2024-06-07 21:55:31'),
+(60, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.762.7', '8256.2021', NULL, '2022-05-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-07 22:14:22', '2024-06-07 22:14:22'),
+(61, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.763.4', '8257.2021', NULL, '2022-05-02', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:17:10', '2024-06-07 22:17:10'),
+(62, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.764.1', '8258.2021', NULL, '2022-05-20', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:18:13', '2024-06-07 22:18:13'),
+(63, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.765.8', '8259.2O21', NULL, '2022-05-02', '2021-03-01', 'available', 'EFE-4602', '2024-06-07 22:20:04', '2024-06-07 22:20:04'),
+(64, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.766.5', '8260.2021', NULL, '2022-05-02', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:21:06', '2024-06-07 22:21:06'),
+(65, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.769.6', '8263.2021', NULL, '2022-05-02', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:22:56', '2024-06-07 22:22:56'),
+(66, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.401.772.6', '8266.2021', NULL, '2024-04-05', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:27:12', '2024-06-07 22:27:12'),
+(67, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.771.9', '8265.2021', NULL, '2022-05-31', '2021-03-01', 'available', 'EFE-3002', '2024-06-07 22:31:58', '2024-06-07 22:31:58'),
+(68, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.773.3', '8267.2021', NULL, '2022-06-08', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:33:22', '2024-06-07 22:33:22'),
+(69, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.774.0', '8268.2021', NULL, '2022-06-08', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:34:49', '2024-06-07 22:34:49'),
+(70, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.775.7', '8269.2021', NULL, '2022-06-08', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:37:21', '2024-06-07 22:37:21'),
+(71, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.491.848.7', '9327.2022', NULL, '2023-03-17', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:39:15', '2024-06-07 22:39:15'),
+(72, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.505.652.2', '9461.2022', NULL, '2022-03-31', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:41:09', '2024-06-07 22:41:09'),
+(73, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.505.665.2', '9462.2022', NULL, '2023-04-02', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:43:18', '2024-06-07 22:43:18');
 
 -- --------------------------------------------------------
 
@@ -465,7 +471,7 @@ CREATE TABLE IF NOT EXISTS `equipment_store` (
   KEY `equipment_store_store_id_foreign` (`store_id`),
   KEY `equipment_store_equipment_id_foreign` (`equipment_id`),
   KEY `equipment_store_customer_id_foreign` (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `equipment_store`
@@ -473,7 +479,8 @@ CREATE TABLE IF NOT EXISTS `equipment_store` (
 
 INSERT INTO `equipment_store` (`id`, `customer_id`, `store_id`, `equipment_id`, `type`, `brand`, `serial`, `owned`, `pull_status`, `remarks`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, 1, 'Chest Freezer', 'CONDURA', 'ABC123', 'Not-Owned', 'no', NULL, '2024-06-04 19:03:32', '2024-06-04 19:03:32'),
-(3, 2, 2, 6, 'Glass Top', 'LIEBHERR', 'L60.989.074.3', 'Owned', 'no', NULL, '2024-06-07 19:13:20', '2024-06-07 19:13:20');
+(3, 2, 2, 6, 'Glass Top', 'LIEBHERR', 'L60.989.074.3', 'Owned', 'no', NULL, '2024-06-07 19:13:20', '2024-06-07 19:13:20'),
+(8, 15, 15, 3, 'Hard Top', 'HINO', 'H2022-047154', 'Owned', 'no', NULL, '2024-06-19 07:52:44', '2024-06-19 07:52:44');
 
 -- --------------------------------------------------------
 
@@ -548,7 +555,7 @@ INSERT INTO `inbounds` (`id`, `user_id`, `branch_code`, `equipment_id`, `custome
 (1, 1, 'EFTO-CAG', '1', 1, 1, '1', '1', '[{\"ptype_code\":\"PT\",\"code\":\"PT_BM\",\"quantity\":\"4\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Buko Melon\"},{\"ptype_code\":\"PT\",\"code\":\"PT_CS\",\"quantity\":\"4\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Cheese\"},{\"ptype_code\":\"PT\",\"code\":\"PT_HH\",\"quantity\":\"4\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Halo halo\"},{\"ptype_code\":\"PT\",\"code\":\"PT_MG\",\"quantity\":12,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Mango\"},{\"ptype_code\":\"BC\",\"code\":\"BC_CS\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cheese\"},{\"ptype_code\":\"BC\",\"code\":\"BC_HH\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Halo halo\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CF\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Chocofi\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CNC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CS\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cheese\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MG\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Mango\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MOC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CNC\",\"quantity\":4,\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CS\",\"quantity\":4,\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cheese\"},{\"ptype_code\":\"SPS\",\"code\":\"SPS_MK\",\"quantity\":\"2\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Milk\"}]', NULL, NULL, NULL, NULL, 'Encoding', 2, NULL, NULL, NULL, '2024-06-04 19:06:32', '2024-06-08 21:35:12'),
 (2, 1, 'EFTO-CAG', '6', 2, 2, '7', '4', '[{\"ptype_code\":\"SC\",\"code\":\"SC_BM\",\"quantity\":1,\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Melon\"},{\"ptype_code\":\"SC\",\"code\":\"SC_BP\",\"quantity\":1,\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan\"},{\"ptype_code\":\"BC\",\"code\":\"BC_CNC\",\"quantity\":1,\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cookies N\' Cream\"},{\"ptype_code\":\"HG\",\"code\":\"HG_BM\",\"quantity\":1,\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Buko Melon\"}]', 1, 0, NULL, NULL, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 19:25:45', '2024-06-07 22:07:38'),
 (3, 1, 'EFTO-CAG', '6', 2, 2, '7', '3', '[{\"ptype_code\":\"SC\",\"code\":\"SC_BP\",\"quantity\":\"1\",\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan\"},{\"ptype_code\":\"MC\",\"code\":\"MC_CS\",\"quantity\":\"1\",\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese\"},{\"ptype_code\":\"BC\",\"code\":\"BC_CNC\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cookies N\' Cream\"},{\"ptype_code\":\"ICC\",\"code\":\"ICC_RR\",\"quantity\":\"1\",\"price\":468,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"ICE CREAM CONES Rocky Road\"},{\"ptype_code\":\"PT\",\"code\":\"PT_HH\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Halo halo\"}]', 1, 0, NULL, NULL, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 22:27:22', '2024-06-07 23:23:42'),
-(4, 2, 'EFTO-CAG', '6', 2, 2, '7', '2', '[{\"ptype_code\":\"SC\",\"code\":\"SC_BP\",\"quantity\":1,\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan\"},{\"ptype_code\":\"MC\",\"code\":\"MC_CS\",\"quantity\":2,\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese\"},{\"ptype_code\":\"BC\",\"code\":\"BC_CS\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cheese\"},{\"ptype_code\":\"SPS\",\"code\":\"SPS_CHO\",\"quantity\":\"1\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Chocolate\"},{\"ptype_code\":\"SPS\",\"code\":\"SPS_MK\",\"quantity\":\"1\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Milk\"},{\"ptype_code\":\"PT\",\"code\":\"PT_BM\",\"quantity\":4,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Buko Melon\"},{\"ptype_code\":\"PT\",\"code\":\"PT_CNC\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Cookies N\' Cream\"},{\"ptype_code\":\"PT\",\"code\":\"PT_CS\",\"quantity\":5,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Cheese\"},{\"ptype_code\":\"PT\",\"code\":\"PT_HH\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Halo halo\"},{\"ptype_code\":\"PT\",\"code\":\"PT_MG\",\"quantity\":5,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Mango\"},{\"ptype_code\":\"PT\",\"code\":\"PT_MOC\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Coffee Mocha Fudge\"},{\"ptype_code\":\"PT\",\"code\":\"PT_VNL\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Vanilla\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CNC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CF\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Chocofi\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CS\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cheese\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MG\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Mango\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MOC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CNC\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CS\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cheese\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_MOC\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_SS\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Strawberry Strawberry\"},{\"ptype_code\":\"HG\",\"code\":\"HG_BM\",\"quantity\":\"10\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Buko Melon\"},{\"ptype_code\":\"HG\",\"code\":\"HG_MG\",\"quantity\":\"10\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Mango\"},{\"ptype_code\":\"HG\",\"code\":\"HG_VNL\",\"quantity\":\"10\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Vanilla\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_CNC\",\"quantity\":9,\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Cookies N\' Cream\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_CS\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Cheese\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_HH\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Halo halo\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_MG\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Mango\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_MOC\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_VNL\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Vanilla\"}]', 0, 1, 1, NULL, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 23:07:13', '2024-06-18 09:07:35');
+(4, 2, 'EFTO-CAG', '6', 2, 2, '7', '2', '[{\"ptype_code\":\"SC\",\"code\":\"SC_BP\",\"quantity\":1,\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan\"},{\"ptype_code\":\"MC\",\"code\":\"MC_CS\",\"quantity\":2,\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese\"},{\"ptype_code\":\"BC\",\"code\":\"BC_CS\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cheese\"},{\"ptype_code\":\"SPS\",\"code\":\"SPS_CHO\",\"quantity\":\"1\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Chocolate\"},{\"ptype_code\":\"SPS\",\"code\":\"SPS_MK\",\"quantity\":\"1\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Milk\"},{\"ptype_code\":\"PT\",\"code\":\"PT_BM\",\"quantity\":4,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Buko Melon\"},{\"ptype_code\":\"PT\",\"code\":\"PT_CNC\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Cookies N\' Cream\"},{\"ptype_code\":\"PT\",\"code\":\"PT_CS\",\"quantity\":5,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Cheese\"},{\"ptype_code\":\"PT\",\"code\":\"PT_HH\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Halo halo\"},{\"ptype_code\":\"PT\",\"code\":\"PT_MG\",\"quantity\":5,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Mango\"},{\"ptype_code\":\"PT\",\"code\":\"PT_MOC\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Coffee Mocha Fudge\"},{\"ptype_code\":\"PT\",\"code\":\"PT_VNL\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Vanilla\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CNC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CF\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Chocofi\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CS\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cheese\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MG\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Mango\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MOC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CNC\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CS\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cheese\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_MOC\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_SS\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Strawberry Strawberry\"},{\"ptype_code\":\"HG\",\"code\":\"HG_BM\",\"quantity\":\"10\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Buko Melon\"},{\"ptype_code\":\"HG\",\"code\":\"HG_MG\",\"quantity\":\"10\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Mango\"},{\"ptype_code\":\"HG\",\"code\":\"HG_VNL\",\"quantity\":\"10\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Vanilla\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_CNC\",\"quantity\":9,\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Cookies N\' Cream\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_CS\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Cheese\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_HH\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Halo halo\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_MG\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Mango\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_MOC\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_VNL\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Vanilla\"}]', 0, 1, 1, 2855, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 23:07:13', '2024-06-19 02:02:33');
 
 -- --------------------------------------------------------
 
@@ -591,42 +598,42 @@ CREATE TABLE IF NOT EXISTS `item_master_data` (
 INSERT INTO `item_master_data` (`id`, `branch_code`, `product_code`, `product_description`, `unit`, `stocks`, `reserved`, `created_at`, `updated_at`) VALUES
 (1, 'EFTO-CAG', 'SC_RR', 'Small Cup Rocky Road', 'Bag/s', 50, 0, '2024-06-04 19:07:48', '2024-06-04 19:07:48'),
 (2, 'EFTO-CAG', 'SC_BM', '90ml SMALL CUP REGULAR (3.0-oz) Buko Melon', 'Bag/s', 30, 1, '2024-06-06 05:10:24', '2024-06-07 22:07:38'),
-(3, 'EFTO-CAG', 'SC_BP', '90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan', 'Bag/s', 26, 8, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(3, 'EFTO-CAG', 'SC_BP', '90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan', 'Bag/s', 26, 9, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
 (4, 'EFTO-CAG', 'SC_BU', '90ml SMALL CUP REGULAR (3.0-oz) Buko Ube', 'Bag/s', 26, 0, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
 (5, 'EFTO-CAG', 'SC_MG', '90ml SMALL CUP REGULAR (3.0-oz) Mango', 'Bag/s', 30, 0, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
-(6, 'EFTO-CAG', 'MC_CS', '135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese', 'Bag/s', 112, 13, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(6, 'EFTO-CAG', 'MC_CS', '135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese', 'Bag/s', 112, 15, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
 (7, 'EFTO-CAG', 'BC_CNC', '180ml BIG CUP (6.0-oz) Cookies N\' Cream', 'Bag/s', 26, 2, '2024-06-06 05:10:24', '2024-06-07 23:23:42'),
-(8, 'EFTO-CAG', 'BC_CS', '180ml BIG CUP (6.0-oz) Cheese', 'Bag/s', 168, 6, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(8, 'EFTO-CAG', 'BC_CS', '180ml BIG CUP (6.0-oz) Cheese', 'Bag/s', 168, 7, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
 (9, 'EFTO-CAG', 'BC_HH', '180ml BIG CUP (6.0-oz) Halo halo', 'Bag/s', 30, 0, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
-(10, 'EFTO-CAG', 'SPS_CHO', 'SPECIAL STICKS Chocolate', 'Bag/s', 38, 6, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(11, 'EFTO-CAG', 'SPS_MK', 'SPECIAL STICKS Milk', 'Bag/s', 42, 6, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(10, 'EFTO-CAG', 'SPS_CHO', 'SPECIAL STICKS Chocolate', 'Bag/s', 38, 7, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(11, 'EFTO-CAG', 'SPS_MK', 'SPECIAL STICKS Milk', 'Bag/s', 42, 7, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
 (12, 'EFTO-CAG', 'ICC_RR', 'ICE CREAM CONES Rocky Road', 'Bag/s', 162, 1, '2024-06-06 05:10:24', '2024-06-07 23:23:42'),
-(13, 'EFTO-CAG', 'PT_BM', 'PINT Buko Melon', 'Pc/s', 171, 24, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(14, 'EFTO-CAG', 'PT_CNC', 'PINT Cookies N\' Cream', 'Pc/s', 171, 12, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(15, 'EFTO-CAG', 'PT_CS', 'PINT Cheese', 'Pc/s', 399, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(16, 'EFTO-CAG', 'PT_HH', 'PINT Halo halo', 'Pc/s', 171, 14, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(17, 'EFTO-CAG', 'PT_MG', 'PINT Mango', 'Pc/s', 171, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(18, 'EFTO-CAG', 'PT_MOC', 'PINT Coffee Mocha Fudge', 'Pc/s', 171, 12, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(19, 'EFTO-CAG', '1L_CF', '1 LITER Chocofi', 'Pc/s', 72, 12, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(20, 'EFTO-CAG', '1L_CNC', '1 LITER Cookies N\' Cream', 'Pc/s', 72, 12, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(21, 'EFTO-CAG', '1L_CS', '1 LITER Cheese', 'Pc/s', 504, 12, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(22, 'EFTO-CAG', '1L_MG', '1 LITER Mango', 'Bag/s', 72, 12, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(23, 'EFTO-CAG', '1L_MOC', '1 LITER Coffee Mocha Fudge', 'Bag/s', 72, 12, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(24, 'EFTO-CAG', '1.7L_CNC', '1.7 LITER Cookies N\' Cream', 'Pc/s', 210, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(25, 'EFTO-CAG', '1.7L_CS', '1.7 LITER Cheese', 'Pc/s', 945, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(26, 'EFTO-CAG', '1.7L_MOC', '1.7 LITER Coffee Mocha Fudge', 'Pc/s', 105, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(27, 'EFTO-CAG', '1.7L_SS', '1.7 LITER Strawberry Strawberry', 'Pc/s', 105, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(28, 'EFTO-CAG', 'HG_BM', 'HALF GALLON (1.89L) Buko Melon', 'Pc/s', 180, 61, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(29, 'EFTO-CAG', 'HG_MG', 'HALF GALLON (1.89L) Mango', 'Pc/s', 270, 60, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(30, 'EFTO-CAG', 'HG_VNL', 'HALF GALLON (1.89L) Vanilla', 'Pc/s', 180, 60, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(31, 'EFTO-CAG', '3.6L_CNC', '3.6 LITER Cookies N\' Cream', 'Pc/s', 108, 54, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(32, 'EFTO-CAG', '3.6L_CS', '3.6 LITER Cheese', 'Pc/s', 276, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(33, 'EFTO-CAG', '3.6L_HH', '3.6 LITER Halo halo', 'Pc/s', 48, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(34, 'EFTO-CAG', '3.6L_MG', '3.6 LITER Mango', 'Pc/s', 156, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(35, 'EFTO-CAG', '3.6L_MOC', '3.6 LITER Coffee Mocha Fudge', 'Pc/s', 60, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
+(13, 'EFTO-CAG', 'PT_BM', 'PINT Buko Melon', 'Pc/s', 171, 28, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(14, 'EFTO-CAG', 'PT_CNC', 'PINT Cookies N\' Cream', 'Pc/s', 171, 14, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(15, 'EFTO-CAG', 'PT_CS', 'PINT Cheese', 'Pc/s', 399, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(16, 'EFTO-CAG', 'PT_HH', 'PINT Halo halo', 'Pc/s', 171, 16, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(17, 'EFTO-CAG', 'PT_MG', 'PINT Mango', 'Pc/s', 171, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(18, 'EFTO-CAG', 'PT_MOC', 'PINT Coffee Mocha Fudge', 'Pc/s', 171, 14, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(19, 'EFTO-CAG', '1L_CF', '1 LITER Chocofi', 'Pc/s', 72, 14, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(20, 'EFTO-CAG', '1L_CNC', '1 LITER Cookies N\' Cream', 'Pc/s', 72, 14, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(21, 'EFTO-CAG', '1L_CS', '1 LITER Cheese', 'Pc/s', 504, 14, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(22, 'EFTO-CAG', '1L_MG', '1 LITER Mango', 'Bag/s', 72, 14, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(23, 'EFTO-CAG', '1L_MOC', '1 LITER Coffee Mocha Fudge', 'Bag/s', 72, 14, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(24, 'EFTO-CAG', '1.7L_CNC', '1.7 LITER Cookies N\' Cream', 'Pc/s', 210, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(25, 'EFTO-CAG', '1.7L_CS', '1.7 LITER Cheese', 'Pc/s', 945, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(26, 'EFTO-CAG', '1.7L_MOC', '1.7 LITER Coffee Mocha Fudge', 'Pc/s', 105, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(27, 'EFTO-CAG', '1.7L_SS', '1.7 LITER Strawberry Strawberry', 'Pc/s', 105, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(28, 'EFTO-CAG', 'HG_BM', 'HALF GALLON (1.89L) Buko Melon', 'Pc/s', 180, 71, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(29, 'EFTO-CAG', 'HG_MG', 'HALF GALLON (1.89L) Mango', 'Pc/s', 270, 70, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(30, 'EFTO-CAG', 'HG_VNL', 'HALF GALLON (1.89L) Vanilla', 'Pc/s', 180, 70, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(31, 'EFTO-CAG', '3.6L_CNC', '3.6 LITER Cookies N\' Cream', 'Pc/s', 108, 63, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(32, 'EFTO-CAG', '3.6L_CS', '3.6 LITER Cheese', 'Pc/s', 276, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(33, 'EFTO-CAG', '3.6L_HH', '3.6 LITER Halo halo', 'Pc/s', 48, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(34, 'EFTO-CAG', '3.6L_MG', '3.6 LITER Mango', 'Pc/s', 156, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(35, 'EFTO-CAG', '3.6L_MOC', '3.6 LITER Coffee Mocha Fudge', 'Pc/s', 60, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
 (36, 'EFTO-CAG', '3.6L_SS', '3.6 LITER Strawberry Strawberry', 'Pc/s', 48, 0, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
-(37, 'EFTO-CAG', '3.6L_VNL', '3.6 LITER Vanilla', 'Pc/s', 60, 30, '2024-06-06 05:10:24', '2024-06-18 09:07:35'),
-(38, 'EFTO-CAG', 'PT_VNL', 'PINT Vanilla', 'Pc/s', 171, 12, '2024-06-06 05:10:24', '2024-06-18 09:07:35');
+(37, 'EFTO-CAG', '3.6L_VNL', '3.6 LITER Vanilla', 'Pc/s', 60, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
+(38, 'EFTO-CAG', 'PT_VNL', 'PINT Vanilla', 'Pc/s', 171, 14, '2024-06-06 05:10:24', '2024-06-19 02:02:33');
 
 -- --------------------------------------------------------
 
@@ -45296,6 +45303,7 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
 ('0t8f2vzcKoGIjsgUUyIS12amQm2xcAbrumaSVPZq', NULL, '1.37.67.134', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiVHdxV2ZyNGxoN2ZPcE9IcFhJVWlGaVl6QzlXQjVhVVNFb2E4U1RQOSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vY3VzdG9tZXJzIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717594174),
 ('0wxENsTpcgG73qstxRUABte3fC06wdcDTuUaMlVi', NULL, '65.154.226.167', 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWW5EZDVyNU9oSWRyNFJ5UXpUNVU0cWdDUTFNMTRNV0loWEJpeExlcSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NToiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vb3JkZXJzIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDU6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL29yZGVycyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1717485075),
+('156R1MwpX17BzIqjlvrZizIX1nKNRNyOhA7gCaM5', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiYUh2Mm5zQk40OTdtZ0RwakM1Tm12SXVxV1FIN0I3dlM4SzV3VkowMSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozNzoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2JhZC1vcmRlcnMtbGlzdCI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM1OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvcHJvZHVjdC10eXBlcyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO30=', 1718781375),
 ('1asPcJT8ywTouz5okd7hOVM1Ev9CXZCQMmay1WGh', NULL, '173.236.217.113', '', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiaEt1S3VLdUxrU1ZVZTZmclQzTkQ0bHpESGJpVzZqNzBja2xmSTJWcyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1718008024),
 ('3bW29R7ofQGfGNmyEoPRKwQ8m3EbGMPcWHJ56t15', NULL, '1.37.67.134', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoibDVxZmN5TmpzbHM2RW1UWWpDckY3d3FJWGIzRmVsUUtHblVDdHBDNSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717493163),
 ('59ek5GA5HFeUW3LwSjt5cOyW9lW29ed99ImiY7eo', NULL, '1.37.67.135', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiVm45cW9WZjUzUHQwTTU0d2dXMUJBbjZ1MEhuakxrNzk1dXdFWDk0SSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NToiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vYnJhbmNoIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717473494),
@@ -45308,11 +45316,10 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 ('gNRkKrczLekpfFyfUCJTi0Q6J15givuyavT4pfj5', NULL, '1.37.67.133', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/6.5.3 Chrome/108.0.5359.220 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiNjJqOW9iZVVSSlJxcGZiQndKcGM0NHBrYzJ1czk5Tjl4TUxVSGtYZiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo1NToiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vaXRlbS1tYXN0ZXItZGF0YSI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQ0OiJodHRwOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9sb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1717510538),
 ('go3QbGEh2y8ZbANbqpMmTMmQ6tW22CpJvHG238BQ', 1, '112.198.228.208', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiaXJmOVY1QkpkSEJaaGtUV1daUWtzeTJEMnZmbTM4bG1ISEptd2ZrZiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTU6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2RlbGl2ZXJ5LXBlcnNvbnMiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6MTE6ImJyYW5jaF9jb2RlIjtzOjg6IkVGVE8tQ0FHIjt9', 1717597297),
 ('GpfgIyhgEdU1v6oujk9NHbwbaIpccA0hDwWoINPr', 1, '210.213.142.167', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiTmNLaTJjQklrRDQ1bXlnckdLcVV3azFhSUdvOWphT1hLeGEzQTlUYiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHBzOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9jdXN0b21lcnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6MTE6ImJyYW5jaF9jb2RlIjtzOjg6IkVGVE8tQ0FHIjt9', 1718008137),
-('hnqFcP8M3Q5H8Q54vbNCpyqRDM4zGslThC2tPuC5', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiS1JLWWRHY1hpYW93S1FwY0NNcUgzcGU0MHZyY0RDbGxOTlJmQ0V6ciI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyOToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL3ByaWNpbmciO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyNzoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1718254899),
 ('IIZ20f7dNDWWzPe2G7mmZaKvnRWFIhjYaFX9KHxz', NULL, '136.158.65.81', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiMjhmTjRwdnBIQm11QTF3WEVUUHhOWnhPcGZ3NDV1TXY1aHNJYzJYaSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9fQ==', 1717747746),
 ('ivAWGMJuLIHkZj7rDxQrON8jGrFt2IwvWqSAEauD', NULL, '1.37.67.199', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWGEwN1VGSmpKcXlwM3NhTUJOd1poMmRtY2VvQkdPY1luT1VSVTVMVyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NzoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vdmVoaWNsZXMiO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czo0NDoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1717590088),
 ('JY6uiQyRu7anYFycYzu4E6BsWarkCCuhJaRDWXrG', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiM2ViZ3ljRnhWR3J0QVhvZWhnWElhVFgzSHU3Sld3VlVkR1g5dDJseiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyOToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL3ByaWNpbmciO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyODoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL29yZGVycyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO30=', 1718256370),
-('K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo4OntzOjY6Il90b2tlbiI7czo0MDoiNHQ2OW1CWmI5Y1BFN1lxRm45Qkp0ZXc5Z1FMSzY4eVRWVGlBckRMbSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozMToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2N1c3RvbWVycyI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjI4OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvb3JkZXJzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTtzOjExOiJicmFuY2hfY29kZSI7czo4OiJFRlRPLUNBRyI7czoxMjoicHJpY2VsZXZlbElkIjtpOjQ7czoxOToidXBkYXRpbmdEYXRhUmVzdWx0cyI7YTozMDp7aTowO2E6Mjp7czo0OiJjb2RlIjtzOjU6IlNDX0JQIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MTthOjI6e3M6NDoiY29kZSI7czo1OiJNQ19DUyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjI7YToyOntzOjQ6ImNvZGUiO3M6NToiQkNfQ1MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aTozO2E6Mjp7czo0OiJjb2RlIjtzOjc6IlNQU19DSE8iO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aTo0O2E6Mjp7czo0OiJjb2RlIjtzOjY6IlNQU19NSyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjU7YToyOntzOjQ6ImNvZGUiO3M6NToiUFRfQk0iO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aTo2O2E6Mjp7czo0OiJjb2RlIjtzOjY6IlBUX0NOQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjc7YToyOntzOjQ6ImNvZGUiO3M6NToiUFRfQ1MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aTo4O2E6Mjp7czo0OiJjb2RlIjtzOjU6IlBUX0hIIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6OTthOjI6e3M6NDoiY29kZSI7czo1OiJQVF9NRyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjEwO2E6Mjp7czo0OiJjb2RlIjtzOjY6IlBUX01PQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjExO2E6Mjp7czo0OiJjb2RlIjtzOjY6IlBUX1ZOTCI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjEyO2E6Mjp7czo0OiJjb2RlIjtzOjY6IjFMX0NOQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjEzO2E6Mjp7czo0OiJjb2RlIjtzOjU6IjFMX0NGIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MTQ7YToyOntzOjQ6ImNvZGUiO3M6NToiMUxfQ1MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToxNTthOjI6e3M6NDoiY29kZSI7czo1OiIxTF9NRyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjE2O2E6Mjp7czo0OiJjb2RlIjtzOjY6IjFMX01PQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjE3O2E6Mjp7czo0OiJjb2RlIjtzOjg6IjEuN0xfQ05DIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MTg7YToyOntzOjQ6ImNvZGUiO3M6NzoiMS43TF9DUyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjE5O2E6Mjp7czo0OiJjb2RlIjtzOjg6IjEuN0xfTU9DIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MjA7YToyOntzOjQ6ImNvZGUiO3M6NzoiMS43TF9TUyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjIxO2E6Mjp7czo0OiJjb2RlIjtzOjU6IkhHX0JNIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MjI7YToyOntzOjQ6ImNvZGUiO3M6NToiSEdfTUciO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToyMzthOjI6e3M6NDoiY29kZSI7czo2OiJIR19WTkwiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToyNDthOjI6e3M6NDoiY29kZSI7czo4OiIzLjZMX0NOQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjI1O2E6Mjp7czo0OiJjb2RlIjtzOjc6IjMuNkxfQ1MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToyNjthOjI6e3M6NDoiY29kZSI7czo3OiIzLjZMX0hIIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6Mjc7YToyOntzOjQ6ImNvZGUiO3M6NzoiMy42TF9NRyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjI4O2E6Mjp7czo0OiJjb2RlIjtzOjg6IjMuNkxfTU9DIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6Mjk7YToyOntzOjQ6ImNvZGUiO3M6ODoiMy42TF9WTkwiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9fX0=', 1718701688),
+('K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo5OntzOjY6Il90b2tlbiI7czo0MDoiNHQ2OW1CWmI5Y1BFN1lxRm45Qkp0ZXc5Z1FMSzY4eVRWVGlBckRMbSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozMToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2N1c3RvbWVycyI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM4OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvaXRlbS1tYXN0ZXItZGF0YSI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO3M6MTI6InByaWNlbGV2ZWxJZCI7aToyO3M6MTk6InVwZGF0aW5nRGF0YVJlc3VsdHMiO2E6MzA6e2k6MDthOjI6e3M6NDoiY29kZSI7czo1OiJTQ19CUCI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjE7YToyOntzOjQ6ImNvZGUiO3M6NToiTUNfQ1MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToyO2E6Mjp7czo0OiJjb2RlIjtzOjU6IkJDX0NTIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MzthOjI6e3M6NDoiY29kZSI7czo3OiJTUFNfQ0hPIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6NDthOjI6e3M6NDoiY29kZSI7czo2OiJTUFNfTUsiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aTo1O2E6Mjp7czo0OiJjb2RlIjtzOjU6IlBUX0JNIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6NjthOjI6e3M6NDoiY29kZSI7czo2OiJQVF9DTkMiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aTo3O2E6Mjp7czo0OiJjb2RlIjtzOjU6IlBUX0NTIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6ODthOjI6e3M6NDoiY29kZSI7czo1OiJQVF9ISCI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjk7YToyOntzOjQ6ImNvZGUiO3M6NToiUFRfTUciO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToxMDthOjI6e3M6NDoiY29kZSI7czo2OiJQVF9NT0MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToxMTthOjI6e3M6NDoiY29kZSI7czo2OiJQVF9WTkwiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToxMjthOjI6e3M6NDoiY29kZSI7czo2OiIxTF9DTkMiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToxMzthOjI6e3M6NDoiY29kZSI7czo1OiIxTF9DRiI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjE0O2E6Mjp7czo0OiJjb2RlIjtzOjU6IjFMX0NTIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MTU7YToyOntzOjQ6ImNvZGUiO3M6NToiMUxfTUciO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToxNjthOjI6e3M6NDoiY29kZSI7czo2OiIxTF9NT0MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToxNzthOjI6e3M6NDoiY29kZSI7czo4OiIxLjdMX0NOQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjE4O2E6Mjp7czo0OiJjb2RlIjtzOjc6IjEuN0xfQ1MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToxOTthOjI6e3M6NDoiY29kZSI7czo4OiIxLjdMX01PQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjIwO2E6Mjp7czo0OiJjb2RlIjtzOjc6IjEuN0xfU1MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToyMTthOjI6e3M6NDoiY29kZSI7czo1OiJIR19CTSI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjIyO2E6Mjp7czo0OiJjb2RlIjtzOjU6IkhHX01HIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MjM7YToyOntzOjQ6ImNvZGUiO3M6NjoiSEdfVk5MIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MjQ7YToyOntzOjQ6ImNvZGUiO3M6ODoiMy42TF9DTkMiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToyNTthOjI6e3M6NDoiY29kZSI7czo3OiIzLjZMX0NTIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MjY7YToyOntzOjQ6ImNvZGUiO3M6NzoiMy42TF9ISCI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjI3O2E6Mjp7czo0OiJjb2RlIjtzOjc6IjMuNkxfTUciO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToyODthOjI6e3M6NDoiY29kZSI7czo4OiIzLjZMX01PQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjI5O2E6Mjp7czo0OiJjb2RlIjtzOjg6IjMuNkxfVk5MIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fX1zOjk6ImluYm91bmRJZCI7czoxOiIxIjt9', 1718784207),
 ('mvCoQipb8Bjhosv6bna7RkUyhPO5TrCrb9jyQK9b', NULL, '122.52.233.63', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiSnJSbG85cnNqTldhTFFianc5RTlEdm1KTlpTemZHS2RuSEp1WDNJTiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9fQ==', 1717559653),
 ('OUg8gVWtlkyU5xSeThzvVyWlMqxweB7CiW3ASQmj', NULL, '65.154.226.167', 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiWW5abVZwUDVDQnhKTDNzaU5FY0NvY05NU2FKT0J5eUtGUHJxeDJBZCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2JhZC1vcmRlcnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1717475742),
 ('P7VguN7VteFSXVW4ytXcNsf6smcKeVHeyFX5GlU2', NULL, '209.35.172.174', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/601.2.4 (KHTML, like Gecko) Version/9.0.1 Safari/601.2.4 facebookexternalhit/1.1 Facebot Twitterbot/1.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZ3NsbkV6SHVkUzMyQzVKdjNkVjlCYjd2NGNlNGE0dzhsOUhZQ3lSNyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZGFzaGJvYXJkIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717750389),
@@ -45350,7 +45357,7 @@ CREATE TABLE IF NOT EXISTS `storeinfo` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `storeinfo_customer_id_foreign` (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `storeinfo`
@@ -45368,7 +45375,8 @@ INSERT INTO `storeinfo` (`id`, `customer_id`, `storename`, `contactno`, `region`
 (11, 11, 'Elsie Y Ang Store', '0977-125-5034', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuao', 'Poblacion II', NULL, '17°44\'1.45\"N', '121°27\'21.32\"E', 'option 1', NULL, NULL, '2024-06-09 05:33:24', '2024-06-09 05:33:24'),
 (12, 12, 'ALL-IN-JUAN MINI GROCERY', '0955-830-7175', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caritan Sur', NULL, '17°39\'22.73\"N', '121°44\'43.22\"E', 'option 1', NULL, NULL, '2024-06-09 05:36:07', '2024-06-09 05:36:07'),
 (13, 13, 'Isagani Store', '0916-578-1701', 'Region II (Cagayan Valley)', 'Cagayan', 'Camalaniugan', 'Catotoran Norte', 'Stall No 8 Public Market', '18°15\'44.74\"N', '121°41\'16.19\"E', 'option 1', NULL, NULL, '2024-06-09 05:41:36', '2024-06-09 05:41:36'),
-(14, 14, 'MLC Minimart', '0917-622-0136', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 2 ', 'Arellano St', '17°36\'40.36\"N', '121°43\'32.64\"E', 'option 1', NULL, NULL, '2024-06-09 05:44:17', '2024-06-09 05:44:17');
+(14, 14, 'MLC Minimart', '0917-622-0136', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 2 ', 'Arellano St', '17°36\'40.36\"N', '121°43\'32.64\"E', 'option 1', NULL, NULL, '2024-06-09 05:44:17', '2024-06-09 05:44:17'),
+(15, 15, 'UB', '123456', 'Cordillera Administrative Region (CAR)', 'kalinga', 'City of Tabuk ', 'Agbannawag', NULL, '17.60619760468376', '121.72787291779376', 'option 1', NULL, NULL, '2024-06-19 07:24:23', '2024-06-19 07:24:23');
 
 -- --------------------------------------------------------
 
@@ -45393,7 +45401,20 @@ CREATE TABLE IF NOT EXISTS `temp_bad_orders` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `temp_bad_orders_customer_id_foreign` (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `temp_bad_orders`
+--
+
+INSERT INTO `temp_bad_orders` (`id`, `customer_id`, `store_id`, `ptype_code`, `code`, `unit`, `description`, `quantity`, `price`, `amount`, `session_id`, `created_at`, `updated_at`) VALUES
+(5, 1, 1, 'SC', 'SC', 'Pc/s', '90ml SMALL CUP REGULAR (3.0-oz)', 5, 10.20, 51.00, 'K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', '2024-06-19 06:57:49', '2024-06-19 06:57:49'),
+(6, 1, 1, 'MC', 'MC', 'Pc/s', '135ml MEDIUM CUP SPECIAL (4.5-oz)', 36, 13.40, 482.40, 'K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', '2024-06-19 06:57:57', '2024-06-19 06:57:57'),
+(7, 1, 1, 'BC', 'BC', 'Pc/s', '180ml BIG CUP (6.0-oz)', 36, 17.80, 640.80, 'K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', '2024-06-19 06:58:09', '2024-06-19 06:58:09'),
+(8, 1, 1, 'SC', 'SC', 'Pc/s', '90ml SMALL CUP REGULAR (3.0-oz)', 5, 10.20, 51.00, 'K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', '2024-06-19 07:01:29', '2024-06-19 07:01:29'),
+(9, 1, 1, 'MC', 'MC', 'Pc/s', '135ml MEDIUM CUP SPECIAL (4.5-oz)', 54, 13.40, 723.60, 'K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', '2024-06-19 07:01:40', '2024-06-19 07:01:40'),
+(10, 1, 1, 'SC', 'SC', 'Pc/s', '90ml SMALL CUP REGULAR (3.0-oz)', 65, 10.20, 663.00, 'K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', '2024-06-19 07:05:12', '2024-06-19 07:05:12'),
+(11, 1, 1, 'MC', 'MC', 'Pc/s', '135ml MEDIUM CUP SPECIAL (4.5-oz)', 15, 13.40, 201.00, 'K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', '2024-06-19 07:07:43', '2024-06-19 07:07:43');
 
 -- --------------------------------------------------------
 
