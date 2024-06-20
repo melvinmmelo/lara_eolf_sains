@@ -103,6 +103,12 @@
             border-color: #0275d8;
             color: #fff;
         }
+
+        .tbContainer{
+            width: 100%;
+            height: 600px;
+            overflow: auto;
+        }
     </style>
 
     @yield('custom_css')
@@ -180,6 +186,16 @@
                 "ordering": true,
                 "info": true,
                 "autoWidth": false,
+                "responsive": true,
+            });
+
+            $('#example3').DataTable({
+                "paging": false,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
                 "responsive": true,
             });
 

@@ -1,70 +1,68 @@
-        <div class="product-list" id="orderProductSum">
+        <div id="orderProductSum">
 
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>Product Type</th>
-                        <th>Quantity</th>
+            <div class="product-list">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product Type</th>
+                            <th>Quantity</th>
 
-                    </tr>
-                </thead>
-                <tbody>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                    @php
-                        $totalSpCount = [];
-                        $totalSpCountSet = [];
-                    @endphp
+                        @php
+                            $totalSpCount = [];
+                            $totalSpCountSet = [];
+                        @endphp
 
-                    @if (count($summary))
-                        @foreach ($summary as $summ)
-                            @php
-                                $spCnt = 0;
-                                $spCnt2 = 0;
-                            @endphp
-
-                            @if ($summ['ptype_code'] == 'SC')
+                        @if (count($summary))
+                            @foreach ($summary as $summ)
                                 @php
-                                    $spCnt = $summ['total'] * $summ['sppb'];
-                                    $spCnt2 = $spCnt / 12;
+                                    $spCnt = 0;
+                                    $spCnt2 = 0;
                                 @endphp
-                            @elseif ($summ['ptype_code'] == 'MC')
+
+                                @if ($summ['ptype_code'] == 'SC')
+                                    @php
+                                        $spCnt = $summ['total'] * $summ['sppb'];
+                                        $spCnt2 = $spCnt / 12;
+                                    @endphp
+                                @elseif ($summ['ptype_code'] == 'MC')
+                                    @php
+                                        $spCnt = $summ['total'] * $summ['sppb'];
+                                        $spCnt2 = $spCnt / 12;
+                                    @endphp
+                                @elseif ($summ['ptype_code'] == 'BC')
+                                    @php
+                                        $spCnt = $summ['total'] * $summ['sppb'];
+                                        $spCnt2 = $spCnt / 12;
+                                    @endphp
+                                @endif
+
                                 @php
-                                    $spCnt = $summ['total'] * $summ['sppb'];
-                                    $spCnt2 = $spCnt / 12;
+                                    $totalSpCount[] = $spCnt;
+                                    $totalSpCountSet[] = $spCnt2;
                                 @endphp
-                            @elseif ($summ['ptype_code'] == 'BC')
-                                @php
-                                    $spCnt = $summ['total'] * $summ['sppb'];
-                                    $spCnt2 = $spCnt / 12;
-                                @endphp
-                            @endif
+                                <tr>
+                                    <td>
+                                        <input type="text" name="total" id="total" class="label-input"
+                                            value="{{ $summ['ptype_code'] }}" readonly>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="total" id="total" class="label-input"
+                                            value="{{ $summ['total'] }}" readonly>
+                                    </td>
+                                </tr>
+                            @endforeach
 
-                            @php
-                                $totalSpCount[] = $spCnt;
-                                $totalSpCountSet[] = $spCnt2;
-                            @endphp
-                            <tr>
-                                <td>
-                                    <input type="text" name="total" id="total" class="label-input"
-                                        value="{{ $summ['ptype_code'] }}" readonly>
-                                </td>
-                                <td>
-                                    <input type="text" name="total" id="total" class="label-input"
-                                        value="{{ $summ['total'] }}" readonly>
-                                </td>
-                            </tr>
-                        @endforeach
-
-                    @endif
+                        @endif
+                    </tbody>
+                </table>
+            </div>
 
 
-                </tbody>
-
-            </table>
-
-
-        </div>
-                    @if (count($summary))
+            @if (count($summary))
                 <div>
                     <label for="spoon_count">Spoon Count</label>
                     <input type="text" name="sum_spoon_count" id="sum_spoon_count" class="form-control w-100"
@@ -74,4 +72,5 @@
                     <input type="text" name="sum_set_spoon" id="sum_set_spoon" class="form-control w-100"
                         value="{{ number_format(array_sum($totalSpCountSet)) }}" readonly>
                 </div>
-        @endif
+            @endif
+        </div>

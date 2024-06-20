@@ -23,6 +23,7 @@ use App\Http\Controllers\ItemMasterDataController;
 use App\Http\Controllers\addbadorderController;
 use App\Http\Controllers\TempBadOrderController;
 use App\Http\Controllers\BadOrderController;
+
 Route::get('/', function () {
     if (auth()->check()) {
 
@@ -52,14 +53,9 @@ Route::get('/loading-ticket', function () {
 
 Route::middleware('auth')->group(function () {
 
-    // Route::get('/bad-orders-list', function () {
-    //     return view('badorder');
-    // })->name('badorderslist');
-
     Route::get('/lastBadOrderOfCustomer/{customerId}/{storeId}', [BadOrderController::class, 'fetchLastBadOrderOfCustomer']);
     Route::get('/getBoDetails', [BadOrderController::class, 'getBoDetails']);
 
-    // Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');
 
     Route::get('/api/getCustomerItems/{customerId}', [addbadorderController::class, 'getCustomerItems']);
 
@@ -106,16 +102,14 @@ Route::middleware('auth')->group(function () {
         return view('inventory-items');
     });
 
-
-
     Route::get('/branch-select', function () {
         return view('branch-select');
     })->name('branch-select');
 
 
     Route::get('/addbadorder/create', [addbadorderController::class, 'create'])->name('addbadorder.create');
-Route::post('/addbadorder/store', [addbadorderController::class, 'store'])->name('addbadorder.store');
-// Route::post('/save-temp-bad-order', [addbadorderController::class, 'saveTempBadOrder']);
+    Route::post('/addbadorder/store', [addbadorderController::class, 'store'])->name('addbadorder.store');
+    // Route::post('/save-temp-bad-order', [addbadorderController::class, 'saveTempBadOrder']);
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit'); // views
@@ -230,9 +224,11 @@ Route::post('/addbadorder/store', [addbadorderController::class, 'store'])->name
     Route::get('/ordering/{inbound}', [InboundController::class, 'orderProcessTwoUI'])->name('order.processTwo');
 
     // ajax
+
+    Route::get('/order/create', [InboundController::class, 'create'])->name('order.create');
     Route::get('/productsin/{code}', [InboundController::class, 'ajaxProductList'])->name('products.ajaxProductList');
     Route::get('/inboundin/{code}/{qty}', [InboundController::class, 'ajaxInboundList'])->name('inbound.inboundList');
-    Route::get('/delete-inboundin/{inboundId}/{pcode}', [InboundController::class, 'deleteAInbound'])->name('inbound.deleteAInbound');
+    Route::get('/delete-inboundin/{pcode}', [InboundController::class, 'deleteAInbound'])->name('inbound.deleteAInbound');
 
     // update if done na mag add ng productin
     Route::post('/inbound', [InboundController::class, 'store'])->name('inbound.store');
@@ -242,7 +238,7 @@ Route::post('/addbadorder/store', [addbadorderController::class, 'store'])->name
 
     // update lang quantity
     // para sa add, min button
-    Route::get('/inbound-updateProdQty/{inbound}/{code}/{action}', [InboundController::class, 'update'])->name('inbound.update');
+    Route::get('/inbound-updateProdQty/{code}/{action}', [InboundController::class, 'update'])->name('inbound.update');
 
     // deleting pending inbound
     Route::get('/inbound-destroy/{inbound}', [InboundController::class, 'destroy'])->name('inbound.destroy');
@@ -254,8 +250,6 @@ Route::post('/addbadorder/store', [addbadorderController::class, 'store'])->name
     Route::post('/idm-addQtyFromHold', [ItemMasterDataController::class, 'addQtyFromHold'])->name('imd.addQtyFromHold');
 
     Route::put('/branch', [BranchesController::class, 'update'])->name('branch.update');
-
-
 });
 
 require __DIR__ . '/auth.php';

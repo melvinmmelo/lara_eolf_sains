@@ -91,51 +91,91 @@
         <div class="card">
             <form action="{{ route('inbound.store') }}" method="POST">
                 @csrf
+
+                <input type="hidden" class="form-control" id="bad_order_id" name="bad_order_id" value="" readonly>
+
+
                 <div class="card-body">
-                    <input type="hidden" name="inboundId" id="inboundId" class="label-input" value="{{ $inboundId }}"
-                        required readonly>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-3">
-                                <label class="form-label" for="price-quantity">Price Level</label>
-                                <input type="text" class="form-control" id="#" name="#"
-                                    value="{{ $defaultPriceLevel->pl_name }}" readonly>
+                                <div class="form-group">
+                                    <label class="form-label" for="branch_code">Branch Code</label>
+                                    <input type="text" class="form-control" name="branch_code" id="branch_code"
+                                        value="{{ session('branch_code') }}" required readonly>
+                                </div>
                             </div>
 
                             <div class="col-sm-3">
-                                <label class="form-label" for="price-quantity">Delivery Person</label>
-                                <input type="text" class="form-control" id="#" name="#"
-                                    value="{{ $deliveryPerson->name }}" readonly>
+                                <div class="form-group">
+                                    <label class="form-label" for="equipment">Equipment</label>
+                                    <select class="form-control equipment w-100 select2bs4" name="equipment_id"
+                                        id="equipment" onchange="setCustomerName(this.value)" required>
+                                        <option value="">--Select--</option>
+                                        @foreach ($equipment as $equip)
+                                            <option value="{{ $equip->id }}">
+                                                {{ $equip->equipment->code . ' ' . $equip->customer->fullName }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="col-sm-3">
-                                <label class="form-label" for="price-quantity">Vehicle</label>
-                                <input type="text" class="form-control" id="#" name="#"
-                                    value="{{ $vehicle->plateno }}" readonly>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="customer"><i style="color:red">*</i>Customer</label>
+                                    <input type="hidden" class="form-control" name="customer_id" id="customer_id" required
+                                        readonly>
+                                    <input type="text" class="form-control" name="customer" id="customer" required
+                                        readonly />
+                                </div>
                             </div>
 
                             <div class="col-sm-3">
-                                <label class="form-label" for="price-quantity">Customer</label>
-                                <input type="text" class="form-control" id="#" name="#"
-                                    value="{{ $equipmentSerial }} {{ $customerName }}" readonly>
 
-
+                                <div class="form-group">
+                                    <label class="form-label" for="deliveryPerson"><i style="color:red">*</i>Delivery
+                                        Person</label>
+                                    <select class="form-control" name="driver_id" id="deliveryPerson" required>
+                                        <option value="">--Select--</option>
+                                        @foreach ($drivers as $driver)
+                                            <option value="{{ $driver->id }}">{{ $driver->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        </div>
 
-                        <div id="BOContainer" class="row">
                             <div class="col-sm-3">
-                                <label for="bad_order_id">BO Amount</label>
-                                <input type="hidden" class="form-control" id="bad_order_id" name="bad_order_id" value="" readonly>
-                                <input type="text" class="form-control" id="bo_amount" name="bo_amount" value="" readonly>
+                                <div class="form-group">
+                                    <label class="form-label" for="pricelevel_id"><i style="color:red">*</i>Price
+                                        Level</label>
+                                    <select class="form-control" name="pricelevel_id" id="pricelevel_id" required>
+                                        <option value="">--Select--</option>
+                                        @foreach ($pricing as $plevel)
+                                            <option value="{{ $plevel->id }}">{{ $plevel->pl_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
 
+                            <div class="col-sm-3">
+
+                                <div class="form-group">
+                                    <label class="form-label" for="vehicle"><i style="color:red">*</i>Vehicle</label>
+                                    <select class="form-control" name="vehicle_id" id="vehicle" required>
+                                        <option value="">--Select--</option>
+                                        @foreach ($vehicles as $vehicle)
+                                            <option value="{{ $vehicle->id }}">{{ $vehicle->plateno }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-sm-1">
-
                             <div class="product-list" style="min-height: 520px;">
                                 <label class="form-label" for="button types">Types</label>
                                 <div class="">
@@ -151,11 +191,16 @@
                             <div style="min-height: 520px;">
                                 <label class="form-label" for="button types">Quantity</label>
                                 <div class="">
-                                    <button type="button" class="btn btn-primary w-100 mb-2" onclick="setQty(1)">1</button>
-                                    <button type="button" class="btn btn-primary w-100 mb-2" onclick="setQty(2)">2</button>
-                                    <button type="button" class="btn btn-primary w-100 mb-2" onclick="setQty(3)">3</button>
-                                    <button type="button" class="btn btn-primary w-100 mb-2" onclick="setQty(4)">4</button>
-                                    <button type="button" class="btn btn-primary w-100 mb-2" onclick="setQty(5)">5</button>
+                                    <button type="button" class="btn btn-primary w-100 mb-2"
+                                        onclick="setQty(1)">1</button>
+                                    <button type="button" class="btn btn-primary w-100 mb-2"
+                                        onclick="setQty(2)">2</button>
+                                    <button type="button" class="btn btn-primary w-100 mb-2"
+                                        onclick="setQty(3)">3</button>
+                                    <button type="button" class="btn btn-primary w-100 mb-2"
+                                        onclick="setQty(4)">4</button>
+                                    <button type="button" class="btn btn-primary w-100 mb-2"
+                                        onclick="setQty(5)">5</button>
                                     <button type="button" class="btn btn-primary w-100 mb-2"
                                         onclick="setQty(10)">10</button>
                                     <button type="button" class="btn btn-primary w-100 mb-2"
@@ -203,117 +248,63 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @php $totalAmount = []; @endphp
-
-                                                        @if (count($inboundList))
-                                                            @foreach ($inboundList as $product)
-                                                                <tr>
-                                                                    <td class="align-middle"><button type="button"
-                                                                            class="btn btn-xs btn-danger"
-                                                                            onclick="deleteProduct('{{ $inboundId }}', `{{ $product['code'] }}`)"><i
-                                                                                class="fas fa-trash"></i></button></td>
-                                                                    <td class="align-middle">
-                                                                        {{ $product['code'] . ' ' . $product['description'] }}
-                                                                    </td>
-                                                                    <td class="align-middle">{{ $product['unit'] }}</td>
-                                                                    <td class="align-middle">
-                                                                        <div class="input-group">
-
-                                                                            <div class="input-group-prepend">
-                                                                                <button type="button"
-                                                                                    class="quantity-left-minus btn btn-warning btn-number btn-xs"
-                                                                                    data-type="minus" data-field=""
-                                                                                    onclick="minusQtyProduct('{{ $product['code'] }}', 'min');">
-                                                                                    <span class="fas fa-minus"></span>
-                                                                                </button>
-                                                                            </div>
-                                                                            <input type="text"
-                                                                                id="{{ $product['code'] }}"
-                                                                                name="quantity"
-                                                                                class="form-control input-number"
-                                                                                value="{{ $product['quantity'] }}"
-                                                                                min="1" max="99999">
-                                                                            <div class="input-group-append">
-                                                                                <button type="button"
-                                                                                    class="quantity-right-plus btn btn-success btn-number btn-xs"
-                                                                                    class="quantity-right-plus btn btn-success btn-number btn-xs"
-                                                                                    data-type="plus" data-field=""
-                                                                                    onclick="plusQtyProduct('{{ $product['code'] }}', 'add')">
-                                                                                    <span class="fas fa-plus"></span>
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>
-
-                                                                    </td>
-                                                                    <td class="align-middle">
-                                                                        <input type="text" name="pcodeprice"
-                                                                            id="{{ $product['code'] . '_price' }}"
-                                                                            class="label-input"
-                                                                            value="{{ $product['price'] }}" readonly>
-                                                                    </td>
-                                                                    <td class="align-middle">
-                                                                        @php $totalAmount[] = $product['quantity'] * $product['price'] @endphp
-                                                                        <input type="text" name="pcodeamt"
-                                                                            id="{{ $product['code'] . '_amt' }}"
-                                                                            class="label-input"
-                                                                            value="{{ $product['quantity'] * $product['price'] }}"
-                                                                            readonly>
-                                                                    </td>
-                                                                </tr>
-                                                            @endforeach
-                                                        @else
-                                                            <tr>
-                                                                <td colspan="5" class="d-md-none">
-                                                                    <strong>Items</strong>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="align-middle text-center" colspan="6">No
-                                                                    data
-                                                                    available.
-                                                                </td>
-                                                            </tr>
-
-                                                            <!-- Additional rows here -->
-                                                            <tr>
-                                                                <td colspan="5" class="d-md-none">
-                                                                    <strong>Total</strong>
-                                                                </td>
-                                                            </tr>
-                                                        @endif
-                                                    </tbody>
-                                                    <tfoot class="desktop-view">
                                                         <tr>
-                                                            <td colspan="4"></td>
-                                                            <td>Total:</td>
-                                                            <td><input type="text" name="total" id="total"
-                                                                    class="label-input"
-                                                                    value="{{ array_sum($totalAmount) }}" readonly></td>
+                                                            <td colspan="5" class="d-md-none">
+                                                                <strong>Items</strong>
+                                                            </td>
                                                         </tr>
-                                                    </tfoot>
+                                                        <tr>
+                                                            <td class="align-middle text-center" colspan="6">No
+                                                                data
+                                                                available.
+                                                            </td>
+                                                        </tr>
+
+                                                        <!-- Additional rows here -->
+                                                        <tr>
+                                                            <td colspan="5" class="d-md-none">
+                                                                <strong>Total</strong>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+
                                                 </table>
+                                            </div>
+
+                                            <div class="w-100 d-flex justify-content-end">
+
+                                                <h6 class="font-weight-bold mr-2">Total:</h6>
+                                                <div>
+                                                    <input type="text" name="total" id="total"
+                                                        class="label-input" value="0" readonly>
+                                                </div>
+                                            </div>
+
+                                            <div id="BOContainer" class="w-100 d-flex justify-content-end">
+                                                <h6 class="font-weight-bold mr-2">BO Amount:</h6>
+                                                <div>
+                                                    <input type="text" name="bo_amount" id="bo_amount"
+                                                        class="label-input" value="0" readonly>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="col-sm-4">
-                                            @if (count($summary))
-                                                @include('orderProductSum')
-                                            @else
-                                                <table class="table table-bordered table-striped">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Product Type</th>
-                                                            <th>Quantity</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td colspan="2" class="text-center">No data available</td>
-                                                        </tr>
-                                                    </tbody>
 
-                                                </table>
-                                            @endif
+                                            <table class="table table-bordered table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Product Type</th>
+                                                        <th>Quantity</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="2" class="text-center">No data available</td>
+                                                    </tr>
+                                                </tbody>
+
+                                            </table>
 
                                         </div>
                                     </div>
@@ -340,9 +331,9 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                    <a href="{{ route('inbound.destroy', ['inbound' => $inboundId]) }}"
-                        onclick="return discardIn()"><button type="button" class="btn btn-danger">Discard</button></a>
-                    <button type="submit" class="btn btn-success">Save</button>
+                    <button type="submit" class="btn btn-default" value="save">Save</button>
+                    <button type="submit" class="btn btn-success" value="saveAndSubmit">Save and complete</button>
+
                 </div>
                 <!-- /.card-footer-->
             </form>
@@ -359,14 +350,43 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
+        document.getElementById("BOContainer").style.display = "none";
 
 
         const total = document.getElementById("total").value ?? 0;
 
         let totalBadOrder = 0;
 
-        function deleteProduct(inboundId, pcode) {
-            if (inboundId == "" || pcode == "") {
+        function setCustomerName(str) {
+            $.ajax({
+                type: "GET",
+                url: "/get-equipmentcustomerstore/" + str,
+                success: function(response) {
+                    // console.log(response);
+                    document.getElementById('customer_id').value = response.customer_id;
+                    document.getElementById('customer').value = response.customer_name;
+                }
+            });
+        }
+
+        document.getElementById('deliveryPerson').addEventListener('change', function() {
+            var driver = document.getElementById('deliveryPerson').value;
+            $.ajax({
+                type: "GET",
+                url: "/dp-details/" + driver,
+                success: function(response) {
+                    document.getElementById('pricelevel_id').value = response.default_price_level;
+                }
+            });
+        });
+
+
+        function setObId(str) {
+            document.getElementById('ob_id').value = str;
+        }
+
+        function deleteProduct(pcode) {
+            if (pcode == "") {
                 return;
             } else {
                 var xmlhttp = new XMLHttpRequest();
@@ -375,7 +395,7 @@
                         document.getElementById("inboundList").innerHTML = this.responseText;
                     }
                 };
-                xmlhttp.open("GET", "/delete-inboundin/" + inboundId + "/" + pcode, true);
+                xmlhttp.open("GET", "/delete-inboundin/" + pcode, true);
                 xmlhttp.send();
             }
         }
@@ -390,16 +410,24 @@
             return confirm('Are you sure you want to discard this order?');
         }
 
-        function fetchLastInsertedBadPricing(customerId, storeId) {
+        function fetchLastInsertedBadPricing() {
+            var total = document.getElementById("total").value;
+            var customerId = document.getElementById("customer_id").value;
+            var storeId = document.getElementById("equipment").value;
 
             if (customerId == "" || storeId == "") {
+
+                alert("Please select a customer.");
+
+                document.getElementById("isBadPricing").checked = false;
+
                 return;
             }
 
             if (totalBadOrder > 0) {
                 var newTotal = total - totalBadOrder;
-                document.getElementById("total").value = newTotal;
-                console.log(newTotal + " deducted.");
+                total.value = newTotal;
+                // console.log(newTotal + " deducted1.");
             } {
 
                 fetch(`/lastBadOrderOfCustomer/${customerId}/${storeId}`)
@@ -407,29 +435,38 @@
                     .then(data => {
 
                         data = JSON.parse(data);
-                        console.log(data);
+                        // console.log(data);
 
-                        if(data == 0){
+                        if (data == 0) {
                             alert("No bad order found.");
                             return;
                         }
 
                         const badOrderId = data.id;
                         totalBadOrder = data.amount; // ! update this
-                        var newTotal = total - totalBadOrder;
+
+                        if (totalBadOrder > total) {
+                            alert("Bad order amount is greater than total.");
+                            document.getElementById("isBadPricing").checked = false;
+
+                            return;
+                        }
+
+                        var newTotal = parseInt(total) - parseInt(totalBadOrder);
 
                         document.getElementById("bad_order_id").value = badOrderId;
                         document.getElementById("bo_amount").value = totalBadOrder;
 
                         document.getElementById("total").value = newTotal;
-                        console.log(newTotal + " deducted.");
+                        // console.log(newTotal + " deducted2.");
                     });
             }
         }
 
         document.getElementById("isBadPricing").addEventListener('click', function() {
             if (this.checked) {
-                fetchLastInsertedBadPricing("{{ $inbound->customer_id }}", "{{ $inbound->store_id }}");
+                fetchLastInsertedBadPricing("{{ $inbound->customer_id ?? '' }}",
+                    "{{ $inbound->store_id ?? '' }}");
                 document.getElementById("BOContainer").style.display = "block";
 
             } else {
@@ -563,39 +600,29 @@
         }
 
         function updateQty(productCode, action) {
-            const inboundId = document.getElementById("inboundId").value;
-            // console.log({inboundId, productCode, action});
-            if (inboundId == "") {
-                // document.getElementById("inboundProdInput").innerHTML = "";
-                return;
-            } else {
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        console.log("ok");
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("orderProductSum").innerHTML = this.responseText;
+                    return true;
+                } else {
+                    try {
+                        var jsonRes = JSON.parse(this.responseText);
+                        if (jsonRes.error) {
+                            alert("Error updating product quantity.");
 
-                        document.getElementById("orderProductSum").innerHTML = this.responseText;
-                        return true;
-                    } else {
-                        console.log("tset");
-                        try {
-                            var jsonRes = JSON.parse(this.responseText);
-                            if (jsonRes.error) {
-                                alert("Error updating product quantity.");
-
-                                if (action == 'add')
-                                    document.getElementById(productCode).value = parseInt(document.getElementById(
-                                        productCode).value) - 1;
-                                else if (action == 'min')
-                                    document.getElementById(productCode).value = parseInt(document.getElementById(
-                                        productCode).value) + 1;
-                            }
-                        } catch (error) {}
-                    }
-                };
-                xmlhttp.open("GET", "/inbound-updateProdQty/" + inboundId + "/" + productCode + "/" + action, true);
-                xmlhttp.send();
-            }
+                            if (action == 'add')
+                                document.getElementById(productCode).value = parseInt(document.getElementById(
+                                    productCode).value) - 1;
+                            else if (action == 'min')
+                                document.getElementById(productCode).value = parseInt(document.getElementById(
+                                    productCode).value) + 1;
+                        }
+                    } catch (error) {}
+                }
+            };
+            xmlhttp.open("GET", "/inbound-updateProdQty/" + productCode + "/" + action, true);
+            xmlhttp.send();
         }
     </script>
 @endsection

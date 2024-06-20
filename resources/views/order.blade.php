@@ -32,79 +32,80 @@
 
             <div class="card-body">
                 <div class="pb-2">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-orders">
-                        Add New
-                    </button>
+                    <a href="{{ route('order.create') }}"><button type="button" class="btn btn-primary">
+                            Add New
+                        </button></a>
                 </div>
-                <table id="example1" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>Date created</th>
-                            <th>Order No.</th>
-                            <th>Degic No.</th>
-                            <th>Customer</th>
-                            <th>Invoice Amount</th>
-                            <th>Balance Due</th>
-                            <th>Status</th>
-                            <th>Days Overdue</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($inbounds as $inbound)
-
-                            @php
-                                $total = $inbound->totalAmount;
-                            @endphp
-
+                <div class="tbContainer">
+                    <table id="example3" class="table table-bordered table-striped">
+                        <thead>
                             <tr>
-                                <td>{{ $inbound->f_created_at }}</td>
-                                <td>{{ $inbound->id }}</td>
-                                <td>{{ $inbound->equipment->serial_no }}</td>
-                                <td>{{ $inbound->customer->fullName }}</td>
-                                <td><span class="label label-primary">{{ $total }}</span></td>
-                                <td>{{ $total - $inbound->delivered_amount }}</td>
-                                <td>{{ $inbound->status }}</td>
-                                <td>{{ number_format($inbound->created_at->diffInDays(now()), 0) }}</td>
-                                <td>
-                                    @if ($inbound->status == 'Encoding')
-                                        <a href="{{ route('order.processTwo', ['inbound' => $inbound->id]) }}"><button
-                                                class="btn btn-primary">Continue</button></a>
-                                    @endif
-
-                                    @if ($inbound->status == 'Completed')
-                                        <a href="#" data-target="#modalAddAmountDelivered" data-toggle="modal"><button
-                                                class="btn btn-danger"
-                                                onclick="setObId(`{{ $inbound->id }}`)">Update</button></a>
-                                    @endif
-
-                                    @if ($inbound->is_with_badOrder)
-                                        <button class="btn btn-xs btn-danger">W/ BO</button>
-                                    @endif
-                                </td>
+                                <th>Date created</th>
+                                <th>Order No.</th>
+                                <th>Degic No.</th>
+                                <th>Customer</th>
+                                <th>Invoice Amount</th>
+                                <th>Balance Due</th>
+                                <th>Status</th>
+                                <th>Days Overdue</th>
+                                <th></th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th>Date created</th>
-                            <th>Order No.</th>
-                            <th>Degic No.</th>
-                            <th>Customer</th>
-                            <th>Invoice Amount</th>
-                            <th>Balance Due</th>
-                            <th>Status</th>
-                            <th>Days Overdue</th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($inbounds as $inbound)
+                                @php
+                                    $total = $inbound->totalAmount;
+                                @endphp
+
+                                <tr>
+                                    <td>{{ $inbound->f_created_at }}</td>
+                                    <td>{{ $inbound->id }}</td>
+                                    <td>{{ $inbound->equipment->serial_no }}</td>
+                                    <td>{{ $inbound->customer->fullName }}</td>
+                                    <td><span class="label label-primary">{{ $total }}</span></td>
+                                    <td>{{ $total - $inbound->delivered_amount }}</td>
+                                    <td>{{ $inbound->status }}</td>
+                                    <td>{{ number_format($inbound->created_at->diffInDays(now()), 0) }}</td>
+                                    <td>
+                                        @if ($inbound->status == 'Encoding')
+                                            <a href="{{ route('order.processTwo', ['inbound' => $inbound->id]) }}"><button
+                                                    class="btn btn-primary">Continue</button></a>
+                                        @endif
+
+                                        @if ($inbound->status == 'Completed')
+                                            <a href="#" data-target="#modalAddAmountDelivered"
+                                                data-toggle="modal"><button class="btn btn-danger"
+                                                    onclick="setObId(`{{ $inbound->id }}`)">Update</button></a>
+                                        @endif
+
+                                        @if ($inbound->is_with_badOrder)
+                                            <button class="btn btn-xs btn-danger">W/ BO</button>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Date created</th>
+                                <th>Order No.</th>
+                                <th>Degic No.</th>
+                                <th>Customer</th>
+                                <th>Invoice Amount</th>
+                                <th>Balance Due</th>
+                                <th>Status</th>
+                                <th>Days Overdue</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
             <!-- /.card-body -->
             <div class="card-footer">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-orders">
-                    Add New
-                </button>
+                <a href="{{ route('order.create') }}"><button type="button" class="btn btn-primary">
+                        Add New
+                    </button></a>
             </div>
             <!-- /.card-footer-->
         </div>
@@ -180,8 +181,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="vehicle"><i
-                                                style="color:red">*</i>Vehicle</label>
+                                        <label class="form-label" for="vehicle"><i style="color:red">*</i>Vehicle</label>
                                         <select class="form-control" name="vehicle" id="vehicle" required>
                                             <option value="">--Select--</option>
                                             @foreach ($vehicles as $vehicle)
@@ -234,41 +234,4 @@
 
 
     @include('modalAddAmountDelivered')
-@endsection
-
-@section('custom_js')
-    <script>
-        function setCustomerName(str) {
-            $.ajax({
-                type: "GET",
-                url: "/get-equipmentcustomerstore/" + str,
-                success: function(response) {
-                    // console.log(response);
-                    document.getElementById('customer_id').value = response.customer_id;
-                    document.getElementById('customer').value = response.customer_name;
-                }
-            });
-        }
-
-        document.getElementById('deliveryPerson').addEventListener('change', function() {
-            var driver = document.getElementById('deliveryPerson').value;
-            $.ajax({
-                type: "GET",
-                url: "/dp-details/" + driver,
-                success: function(response) {
-                    document.getElementById('pricelevel_id').value = response.default_price_level;
-                }
-            });
-        });
-
-        // set ob id to add payment
-        // $('#modalAddAmountDelivered').on('show.bs.modal', function(e) {
-        //     var ob_id = $(e.relatedTarget).data('id');
-        //     $('#ob_id').val(ob_id);
-        // });
-
-        function setObId(str) {
-            document.getElementById('ob_id').value = str;
-        }
-    </script>
 @endsection

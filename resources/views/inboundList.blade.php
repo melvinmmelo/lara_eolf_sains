@@ -24,13 +24,16 @@
 
                     @foreach ($uiProducts as $product)
                         <tr>
-                            <td class="align-middle"><button type="button" class="btn btn-xs btn-danger" onclick="deleteProduct('{{ $inboundId }}', `{{ $product['code'] }}`)"><i class="fas fa-trash"></i></button></td>
-                            <td class="align-middle">{{ $product['code'] . " " . $product['description'] }} </td>
+                            <td class="align-middle"><button type="button" class="btn btn-xs btn-danger"
+                                    onclick="deleteProduct(`{{ $product['code'] }}`)"><i
+                                        class="fas fa-trash"></i></button></td>
+                            <td class="align-middle">{{ $product['code'] . ' ' . $product['description'] }} </td>
                             <td class="align-middle">{{ $product['unit'] }}</td>
                             <td class="align-middle">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <button type="button" class="quantity-left-minus btn btn-warning btn-number btn-xs"
+                                        <button type="button"
+                                            class="quantity-left-minus btn btn-warning btn-number btn-xs"
                                             data-type="minus" data-field=""
                                             onclick="minusQtyProduct('{{ $product['code'] }}', 'min');">
                                             <span class="fas fa-minus"></span>
@@ -40,7 +43,8 @@
                                         class="form-control input-number" value="{{ $product['quantity'] }}"
                                         min="1" max="99999">
                                     <div class="input-group-append">
-                                        <button type="button" class="quantity-right-plus btn btn-success btn-number btn-xs"
+                                        <button type="button"
+                                            class="quantity-right-plus btn btn-success btn-number btn-xs"
                                             data-type="plus" data-field=""
                                             onclick="plusQtyProduct('{{ $product['code'] }}', 'add')">
                                             <span class="fas fa-plus"></span>
@@ -55,7 +59,8 @@
                             <td class="align-middle">
                                 @php $totalAmount[] = $product['quantity'] * $product['price'] @endphp
                                 <input type="text" name="pcodeamt" id="{{ $product['code'] . '_amt' }}"
-                                    class="label-input" value="{{ $product['quantity'] * $product['price'] }}" readonly>
+                                    class="label-input" value="{{ $product['quantity'] * $product['price'] }}"
+                                    readonly>
                             </td>
                         </tr>
                     @endforeach
@@ -65,15 +70,25 @@
                         <td colspan="5" class="d-md-none"><strong>Total</strong></td>
                     </tr>
                 </tbody>
-                <tfoot class="desktop-view">
-                    <tr>
-                        <td colspan="4"></td>
-                        <td>Total:</td>
-                        <td><input type="text" name="total" id="total" class="label-input"
-                                value="{{ array_sum($totalAmount) }}" readonly></td>
-                    </tr>
-                </tfoot>
             </table>
+        </div>
+
+        <div class="w-100 d-flex justify-content-end">
+
+            <h6 class="font-weight-bold mr-2">Total:</h6>
+            <div>
+                <input type="text" name="total" id="total" class="label-input"
+                    value="{{ array_sum($totalAmount) }}" readonly>
+            </div>
+        </div>
+
+        <div id="BOContainer" class="w-100 d-flex justify-content-end">
+            <h6 class="font-weight-bold mr-2">BO Amount:</h6>
+
+            <div>
+                <input type="text" name="bo_amount" id="bo_amount" class="label-input" value="0" readonly>
+            </div>
+
         </div>
     </div>
 

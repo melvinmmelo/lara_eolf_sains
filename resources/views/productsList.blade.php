@@ -2,13 +2,6 @@
     <br>
     @if (count($products) == 0)
         <p>No products/prices found</p>
-
-        <h2>{{ $branchCode }}</h2>
-
-        <h5>{{ $pricelevelId }}</h5>
-
-        <h6>{{ $pass }}</h6>
-
     @else
         @foreach ($products as $product)
             @php

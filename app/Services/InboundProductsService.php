@@ -18,6 +18,10 @@ class InboundProductsService extends Model
 
     public function __construct($products)
     {
+        if ($products == null) {
+            $this->products = null;
+            return;
+        }
         $this->products = json_decode($products, true);
     }
 

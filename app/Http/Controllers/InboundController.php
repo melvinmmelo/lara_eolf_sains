@@ -60,35 +60,29 @@ class InboundController extends Controller
     }
 
     // delete product from the list
-    public function deleteAInbound($inboundId, $pcode)
+    public function deleteAInbound($pcode)
     {
-        $inbound = Inbound::find($inboundId);
 
-        $inboundService = new InboundProductsService($inbound->products);
+        $products = json_encode(session()->get('products'));
+
+        $summary = [];
+
+        $inboundService = new InboundProductsService($products);
 
         $products = $inboundService->deleteProduct($pcode);
-
 
         $uiProducts = $products;
 
         $summary = [];
 
-        if ($inbound->products) {
+        if ($products) {
 
             $summary = $inboundService->summary();
 
             $summary = $inboundService->addSppbinSummary(); // ! you need to call summary() first before addSppbinSummary()
         }
 
-        $inbound->products = json_encode($products);
-
-        $inbound->save();
-
-        activity('outbound')
-            ->performedOn($inbound)
-            ->log('Order deleted.');
-
-        return view('inboundList', compact('inboundId', 'inbound', 'uiProducts', 'summary'));
+        return view('inboundList', compact('uiProducts', 'summary'));
     }
 
     /**
@@ -210,7 +204,6 @@ class InboundController extends Controller
     {
 
         $pricelevelId = session('pricelevelId');
-
         $branchCode = session('branch_code');
 
         $allProducts = Product::where('product_type_code', $code)->get();
@@ -223,13 +216,6 @@ class InboundController extends Controller
             $price = prices::getPricePerPriceLevelAndPCode(session('pricelevelId'), $product->code);
 
             $item = ItemMasterData::branch(session('branch_code'))->productCode($product->code)->first();
-
-            // return response()->json([$price, $item]);
-
-            // if($item == null){
-            //     break;
-            //     return response()->json(['Not stock available.']);
-            // }
 
             $stocks = $item->stocks ?? 0;
 
@@ -248,11 +234,15 @@ class InboundController extends Controller
     // per product na ito ha, ito na yung table ng product, yung may details
     public function ajaxInboundList($code, $qty = 1)
     {
-        if (session()->has('inboundId')) {
-            $inboundId = session()->get('inboundId');
+
+        $summary = [];
+
+        if (session()->has('products')) {
+            $products = json_encode(session()->get('products'));
+        } else {
+            $products = [];
         }
 
-        $inbound = Inbound::find($inboundId);
         $product = Product::where('code', $code)->first();
         $price = prices::where('p_code', $code)->first();
 
@@ -262,7 +252,6 @@ class InboundController extends Controller
 
         $data = ['order' => $sequence_no, 'ptype_code' => $product->product_type_code, 'code' => $product->code, 'quantity' => $qty, 'price' => $price->p_price, 'unit' => $price->p_unit, 'sppb' => $product->spoon_pcs_per_bag, 'description' => $product->productName, 'created_at' => now()];
 
-        $products = $inbound->products;
 
         $isExist = false;
 
@@ -284,62 +273,64 @@ class InboundController extends Controller
             array_push($products, $data);
         }
 
+        session()->put('products', $products);
+
         $uiProducts = $products;
 
         usort($uiProducts, function ($a, $b) {
             return $a['order'] <=> $b['order'];
         });
 
-        $inbound->products = json_encode($products);
+        $summary = $inProdService->summary();
+        $summary = $inProdService->addSppbinSummary();
 
-        $summary = [];
-
-        if ($inbound->save()) {
-            $inProdService = new InboundProductsService($inbound->products);
-            $summary = $inProdService->summary();
-            $summary = $inProdService->addSppbinSummary();
-        }
-
-        return view('inboundList', compact('inboundId', 'inbound', 'uiProducts', 'summary'));
+        return view('inboundList', compact('uiProducts', 'summary'));
     }
 
     public function store(Request $request)
     {
 
         $request->validate([
-            'inboundId' => 'required|exists:inbounds,id',
+            'pricelevel_id' => 'required',
+            'customer_id' => 'required',
+            'equipment_id' => 'required',
+            'driver_id' => 'required',
+            'vehicle_id' => 'required',
             'bad_order_id' => 'nullable',
             'bo_amount' => 'nullable',
         ]);
 
+        $products = session()->get('products');
 
-        $inbound = Inbound::find($request->inboundId);
-
+        $inbound = new Inbound();
+        $inbound->user_id = auth()->user()->id;
+        $inbound->branch_code = session('branch_code');
+        $inbound->equipment_id = $request->equipment_id;
+        $inbound->driver_id = $request->driver_id;
+        $inbound->vehicle_id = $request->vehicle_id;
+        $inbound->products = json_encode($products);
+        $inbound->status = 'Completed';
+        $inbound->pricelevel_id = $request->pricelevel_id;
+        $inbound->customer_id = $request->customer_id;
+        $inbound->store_id = EquipmentStore::find($request->equipment_id)->store_id;
         $inbound->status = 'Completed';
 
-        $inbound->with_invoice = $request->with_invoice == 'on' ? 1 : 0;
+        $bad_order = $request->bad_order == 'on' ? 1 : 0;
 
-        $inbound->bad_order = $request->bad_order == 'on' ? 1 : 0;
-
-        if ($inbound->bad_order == 1) {
+        if ($bad_order == 1) {
 
             BadOrder::where('bo_id', $request->bad_order_id)->update(['is_active' => 0]);
 
             $inbound->bad_order_id = $request->bad_order_id;
 
             $inbound->bo_amount = $request->bo_amount;
-
         }
 
         $inbound->save();
 
         $updatingData = [];
 
-        $inboundProducts = json_decode($inbound->products, true);
-
-
-
-        foreach ($inboundProducts as $product) {
+        foreach ($products as $product) {
 
             $message = 'Failed';
 
@@ -353,10 +344,9 @@ class InboundController extends Controller
             $updatingData[] = ['code' => $product['code'], 'message' => $message];
         }
 
-        session()->forget('inboundId');
-
-        // create a session for variable updatingData
         session()->put('updatingDataResults', $updatingData);
+
+        session()->forget('products');
 
         activity('outbound')
             ->performedOn($inbound)
@@ -366,17 +356,12 @@ class InboundController extends Controller
         return redirect()->route('order.index')->with('success', 'Your order has been completed.');
     }
 
-    public function update(Request $request, $inbound, $code, $action)
+    public function update(Request $request, $code, $action)
     {
-        if (session()->has('inboundId')) {
-            $inboundId = session()->get('inboundId');
-        } else {
-            return redirect()->route('order.index');
-        }
 
-        $inbound = Inbound::find($inboundId);
+        $products = json_encode(session()->get('products'));
 
-        $inboundService = new InboundProductsService($inbound->products);
+        $inboundService = new InboundProductsService($products);
 
         if ($action == 'add') {
             try {
@@ -392,17 +377,8 @@ class InboundController extends Controller
             }
         }
 
-        $inbound->products = json_encode($products);
-
         $summary = $inboundService->summary();
-
         $summary = $inboundService->addSppbinSummary();
-
-        $inbound->save();
-
-        activity('outbound')
-            ->performedOn($inbound)
-            ->log('Ordered products has been updated.');
 
         return view('orderProductSum', compact('summary'));
     }
@@ -417,5 +393,31 @@ class InboundController extends Controller
             ->log('Inbound deleted.');
 
         return redirect()->route('order.index')->with('success', 'An inbound has been deleted.');
+    }
+
+    public function create()
+    {
+
+        session()->forget('products');
+
+
+        $productTypes = ProductType::where('is_active', 1)->orderBy('sequence_no', 'asc')->get();
+
+        $drivers = Drivers::active()->get();
+
+        $vehicles = Vehicles::active()->get();
+
+        $inbounds = Inbound::with('driver', 'vehicle')->branch(session('branch_code'))->get();
+
+        $equipment = EquipmentStore::all();
+
+        $pricing = pricelevels::getPriceLevels(session('branch_code'));
+
+        $inbounds->map(function ($inbound) {
+            $inbound->is_with_badOrder = InboundService::isWithBadOrder($inbound->id);
+            return $inbound;
+        });
+
+        return view('ordering', compact('equipment', 'drivers', 'vehicles', 'inbounds', 'pricing', 'productTypes'));
     }
 }
