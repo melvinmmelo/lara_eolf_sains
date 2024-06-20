@@ -89,9 +89,22 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request)
     {
-        //
+        $request->validate([
+            'product_code' => 'required|exists:products,code',
+            'product_type_code' => 'required|exists:product_types,code',
+            'product_variant_code' => 'required|exists:product_variants,code',
+        ]);
+
+        $Product = Product::where('code', $request->product_code)->first();
+        $Product->code = $request->product_type_code . "_" . $request->product_variant_code;
+        $Product->product_type_code = $request->product_type_code;
+        $Product->product_variant_code = $request->product_variant_code;
+        $Product->save();
+
+        return redirect()->back()->with('sucess', 'Data saved!');
+
     }
 
     /**

@@ -214,6 +214,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::post('/product/store', [ProductController::class, 'store'])->name('product.store');
 
+    Route::patch('/product/update', [ProductController::class, 'update'])->name('product.update');
+
+
     Route::get('/product/{id}/toggle-status', [ProductController::class, 'toggleStatus'])->name('product.toggleStatus');
     Route::get('/product-type/{id}/toggle-status', [ProductTypeController::class, 'toggleStatus'])->name('productType.toggleStatus');
 
@@ -226,21 +229,19 @@ Route::middleware('auth')->group(function () {
     // ajax
 
     Route::get('/order/create', [InboundController::class, 'create'])->name('order.create');
+
     Route::get('/productsin/{code}', [InboundController::class, 'ajaxProductList'])->name('products.ajaxProductList');
+
     Route::get('/inboundin/{code}/{qty}', [InboundController::class, 'ajaxInboundList'])->name('inbound.inboundList');
+
     Route::get('/delete-inboundin/{pcode}', [InboundController::class, 'deleteAInbound'])->name('inbound.deleteAInbound');
 
-    // update if done na mag add ng productin
     Route::post('/inbound', [InboundController::class, 'store'])->name('inbound.store');
 
     Route::patch('/inbound/add-payment', [InboundController::class, 'addPayment'])->name('inbound.addPayment');
 
-
-    // update lang quantity
-    // para sa add, min button
     Route::get('/inbound-updateProdQty/{code}/{action}', [InboundController::class, 'update'])->name('inbound.update');
 
-    // deleting pending inbound
     Route::get('/inbound-destroy/{inbound}', [InboundController::class, 'destroy'])->name('inbound.destroy');
 
     Route::get('/set-branch/{code}', [BranchesController::class, 'setBranchSession'])->name('branch.setBranchSession');
