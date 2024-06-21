@@ -23,17 +23,17 @@
                                     $spCnt2 = 0;
                                 @endphp
 
-                                @if ($summ['ptype_code'] == 'SC')
+                                @if ($summ['ptype_code'] === 'SC')
                                     @php
                                         $spCnt = $summ['total'] * $summ['sppb'];
                                         $spCnt2 = $spCnt / 12;
                                     @endphp
-                                @elseif ($summ['ptype_code'] == 'MC')
+                                @elseif ($summ['ptype_code'] === 'MC')
                                     @php
                                         $spCnt = $summ['total'] * $summ['sppb'];
                                         $spCnt2 = $spCnt / 12;
                                     @endphp
-                                @elseif ($summ['ptype_code'] == 'BC')
+                                @elseif ($summ['ptype_code'] === 'BC')
                                     @php
                                         $spCnt = $summ['total'] * $summ['sppb'];
                                         $spCnt2 = $spCnt / 12;

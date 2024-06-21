@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ItemMasterData;
 use App\Models\ProductType;
+use App\Models\Inbound;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -124,5 +125,22 @@ class InboundProductsService extends Model
         }
 
         return $summary;
+    }
+
+    public static function getInboundProducts()
+    {
+
+        if (session()->get('products')) {
+            $products = json_encode(session()->get('products'));
+        }else if (session()->get('inboundId') AND session()->get('inboundId') != null AND session()->get('inboundId') != '' AND session()->get('inboundId') != 0) {
+            $inboundId = session()->get('inboundId');
+            $inbound = Inbound::find($inboundId);
+            $products = json_decode($inbound->products, true);
+            session()->put('products', $products);
+        } else{
+            $products = [];
+        }
+
+        return $products;
     }
 }

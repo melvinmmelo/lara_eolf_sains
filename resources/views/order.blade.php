@@ -81,6 +81,12 @@
                                         @if ($inbound->is_with_badOrder)
                                             <button class="btn btn-xs btn-danger">W/ BO</button>
                                         @endif
+
+                                        @if($inbound->status === 'Completed')
+
+                                         <a href="{{ route('order.edit', ['inboundId' => $inbound->id ]) }}" class="btn btn-primary">Edit</button></a>
+
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

@@ -227,6 +227,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/order/create', [InboundController::class, 'create'])->name('order.create');
 
+    Route::get('/order/{inboundId}/edit', [InboundController::class, 'edit'])->name('order.edit');
+
+    Route::put('/order/update', [InboundController::class, 'updateInbound'])->name('order.updateInbound');
+
     Route::get('/productsin/{code}', [InboundController::class, 'ajaxProductList'])->name('products.ajaxProductList');
 
     Route::get('/inboundin/{code}/{qty}', [InboundController::class, 'ajaxInboundList'])->name('inbound.inboundList');
