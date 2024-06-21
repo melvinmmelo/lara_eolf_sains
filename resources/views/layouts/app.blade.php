@@ -104,7 +104,7 @@
             color: #fff;
         }
 
-        .tbContainer{
+        .tbContainer {
             width: 100%;
             height: 600px;
             overflow: auto;
@@ -168,12 +168,13 @@
     <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
 
     <script>
-
         $(function() {
 
             $("#example1").DataTable({
                 "order": [],
                 "paging": false,
+                "scrollY": "1000px",
+                "scrollCollapse": true,
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
@@ -230,7 +231,6 @@
             })
 
         });
-
     </script>
 
     @yield('custom_js')
@@ -238,4 +238,5 @@
     <script src="{{ asset('js/editcustomeraddress.js') }}"></script>
 
 </body>
+
 </html>
