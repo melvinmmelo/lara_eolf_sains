@@ -29,7 +29,7 @@ class CustomersController extends Controller
             'lastname' => 'required',
             'firstname' => 'required',
             'companyname' => 'required',
-            'middlename' => 'required',
+            'middlename' => 'nullable',
             'storename' => 'required',
         ]);
 

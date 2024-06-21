@@ -26,7 +26,7 @@ class EquipmentController extends Controller
             'ownership' => 'required',
             'type' => 'required',
             'brand' => 'required',
-            'price' => 'required|numeric',
+            'price' => 'nullable|numeric',
             'serial_no' => 'required|unique:equipment',
             'model' => 'required',
             'code' => 'required',

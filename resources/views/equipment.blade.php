@@ -130,7 +130,7 @@
                             @csrf
 
                             <input type="hidden" class="form-control" name="branch_code" id="branch_code"
-                            value="{{ session('branch_code') }}" required readonly>
+                                value="{{ session('branch_code') }}" required readonly>
 
                             <div class="form-group">
                                 <div class="row mb-2">
@@ -139,8 +139,6 @@
                                                 style="color:red">*</i>Ownership</label>
                                         <select class="form-control" id="ownership" name="ownership" required>
                                             <option value="Owned">Owned</option>
-                                            <option value="Leased">Leased</option>
-                                            <option value="Rented">Rented</option>
                                             <option value="Customer-Owned">Customer-Owned</option>
                                         </select>
                                     </div>
@@ -177,17 +175,15 @@
                                             <option value="Others">Others</option>
                                         </select>
                                     </div>
-
-
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="row mb-2">
 
                                     <div class="col-sm-6">
-                                        <label class="form-label" for="price"><i style="color:red">*</i>Price</label>
+                                        <label class="form-label" for="price">Price</label>
                                         <input type="text" pattern="[0-9]*" inputmode="numeric" class="form-control"
-                                            id="price" name="price" placeholder="Enter price" required>
+                                            id="price" name="price" placeholder="Enter price">
                                     </div>
 
                                     <div class="col-sm-6">
@@ -203,20 +199,19 @@
                                 <div class="row mb-2">
                                     <div class="col-sm-6">
                                         <label class="form-label" for="code"><i style="color:red">*</i>Code</label>
-                                        <input type="text" class="form-control" id="code" name="code"
-                                            required>
+                                        <input type="text" class="form-control" id="code" name="code" required>
                                     </div>
                                 </div>
                             </div>
                             <input type="hidden" class="form-control" id="distributor" name="distributor">
                             <!-- </div> -->
                             <div class="form-group">
-                                <label class="form-label" for="date_delivered"><i style="color:red">*</i>Date
+                                <label class="form-label" for="date_delivered">Date
                                     Delivered</label>
                                 <input type="date" class="form-control" id="date_delivered" name="date_delivered">
                             </div>
                             <div class="form-group">
-                                <label class="form-label" for="date_purchased"><i style="color:red">*</i>Date
+                                <label class="form-label" for="date_purchased">Date
                                     Purchased</label>
                                 <input type="date" class="form-control" id="date_purchased" name="date_purchased">
                             </div>

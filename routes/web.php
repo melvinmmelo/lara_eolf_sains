@@ -65,11 +65,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/get-price/{pricelevel_id}/{p_code}', [addbadorderController::class, 'getPrice']);
 
-    Route::get('/bad-orders', [addbadorderController::class, 'create'])->name('addbadorder.create');
-
-    Route::post('/bad-orders', [addbadorderController::class, 'store'])->name('addbadorder.store');
-
     Route::get('/bad-orders-list', [BadOrderController::class, 'index'])->name('badOrders.index');
+
     Route::delete('/bad-orders/{id}', [BadOrderController::class, 'destroy'])->name('badOrders.destroy');
 
 

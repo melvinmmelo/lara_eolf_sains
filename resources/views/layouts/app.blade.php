@@ -173,6 +173,7 @@
 
             $("#example1").DataTable({
                 "order": [],
+                "paging": false,
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,

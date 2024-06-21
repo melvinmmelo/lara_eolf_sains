@@ -82,6 +82,10 @@ class InboundController extends Controller
             $summary = $inboundService->addSppbinSummary(); // ! you need to call summary() first before addSppbinSummary()
         }
 
+        session()->forget('products');
+
+        session()->put('products', $products);
+
         return view('inboundList', compact('uiProducts', 'summary'));
     }
 
