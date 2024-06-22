@@ -55,9 +55,6 @@ class BadOrderController extends Controller
     {
 
         $badOrder = BadOrder::where('customer_id', $customerId)
-            ->whereHas('customer', function ($query) use ($storeId) {
-                $query->where('store_id', $storeId);
-            })
             ->where('is_active', 1)
             ->orderBy('created_at', 'desc')
             ->first();

@@ -444,7 +444,9 @@ class InboundController extends Controller
 
         $inbound = Inbound::find($inboundId);
 
-        $products = InboundProductsService::getInboundProducts();
+        $products = $inbound->products;
+
+        // $products = InboundProductsService::getInboundProducts($inboundId);
 
         $drivers = Drivers::active()->get();
 

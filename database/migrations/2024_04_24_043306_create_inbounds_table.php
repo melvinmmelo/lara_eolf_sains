@@ -26,6 +26,8 @@ return new class extends Migration
             $table->json('products')->nullable();
             $table->tinyInteger('with_invoice')->nullable();
             $table->tinyInteger('bad_order')->nullable();
+            $table->unsignedInteger('bad_order_id')->nullable();
+            $table->float('bo_amount', 2)->nullable();
             $table->string('status', 10);
             $table->unsignedInteger('pricelevel_id');
             $table->string('payment_type', 30)->nullable();

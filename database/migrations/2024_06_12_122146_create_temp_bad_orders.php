@@ -14,9 +14,7 @@ return new class extends Migration
         Schema::create('temp_bad_orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('customer_id');
-            // $table->unsignedBigInteger('inbound_id');
             $table->unsignedBigInteger('store_id');
-            
             $table->string('ptype_code');
             $table->string('code');
             $table->string('unit');
@@ -24,7 +22,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->decimal('price', 8, 2);
             $table->decimal('amount', 8, 2);
-            $table->string('session_id')->nullable(); // Add this line
+            $table->string('session_id')->nullable();
             $table->timestamps();
 
             // You can add foreign key constraints if necessary
