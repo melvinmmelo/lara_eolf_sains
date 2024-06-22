@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: Jun 19, 2024 at 08:13 AM
--- Server version: 5.7.26
--- PHP Version: 7.2.18
+-- Host: localhost:3306
+-- Generation Time: Jun 21, 2024 at 07:51 PM
+-- Server version: 10.6.18-MariaDB-cll-lve
+-- PHP Version: 8.1.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -27,42 +27,55 @@ SET time_zone = "+00:00";
 -- Table structure for table `activity_log`
 --
 
-DROP TABLE IF EXISTS `activity_log`;
-CREATE TABLE IF NOT EXISTS `activity_log` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `log_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `subject_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `event` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+CREATE TABLE `activity_log` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `log_name` varchar(191) DEFAULT NULL,
+  `description` text NOT NULL,
+  `subject_type` varchar(191) DEFAULT NULL,
+  `event` varchar(191) DEFAULT NULL,
   `subject_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `causer_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `causer_type` varchar(191) DEFAULT NULL,
   `causer_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `properties` json DEFAULT NULL,
-  `batch_uuid` char(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `properties` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`properties`)),
+  `batch_uuid` char(36) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `subject` (`subject_type`,`subject_id`),
-  KEY `causer` (`causer_type`,`causer_id`),
-  KEY `activity_log_log_name_index` (`log_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `activity_log`
 --
 
 INSERT INTO `activity_log` (`id`, `log_name`, `description`, `subject_type`, `event`, `subject_id`, `causer_type`, `causer_id`, `properties`, `batch_uuid`, `created_at`, `updated_at`) VALUES
-(1, 'default', 'Order completed.', 'App\\Models\\Inbound', NULL, 4, 'App\\Models\\User', 1, '[]', NULL, '2024-06-18 09:01:06', '2024-06-18 09:01:06'),
-(2, 'default', 'Order completed.', 'App\\Models\\Inbound', NULL, 4, 'App\\Models\\User', 1, '[]', NULL, '2024-06-18 09:02:18', '2024-06-18 09:02:18'),
-(3, 'default', 'Order completed.', 'App\\Models\\Inbound', NULL, 4, 'App\\Models\\User', 1, '[]', NULL, '2024-06-18 09:03:41', '2024-06-18 09:03:41'),
-(4, 'default', 'Order completed.', 'App\\Models\\Inbound', NULL, 4, 'App\\Models\\User', 1, '[]', NULL, '2024-06-18 09:04:43', '2024-06-18 09:04:43'),
-(5, 'default', 'Order completed.', 'App\\Models\\Inbound', NULL, 4, 'App\\Models\\User', 1, '[]', NULL, '2024-06-18 09:07:35', '2024-06-18 09:07:35'),
-(6, 'default', 'Order completed.', 'App\\Models\\Inbound', NULL, 4, 'App\\Models\\User', 1, '[]', NULL, '2024-06-19 02:02:33', '2024-06-19 02:02:33'),
-(7, 'default', 'equipment store entry deleted', NULL, NULL, NULL, 'App\\Models\\User', 1, '{\"equipment_id\": \"5\", \"equipment_store_id\": \"7\"}', NULL, '2024-06-19 07:49:52', '2024-06-19 07:49:52'),
-(8, 'default', 'equipment store entry deleted', NULL, NULL, NULL, 'App\\Models\\User', 1, '{\"equipment_id\": \"3\", \"equipment_store_id\": \"6\"}', NULL, '2024-06-19 07:49:55', '2024-06-19 07:49:55'),
-(9, 'default', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 1, '{\"store_id\": \"15\", \"customer_id\": \"15\", \"equipment_ids\": [\"3\", \"5\"], \"pull_statuses\": null}', NULL, '2024-06-19 07:50:02', '2024-06-19 07:50:02'),
-(10, 'default', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 1, '{\"store_id\": \"15\", \"customer_id\": \"15\", \"equipment_ids\": [\"3\", \"5\"], \"pull_statuses\": null}', NULL, '2024-06-19 07:52:44', '2024-06-19 07:52:44'),
-(11, 'equipment-store', 'equipment store entry deleted', NULL, NULL, NULL, 'App\\Models\\User', 1, '{\"equipment_id\": \"5\", \"equipment_store_id\": \"9\"}', NULL, '2024-06-19 07:58:27', '2024-06-19 07:58:27');
+(1, 'default', 'Order created.', 'App\\Models\\Inbound', NULL, 6, 'App\\Models\\User', 2, '[]', NULL, '2024-06-15 14:13:44', '2024-06-15 14:13:44'),
+(2, 'default', 'Quantity added from hold.', 'App\\Models\\ItemMasterData', NULL, 5, 'App\\Models\\User', 2, '{\"quantity\":\"22\"}', NULL, '2024-06-15 14:15:19', '2024-06-15 14:15:19'),
+(3, 'default', 'Quantity added from hold.', 'App\\Models\\ItemMasterData', NULL, 7, 'App\\Models\\User', 2, '{\"quantity\":\"40\"}', NULL, '2024-06-15 14:15:31', '2024-06-15 14:15:31'),
+(4, 'default', 'Price updated.', 'App\\Models\\prices', NULL, 5, 'App\\Models\\User', 2, '{\"_token\":\"MLDWW6mlURCuo0MK1VuHtnT0KSx6UCJ109S2ATXM\",\"_method\":\"PATCH\",\"price_id\":\"5\",\"e_quant\":\"1\",\"e_price_unit\":\"Pc\\/s\",\"e_price\":\"12.70\"}', NULL, '2024-06-21 01:01:11', '2024-06-21 01:01:11'),
+(5, 'default', 'Price updated.', 'App\\Models\\prices', NULL, 5, 'App\\Models\\User', 2, '{\"_token\":\"MLDWW6mlURCuo0MK1VuHtnT0KSx6UCJ109S2ATXM\",\"_method\":\"PATCH\",\"price_id\":\"5\",\"e_quant\":\"1\",\"e_price_unit\":\"Pc\\/s\",\"e_price\":\"12.70\"}', NULL, '2024-06-21 01:01:12', '2024-06-21 01:01:12'),
+(6, 'default', 'Price added.', 'App\\Models\\pricelevels', NULL, 2, 'App\\Models\\User', 2, '{\"_token\":\"MLDWW6mlURCuo0MK1VuHtnT0KSx6UCJ109S2ATXM\",\"pricing_id\":\"2\",\"product_type\":\"SC\",\"price\":\"12.70\"}', NULL, '2024-06-21 01:08:18', '2024-06-21 01:08:18'),
+(7, 'default', 'Price added.', 'App\\Models\\pricelevels', NULL, 2, 'App\\Models\\User', 2, '{\"_token\":\"MLDWW6mlURCuo0MK1VuHtnT0KSx6UCJ109S2ATXM\",\"pricing_id\":\"2\",\"product_type\":\"MC\",\"price\":\"18.43\"}', NULL, '2024-06-21 01:12:10', '2024-06-21 01:12:10'),
+(8, 'outbound', 'Order completed.', 'App\\Models\\Inbound', NULL, 7, 'App\\Models\\User', 2, '[]', NULL, '2024-06-21 03:05:24', '2024-06-21 03:05:24'),
+(9, 'default', 'Added a new pricing level', 'App\\Models\\pricelevels', NULL, NULL, 'App\\Models\\User', 2, '{\"_token\":\"sFg8LuCzG0waqghXdMUMAcVDDDnIYa2lItiILWp9\",\"branch_code\":\"EFTO-TAR\",\"name\":\"FACTORY PRICE\",\"Description\":\"FACTORY PRICE\",\"priceType\":\"FACTORY PRICE\"}', NULL, '2024-06-21 17:08:16', '2024-06-21 17:08:16'),
+(10, 'default', 'Updated a pricing level', 'App\\Models\\pricelevels', NULL, 1, 'App\\Models\\User', 2, '{\"_token\":\"sFg8LuCzG0waqghXdMUMAcVDDDnIYa2lItiILWp9\",\"_method\":\"PUT\",\"e_pricelevel_id\":\"1\",\"e_name\":\"SUMMER 2024\",\"e_description\":\"FP Summer 2024\",\"e_priceType\":\"CUSTOMER\",\"e_status\":\"on\"}', NULL, '2024-06-21 17:08:23', '2024-06-21 17:08:23'),
+(11, 'default', 'Updated a pricing level', 'App\\Models\\pricelevels', NULL, 1, 'App\\Models\\User', 2, '{\"_token\":\"sFg8LuCzG0waqghXdMUMAcVDDDnIYa2lItiILWp9\",\"_method\":\"PUT\",\"e_pricelevel_id\":\"1\",\"e_name\":\"SUMMER 2024\",\"e_description\":\"FP Summer 2024\",\"e_priceType\":\"CUSTOMER\",\"e_status\":\"on\"}', NULL, '2024-06-21 17:08:30', '2024-06-21 17:08:30'),
+(12, 'default', 'Updated a pricing level', 'App\\Models\\pricelevels', NULL, 1, 'App\\Models\\User', 2, '{\"_token\":\"sFg8LuCzG0waqghXdMUMAcVDDDnIYa2lItiILWp9\",\"_method\":\"PUT\",\"e_pricelevel_id\":\"1\",\"e_name\":\"SUMMER 2024\",\"e_description\":\"FP Summer 2024\",\"e_priceType\":\"CUSTOMER\",\"e_status\":\"on\"}', NULL, '2024-06-21 17:08:41', '2024-06-21 17:08:41'),
+(13, 'default', 'Added a new pricing level', 'App\\Models\\pricelevels', NULL, NULL, 'App\\Models\\User', 2, '{\"_token\":\"sFg8LuCzG0waqghXdMUMAcVDDDnIYa2lItiILWp9\",\"branch_code\":\"EFTO-TAR\",\"name\":\"CODE 1.26\",\"Description\":\"TARLAC & LA UNION\",\"priceType\":\"CUSTOMER\"}', NULL, '2024-06-21 17:09:03', '2024-06-21 17:09:03'),
+(14, 'default', 'Added a new pricing level', 'App\\Models\\pricelevels', NULL, NULL, 'App\\Models\\User', 2, '{\"_token\":\"sFg8LuCzG0waqghXdMUMAcVDDDnIYa2lItiILWp9\",\"branch_code\":\"EFTO-TAR\",\"name\":\"CODE 1.27\",\"Description\":\"ABRA & ILOCOS AREA\",\"priceType\":\"CUSTOMER\"}', NULL, '2024-06-21 17:09:19', '2024-06-21 17:09:19'),
+(15, 'default', 'Price added.', 'App\\Models\\pricelevels', NULL, 5, 'App\\Models\\User', 2, '{\"_token\":\"sFg8LuCzG0waqghXdMUMAcVDDDnIYa2lItiILWp9\",\"pricing_id\":\"5\",\"price_code\":\"SC_BM\",\"quant\":\"60\",\"price_unit\":\"Bag\\/s\",\"price\":\"600\"}', NULL, '2024-06-21 17:10:06', '2024-06-21 17:10:06'),
+(16, 'default', 'Price added.', 'App\\Models\\pricelevels', NULL, 5, 'App\\Models\\User', 2, '{\"_token\":\"sFg8LuCzG0waqghXdMUMAcVDDDnIYa2lItiILWp9\",\"pricing_id\":\"5\",\"price_code\":\"SC_BP\",\"quant\":\"60\",\"price_unit\":\"Bag\\/s\",\"price\":\"600\"}', NULL, '2024-06-21 17:10:21', '2024-06-21 17:10:21'),
+(17, 'default', 'Price added.', 'App\\Models\\pricelevels', NULL, 5, 'App\\Models\\User', 2, '{\"_token\":\"sFg8LuCzG0waqghXdMUMAcVDDDnIYa2lItiILWp9\",\"pricing_id\":\"5\",\"price_code\":\"SC_BS\",\"quant\":\"60\",\"price_unit\":\"Bag\\/s\",\"price\":\"600\"}', NULL, '2024-06-21 17:10:37', '2024-06-21 17:10:37'),
+(18, 'default', 'Price added.', 'App\\Models\\pricelevels', NULL, 2, 'App\\Models\\User', 2, '{\"_token\":\"MLDWW6mlURCuo0MK1VuHtnT0KSx6UCJ109S2ATXM\",\"pricing_id\":\"2\",\"product_type\":\"BC\",\"price\":\"24.40\"}', NULL, '2024-06-22 17:03:15', '2024-06-22 17:03:15'),
+(19, 'default', 'Price added.', 'App\\Models\\pricelevels', NULL, 2, 'App\\Models\\User', 2, '{\"_token\":\"MLDWW6mlURCuo0MK1VuHtnT0KSx6UCJ109S2ATXM\",\"pricing_id\":\"2\",\"product_type\":\"LOL\",\"price\":\"6.74\"}', NULL, '2024-06-22 17:03:31', '2024-06-22 17:03:31'),
+(20, 'default', 'Price added.', 'App\\Models\\pricelevels', NULL, 2, 'App\\Models\\User', 2, '{\"_token\":\"MLDWW6mlURCuo0MK1VuHtnT0KSx6UCJ109S2ATXM\",\"pricing_id\":\"2\",\"product_type\":\"ICB\",\"price\":\"9.90\"}', NULL, '2024-06-22 17:03:44', '2024-06-22 17:03:44'),
+(21, 'default', 'Price added.', 'App\\Models\\pricelevels', NULL, 2, 'App\\Models\\User', 2, '{\"_token\":\"MLDWW6mlURCuo0MK1VuHtnT0KSx6UCJ109S2ATXM\",\"pricing_id\":\"2\",\"product_type\":\"SPS\",\"price\":\"15.88\"}', NULL, '2024-06-22 17:03:58', '2024-06-22 17:03:58'),
+(22, 'default', 'Price added.', 'App\\Models\\pricelevels', NULL, 2, 'App\\Models\\User', 2, '{\"_token\":\"MLDWW6mlURCuo0MK1VuHtnT0KSx6UCJ109S2ATXM\",\"pricing_id\":\"2\",\"product_type\":\"ICC\",\"price\":\"24.75\"}', NULL, '2024-06-22 17:04:15', '2024-06-22 17:04:15'),
+(23, 'default', 'Price added.', 'App\\Models\\pricelevels', NULL, 2, 'App\\Models\\User', 2, '{\"_token\":\"MLDWW6mlURCuo0MK1VuHtnT0KSx6UCJ109S2ATXM\",\"pricing_id\":\"2\",\"product_type\":\"PT\",\"price\":\"61\"}', NULL, '2024-06-22 17:04:28', '2024-06-22 17:04:28'),
+(24, 'default', 'Price added.', 'App\\Models\\pricelevels', NULL, 2, 'App\\Models\\User', 2, '{\"_token\":\"MLDWW6mlURCuo0MK1VuHtnT0KSx6UCJ109S2ATXM\",\"pricing_id\":\"2\",\"product_type\":\"1L\",\"price\":\"123\"}', NULL, '2024-06-22 17:04:39', '2024-06-22 17:04:39'),
+(25, 'default', 'Price added.', 'App\\Models\\pricelevels', NULL, 2, 'App\\Models\\User', 2, '{\"_token\":\"MLDWW6mlURCuo0MK1VuHtnT0KSx6UCJ109S2ATXM\",\"pricing_id\":\"2\",\"product_type\":\"1.7L\",\"price\":\"216\"}', NULL, '2024-06-22 17:04:56', '2024-06-22 17:04:56'),
+(26, 'default', 'Price added.', 'App\\Models\\pricelevels', NULL, 2, 'App\\Models\\User', 2, '{\"_token\":\"MLDWW6mlURCuo0MK1VuHtnT0KSx6UCJ109S2ATXM\",\"pricing_id\":\"2\",\"product_type\":\"HG\",\"price\":\"216\"}', NULL, '2024-06-22 17:05:09', '2024-06-22 17:05:09'),
+(27, 'default', 'Price added.', 'App\\Models\\pricelevels', NULL, 2, 'App\\Models\\User', 2, '{\"_token\":\"MLDWW6mlURCuo0MK1VuHtnT0KSx6UCJ109S2ATXM\",\"pricing_id\":\"2\",\"product_type\":\"3.6L\",\"price\":\"404\"}', NULL, '2024-06-22 17:05:21', '2024-06-22 17:05:21'),
+(28, 'default', 'Price added.', 'App\\Models\\pricelevels', NULL, 2, 'App\\Models\\User', 2, '{\"_token\":\"MLDWW6mlURCuo0MK1VuHtnT0KSx6UCJ109S2ATXM\",\"pricing_id\":\"2\",\"product_type\":\"N3.6L\",\"price\":\"404\"}', NULL, '2024-06-22 17:05:49', '2024-06-22 17:05:49'),
+(29, 'outbound', 'Order completed.', 'App\\Models\\Inbound', NULL, 8, 'App\\Models\\User', 2, '[]', NULL, '2024-06-22 17:13:21', '2024-06-22 17:13:21');
 
 -- --------------------------------------------------------
 
@@ -70,34 +83,34 @@ INSERT INTO `activity_log` (`id`, `log_name`, `description`, `subject_type`, `ev
 -- Table structure for table `bad_orders`
 --
 
-DROP TABLE IF EXISTS `bad_orders`;
-CREATE TABLE IF NOT EXISTS `bad_orders` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `bo_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+CREATE TABLE `bad_orders` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `bo_id` varchar(191) NOT NULL,
   `customer_id` bigint(20) UNSIGNED NOT NULL,
   `store_id` bigint(20) UNSIGNED NOT NULL,
-  `re_dr` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `bo_percentage` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `remarks` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `ptype_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `re_dr` varchar(191) DEFAULT NULL,
+  `bo_percentage` varchar(191) DEFAULT NULL,
+  `remarks` varchar(191) DEFAULT NULL,
+  `ptype_code` varchar(191) NOT NULL,
+  `code` varchar(191) NOT NULL,
   `quantity` int(11) NOT NULL,
   `price` double NOT NULL,
-  `unit` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `unit` varchar(191) NOT NULL,
+  `description` varchar(191) NOT NULL,
   `amount` double NOT NULL,
-  `is_active` tinyint(4) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `bad_orders`
 --
 
-INSERT INTO `bad_orders` (`id`, `bo_id`, `customer_id`, `store_id`, `re_dr`, `bo_percentage`, `remarks`, `ptype_code`, `code`, `quantity`, `price`, `unit`, `description`, `amount`, `is_active`, `created_at`, `updated_at`) VALUES
-(4, '2', 1, 1, '55254', '50', NULL, 'SC', 'SC', 5, 10.2, 'Pc/s', '90ml SMALL CUP REGULAR (3.0-oz)', 51, 1, '2024-06-19 06:25:01', '2024-06-19 06:25:01');
+INSERT INTO `bad_orders` (`id`, `bo_id`, `customer_id`, `store_id`, `re_dr`, `bo_percentage`, `remarks`, `ptype_code`, `code`, `quantity`, `price`, `unit`, `description`, `amount`, `created_at`, `updated_at`) VALUES
+(1, '1', 2, 2, '1234', '100', 'test', 'SC', 'SC', 2, 12.7, 'Pc/s', '90ml SMALL CUP REGULAR (3.0-oz)', 25.4, '2024-06-22 17:31:19', '2024-06-22 17:31:19'),
+(2, '2', 1, 1, NULL, '100', 'testing', 'SC', 'SC', 2, 12.7, 'Pc/s', '90ml SMALL CUP REGULAR (3.0-oz)', 25.4, '2024-06-22 17:38:41', '2024-06-22 17:38:41'),
+(3, '2', 1, 1, NULL, '100', 'testing', 'MC', 'MC', 2, 18.43, 'Pc/s', '135ml MEDIUM CUP SPECIAL (4.5-oz)', 36.86, '2024-06-22 17:38:41', '2024-06-22 17:38:41'),
+(4, '3', 3, 3, NULL, '50', 'BROWN OUT', 'BC', 'BC', 5, 24.4, 'Pc/s', '180ml BIG CUP (6.0-oz)', 122, '2024-06-22 17:45:41', '2024-06-22 17:45:41');
 
 -- --------------------------------------------------------
 
@@ -105,17 +118,15 @@ INSERT INTO `bad_orders` (`id`, `bo_id`, `customer_id`, `store_id`, `re_dr`, `bo
 -- Table structure for table `branches`
 --
 
-DROP TABLE IF EXISTS `branches`;
-CREATE TABLE IF NOT EXISTS `branches` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `address` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `office_no` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+CREATE TABLE `branches` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `code` varchar(191) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `address` varchar(191) NOT NULL,
+  `office_no` varchar(191) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `branches`
@@ -131,13 +142,21 @@ INSERT INTO `branches` (`id`, `code`, `name`, `address`, `office_no`, `created_a
 -- Table structure for table `cache`
 --
 
-DROP TABLE IF EXISTS `cache`;
-CREATE TABLE IF NOT EXISTS `cache` (
-  `key` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `expiration` int(11) NOT NULL,
-  PRIMARY KEY (`key`)
+CREATE TABLE `cache` (
+  `key` varchar(191) NOT NULL,
+  `value` mediumtext NOT NULL,
+  `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `cache`
+--
+
+INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
+('danerics.eolf@gmail.com|49.150.101.39', 'i:1;', 1718067012),
+('danerics.eolf@gmail.com|49.150.101.39:timer', 'i:1718067012;', 1718067012),
+('danerics.eolffoodttrading@gmail.com|49.150.101.39', 'i:1;', 1718066953),
+('danerics.eolffoodttrading@gmail.com|49.150.101.39:timer', 'i:1718066953;', 1718066953);
 
 -- --------------------------------------------------------
 
@@ -145,12 +164,10 @@ CREATE TABLE IF NOT EXISTS `cache` (
 -- Table structure for table `cache_locks`
 --
 
-DROP TABLE IF EXISTS `cache_locks`;
-CREATE TABLE IF NOT EXISTS `cache_locks` (
-  `key` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `owner` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `expiration` int(11) NOT NULL,
-  PRIMARY KEY (`key`)
+CREATE TABLE `cache_locks` (
+  `key` varchar(191) NOT NULL,
+  `owner` varchar(191) NOT NULL,
+  `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -159,12 +176,10 @@ CREATE TABLE IF NOT EXISTS `cache_locks` (
 -- Table structure for table `chart_of_accounts`
 --
 
-DROP TABLE IF EXISTS `chart_of_accounts`;
-CREATE TABLE IF NOT EXISTS `chart_of_accounts` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `chart_of_accounts` (
+  `id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -173,18 +188,16 @@ CREATE TABLE IF NOT EXISTS `chart_of_accounts` (
 -- Table structure for table `company_details`
 --
 
-DROP TABLE IF EXISTS `company_details`;
-CREATE TABLE IF NOT EXISTS `company_details` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `contact_no` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `logo` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+CREATE TABLE `company_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `contact_no` varchar(191) DEFAULT NULL,
+  `email` varchar(191) DEFAULT NULL,
+  `address` varchar(191) DEFAULT NULL,
+  `logo` varchar(191) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `company_details`
@@ -199,31 +212,28 @@ INSERT INTO `company_details` (`id`, `name`, `contact_no`, `email`, `address`, `
 -- Table structure for table `customers`
 --
 
-DROP TABLE IF EXISTS `customers`;
-CREATE TABLE IF NOT EXISTS `customers` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `distributor` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `branch_code` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `lastname` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `firstname` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `middlename` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `companyname` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tin` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `contact_no` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `region` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `province` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `city` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `brgy` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `subdivision` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `latitude` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `longitude` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+CREATE TABLE `customers` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `distributor` varchar(191) NOT NULL,
+  `branch_code` varchar(15) NOT NULL,
+  `lastname` varchar(191) NOT NULL,
+  `firstname` varchar(191) NOT NULL,
+  `middlename` varchar(191) DEFAULT NULL,
+  `companyname` varchar(191) NOT NULL,
+  `tin` varchar(191) DEFAULT NULL,
+  `contact_no` varchar(191) DEFAULT NULL,
+  `email` varchar(191) DEFAULT NULL,
+  `address` varchar(191) DEFAULT NULL,
+  `region` varchar(191) DEFAULT NULL,
+  `province` varchar(191) DEFAULT NULL,
+  `city` varchar(191) DEFAULT NULL,
+  `brgy` varchar(191) DEFAULT NULL,
+  `subdivision` varchar(191) DEFAULT NULL,
+  `latitude` varchar(191) DEFAULT NULL,
+  `longitude` varchar(191) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `customers_branch_code_index` (`branch_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `customers`
@@ -231,18 +241,313 @@ CREATE TABLE IF NOT EXISTS `customers` (
 
 INSERT INTO `customers` (`id`, `distributor`, `branch_code`, `lastname`, `firstname`, `middlename`, `companyname`, `tin`, `contact_no`, `email`, `address`, `region`, `province`, `city`, `brgy`, `subdivision`, `latitude`, `longitude`, `created_at`, `updated_at`) VALUES
 (1, 'n/a', 'EFTO-CAG', 'Melo', 'Melvin', 'Melo', 'UB', '741852852', '09365235214', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Calayan', 'Magsidel', '4587458', NULL, NULL, '2024-06-04 19:01:40', '2024-06-04 19:01:40'),
-(2, 'n/a', 'EFTO-CAG', 'Pagulayan', 'Carmaine Joy', 'D', 'CJM LIQUOR SHOP', '285157377', '09555423762', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caritan Sur', '2A ZONE 3', NULL, NULL, '2024-06-05 00:31:46', '2024-06-05 00:31:46'),
+(2, 'n/a', 'EFTO-CAG', 'Pagulayan', 'Carmaine Joy', 'D', 'CJM LIQUOR SHOP', '285157377', '09555423762', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City', 'Caritan Sur', '2A ZONE 3', NULL, NULL, '2024-06-05 00:31:46', '2024-06-17 18:53:36'),
 (3, 'n/a', 'EFTO-CAG', 'Pagulayan', 'Liberty', 'D', 'Achilles Liquor Shop', '486682657', '09356483518', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Cataggaman Nuevo', 'Provincial Road', NULL, NULL, '2024-06-05 00:34:33', '2024-06-05 00:34:33'),
-(4, 'n/a', 'EFTO-CAG', 'Taguba', 'Simplicio Jr', 'B', 'Treshiel Mini-mart', '109103053', '09178099848', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 8 ', 'College Ave.', NULL, NULL, '2024-06-05 00:37:31', '2024-06-05 00:37:31'),
+(4, 'n/a', 'EFTO-CAG', 'Taguba', 'Simplicio Jr', 'B', 'Treshiel Mini-mart', '109103053', '09178099848', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City', 'Centro 8', 'College Ave.', NULL, NULL, '2024-06-05 00:37:31', '2024-06-14 15:38:45'),
 (5, 'n/a', 'EFTO-CAG', 'Agustin', 'Quenne Yvonne', 'A', 'Richvonnejoyce Store', NULL, '0945-263-8222 / 0956-079-3680', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Atulayan Norte', NULL, NULL, NULL, '2024-06-07 22:30:24', '2024-06-07 22:30:24'),
 (6, 'n/a', 'EFTO-CAG', 'Abran', 'Joventa', 'G', 'Abran Store', NULL, '0917-487-1212', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-06-07 22:45:45', '2024-06-07 22:45:45'),
 (7, 'n/a', 'EFTO-CAG', 'Acasio', 'Lilia', 'R', 'Lilian Store', NULL, '0927-542-5475', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Santa Ana', 'Marede', NULL, NULL, NULL, '2024-06-07 22:51:14', '2024-06-07 22:51:14'),
 (8, 'n/a', 'EFTO-CAG', 'Accad', 'Karen', 'S', 'Cayle\'s Food Supply Trading', NULL, '0917-7907-048', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'San Gabriel', 'Diversion Road', NULL, NULL, '2024-06-07 22:55:34', '2024-06-07 22:55:34'),
-(11, 'n/a', 'EFTO-CAG', 'Ang', 'Elsie', 'Y', 'Elsie Y Ang Store', '939-738-953', '0977-125-5034', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuao', 'Poblacion II', NULL, NULL, NULL, '2024-06-09 05:33:24', '2024-06-09 05:33:24'),
-(12, 'n/a', 'EFTO-CAG', 'Perez', 'Erickson John', 'Q', 'ALL-IN-JUAN MINI GROCERY', '216-590-445', '0955-830-7175', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caritan Sur', NULL, NULL, NULL, '2024-06-09 05:36:07', '2024-06-09 05:36:07'),
+(11, 'n/a', 'EFTO-CAG', 'Ang', 'Elsie', 'Y', 'Elsie Y Ang Store', '939738953', '0977-125-5034', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuao', 'Poblacion II', NULL, NULL, NULL, '2024-06-09 05:33:24', '2024-06-14 17:55:49'),
+(12, 'n/a', 'EFTO-CAG', 'Perez', 'Erickson John', 'Q', 'ALL-IN-JUAN MINI GROCERY', '216590445', '0955-830-7175', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City', 'Caritan Sur', NULL, NULL, NULL, '2024-06-09 05:36:07', '2024-06-14 17:56:00'),
 (13, 'n/a', 'EFTO-CAG', 'Publico', 'Isagani', 'C', 'Isagani Store', 'N/A', '0916-578-1701', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Camalaniugan', 'Catotoran Norte', NULL, NULL, NULL, '2024-06-09 05:41:36', '2024-06-09 05:41:36'),
-(14, 'n/a', 'EFTO-CAG', 'Calimaran', 'Francis Angelica', 'L', 'MLC Minimart', '339-747-008', '0917-622-0136', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 2 ', 'Arellano St', NULL, NULL, '2024-06-09 05:44:17', '2024-06-09 05:44:17'),
-(15, 'n/a', 'EFTO-CAG', 'SANTOS', 'AI', 'L', 'UB', NULL, '123456', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'kalinga', 'City of Tabuk ', 'Agbannawag', NULL, '17.60619760468376', '121.72787291779376', '2024-06-19 07:24:23', '2024-06-19 07:24:23');
+(14, 'n/a', 'EFTO-CAG', 'Calimaran', 'Francis Angelica', 'L', 'MLC Minimart', '339747008', '0917-622-0136', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City', 'Centro 2', 'Arellano St', NULL, NULL, '2024-06-09 05:44:17', '2024-06-14 15:38:33'),
+(15, 'n/a', 'EFTO-CAG', 'Baluan', 'Chito Louie', 'D', 'Arlydz Restaurant and Catering Services', NULL, '0956-977-3735', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'Quirino', NULL, NULL, NULL, '2024-06-14 14:38:19', '2024-06-14 14:38:19'),
+(16, 'n/a', 'EFTO-CAG', 'Barroga', 'Eden Grace', 'B', 'Talay Store', NULL, '0956-732-5975', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'Capagaypayan', NULL, NULL, NULL, '2024-06-14 15:21:19', '2024-06-14 15:21:19'),
+(17, 'n/a', 'EFTO-CAG', 'Balatico', 'Jimmy Aldrin', 'R', 'Baker\'s Percent', '755362393', '0917-686-5710', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Lal-Lo', 'Bagumbayan', NULL, NULL, NULL, '2024-06-14 15:28:10', '2024-06-14 15:28:10'),
+(18, 'n/a', 'EFTO-CAG', 'Bautista', 'Babylyn', 'C', 'Taradun Convinience Store Allen One Grocery', '942568444', '0917-311-2452', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 4 ', 'Zone 4 Bartolome St', NULL, NULL, '2024-06-14 15:31:39', '2024-06-14 15:31:39'),
+(19, 'n/a', 'EFTO-CAG', 'Bunagan', 'Delfin', 'D', 'Delric Bakery', '417003882', '0997-109-8082', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Ugac Sur', 'Lecaros St', NULL, NULL, '2024-06-14 15:34:28', '2024-06-14 15:34:28'),
+(20, 'n/a', 'EFTO-CAG', 'Bayangan', 'Vima Dame', 'R', 'D Mixiologist', NULL, '0926-240-0604', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caritan Sur', 'Carig Sur', NULL, NULL, '2024-06-14 15:37:45', '2024-06-14 15:37:45'),
+(21, 'n/a', 'EFTO-CAG', 'Jaymarimelson', 'Corporation', 'JC', 'Farmacia Cabling', '009729210', '0917-592-8983', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Alcala', NULL, NULL, NULL, NULL, '2024-06-14 16:08:49', '2024-06-14 16:08:49'),
+(22, 'n/a', 'EFTO-CAG', 'Jaymarimelson', 'Corporation', 'JC', 'JC\'s Drug Store', '009729210', '0917-592-8983', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Alcala', 'Centro Norte ', NULL, NULL, NULL, '2024-06-14 16:10:54', '2024-06-14 16:10:54'),
+(23, 'n/a', 'EFTO-CAG', 'Bunagan', 'Roberto', 'M', 'Bunagan Store', NULL, '0945-089-7053', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Basi East', NULL, NULL, NULL, '2024-06-14 16:16:45', '2024-06-14 16:16:45'),
+(24, 'n/a', 'EFTO-CAG', 'Busacay', 'Janette', 'D', 'JJJ General Merchandise', '947171234', '0906-398-0038', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Kalinga', NULL, NULL, NULL, NULL, NULL, '2024-06-14 16:21:52', '2024-06-14 16:21:52'),
+(25, 'n/a', 'EFTO-CAG', 'Calayan', 'Jocelyn', 'T', 'Calayan Sari-sari STore', '602604605', '0905-358-8203', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Linao East', NULL, NULL, NULL, '2024-06-14 16:30:54', '2024-06-14 16:30:54'),
+(26, 'n/a', 'EFTO-CAG', 'Calayan', 'Vaneza', 'T', 'Vance Grocery', '233684960', '0917-860-9799', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 5 ', 'Zone 5 Tagga', NULL, NULL, '2024-06-14 16:32:52', '2024-06-14 16:32:52'),
+(27, 'n/a', 'EFTO-CAG', 'Castro', 'Rowena', 'T', 'Castro Store', '913654706', '0927-912-8683', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'San Gabriel', 'Main Ave., Cor Lapu-Lapu St', NULL, NULL, '2024-06-14 16:35:10', '2024-06-14 16:35:10'),
+(28, 'n/a', 'EFTO-CAG', 'Zalun', 'Jovirose', 'S', 'BOZZB Refilling Station', '241679889', '0917-531-0006', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caritan Sur', '12 Campos St', NULL, NULL, '2024-06-14 16:39:30', '2024-06-14 16:39:30'),
+(29, 'n/a', 'EFTO-CAG', 'Yude', 'Justine Cyrus', 'C', '24/ Yude Mini Grocery', NULL, '0967-158-3996', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Alcala', 'Baybayog', NULL, NULL, NULL, '2024-06-14 17:58:33', '2024-06-14 17:58:33'),
+(30, 'n/a', 'EFTO-CAG', 'Yu', 'Faith', 'D', 'Faith Store', NULL, '0917-179-1557', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Conner', 'Malama', NULL, NULL, NULL, '2024-06-14 18:02:35', '2024-06-14 18:02:35'),
+(31, 'n/a', 'EFTO-CAG', 'Ylarde', 'Maricel', 'A', 'Uriel Store', '405571004', '0975-664-8518', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Buntun', NULL, NULL, NULL, '2024-06-14 18:05:52', '2024-06-14 18:05:52'),
+(32, 'n/a', 'EFTO-CAG', 'Wandag', 'Jourdan', 'B', 'Bulanao 1', NULL, '0906-938-9585', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Kalinga', NULL, NULL, 'Purok 4', NULL, NULL, '2024-06-14 18:13:11', '2024-06-14 18:13:11'),
+(33, 'n/a', 'EFTO-CAG', 'Wandag', 'Jourdan', 'B', 'Bulanao 2', NULL, '0906-938-9585', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Kalinga', NULL, NULL, NULL, NULL, NULL, '2024-06-14 18:15:58', '2024-06-14 18:15:58'),
+(34, 'n/a', 'EFTO-CAG', 'Wandag', 'Jourdan', 'B', 'Casigayan', NULL, '0906-938-9585', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Kalinga', NULL, NULL, NULL, NULL, NULL, '2024-06-14 18:18:02', '2024-06-14 18:18:02'),
+(35, 'n/a', 'EFTO-CAG', 'Valdez', 'Evelyn', 'G', 'Samchiz Mini-mart', NULL, '0949-620-6352', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Sanchez-Mira', 'San Andres', NULL, NULL, NULL, '2024-06-14 18:25:08', '2024-06-14 18:25:08'),
+(36, 'n/a', 'EFTO-CAG', 'Ventura', 'Janice', 'H', 'SJ Ventura Store', NULL, '0936-689-5439', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Camasi', NULL, NULL, NULL, '2024-06-14 18:29:21', '2024-06-14 18:29:21'),
+(37, 'n/a', 'EFTO-CAG', 'Vila', 'Mary Christine', 'C', 'Kids Sari-sari Store', NULL, '0977-842-6184', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Larion Bajo', '197 Abraham St', NULL, NULL, '2024-06-14 19:12:04', '2024-06-14 19:12:04'),
+(38, 'n/a', 'EFTO-CAG', 'Viernes', 'Mercy', 'C', 'Viernes Store', '471366932', '0915-192-5196', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Pudtol', 'San Luis', 'Purok Sunflower', NULL, NULL, '2024-06-14 19:14:38', '2024-06-14 19:14:38'),
+(39, 'n/a', 'EFTO-CAG', 'Yaquin', 'Gladys', 'A', 'Gladdys Store', NULL, '0906-318-2317', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Sanchez-Mira', 'Callungan', NULL, NULL, NULL, '2024-06-14 19:40:02', '2024-06-14 19:40:02'),
+(40, 'n/a', 'EFTO-CAG', 'Paguyo', 'Guilbert', 'R', '2A\'s Barbershop and Barbecue', NULL, '0960-531-6353', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Cataggaman Pardo', NULL, NULL, NULL, '2024-06-14 19:45:44', '2024-06-14 19:45:44'),
+(41, 'n/a', 'EFTO-CAG', 'Palattao', 'Porfirio Jr', 'A', 'Palattao\'s Sari-Sari Store', NULL, '0965-849-6664', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Iguig', 'Atulu', 'Mallo St', NULL, NULL, '2024-06-14 19:50:58', '2024-06-14 19:50:58'),
+(42, 'n/a', 'EFTO-CAG', 'Pascua', 'Learni', 'F', '3J\'s Sari sari Store', NULL, '0976-102-5777', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Amulung', NULL, 'Zone 7 Estefania', NULL, NULL, '2024-06-14 19:56:06', '2024-06-14 19:56:06'),
+(43, 'n/a', 'EFTO-CAG', 'Pascual', 'Adbiel', 'J', 'Pascua Sari-sari Store', NULL, '0997-091-1291', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Santa Teresita', 'Simpatuyo', 'Purok Palagao', NULL, NULL, '2024-06-14 19:58:58', '2024-06-14 19:58:58'),
+(44, 'n/a', 'EFTO-CAG', 'Pasicolan', 'Maricel', 'A', 'Pasicolan Sari-sari Store', '766983709', '0905-190-1836', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Cataggaman Pardo', '120 Andal St', NULL, NULL, '2024-06-14 20:01:25', '2024-06-14 20:01:25'),
+(45, 'n/a', 'EFTO-CAG', 'Pascua', 'Madona Princes', 'C', 'DS & PJ Convenience Store', NULL, '0908-925-3876', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Ugac Sur', '45 A Arao Street', NULL, NULL, '2024-06-14 20:06:42', '2024-06-14 20:06:42'),
+(46, 'n/a', 'EFTO-CAG', 'Suyu', 'Marizel', 'C', 'Uno Tres Store', '432609891', '0917-623-9282', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Tanza', '6 Purok 7 Maharlika Highway', NULL, NULL, '2024-06-14 20:09:10', '2024-06-14 20:09:10'),
+(47, 'n/a', 'EFTO-CAG', 'Ronquillo', 'Helen', 'T', 'Five Zero Seven Mart', '762652280', '0975-053-6464', NULL, NULL, 'Region II (Cagayan Valley)', 'Isabela', 'Mallig', 'San Pedro', 'Pagkakaisa St', NULL, NULL, '2024-06-14 20:48:23', '2024-06-14 20:48:23'),
+(48, 'n/a', 'EFTO-CAG', 'Rosario', 'Jay-Ar', 'T', 'Ana Gammad Store', '124078293', '0936-760-4199', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'San Gabriel', 'Diversion Roas', NULL, NULL, '2024-06-14 20:50:55', '2024-06-14 20:50:55'),
+(49, 'n/a', 'EFTO-CAG', 'Agustin', 'Abigail', 'F', 'Kristalee store', NULL, '0961-608-5839', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Conner', 'Caglayan', NULL, NULL, NULL, '2024-06-14 20:57:25', '2024-06-14 20:57:25'),
+(50, 'n/a', 'EFTO-CAG', 'Agustin', 'Arlene', 'C', 'Arlene Streetfood Store', '463633393', '0961-837-6881', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'Poblacion', 'Purok Salindeg', NULL, NULL, '2024-06-14 21:00:31', '2024-06-14 21:00:31'),
+(51, 'n/a', 'EFTO-CAG', 'Alipio', 'Maricel', 'D', 'ALIPIO\'S store', '747896796', '09060224223 / 09365014535 / 078396866', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Pamplona', 'Abanqueruan', NULL, NULL, NULL, '2024-06-14 21:04:06', '2024-06-14 21:04:06'),
+(52, 'n/a', 'EFTO-CAG', 'Alonzo', 'Charles', 'C', 'C. Divina\'s Store', '453910497', '09464818431 / 09499150441', NULL, NULL, 'Region II (Cagayan Valley)', NULL, NULL, NULL, NULL, NULL, NULL, '2024-06-14 21:07:12', '2024-06-14 21:07:12'),
+(53, 'n/a', 'EFTO-CAG', 'Apil', 'Linda', 'W', 'RL\'s Apil Store', NULL, '0945-144-6497', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Kalinga', NULL, NULL, NULL, NULL, NULL, '2024-06-14 21:13:55', '2024-06-14 21:13:55'),
+(54, 'n/a', 'EFTO-CAG', 'Andaya', 'Tita', 'B', 'KAISNAGGAN', NULL, '0926-234-0023', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'San Isidro Sur', NULL, NULL, NULL, '2024-06-14 21:16:47', '2024-06-14 21:16:47'),
+(55, 'n/a', 'EFTO-CAG', 'Amosco', 'Edna', 'S', 'Lucas Store', NULL, '0975-242-5495  / 0915-190-6373', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Atulayan Sur', '27 Tamaray St.', NULL, NULL, '2024-06-14 21:22:37', '2024-06-14 21:22:37'),
+(56, 'n/a', 'EFTO-CAG', 'Amora', 'Shirley', 'N', 'Rosalinda Sari Sari store', NULL, '0917-163-7504', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Libag Norte', '86 Taguinod St.', NULL, NULL, '2024-06-14 21:27:19', '2024-06-14 21:27:19'),
+(57, 'n/a', 'EFTO-CAG', 'Apaling', 'Estela', 'H', 'Kaydee\'s Sari Sari Store', '142628453', '0917-637-1985', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Pinukpuk', 'Taga ', NULL, NULL, NULL, '2024-06-14 21:33:37', '2024-06-14 21:33:37'),
+(58, 'n/a', 'EFTO-CAG', 'Baguec', 'Abigail', 'B', 'Betchay\'s Variety', NULL, '0939-019-1376', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Conner', 'Ripang', NULL, NULL, NULL, '2024-06-14 21:43:58', '2024-06-14 21:43:58'),
+(59, 'n/a', 'EFTO-CAG', 'Apprecio', 'Julita', 'G', 'Dragline Variety Store', NULL, '0905-772-4253', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Allacapan', 'Centro West ', NULL, NULL, NULL, '2024-06-14 21:57:29', '2024-06-14 21:57:29'),
+(60, 'n/a', 'EFTO-CAG', 'Ayson', 'Jessica', 'S', 'Paul\'s Hardware', '102204-31', '0917-601-9142', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Ugac Norte', NULL, NULL, NULL, '2024-06-14 22:03:55', '2024-06-14 22:03:55'),
+(61, 'n/a', 'EFTO-CAG', 'Balanay', 'Marissa', 'M', 'Marissa Store', NULL, '\'0947-835-1362', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Claveria', 'Union', 'Bumanglag st 029', NULL, NULL, '2024-06-14 22:10:30', '2024-06-14 22:10:30'),
+(62, 'n/a', 'EFTO-CAG', 'Baccay', 'Maida', 'm', 'DB\'s Sari-sari Store', NULL, '0955-162-7657', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Libag Norte', 'Sampaguita St', NULL, NULL, '2024-06-14 22:17:36', '2024-06-14 22:17:36'),
+(63, 'n/a', 'EFTO-CAG', 'Trumpo', 'Elizabeth', 'O', 'Beth Store', NULL, '0906-177-4081', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'Dagupan', 'Purok Mapalad', NULL, NULL, '2024-06-14 22:32:57', '2024-06-14 22:32:57'),
+(64, 'n/a', 'EFTO-CAG', 'Baliuag', 'Diana', 'F', 'Kyle Mix Style Botique', NULL, '0905-843-0200', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'San Gabriel', '24 Lansones St.', NULL, NULL, '2024-06-14 22:38:55', '2024-06-14 22:38:55'),
+(65, 'n/a', 'EFTO-CAG', 'Bongalon', 'Susan', 'V', 'Road and Shine Grill & Restaurant Eat All You Can', NULL, '09358364125', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-06-16 01:55:58', '2024-06-16 01:55:58'),
+(66, 'n/a', 'EFTO-CAG', 'Bulan', 'Leila Rose', 'M', 'Bulan\'s Store', NULL, '09358364125', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Buguey', 'San Lorenzo', 'Zone 2', NULL, NULL, '2024-06-16 02:00:27', '2024-06-16 02:00:27'),
+(67, 'n/a', 'EFTO-CAG', 'Cabal', 'Zeny', 'M', 'DRL Store', '749501214', '0955123-438', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Aparri', 'Backiling', 'Magsirulan', NULL, NULL, '2024-06-16 02:06:51', '2024-06-16 02:06:51'),
+(68, 'n/a', 'EFTO-CAG', 'Callueng', 'Jerrick', 'M', 'Jennas store', NULL, '09653596270', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Maddarulug', NULL, NULL, NULL, '2024-06-16 02:12:09', '2024-06-16 02:12:09'),
+(69, 'n/a', 'EFTO-CAG', 'Campano', 'Frederick', 'W', 'DYRE’S sari-sari Store', '705865263', '09166653345', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Carig', '350 National Highway', NULL, NULL, '2024-06-16 02:16:16', '2024-06-16 02:16:16'),
+(70, 'n/a', 'EFTO-CAG', 'Capili', 'Nora', 'B', 'N.B Capili Store', NULL, '09068847153', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'San Gabriel', '#9 Tindalo St.', NULL, NULL, '2024-06-16 02:18:21', '2024-06-16 02:18:21'),
+(71, 'n/a', 'EFTO-CAG', 'Casauay', 'Hans', 'R', 'Balai Isabel', NULL, '09360327134', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Camalaniugan', 'Sapping', 'Balai Isabel Restaurant, National highway', NULL, NULL, '2024-06-16 03:27:04', '2024-06-16 03:27:04'),
+(72, 'n/a', 'EFTO-CAG', 'Dela Cruz', 'Darren Leander', 'P', 'Arnoks, Luna Branch', NULL, '09762435865', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'Poblacion', NULL, NULL, NULL, '2024-06-16 03:29:40', '2024-06-16 03:29:40'),
+(73, 'n/a', 'EFTO-CAG', 'Dela Cruz', 'Michael', 'R', 'Park and Buy Vonvenience Store', NULL, '09178822227', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'Poblacion', 'Poblacion Branch', NULL, NULL, '2024-06-16 03:35:43', '2024-06-16 03:38:27'),
+(74, 'n/a', 'EFTO-CAG', 'Dela Cruz', 'Michael', 'R', 'Park and Buy Vonvenience Store', NULL, '09178822227', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'San Isidro Sur', 'San Isidro Branch', NULL, NULL, '2024-06-16 03:37:59', '2024-06-16 03:39:08'),
+(75, 'n/a', 'EFTO-CAG', 'De Guzman', 'Jamaica', 'S', 'Unos sari sari store', NULL, '09570693538', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Piat', 'Santa Barbara', '#72 zone 4', NULL, NULL, '2024-06-16 03:42:01', '2024-06-16 03:42:01'),
+(76, 'n/a', 'EFTO-CAG', 'Dela Cruz', 'Imelda', 'R', 'Imelda Dela Cruz Store', NULL, '09761603465', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Flora', 'Santa Maria', NULL, NULL, NULL, '2024-06-16 03:47:36', '2024-06-16 03:47:36'),
+(77, 'n/a', 'EFTO-CAG', 'De Guzman', 'Mariesa', 'P', 'Mariesa Food Store', NULL, '09176875957', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Kalinga', NULL, NULL, NULL, NULL, NULL, '2024-06-16 03:52:43', '2024-06-16 03:52:43'),
+(78, 'n/a', 'EFTO-CAG', 'De Leon', 'Lilia', 'R', 'Lilia’s Sari- Sari Store - De Leon’s Store', NULL, '09056282262 / 09365147838', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Amulung', 'Anquiray', NULL, NULL, NULL, '2024-06-16 03:54:49', '2024-06-16 03:54:49'),
+(79, 'n/a', 'EFTO-CAG', 'Doliente', 'Maria Juanita', 'C', 'Violys store-Em-em Food House', NULL, '09161410418 / 09359132905', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Malibabag', '07 Purok Okra', NULL, NULL, '2024-06-16 03:57:19', '2024-06-16 03:57:19'),
+(80, 'n/a', 'EFTO-CAG', 'Doro', 'Ernesto Jr', 'B', 'Terrace Grill And Restaurant', NULL, '09513952865 / 09059453980', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Conner', NULL, 'Purok 1', NULL, NULL, '2024-06-16 04:00:04', '2024-06-16 04:00:04'),
+(81, 'n/a', 'EFTO-CAG', 'Duclan', 'May Jecelyn', 'R', 'COD CONSUMER GOODS RETALING', '419964674', '09175738017', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Carig', 'Unit 2 Rhem Square Caronan Bldg Maharlika Highway', NULL, NULL, '2024-06-16 04:10:18', '2024-06-16 04:10:18'),
+(82, 'n/a', 'EFTO-TAR', 'Baradi', 'Dianne Averyl', 'G.', 'Bon Bon\'s Ice Cream House', 'Bagulin Cor. Ortiz (Pob), Naguilian, La Union', '09177772028', NULL, NULL, 'Region I (Ilocos Region)', 'La Union', 'Naguilian', 'Ortiz ', NULL, NULL, NULL, '2024-06-17 18:10:09', '2024-06-17 18:10:09'),
+(83, 'n/a', 'EFTO-TAR', 'Boado', 'John Paulo', 'Eslao', 'Food Buddies Store', '469127639', '09388193407/09982975488', NULL, NULL, 'Region I (Ilocos Region)', 'La Union', 'Agoo', 'San Julian East', NULL, NULL, NULL, '2024-06-17 18:17:55', '2024-06-17 18:17:55'),
+(84, 'n/a', 'EFTO-TAR', 'Tabafunda', 'Nemia', 'P.', 'N/A', 'N/A', 'N/A', NULL, NULL, 'Region I (Ilocos Region)', 'La Union', 'San Juan', 'Guinguinabang', NULL, NULL, NULL, '2024-06-17 18:29:09', '2024-06-17 18:29:09'),
+(85, 'n/a', 'EFTO-TAR', 'Roque', 'Jessica', 'Carbonell', 'Mango Vins Eatery', 'N/A', '09190953651', NULL, NULL, 'Region I (Ilocos Region)', 'La Union', 'Santo Tomas', 'Lomboy', NULL, NULL, NULL, '2024-06-17 18:32:58', '2024-06-17 18:32:58'),
+(86, 'n/a', 'EFTO-TAR', 'Rivera', 'Jessie', 'R.', 'Yuna Store', 'N/A', '09672703478', NULL, NULL, 'Region I (Ilocos Region)', 'La Union', 'Santo Tomas', 'Damortis', NULL, NULL, NULL, '2024-06-17 18:37:22', '2024-06-17 18:37:22'),
+(87, 'n/a', 'EFTO-TAR', 'Reyes', 'Isabel', 'Manalo', 'Isalykalyn Convenience Store', 'N/A', '09452148893/09464530701', NULL, NULL, 'Region I (Ilocos Region)', 'La Union', 'Rosario', 'Concepcion', NULL, NULL, NULL, '2024-06-17 18:41:58', '2024-06-17 18:41:58'),
+(88, 'n/a', 'EFTO-TAR', 'Ramirez', 'Ruby', 'Adona', 'Ramirez Place', 'N/A', '09467227947', NULL, NULL, 'Region I (Ilocos Region)', 'La Union', 'Santo Tomas', 'Namonitan', NULL, NULL, NULL, '2024-06-17 18:44:52', '2024-06-17 18:44:52'),
+(89, 'n/a', 'EFTO-TAR', 'Ramirez', 'Leandro', 'Quibin', 'L & D Online Store', 'N/A', '09178044604', NULL, NULL, 'Region I (Ilocos Region)', 'La Union', 'Agoo', 'San Miguel', NULL, NULL, NULL, '2024-06-17 18:48:26', '2024-06-17 18:48:26'),
+(90, 'n/a', 'EFTO-TAR', 'Patricio', 'Glenn', 'Milanes', 'Denz & Glenn Sari-Sari Store', 'N/A', '09453721739', NULL, NULL, 'Region I (Ilocos Region)', 'La Union', 'Agoo', 'San Nicolas Central ', NULL, NULL, NULL, '2024-06-17 18:52:26', '2024-06-17 18:52:26'),
+(91, 'n/a', 'EFTO-TAR', 'Mangaoang', 'Lecyl', 'M.', '8-16 General Merchandise', '944942781', '09065310548', NULL, NULL, 'Region I (Ilocos Region)', 'La Union', 'Aringay', 'Santa Rita West', NULL, NULL, NULL, '2024-06-17 18:57:02', '2024-06-17 18:57:02'),
+(92, 'n/a', 'EFTO-CAG', 'Adquilen', 'Juvy', 'F', 'Cee-Jay Sari-Sari Store', '767856456', '09751735492', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Gattaran', 'Newagac', 'Zone 5', NULL, NULL, '2024-06-17 18:58:29', '2024-06-17 18:58:29'),
+(93, 'n/a', 'EFTO-TAR', 'Lamaroza', 'Arlene', 'Flores', 'Flores-Lamaroza General Merchandise', 'N/A', '09088820389', NULL, NULL, 'Region I (Ilocos Region)', 'La Union', 'Naguilian', 'Ortiz ', NULL, NULL, NULL, '2024-06-17 19:00:17', '2024-06-17 19:00:17'),
+(94, 'n/a', 'EFTO-TAR', 'Hipol', 'Gelrie', 'D.', 'Naragsak Frozen', NULL, '09453497180/09672167866', NULL, NULL, 'Region I (Ilocos Region)', 'La Union', 'Caba', 'Poblacion Sur', NULL, NULL, NULL, '2024-06-17 19:04:16', '2024-06-17 19:04:16'),
+(95, 'n/a', 'EFTO-CAG', 'Amojela', 'Ronalyn', 'J', 'Darel Sari-Sari Store', NULL, '09958230989', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Allacapan', 'Labben', NULL, NULL, NULL, '2024-06-17 19:19:52', '2024-06-17 19:19:52'),
+(97, 'n/a', 'EFTO-CAG', 'Basal', 'Irene', 'O', 'Basal Eatery', '331-545-560', '0956-296-6348', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Ugac Norte', '78 Luna St.', NULL, NULL, '2024-06-17 19:31:37', '2024-06-17 19:31:37'),
+(98, 'n/a', 'EFTO-CAG', 'Batan', 'Aileen', 'M', 'Enteng Cheesedesal', '448717504', '09171430477', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 12 ', 'Diversion Road Balzain West', NULL, NULL, '2024-06-17 19:37:19', '2024-06-17 19:37:19'),
+(99, 'n/a', 'EFTO-CAG', 'Batang', 'Mary Grace', 'M', 'LAROSE STORE 2', NULL, '0906-353-9243', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Centro Southeast ', NULL, NULL, NULL, '2024-06-17 19:41:46', '2024-06-17 19:41:46'),
+(100, 'n/a', 'EFTO-CAG', 'Bautista', 'Wilma', 'C', '4 VOIS POULTRY SUPPLY', '998413883', '0961-836-8124', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Sanchez-Mira', 'Tokitok', NULL, NULL, NULL, '2024-06-17 19:47:33', '2024-06-17 19:47:33'),
+(101, 'n/a', 'EFTO-CAG', 'Boucher', 'Kristoffer', 'D', 'Mang Raul\'s Lechon', '764-082-343', '09171420382', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Pengue', 'Maharlika Highway', NULL, NULL, '2024-06-17 19:58:14', '2024-06-17 19:58:14'),
+(102, 'n/a', 'EFTO-CAG', 'Callo', 'Marymel', 'M', 'Mhy Food Hub', NULL, '09050626738', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Santo Niño', 'Centro Norte ', NULL, NULL, NULL, '2024-06-17 20:02:43', '2024-06-17 20:02:43'),
+(103, 'n/a', 'EFTO-CAG', 'Calling', 'Lolita', 'L', 'Lolita\'s Store', NULL, '079355559008', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Rizal', 'Dungan', 'Purok 3', NULL, NULL, '2024-06-17 20:08:43', '2024-06-17 20:08:43'),
+(104, 'n/a', 'EFTO-TAR', 'Gascon', 'Eduardo', 'Elechosa', 'Ned\'s Beauty and Wellness Product Trading', 'N/A', '09060323448', NULL, NULL, 'Region I (Ilocos Region)', 'La Union', 'Aringay', 'San Benito Sur', NULL, NULL, NULL, '2024-06-17 20:12:42', '2024-06-17 20:12:42'),
+(105, 'n/a', 'EFTO-CAG', 'Caraggayan', 'Meliton', 'D', 'Shellah\'s Pizza Stall', '922038518', '09166813104', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Aparri', 'Centro 14 ', NULL, NULL, NULL, '2024-06-17 20:13:31', '2024-06-17 20:13:31'),
+(106, 'n/a', 'EFTO-TAR', 'Cadano', 'Henry', 'Pacala', 'Henry Appliance Center', 'N/A', '09177160285', NULL, NULL, 'Region I (Ilocos Region)', 'La Union', 'Rosario', 'Tay-ac', NULL, NULL, NULL, '2024-06-17 20:16:19', '2024-06-17 20:16:19'),
+(107, 'n/a', 'EFTO-TAR', 'Tudlong', 'Elizabeth', 'Retona', 'Janella\'s Consumer Goods Trading', '506434925', '09295607779', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Moncada', 'Camposanto 2', NULL, NULL, NULL, '2024-06-17 20:23:44', '2024-06-17 20:23:44'),
+(108, 'n/a', 'EFTO-TAR', 'Taruc', 'Eden', 'Lazarte', 'Chiz Store', NULL, '09295908989', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'City of Tarlac ', 'Tibag', NULL, NULL, NULL, '2024-06-17 20:45:50', '2024-06-17 20:45:50'),
+(109, 'n/a', 'EFTO-TAR', 'Taniza', 'Rodel', 'Gagarin', 'Sofie Variety Store', 'N/A', '09666850542', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Victoria', 'San Andres', NULL, NULL, NULL, '2024-06-17 20:51:43', '2024-06-17 20:51:43'),
+(110, 'n/a', 'EFTO-TAR', 'Sultan', 'Gasanara', 'M.', 'N/A', 'N/A', '09158152346', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Capas', 'Santa Lucia', NULL, NULL, NULL, '2024-06-17 20:55:42', '2024-06-17 20:55:42'),
+(111, 'n/a', 'EFTO-TAR', 'Seguep', 'Emily', 'Valdez', 'E. Seguep Store', NULL, '09122005289/09199567205', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Victoria', 'Canarem', NULL, NULL, NULL, '2024-06-17 21:06:05', '2024-06-17 21:06:05'),
+(112, 'n/a', 'EFTO-TAR', 'Santos', 'Rizel', 'D.', 'N/A', NULL, '09540947810/09695556690', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Santa Ignacia', 'Baldios', NULL, NULL, NULL, '2024-06-17 21:11:07', '2024-06-17 21:11:07'),
+(113, 'n/a', 'EFTO-TAR', 'Valdez', 'Rhea May', 'Eustaquio', 'NJM Valdez Minimart', '721125244', '09995246876/09951616316', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Camiling', 'Poblacion G', NULL, NULL, NULL, '2024-06-17 21:25:04', '2024-06-17 21:25:04'),
+(114, 'n/a', 'EFTO-CAG', 'Corpuz', 'Romel', 'A', '3-M store & Digital Printing Services', '287-436-973', '09560775769/09260783743', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Alcala', 'Baybayog', NULL, NULL, NULL, '2024-06-17 21:34:23', '2024-06-17 21:34:23'),
+(115, 'n/a', 'EFTO-CAG', 'Dagli', 'Margie', 'F', 'BUY D\' WAY FROZEN FOODS & MEAT SHOP', NULL, '09953178717', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Santa Ana', 'Centro ', NULL, NULL, NULL, '2024-06-17 21:40:30', '2024-06-17 21:40:30'),
+(116, 'n/a', 'EFTO-CAG', 'Daguio', 'Maricel', 'A', 'Daguio Store', NULL, '09355715800', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Iguig', 'San Isidro', NULL, NULL, NULL, '2024-06-17 21:42:57', '2024-06-17 21:42:57'),
+(117, 'n/a', 'EFTO-TAR', 'Reyes', 'Teodoro', 'N/A', 'Lyndon\'s Special Baliuag Pasalubong Wholesale Retail', 'N/A', '09399107255', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'City of Tarlac ', 'Buhilit', NULL, NULL, NULL, '2024-06-17 21:44:03', '2024-06-17 21:44:03'),
+(118, 'n/a', 'EFTO-CAG', 'Doronio', 'Maria Flordeliza', 'P', 'CKK\'s Eatery', NULL, '09386660343', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Allacapan', 'San Juan', NULL, NULL, NULL, '2024-06-17 21:46:32', '2024-06-17 21:46:32'),
+(119, 'n/a', 'EFTO-TAR', 'Ramos', 'Elidar', 'Ordonez', 'Astrodar Gasoline Station', '621352791', '09167968860/09267472540', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'San Manuel', 'San Miguel', NULL, NULL, NULL, '2024-06-17 21:58:54', '2024-06-17 21:58:54'),
+(120, 'n/a', 'EFTO-TAR', 'Parairo', 'Marlyn', 'A.', 'M Parairo Trading', 'N/A', '09688546584/09228441411', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Pura', 'Buenavista', NULL, NULL, NULL, '2024-06-17 22:04:22', '2024-06-17 22:04:22'),
+(121, 'n/a', 'EFTO-TAR', 'Motilla', 'Justine', 'Juan', 'Motilla Variety Store', 'N/A', '09505063503', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Paniqui', 'Cabayaoasan', NULL, NULL, NULL, '2024-06-17 22:07:18', '2024-06-17 22:07:18'),
+(122, 'n/a', 'EFTO-TAR', 'Miranda', 'Rozalie', 'N/A', 'Come and Stop Convenience Store', 'N/A', '09335392502', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'City of Tarlac ', 'San Nicolas', NULL, NULL, NULL, '2024-06-17 22:11:38', '2024-06-17 22:11:38'),
+(123, 'n/a', 'EFTO-TAR', 'Millo', 'Fe', 'A.', 'N/A', 'N/A', '09396534889', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Pura', 'Poblacion 2', NULL, NULL, NULL, '2024-06-17 22:22:34', '2024-06-17 22:22:34'),
+(124, 'n/a', 'EFTO-TAR', 'Mamocod', 'Lourdes', 'Mendoza', 'L.M. Mamucod Business Center', 'N/A', '09231919478', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Moncada', 'San Julian', NULL, NULL, NULL, '2024-06-17 22:27:33', '2024-06-17 22:27:33'),
+(125, 'n/a', 'EFTO-TAR', 'Liwag', 'Jayson', 'Dela Cruz', 'Railey Store', 'N/A', '09267733233/09519553660', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'City of Tarlac ', 'San Vicente', NULL, NULL, NULL, '2024-06-17 22:32:43', '2024-06-17 22:32:43'),
+(126, 'n/a', 'EFTO-CAG', 'Echanique', 'Emyrene', 'A', '5 JAN\'S VARIETY STORE', '431887885', '09157036149', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', NULL, NULL, NULL, NULL, '2024-06-17 22:34:45', '2024-06-17 22:34:45'),
+(127, 'n/a', 'EFTO-TAR', 'Labasan', 'Brigilda', 'Paduit', 'Sari-Sari Store', 'N/A', '09065238010', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Gerona', 'Poblacion 1', NULL, NULL, NULL, '2024-06-17 22:35:36', '2024-06-17 22:35:36'),
+(128, 'n/a', 'EFTO-CAG', 'Eclipse', 'Nida', 'F', 'Cirelle\'s Bread House', NULL, '09057203081', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Ugac Norte', NULL, NULL, NULL, '2024-06-17 22:38:25', '2024-06-17 22:38:25'),
+(129, 'n/a', 'EFTO-TAR', 'Gracilla', 'Reynaldo', 'Reondanga', 'RJ Gracilla Store', 'N/A', '09568916427', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'San Clemente', 'Poblacion Norte', NULL, NULL, NULL, '2024-06-17 22:39:02', '2024-06-17 22:39:02'),
+(130, 'n/a', 'EFTO-TAR', 'Gutierrez', 'Elma', 'Matias', 'Elmanic Variety Store', 'N/A', '09159646331/09677961607', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Capas', 'Cubcub ', NULL, NULL, NULL, '2024-06-17 22:42:09', '2024-06-17 22:42:09'),
+(131, 'n/a', 'EFTO-CAG', 'Espanto', 'Esvelina', 'O', 'GIG\'s food House', NULL, '09171661609', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Pengue', NULL, NULL, NULL, '2024-06-17 22:43:15', '2024-06-17 22:43:15'),
+(132, 'n/a', 'EFTO-TAR', 'Felipe', 'Janette', 'G.', 'Janette Groceries', 'N/A', '09457611072', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Victoria', 'San Gavino ', NULL, NULL, NULL, '2024-06-17 22:46:27', '2024-06-17 22:46:27'),
+(133, 'n/a', 'EFTO-TAR', 'Domingo', 'Faith Linsell', 'Galbadores', 'N/A', 'N/A', '09226244964', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Gerona', 'Amacalan', NULL, NULL, NULL, '2024-06-17 22:49:34', '2024-06-17 22:49:34'),
+(134, 'n/a', 'EFTO-TAR', 'Dela Cruz', 'Ryan', 'M.', 'Dela Cruz Store', 'N/A', '09225136063', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Paniqui', 'Tablang', NULL, NULL, NULL, '2024-06-17 22:53:23', '2024-06-17 22:53:23'),
+(135, 'n/a', 'EFTO-CAG', 'Furigay', 'Huliyana', 'S', 'Samatra Store', NULL, '09457621313', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Camasi', NULL, NULL, NULL, '2024-06-17 22:53:28', '2024-06-17 22:53:28'),
+(136, 'n/a', 'EFTO-TAR', 'Daud', 'Amanodin', 'N/A', 'N/A', 'N/A', '09518068109', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Capas', 'Cristo Rey', NULL, NULL, NULL, '2024-06-17 22:55:34', '2024-06-17 22:55:34'),
+(137, 'n/a', 'EFTO-CAG', 'Ferro', 'Alexis Isaac', 'R.', 'OFA Realty Corp Coop', NULL, '09457717786', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Santa Ana', 'Centro ', '7r Bldg Bacobo St.', NULL, NULL, '2024-06-17 22:56:04', '2024-06-17 22:56:04'),
+(138, 'n/a', 'EFTO-TAR', 'Cenizal', 'Patricia Ann', 'N/A', 'HealthMed Drugstrore', '454600416', '09914242312/09061748464', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Capas', 'Santo Rosario', NULL, NULL, NULL, '2024-06-17 22:58:18', '2024-06-17 22:58:18'),
+(139, 'n/a', 'EFTO-CAG', 'Gallay', 'Renato', 'C', 'BARBIE SARI-SARI STORE', NULL, '09450774935', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Pudtol', NULL, NULL, NULL, NULL, '2024-06-17 22:59:13', '2024-06-17 22:59:13'),
+(140, 'n/a', 'EFTO-TAR', 'Salvador', 'Jessieline', 'R.', 'N/A', 'N/A', '09267383903', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Santa Ignacia', 'Botbotones', NULL, NULL, NULL, '2024-06-17 23:04:06', '2024-06-17 23:04:06'),
+(141, 'n/a', 'EFTO-TAR', 'Celario', 'Noel', 'V.', 'N/A', 'N/A', '09279461598/0978268805', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Camiling', 'Marawi', NULL, NULL, NULL, '2024-06-17 23:05:58', '2024-06-17 23:05:58'),
+(142, 'n/a', 'EFTO-TAR', 'Capiendo', 'Angelica', 'O.', 'Tenven Consumer Good Wholesaling', 'N/A', '09381748609', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'City of Tarlac ', 'Burot', NULL, NULL, NULL, '2024-06-17 23:09:43', '2024-06-17 23:09:43'),
+(143, 'n/a', 'EFTO-TAR', 'Caballero', 'Maricel', 'Mandi', 'Tita Cel\'s Tindahan', 'N/A', '09688565948', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Gerona', 'Parsolingan', NULL, NULL, NULL, '2024-06-17 23:11:49', '2024-06-17 23:11:49'),
+(144, 'n/a', 'EFTO-CAG', 'Galviso', 'Melowin', 'C', 'Goldwin Shop', '700-322-220', '09560772234', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Pengue', NULL, NULL, NULL, '2024-06-17 23:15:32', '2024-06-17 23:15:32'),
+(145, 'n/a', 'EFTO-TAR', 'Atienza', 'Vanessa Joyce', 'N/A', 'Basteakoy Nami\'s Takoyaki', 'N/A', '09266117261', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'Camiling', 'Bobon 1st', NULL, NULL, NULL, '2024-06-17 23:17:09', '2024-06-17 23:17:09'),
+(146, 'n/a', 'EFTO-CAG', 'Ganzon', 'Marian Joy', 'C', '3 Roses', NULL, '09053586532', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Linao West', NULL, NULL, NULL, '2024-06-17 23:19:06', '2024-06-17 23:19:06'),
+(147, 'n/a', 'EFTO-TAR', 'Acosta', 'Alberto', 'N/A', 'Acosta Grocery store', 'N/A', '0945-466-3029/0977-381-7698', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'San Manuel', 'Poblacion', NULL, NULL, NULL, '2024-06-17 23:19:21', '2024-06-17 23:19:21'),
+(148, 'n/a', 'EFTO-CAG', 'Gaspar', 'Emmalyn', 'A', 'Hely\'s Sari Sari Store', '933-422-858', '09153372909', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Gattaran', NULL, NULL, NULL, NULL, '2024-06-17 23:21:48', '2024-06-17 23:21:48'),
+(149, 'n/a', 'EFTO-TAR', 'Concepcion', 'Tan', 'N/A', 'N/A', NULL, '09279194256', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'City of Batac', 'San Mateo', NULL, NULL, NULL, '2024-06-17 23:25:03', '2024-06-17 23:25:03'),
+(150, 'n/a', 'EFTO-TAR', 'Tabillos', 'Marina', 'G.', 'N/A', 'N/A', '09155695919', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'City of Batac', 'San Mateo', NULL, NULL, NULL, '2024-06-17 23:27:28', '2024-06-17 23:27:28'),
+(151, 'n/a', 'EFTO-CAG', 'Guyagoy', 'Janelle', 'A', 'Erins Choice Variety Shop', '446393081', '09177130350', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Leonarda', NULL, NULL, NULL, '2024-06-17 23:28:49', '2024-06-17 23:28:49'),
+(152, 'n/a', 'EFTO-TAR', 'Sonido', 'Leylani', 'Rinen', 'DL\'s Sari-Sari Store', '929554174', '09293808190', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'Badoc', 'Alogoog', NULL, NULL, NULL, '2024-06-17 23:29:13', '2024-06-17 23:29:13'),
+(153, 'n/a', 'EFTO-TAR', 'Saep', 'Luzviminda', 'N/A', 'Louies Levin\'s Bakery and Store', 'N/A', '0999-991-8286', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'Paoay', 'Nagbacalan', NULL, NULL, NULL, '2024-06-17 23:31:33', '2024-06-17 23:31:33'),
+(154, 'n/a', 'EFTO-TAR', 'Rosqueta', 'Noel', 'R.', 'Joakris Foodhouse', 'N/A', '09305556484', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'Marcos', 'Lydia ', NULL, NULL, NULL, '2024-06-17 23:33:09', '2024-06-17 23:33:09'),
+(155, 'n/a', 'EFTO-CAG', 'Ibañez', 'Soella Jazer', 'B', 'MARITONI GROCERY', '224305681', '09617793680', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Rizal', 'Bulanao', NULL, NULL, NULL, '2024-06-17 23:34:21', '2024-06-17 23:38:47'),
+(156, 'n/a', 'EFTO-CAG', 'Ibañez', 'Soella Jazer', 'B', 'MAMA MIAZ', '417083915', '09176283339', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Rizal', 'Dagupan Centro ', NULL, NULL, NULL, '2024-06-17 23:37:58', '2024-06-17 23:37:58'),
+(157, 'n/a', 'EFTO-TAR', 'Romero', 'Benilda', 'Pastor', 'Bien Alexis Sari-Sari Store', 'N/A', '09152587003', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'Bacarra', 'Santa Rita ', NULL, NULL, NULL, '2024-06-17 23:38:08', '2024-06-17 23:38:08'),
+(158, 'n/a', 'EFTO-TAR', 'Queja', 'Rogelio', 'A.', 'R. Queja Store', 'N/A', '09287366070', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'Bacarra', 'Buyon', NULL, NULL, NULL, '2024-06-17 23:40:20', '2024-06-17 23:40:20'),
+(159, 'n/a', 'EFTO-TAR', 'Paredes', 'Amalia', 'N/A', 'N/A', 'N/A', '09157388617', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'Bacarra', NULL, NULL, NULL, NULL, '2024-06-17 23:42:24', '2024-06-17 23:42:24'),
+(160, 'n/a', 'EFTO-TAR', 'Pascua', 'Nolie', 'Calaycay', 'Hillside Store', 'N/A', '09189615469', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'Badoc', 'Mabusag Norte', NULL, NULL, NULL, '2024-06-17 23:44:10', '2024-06-17 23:44:10'),
+(161, 'n/a', 'EFTO-CAG', 'Jusay', 'Wenelyn', 'I', 'IGNACIO\'S STORE', '480-939-453', '09156376455/09560988859', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Santa Ana', 'Centro ', '242 Plamera St', NULL, NULL, '2024-06-17 23:45:50', '2024-06-17 23:45:50'),
+(162, 'n/a', 'EFTO-TAR', 'Pacubat', 'Ma. Karen Mae', 'P.', 'N/A', 'N/A', '09203902654/09971116214', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'Pinili', 'Valbuena ', NULL, NULL, NULL, '2024-06-17 23:46:34', '2024-06-17 23:46:34'),
+(163, 'n/a', 'EFTO-CAG', 'Kiser', 'Jonalyn', 'G', 'CALANAN GENERAL MERCHANDISE', NULL, '099353432450', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Rizal', 'San Pascual', NULL, NULL, NULL, '2024-06-17 23:48:36', '2024-06-17 23:48:36'),
+(164, 'n/a', 'EFTO-TAR', 'Macalma', 'Zyralyne', 'P.', 'Gieli\"s', 'N/A', '0969223886', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'Dumalneg', 'Kalaw', NULL, NULL, NULL, '2024-06-17 23:48:47', '2024-06-17 23:48:47'),
+(165, 'n/a', 'EFTO-TAR', 'Marcos', 'Gennie', 'N/A', 'N/A', 'N/A', '0927-756-7620', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'Sarrat', 'San Pedro', NULL, NULL, NULL, '2024-06-17 23:50:45', '2024-06-17 23:50:45'),
+(166, 'n/a', 'EFTO-CAG', 'Lago', 'Carmencita', 'M', 'CARMENCITA\'S SARI-SARI STORE', NULL, '09072989181', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Pamplona', 'Bidduang', NULL, NULL, NULL, '2024-06-17 23:51:13', '2024-06-17 23:51:13'),
+(167, 'n/a', 'EFTO-TAR', 'Laguitan', 'Gemalyn', 'Lacuesta', 'N/A', 'N/A', '09773066357', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'Pinili', 'Capangdanan', NULL, NULL, NULL, '2024-06-17 23:52:45', '2024-06-17 23:52:45'),
+(168, 'n/a', 'EFTO-CAG', 'Lagundi', 'Ma. Elena', 'C', 'J-dee Store', NULL, '09752900493', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Cataggaman Pardo', NULL, NULL, NULL, '2024-06-17 23:52:53', '2024-06-17 23:52:53'),
+(169, 'n/a', 'EFTO-CAG', 'Lopez', 'Milagros', 'C', 'ALIM\'S SARI-SARI STORE - JAYLO\'S SNACK HOUSE', NULL, '09056514420', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'Turod', NULL, NULL, NULL, '2024-06-17 23:56:31', '2024-06-17 23:56:31'),
+(170, 'n/a', 'EFTO-CAG', 'Manalo', 'Rosalinda', 'D', 'Riverside Sari Sari Store', '432990769', '09175922050', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Buntun', NULL, NULL, NULL, '2024-06-18 00:00:29', '2024-06-18 00:00:29'),
+(171, 'n/a', 'EFTO-TAR', 'Garcia', 'Gueni', 'Ragmat', 'Ton ton E-load Prepaid Cards &Accessories Trading', 'N/A', '09056552728', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'Badoc', 'Garreta ', NULL, NULL, NULL, '2024-06-18 00:00:47', '2024-06-18 00:00:47'),
+(172, 'n/a', 'EFTO-TAR', 'Dawaton', 'Vick Michael', 'N/A', 'JKN Variety Store', '293898364', '09266281809', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'Piddig', 'Estancia', NULL, NULL, NULL, '2024-06-18 00:03:06', '2024-06-18 00:03:06'),
+(173, 'n/a', 'EFTO-CAG', 'Manuel', 'Sylvester', 'A', 'Bas Tea', '411823614', '09361920854', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Iguig', 'San Esteban', NULL, NULL, NULL, '2024-06-18 00:03:26', '2024-06-18 00:03:26'),
+(174, 'n/a', 'EFTO-TAR', 'Chua', 'Gemma Aurora', 'D.', 'GEMMA\'S BAKESHOP & GROCERY', 'N/A', '09189395401', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'City of Batac', 'Ablan Pob.', NULL, NULL, NULL, '2024-06-18 00:06:02', '2024-06-18 00:06:02'),
+(175, 'n/a', 'EFTO-TAR', 'Co', 'Erlinda', 'S.', 'ESC Merchandising', '936944294', '09565317037', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'City of Batac', 'Ablan Pob.', NULL, NULL, NULL, '2024-06-18 00:08:06', '2024-06-18 00:08:06'),
+(176, 'n/a', 'EFTO-TAR', 'Alvarez', 'John Stephen', 'N/A', 'N/A', 'N/A', '09214772431', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'Pasuquin', 'Poblacion 1', NULL, NULL, NULL, '2024-06-18 00:10:13', '2024-06-18 00:10:13'),
+(177, 'n/a', 'EFTO-TAR', 'Aguilar', 'Lorna', 'B.', 'Lorna Flowershop', 'N/A', '09171269885', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'San Nicolas', 'San Francisco ', NULL, NULL, NULL, '2024-06-18 00:13:41', '2024-06-18 00:13:41'),
+(178, 'n/a', 'EFTO-CAG', 'Mamba', 'Mary Corinne', 'P', 'KC\'s Twenty Four-7even Convenient Store', '917819057', '09159476772', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuao', 'Poblacion I', NULL, NULL, NULL, '2024-06-18 00:16:10', '2024-06-18 00:16:10'),
+(179, 'n/a', 'EFTO-CAG', 'Mamba', 'Mary Corinne', 'P', 'KC\'s Twenty Four-7even Convenient Store', '917819057', '09159476772', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuao', 'Poblacion I', NULL, NULL, NULL, '2024-06-18 00:17:55', '2024-06-18 00:17:55'),
+(180, 'n/a', 'EFTO-CAG', 'Maribay', 'Maribel', 'B', 'M. B. MARIBAY STORE', '919978961', '09753079166', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Camasi', NULL, NULL, NULL, '2024-06-18 00:19:31', '2024-06-18 00:19:31'),
+(181, 'n/a', 'EFTO-CAG', 'Martinez', 'Shakey', 'L', 'S&M Food House and Panciteria', NULL, '09774403039', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Rizal', 'Dagupan Weste', NULL, NULL, NULL, '2024-06-18 00:22:47', '2024-06-18 00:22:47'),
+(182, 'n/a', 'EFTO-CAG', 'Medrano', 'Aaron', 'D', 'MTE Store', NULL, '0935-833-4368', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Nannarian', NULL, NULL, NULL, '2024-06-18 00:24:24', '2024-06-18 00:24:24'),
+(183, 'n/a', 'EFTO-CAG', 'Nicolas', 'Sheryl', 'S', 'SARAH SARI-SARI STORE', '297155307', '09167701786', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Santa Ana', 'Centro ', NULL, NULL, NULL, '2024-06-18 00:26:36', '2024-06-18 00:26:36'),
+(184, 'n/a', 'EFTO-CAG', 'Obaro', 'Eduardo', 'S', 'AZEA STORE', '101683887', '09216602384', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Iguig', 'Gammad', 'Blk 27 Lot 7 Womderland Homes subdivision', NULL, NULL, '2024-06-18 00:29:16', '2024-06-18 00:29:16'),
+(185, 'n/a', 'EFTO-CAG', 'Obaro', 'Florenda', 'D', 'Perpetual Village Corner Store', '193256340', '09279491570', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Ugac Sur', 'Blk 12 Lot 2 St. Mary St. Perpetual Village', NULL, NULL, '2024-06-18 00:32:39', '2024-06-18 00:32:39'),
+(186, 'n/a', 'EFTO-CAG', 'Perez', 'Marife', 'C', 'MARCELO\'S Diner', NULL, '09175785054', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Nangalisan', NULL, NULL, NULL, '2024-06-18 00:37:15', '2024-06-18 00:37:15'),
+(187, 'n/a', 'EFTO-CAG', 'Ramos', 'John Kennedy', 'b', 'Amelie Aquabreeze Water Refilling Station', NULL, '09262714799', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Carig', NULL, NULL, NULL, '2024-06-18 00:40:12', '2024-06-18 00:40:12'),
+(188, 'n/a', 'EFTO-CAG', 'Rivera', 'Jewel', 'P', 'BEE\'S MINIMART', NULL, '0936-364-9869', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Carig', '529 Fe Pasimuro St', NULL, NULL, '2024-06-18 00:43:21', '2024-06-18 00:43:21'),
+(189, 'n/a', 'EFTO-CAG', 'Rojo', 'Cristina', 'T', 'ZEUS STORE', NULL, '09753987593', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Centro Northwest ', '300 Bonifacio St.', NULL, NULL, '2024-06-18 00:45:53', '2024-06-18 00:45:53'),
+(190, 'n/a', 'EFTO-CAG', 'Ruma', 'Soledad', 'A', 'Aoen-Ruma Sari- Sari Store', NULL, '0968-644-6995', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Conner', 'Poblacion', NULL, NULL, NULL, '2024-06-18 00:50:00', '2024-06-18 00:50:00'),
+(191, 'n/a', 'EFTO-CAG', 'Sabandal', 'Margie', 'B', 'Margie B Sabandal', '140067473', '09175467347', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Aparri', 'Macanaya', NULL, NULL, NULL, '2024-06-18 00:51:53', '2024-06-18 00:51:53'),
+(192, 'n/a', 'EFTO-CAG', 'Sagun', 'Aileen Beth', 'G', 'A & J FOOD HOUSE', '931510111', '097773665276/09771324308', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Pudtol', 'Poblacion', '56 Bala St.', NULL, NULL, '2024-06-18 00:54:26', '2024-06-18 00:54:26'),
+(193, 'n/a', 'EFTO-CAG', 'Samonte', 'Angelyn Marie', 'S', 'MANG TONY\'S SEAFOOD GRILL HAUS', NULL, '09568168885', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Rizal', 'San Juan', NULL, NULL, NULL, '2024-06-18 00:58:09', '2024-06-18 00:58:09'),
+(194, 'n/a', 'EFTO-CAG', 'Sibbaluca', 'Diana  Rose', 'A', 'TS Construction Supply', NULL, '09458692671', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Dodan', NULL, NULL, NULL, '2024-06-18 01:01:13', '2024-06-18 01:01:13'),
+(195, 'n/a', 'EFTO-CAG', 'Suga', 'Ruzzel', 'M', 'Kelz Pharmaceuticals', NULL, '09560695529', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Lasam', 'Centro I ', NULL, NULL, NULL, '2024-06-18 01:02:59', '2024-06-18 01:02:59'),
+(196, 'n/a', 'EFTO-CAG', 'Tabliago', 'Richard', 'S', 'Kuya Richard Pancit Cabagan', NULL, '09167427649/09155275114', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Sanchez-Mira', 'Centro I ', NULL, NULL, NULL, '2024-06-18 01:04:33', '2024-06-18 01:04:33'),
+(197, 'n/a', 'EFTO-CAG', 'Tagama', 'Zenaida', 'B', 'Tagama Store', NULL, '09976917417', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caritan Sur', NULL, NULL, NULL, '2024-06-18 01:06:17', '2024-06-18 01:06:17'),
+(198, 'n/a', 'EFTO-CAG', 'Taguibao', 'Celia', 'T', 'Celia Taguibao Store', NULL, '09970788838', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Dodan', NULL, NULL, NULL, '2024-06-18 01:08:30', '2024-06-18 01:08:30'),
+(199, 'n/a', 'EFTO-CAG', 'Talimbatog', 'Arthella', 'B', 'AZ Mini Mart', '700267442', '09176296889', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Kabugao ', 'Poblacion', NULL, NULL, NULL, '2024-06-18 01:10:07', '2024-06-18 01:10:07'),
+(200, 'n/a', 'EFTO-CAG', 'Teologo', 'Elizabeth', 'A', 'TEOLOGO SARI SARI STORE', NULL, '09559466217/09173916110', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Iraga', NULL, NULL, NULL, '2024-06-18 01:12:35', '2024-06-18 01:12:35'),
+(201, 'n/a', 'EFTO-CAG', 'Teologo', 'Gregoria', 'M', 'Teologo Sari Sari Store', NULL, '09268621658', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Capatan', NULL, NULL, NULL, '2024-06-18 01:14:34', '2024-06-18 01:14:34'),
+(202, 'n/a', 'EFTO-CAG', 'Tierro', 'Sarah Mae', 'M', 'WS Store', NULL, '09363547425', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Lal-Lo', 'Catayauan', NULL, NULL, NULL, '2024-06-18 01:16:08', '2024-06-18 01:16:08');
+INSERT INTO `customers` (`id`, `distributor`, `branch_code`, `lastname`, `firstname`, `middlename`, `companyname`, `tin`, `contact_no`, `email`, `address`, `region`, `province`, `city`, `brgy`, `subdivision`, `latitude`, `longitude`, `created_at`, `updated_at`) VALUES
+(203, 'n/a', 'EFTO-CAG', 'Tillo', 'Jhonny Boy', 'A', 'Tillo Agri & Poultry Supplies', '457791006', '09672648567', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Gattaran', 'San Vicente', NULL, NULL, NULL, '2024-06-18 01:18:41', '2024-06-18 01:18:41'),
+(204, 'n/a', 'EFTO-CAG', 'Tolentino', 'Rochelle', 'C', 'Tolentino Sari-Sari Store', NULL, '09066593172', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Carig', NULL, NULL, NULL, '2024-06-18 01:21:03', '2024-06-18 01:21:03'),
+(205, 'n/a', 'EFTO-CAG', 'Torio', 'Lorivina', 'G', 'LORIE\'S STORE', NULL, '09169906704', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Rizal', 'Casigayan', NULL, NULL, NULL, '2024-06-18 01:22:37', '2024-06-18 01:22:37'),
+(206, 'n/a', 'EFTO-CAG', 'Tuddao', 'Lemuel', 'C', 'Sari-sari Store', NULL, '09561060360', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Annafunan West', NULL, NULL, NULL, '2024-06-18 01:24:24', '2024-06-18 01:24:24'),
+(207, 'n/a', 'EFTO-CAG', 'Ubina', 'Rei Kristoffer', 'C', 'RK Ubina Family Health Care Clinic and Drugstore', '947934369', '09178970390', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Sampaguita', NULL, NULL, NULL, '2024-06-18 01:26:05', '2024-06-18 01:26:05'),
+(208, 'n/a', 'EFTO-CAG', 'Umayam', 'Edwin', 'A', 'Fhines Water Refilling Station', NULL, '09158882938', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Lal-Lo', 'Centro ', 'Rosales st', NULL, NULL, '2024-06-18 01:29:27', '2024-06-18 01:29:27'),
+(209, 'n/a', 'EFTO-CAG', 'Urbino', 'Ma. Librada', 'M', 'YC\'s Variety Store', '236875297', '09951000511/09682698048', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Pudtol', 'Emilia', 'Rang ay St', NULL, NULL, '2024-06-18 01:32:34', '2024-06-18 01:32:34'),
+(210, 'n/a', 'EFTO-TAR', 'Wandas', 'Agnes', 'D.', 'A.D. Wandas Store', 'N/A', '09185892391/09666884626', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Suyo', 'Uso', NULL, NULL, NULL, '2024-06-19 19:53:57', '2024-06-19 19:53:57'),
+(211, 'n/a', 'EFTO-TAR', 'Valdez', 'Jhazel', 'Panaglima', 'Lucky JJJ Plastics Products Trading', 'N/A', '09459747150', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'City of Candon', 'San Nicolas', NULL, NULL, NULL, '2024-06-19 20:01:35', '2024-06-19 20:01:35'),
+(212, 'n/a', 'EFTO-TAR', 'Tolentino', 'Judy', 'N/A', 'Dadas Litson', 'N/A', '09052651675', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Santa Cruz', 'Poblacion Este', NULL, NULL, NULL, '2024-06-19 20:04:33', '2024-06-19 20:04:33'),
+(213, 'n/a', 'EFTO-TAR', 'Tolentino', 'Jomar', 'N/A', 'JLA\'s Variety Store', '700522395', '09275269846/09684552393', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Salcedo', 'Poblacion Sur', NULL, NULL, NULL, '2024-06-19 20:07:11', '2024-06-19 20:07:11'),
+(214, 'n/a', 'EFTO-TAR', 'Rebuyon', 'Ricel', 'N/A', 'Teas Marias Cafe', 'N/A', 'N/A', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'San Juan', 'Bannuar ', NULL, NULL, NULL, '2024-06-19 20:14:10', '2024-06-19 20:14:10'),
+(215, 'n/a', 'EFTO-TAR', 'Ragudo', 'Jovy', 'C.', 'Mapples ang Mumbles Variety Store', 'N/A', '09950909148', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Cabugao', 'Rizal ', NULL, NULL, NULL, '2024-06-19 20:15:47', '2024-06-19 20:15:47'),
+(216, 'n/a', 'EFTO-TAR', 'Racca', 'Jovelyn', 'C.', '1021 Fruit and Tea', '268782531', '09564405298/09159961580', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Narvacan', 'Quinarayan', NULL, NULL, NULL, '2024-06-19 21:04:52', '2024-06-19 21:04:52'),
+(217, 'n/a', 'EFTO-TAR', 'Peralta', 'Mildred', 'Dominguez', 'A and A Store', 'N/A', '09674292515', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Santo Domingo', 'Camestizoan', NULL, NULL, NULL, '2024-06-19 21:07:16', '2024-06-19 21:07:16'),
+(218, 'n/a', 'EFTO-TAR', 'Paet', 'Raymund', 'Piano', 'Shaira Food Hub', 'N/A', '09177025516', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Bantay', 'Naguiddayan', NULL, NULL, NULL, '2024-06-19 21:09:51', '2024-06-19 21:09:51'),
+(219, 'n/a', 'EFTO-TAR', 'Ordanza', 'Mark Ralphie', 'Baltazar', 'Amart Minimart', '291903004', '09772717286', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Santo Domingo', 'Nambaran', NULL, NULL, NULL, '2024-06-19 21:13:17', '2024-06-19 21:13:17'),
+(220, 'n/a', 'EFTO-TAR', 'Ocana', 'Joseph', 'N/A', 'Chefs Boy Bakeshop', 'N/A', '09295334722', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Tagudin', NULL, NULL, NULL, NULL, '2024-06-19 21:27:03', '2024-06-19 21:27:03'),
+(221, 'n/a', 'EFTO-TAR', 'Manogan', 'Rodelyn', 'N/A', 'Rodelyn\'s Store', 'N/A', '09214589560/09162405301', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Banayoyo', 'Poblacion', NULL, NULL, NULL, '2024-06-19 21:29:28', '2024-06-19 21:29:28'),
+(222, 'n/a', 'EFTO-TAR', 'Luis', 'Lyle Adams', 'P.', 'Ely Gino 1424', 'N/A', '091735670778', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Banayoyo', 'Poblacion', NULL, NULL, NULL, '2024-06-19 21:34:17', '2024-06-19 21:34:17'),
+(223, 'n/a', 'EFTO-TAR', 'Lorenzana', 'Leonora', 'N/A', 'Gieworfe Cafe and Store', 'N/A', '09279332347/09186939625', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Tagudin', 'Dardarat', NULL, NULL, NULL, '2024-06-19 21:37:54', '2024-06-19 21:37:54'),
+(224, 'n/a', 'EFTO-TAR', 'Igarta', 'Ziegrid', 'Agustin', 'Krizz Keith Online Shop', 'N/A', '09706500234', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Sinait', 'Duyayyat', NULL, NULL, NULL, '2024-06-19 21:40:54', '2024-06-19 21:40:54'),
+(225, 'n/a', 'EFTO-TAR', 'Ilar', 'Elbert', 'Ramos', 'Jhoella\'s Store', 'N/A', '09955747072/09454573807', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Sinait', 'Namnama ', NULL, NULL, NULL, '2024-06-19 21:44:36', '2024-06-19 21:44:36'),
+(226, 'n/a', 'EFTO-TAR', 'Ibea', 'Fe', 'N/A', 'Ibea\'s Minimart', 'N/A', '09059124282', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Sinait', 'Ricudo', NULL, NULL, NULL, '2024-06-19 21:46:38', '2024-06-19 21:46:38'),
+(227, 'n/a', 'EFTO-CAG', 'Binarao', 'Johanna', 'P', 'JJE FOOD MANUFACTURERS STORE', NULL, '09354075276', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Centro Southwest ', '#177 Aguinaldo St.', NULL, NULL, '2024-06-19 21:48:14', '2024-06-19 21:48:14'),
+(228, 'n/a', 'EFTO-TAR', 'Ibanez', 'Rochelle', 'N/A', 'Cindy\'s', NULL, '09263219739', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Sinait', NULL, NULL, NULL, NULL, '2024-06-19 21:48:39', '2024-06-19 21:48:39'),
+(229, 'n/a', 'EFTO-CAG', 'Boucher', 'Edna', 'D', 'MANG RAUL\'S LECHON', NULL, '09171420382', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Enrile', NULL, NULL, NULL, NULL, '2024-06-19 21:49:52', '2024-06-19 21:49:52'),
+(230, 'n/a', 'EFTO-TAR', 'Hsu', 'Sheng Yuan', 'Molina', 'Magsingal Basteakoy', 'N/A', '09517096423', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Magsingal', 'San Basilio ', NULL, NULL, NULL, '2024-06-19 21:51:07', '2024-06-19 21:51:07'),
+(231, 'n/a', 'EFTO-TAR', 'Doria', 'Claudette', 'N/A', 'Basteakoy', 'N/A', '09360411810', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Cabugao', 'Baclig ', NULL, NULL, NULL, '2024-06-19 21:52:59', '2024-06-19 21:52:59'),
+(232, 'n/a', 'EFTO-CAG', 'Castillo', 'Edmund Jaycee', 'D', 'Castillo Store', NULL, '09178944975', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Gattaran', 'Nabaccayan', NULL, NULL, NULL, '2024-06-19 21:54:40', '2024-06-19 21:54:40'),
+(233, 'n/a', 'EFTO-TAR', 'Dela Cruz', 'Frida', 'P.', 'Bonzai na Kainan Food Houz', 'N/A', '09661997919', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'City of Candon', 'San Jose ', NULL, NULL, NULL, '2024-06-19 21:56:37', '2024-06-19 21:56:37'),
+(234, 'n/a', 'EFTO-TAR', 'Dela Rita', 'Michelle', 'N/A', 'Natnat Store', 'N/A', '09499278911', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Suyo', 'Cabugao', NULL, NULL, NULL, '2024-06-19 21:58:30', '2024-06-19 21:58:30'),
+(235, 'n/a', 'EFTO-TAR', 'Dayoan', 'Roselily', 'S.', 'Xiann General Merchandise', 'N/A', '09156541885', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Sinait', 'Dadalaquiten Norte', NULL, NULL, NULL, '2024-06-19 22:00:25', '2024-06-19 22:00:25'),
+(236, 'n/a', 'EFTO-TAR', 'Costales', 'Nhelmarie', 'G.', 'Angela Store', 'N/A', '09156541885', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Santa Maria', 'Lingsat', NULL, NULL, NULL, '2024-06-19 22:01:53', '2024-06-19 22:01:53'),
+(237, 'n/a', 'EFTO-TAR', 'Calvo', 'Maria Theresa', 'N.', 'N/A', 'N/A', '09983071447', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'City of Candon', 'Langlangca Primero', NULL, NULL, NULL, '2024-06-19 22:03:59', '2024-06-19 22:03:59'),
+(238, 'n/a', 'EFTO-CAG', 'Dilla', 'Evangeline', 'A', 'Mc Eve\'s Store', '411978155', '09450897621', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Rizal', 'Magsaysay', NULL, NULL, NULL, '2024-06-19 22:05:22', '2024-06-19 22:05:22'),
+(239, 'n/a', 'EFTO-TAR', 'Cabrera', 'Randolf John', 'Crisostomo', 'Milkteaza Milktea Shop', 'N/A', '09178295139', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Nagbukel', 'Poblacion West', NULL, NULL, NULL, '2024-06-19 22:06:24', '2024-06-19 22:06:24'),
+(240, 'n/a', 'EFTO-TAR', 'Cortez', 'Nelia', 'Z.', 'Hanans Sari-Sari Store', '759526957', '09560213253', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'San Ildefonso', 'Bungro', NULL, NULL, NULL, '2024-06-19 22:08:41', '2024-06-19 22:08:41'),
+(241, 'n/a', 'EFTO-CAG', 'Gannaban', 'Minerva', 'M', '3 Roses', NULL, '09278275876', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Amulung', 'Palayag', NULL, NULL, NULL, '2024-06-19 22:09:22', '2024-06-19 22:09:22'),
+(242, 'n/a', 'EFTO-TAR', 'Cac', 'Noem Bless', 'N/A', 'NBC Pharmacy and General Merchandise', 'N/A', 'N/A', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Narvacan', 'Lungog', NULL, NULL, NULL, '2024-06-19 22:10:34', '2024-06-19 22:12:52'),
+(243, 'n/a', 'EFTO-TAR', 'Blancia', 'Emerita', 'C.', 'Emeritz Bread Corner', 'N/A', '09214159979', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Cabugao', NULL, NULL, NULL, NULL, '2024-06-19 22:12:32', '2024-06-19 22:12:32'),
+(244, 'n/a', 'EFTO-CAG', 'Luna', 'Karen Marie', 'S', 'Tropicon', NULL, '09175992134', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Ugac Sur', '24 Bassig St.', NULL, NULL, '2024-06-19 22:13:27', '2024-06-19 22:13:27'),
+(245, 'n/a', 'EFTO-TAR', 'Alcosero', 'Mary Grace', 'N/A', 'Ophir Store', 'N/A', '09657254430/09563360115', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'Galimuyod', 'Borobor', NULL, NULL, NULL, '2024-06-19 22:15:08', '2024-06-19 22:15:08'),
+(246, 'n/a', 'EFTO-CAG', 'Manuel', 'Sylvester', 'A', 'Bas Tea', '411823614', '09361920854', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Iguig', 'San Esteban', 'Zone 7', NULL, NULL, '2024-06-19 22:15:57', '2024-06-19 22:15:57'),
+(247, 'n/a', 'EFTO-TAR', 'Atmosfera', 'Alex', 'N/A', 'Kammetek Restaurant', 'N/A', '09169581179/09914956338', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'City of Candon', 'San Jose ', NULL, NULL, NULL, '2024-06-19 22:17:35', '2024-06-19 22:17:35'),
+(248, 'n/a', 'EFTO-CAG', 'Marcelo', 'Jocelyn', 'D', 'Damac Convenience Store', NULL, '09171506898', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Enrile', NULL, NULL, NULL, NULL, '2024-06-19 22:19:27', '2024-06-19 22:19:27'),
+(249, 'n/a', 'EFTO-TAR', 'Alonzo', 'Edylene', 'R.', 'N/A', 'N/A', '09266664926', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Sur', 'City of Vigan ', 'Barangay I ', NULL, NULL, NULL, '2024-06-19 22:19:29', '2024-06-19 22:19:29'),
+(250, 'n/a', 'EFTO-CAG', 'Mora', 'Marjorie Lyn', 'M', 'E L Sari-sari Store', NULL, '09959309836', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Linao East', NULL, NULL, NULL, '2024-06-19 22:22:45', '2024-06-19 22:22:45'),
+(251, 'n/a', 'EFTO-CAG', 'Pacis', 'Marites', 'M', 'FFE REFILLING', NULL, '09358013226', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuao', NULL, 'Centro II', NULL, NULL, '2024-06-19 22:25:55', '2024-06-19 22:25:55'),
+(252, 'n/a', 'EFTO-TAR', 'Davis', 'Angelyn', 'Dargo', 'tripple A', 'N/A', '09491307886', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Luba', 'Poblacion', NULL, NULL, NULL, '2024-06-19 22:26:34', '2024-06-19 22:26:34'),
+(253, 'n/a', 'EFTO-CAG', 'Pekas', 'Marjorie', 'L', 'CONNER MINIMART', NULL, '0935-990-8920', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Conner', 'Malama', NULL, NULL, NULL, '2024-06-19 22:29:31', '2024-06-19 22:29:31'),
+(254, 'n/a', 'EFTO-CAG', 'Perez', 'Jovelyn', 'A', 'Jhamila\'s Store', '719044070', '09355562871', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caggay', NULL, NULL, NULL, '2024-06-19 22:31:05', '2024-06-19 22:31:05'),
+(255, 'n/a', 'EFTO-TAR', 'Claustro', 'Imelda', 'N/A', 'Claustro Honeylette', '343310329', '09155562231', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Lagangilang', 'Laang', NULL, NULL, NULL, '2024-06-19 22:31:54', '2024-06-19 22:31:54'),
+(256, 'n/a', 'EFTO-CAG', 'Que', 'Catherine', 'A', 'Malakas Store', NULL, '09559506497', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Sanchez-Mira', 'Centro I ', NULL, NULL, NULL, '2024-06-19 22:33:24', '2024-06-19 22:33:24'),
+(257, 'n/a', 'EFTO-TAR', 'Claor', 'Nestor', 'Londe', 'Claor Sari-Sari store', '401707217', '09358482883', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'San Isidro', 'Pantoc', NULL, NULL, NULL, '2024-06-19 22:34:05', '2024-06-19 22:34:05'),
+(258, 'n/a', 'EFTO-CAG', 'Requino', 'Rozel', 'T', 'R & R GENERAL MERCHANDISE', NULL, NULL, NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Kabugao', 'Poblacion', NULL, NULL, NULL, '2024-06-19 22:35:57', '2024-06-19 22:36:28'),
+(259, 'n/a', 'EFTO-TAR', 'Claro', 'Jessa Marie', 'Bautista', 'Genan\'s General Merchandise', '314426415', '09774624550/09056706019/09774624717', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'San Juan', 'Poblacion', NULL, NULL, NULL, '2024-06-19 22:36:47', '2024-06-19 22:36:47'),
+(260, 'n/a', 'EFTO-CAG', 'Reyes', 'Leodegario', 'V', 'Reyes Store', NULL, '0915-855-0218', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Gonzaga', 'Baua', NULL, NULL, NULL, '2024-06-19 22:37:47', '2024-06-19 22:37:47'),
+(261, 'n/a', 'EFTO-TAR', 'Castillo', 'Frimalyn', 'B.', 'Jonathan Sari-Sari Store', 'N/A', '09995410402', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Bañacao', NULL, NULL, NULL, '2024-06-19 22:39:15', '2024-06-19 22:39:15'),
+(262, 'n/a', 'EFTO-TAR', 'Caoagas', 'Jessica', 'Balido', 'La Herencia Consumer Goods Store', 'N/A', '09178011056/09178785726', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Agtangao', NULL, NULL, NULL, '2024-06-19 22:42:19', '2024-06-19 22:42:19'),
+(263, 'n/a', 'EFTO-TAR', 'Burgos', 'Milagros', 'Cardenas', 'Clinica Dela Assumption', '127879685', '09177997644/09173012478', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Agtangao', NULL, NULL, NULL, '2024-06-19 22:45:27', '2024-06-19 22:45:27'),
+(264, 'n/a', 'EFTO-TAR', 'Buen', 'Marlene', 'N/A', 'DERFASIUL', 'N/A', '09173186614', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Bucay', 'South Poblacion', NULL, NULL, NULL, '2024-06-19 22:47:48', '2024-06-19 22:47:48'),
+(265, 'n/a', 'EFTO-TAR', 'Brillantes', 'Carina', 'N/A', 'Basteakoy', 'N/A', '09165519824', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Zone 6 Pob. ', NULL, NULL, NULL, '2024-06-19 22:49:43', '2024-06-19 22:49:43'),
+(266, 'n/a', 'EFTO-TAR', 'Botanes', 'Aida', 'Gandeza', 'YumHop', 'N/A', '09056573558', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Lagangilang', 'Tagodtod', NULL, NULL, NULL, '2024-06-19 22:51:24', '2024-06-19 22:51:24'),
+(267, 'n/a', 'EFTO-TAR', 'Bisares', 'Bernadette', 'Baculi', 'Jeg Consumer Trading', '439079918', '09500924990', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Luba', 'Poblacion', NULL, NULL, NULL, '2024-06-19 22:53:08', '2024-06-19 22:53:08'),
+(268, 'n/a', 'EFTO-TAR', 'Bisala', 'Elias', 'C.', 'Green Valley Bakeshop', 'N/A', '09062395994', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Zone 2 Pob.', NULL, NULL, NULL, '2024-06-19 22:57:00', '2024-06-19 22:57:00'),
+(269, 'n/a', 'EFTO-TAR', 'Belandres', 'Romela', 'N/A', 'EL-GD Merchandize', '127877900', '09774863833', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Pidigan', 'Poblacion', NULL, NULL, NULL, '2024-06-19 23:00:59', '2024-06-19 23:00:59'),
+(270, 'n/a', 'EFTO-TAR', 'Vargas', 'Ma. Kristella', 'Barbosa', 'Khristma Minmart', '365020572', '09167803944/09063364596', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Pidigan', 'Garreta', NULL, NULL, NULL, '2024-06-19 23:04:06', '2024-06-19 23:04:06'),
+(271, 'n/a', 'EFTO-TAR', 'Timbreza', 'Marinel', 'colobong', 'Lhiam Sari-Sari Store', 'N/A', '09052769582', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Bucay', 'San Miguel', NULL, NULL, NULL, '2024-06-19 23:07:10', '2024-06-19 23:07:10'),
+(272, 'n/a', 'EFTO-TAR', 'Tavares', 'May Ann', 'T.', 'Printing @ xerox services', 'N/A', '09982942877', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Lagangilang', 'Tagodtod', NULL, NULL, NULL, '2024-06-19 23:09:42', '2024-06-19 23:09:42'),
+(273, 'n/a', 'EFTO-TAR', 'Pescador', 'Divina', 'Rosete', 'Divina\'s Bakery', '229114785', '09057534074', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Tayum', 'Gaddani', NULL, NULL, NULL, '2024-06-19 23:11:52', '2024-06-19 23:11:52'),
+(274, 'n/a', 'EFTO-TAR', 'Pascua', 'Analecto', 'F.', 'N/A', 'N/A', '09774746849', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'La Paz', 'Bulbulala', NULL, NULL, NULL, '2024-06-19 23:14:31', '2024-06-19 23:14:31'),
+(275, 'n/a', 'EFTO-TAR', 'Palecpec', 'Michelle', 'Balubar', 'N/A', 'N/A', '09360414516/09351417976', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Cosili West', NULL, NULL, NULL, '2024-06-19 23:17:13', '2024-06-19 23:17:13'),
+(276, 'n/a', 'EFTO-TAR', 'Pacapac', 'Merce Rezah', 'T.', 'A and T Trading / K-Pax Store', 'N/A', '09516470905', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Dolores', 'Poblacion', NULL, NULL, NULL, '2024-06-19 23:21:12', '2024-06-19 23:23:06'),
+(277, 'n/a', 'EFTO-TAR', 'Ortega', 'Justine', 'S.', 'J&D STORE', '343155286', '09173693200', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Zone 5 Pob.', NULL, NULL, NULL, '2024-06-19 23:29:54', '2024-06-19 23:29:54'),
+(278, 'n/a', 'EFTO-TAR', 'Montero', 'Maria Lucille', 'L.', 'Maria Sari-Sari Store', 'N/A', '09264526365/09953615640', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Lagayan', 'Poblacion', NULL, NULL, NULL, '2024-06-19 23:32:14', '2024-06-19 23:32:14'),
+(279, 'n/a', 'EFTO-TAR', 'Millare', 'Isabel', 'Balneg', 'Alas sari-Sari Store', 'N/A', '09151505357/09353391671', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Zone 3 Pob.', NULL, NULL, NULL, '2024-06-19 23:35:25', '2024-06-19 23:35:25'),
+(280, 'n/a', 'EFTO-TAR', 'Millare', 'Benito', 'T.', 'B.T. Millare\'s Gen. Merchandizing', '129597648', '09558323722', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Tayum', 'Poblacion', NULL, NULL, NULL, '2024-06-19 23:38:37', '2024-06-19 23:38:37'),
+(281, 'n/a', 'EFTO-CAG', 'Aguilar', 'Arsenia', NULL, 'B.T AGUILAR', NULL, '09556034413', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caggay', 'Sampaguita St.', NULL, NULL, '2024-06-21 20:35:11', '2024-06-21 20:35:11'),
+(282, 'n/a', 'EFTO-CAG', 'Agcaoili', 'Shirly', NULL, 'GRAXIA\'S STORE', NULL, '09675908088', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Pamplona', NULL, NULL, NULL, NULL, '2024-06-21 20:42:31', '2024-06-21 20:42:31'),
+(283, 'n/a', 'EFTO-CAG', 'Alcantara', 'Arnold', NULL, 'AC ALCANTARA', NULL, '09176273591', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Claveria', 'Centro VI', 'Germana St.', NULL, NULL, '2024-06-21 20:45:00', '2024-06-21 20:45:00'),
+(284, 'n/a', 'EFTO-CAG', 'Batugal', 'Rhea', 'Micaela', 'Drop Zone Convenience Store', NULL, NULL, NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Iguig', 'Nattanzan ', NULL, NULL, NULL, '2024-06-21 20:55:34', '2024-06-21 20:55:34'),
+(285, 'n/a', 'EFTO-CAG', 'Batugal', 'Rhea', 'Micaela', 'Drop Zone Convenience Store', NULL, NULL, NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Iguig', 'Nattanzan ', NULL, NULL, NULL, '2024-06-21 20:55:37', '2024-06-21 20:55:37'),
+(286, 'n/a', 'EFTO-CAG', 'Carag', 'Jaycell', 'A', 'ZELL MINIMART', NULL, '09295822316', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Conner', 'Malama', NULL, NULL, NULL, '2024-06-21 20:58:42', '2024-06-21 20:58:42'),
+(287, 'n/a', 'EFTO-CAG', 'Carag', 'Kyla Micaela', NULL, 'KM DRUGSTORE', NULL, '09271456554', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Parug-parug', NULL, NULL, NULL, '2024-06-21 21:00:13', '2024-06-21 21:00:13'),
+(288, 'n/a', 'EFTO-CAG', 'Ceredon', 'Bernard', NULL, 'Wheyne Store', NULL, '09557024592', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City', 'Caritan Centro', 'Baggay Road', NULL, NULL, '2024-06-21 21:01:55', '2024-06-21 21:03:29'),
+(289, 'n/a', 'EFTO-CAG', 'Rey', 'Crispina', NULL, '4J\'s COSMETIC CENTER', NULL, '09927085010', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Iguig', 'Ajat ', NULL, NULL, NULL, '2024-06-21 21:04:48', '2024-06-21 21:04:48'),
+(290, 'n/a', 'EFTO-CAG', 'Curibang', 'Zenaida', 'P', 'Curibang Eatery', '907575003', '09069489754', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 11 ', 'Balzain Highway', NULL, NULL, '2024-06-21 21:08:05', '2024-06-21 21:08:05'),
+(291, 'n/a', 'EFTO-CAG', 'De Venecia', 'Haezel Anne', NULL, 'Zoey Bernice Sari-sari Store', NULL, '09958098057', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 11 ', '112 Balzain Highway', NULL, NULL, '2024-06-21 21:09:51', '2024-06-21 21:09:51'),
+(292, 'n/a', 'EFTO-CAG', 'Doniego', 'Ley', NULL, 'KING GROCERY', NULL, '09454267966', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Amulung', 'Baculud', 'Maharlika Highway Zone 7', NULL, NULL, '2024-06-21 21:12:37', '2024-06-21 21:12:37'),
+(293, 'n/a', 'EFTO-CAG', 'Garcia', 'Lolita', NULL, 'CHEALSEA\'S CONVENIENCE STORE', '968123261', '09277777251', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Santa Teresita', 'Centro East ', NULL, NULL, NULL, '2024-06-21 21:14:24', '2024-06-21 21:14:24'),
+(294, 'n/a', 'EFTO-CAG', 'Guillen', 'John Patrick', NULL, 'GHAEL\'S PHARMACY', NULL, '09772387927', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Claveria', 'Centro VI', NULL, NULL, NULL, '2024-06-21 21:16:29', '2024-06-21 21:16:29'),
+(295, 'n/a', 'EFTO-CAG', 'Layugan', 'Analyn', NULL, 'RICH ANN FUEL GAS STATION', NULL, '09158332848', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Gonzaga', 'Pateng', NULL, NULL, NULL, '2024-06-21 21:20:12', '2024-06-21 21:20:12'),
+(296, 'n/a', 'EFTO-CAG', 'Lara', 'Joseph Joshua', 'D', 'J Stop', '442542014', '09450753179', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Alimannao', NULL, NULL, NULL, '2024-06-21 21:22:42', '2024-06-21 21:23:06'),
+(297, 'n/a', 'EFTO-CAG', 'Marcelo', 'Jonathan', NULL, 'SAVE MO-TO MART', NULL, '09184765823', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Camalaniugan', NULL, 'KM 575 MGM Building Maharlika High way', NULL, NULL, '2024-06-21 21:26:27', '2024-06-21 21:26:27'),
+(298, 'n/a', 'EFTO-CAG', 'Noto', 'Julieta', NULL, 'JC NOTO STORE', NULL, '09069219421', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Piat', 'Poblacion I', NULL, NULL, NULL, '2024-06-21 21:27:40', '2024-06-21 21:27:40'),
+(299, 'n/a', 'EFTO-CAG', 'Ordas', 'Romerson', NULL, 'KE GENERAL MERCHANDISE', NULL, '09071773475', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Pinukpuk', NULL, NULL, NULL, NULL, '2024-06-21 21:29:15', '2024-06-21 21:29:15'),
+(300, 'n/a', 'EFTO-CAG', 'Orteza', 'Isagani', NULL, 'ORTEZA\'S STORE', NULL, '09152703164', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Sanchez-Mira', 'Centro II ', NULL, NULL, NULL, '2024-06-21 21:30:23', '2024-06-21 21:30:23'),
+(301, 'n/a', 'EFTO-CAG', 'Pablo', 'Zaldy', NULL, 'AZ STORE', NULL, '09163830027', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Gosi Sur', NULL, NULL, NULL, '2024-06-21 21:31:43', '2024-06-21 21:31:43'),
+(302, 'n/a', 'EFTO-CAG', 'Pasingan', 'Jaime', NULL, 'ERMIES STORE', NULL, '0967-668-4192', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Pinukpuk', 'Apatan', 'Tappo', NULL, NULL, '2024-06-21 21:33:58', '2024-06-21 21:33:58'),
+(303, 'n/a', 'EFTO-CAG', 'Rios', 'Teresita', NULL, 'EILEEN\'S FOOD HOUSEEILEEN\'S FOOD HOUSE', NULL, '0975939284', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Nangalisan', NULL, NULL, NULL, '2024-06-21 21:35:33', '2024-06-21 21:35:33'),
+(304, 'n/a', 'EFTO-CAG', 'Salviejo', 'Ryalin', NULL, 'Hadji Store', NULL, '09061852997', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caggay', NULL, NULL, NULL, '2024-06-21 21:36:47', '2024-06-21 21:36:47'),
+(305, 'n/a', 'EFTO-CAG', 'Tablac', 'Alden', NULL, 'TABLAC STORE', NULL, '09458834361', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Gonzaga', 'Santa Cruz', NULL, NULL, NULL, '2024-06-21 21:38:24', '2024-06-21 21:38:24'),
+(306, 'n/a', 'EFTO-CAG', 'Taloma', 'Ma. Angelica', NULL, 'Ma. Angelica Taloma', NULL, '09178995436', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Amulung', 'Cordova', NULL, NULL, NULL, '2024-06-21 21:39:55', '2024-06-21 21:39:55'),
+(307, 'n/a', 'EFTO-CAG', 'Vicera', 'Felicidad', NULL, 'VFM Food Products', NULL, '09554075543', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Santa Marcela', 'San Carlos', NULL, NULL, NULL, '2024-06-21 21:43:02', '2024-06-21 21:43:02'),
+(308, 'n/a', 'EFTO-CAG', 'Bayangan', 'Vilma Dame', 'R', 'Basteakoy', NULL, '09190002751', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caritan Sur', NULL, NULL, NULL, '2024-06-21 23:05:49', '2024-06-21 23:05:49'),
+(309, 'n/a', 'EFTO-CAG', 'Dagli', 'Margie', NULL, 'BUY D\' WAY FROZEN FOODS & MEAT SHOP', NULL, '09953178717', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Santa Ana', 'Centro ', NULL, NULL, NULL, '2024-06-21 23:11:22', '2024-06-21 23:11:22'),
+(311, 'n/a', 'EFTO-CAG', 'Javillonar', 'Edna', NULL, 'JAVILLONAR\'S STORE', NULL, '09063109142', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'kalinga', 'Rizal', NULL, NULL, NULL, NULL, '2024-06-21 23:24:54', '2024-06-21 23:24:54');
 
 -- --------------------------------------------------------
 
@@ -250,12 +555,10 @@ INSERT INTO `customers` (`id`, `distributor`, `branch_code`, `lastname`, `firstn
 -- Table structure for table `deliveries`
 --
 
-DROP TABLE IF EXISTS `deliveries`;
-CREATE TABLE IF NOT EXISTS `deliveries` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `deliveries` (
+  `id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -264,30 +567,27 @@ CREATE TABLE IF NOT EXISTS `deliveries` (
 -- Table structure for table `delivery_purchase_receipts`
 --
 
-DROP TABLE IF EXISTS `delivery_purchase_receipts`;
-CREATE TABLE IF NOT EXISTS `delivery_purchase_receipts` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `branch_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `dr_no` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+CREATE TABLE `delivery_purchase_receipts` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `branch_code` varchar(191) NOT NULL,
+  `dr_no` varchar(191) NOT NULL,
   `issue_date` date NOT NULL,
-  `status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Encoding',
-  `products` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `status` varchar(191) NOT NULL DEFAULT 'Encoding',
+  `products` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`products`)),
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `delivery_purchase_receipts_dr_no_unique` (`dr_no`),
-  KEY `delivery_purchase_receipts_branch_code_index` (`branch_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `user_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `delivery_purchase_receipts`
 --
 
 INSERT INTO `delivery_purchase_receipts` (`id`, `branch_code`, `dr_no`, `issue_date`, `status`, `products`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'EFTO-CAG', '123456', '2024-06-04', 'Saved', '[{\"code\":\"SC_RR\",\"description\":\"Small Cup Rocky Road\",\"quantity\":\"50\",\"unit\":\"Bag\\/s\",\"price\":450}]', '2024-06-04 19:06:54', '2024-06-04 19:07:48', 1),
-(2, 'EFTO-CAG', '28A-240122', '2024-06-02', 'Encoding', '[{\"code\":\"SC_RR\",\"description\":\"Small Cup Strawberry\",\"quantity\":\"30\",\"unit\":\"Bag\\/s\",\"price\":450}]', '2024-06-05 01:29:49', '2024-06-05 01:30:18', 1),
-(3, 'EFTO-CAG', '28A-240123', '2024-06-05', 'Saved', '[{\"code\":\"SC_BM\",\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Melon\",\"quantity\":\"30\",\"unit\":\"Bag\\/s\",\"price\":600},{\"code\":\"SC_BP\",\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan\",\"quantity\":\"26\",\"unit\":\"Bag\\/s\",\"price\":600},{\"code\":\"SC_BU\",\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Ube\",\"quantity\":\"26\",\"unit\":\"Bag\\/s\",\"price\":600},{\"code\":\"SC_MG\",\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Mango\",\"quantity\":\"30\",\"unit\":\"Bag\\/s\",\"price\":600},{\"code\":\"MC_CS\",\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese\",\"quantity\":\"112\",\"unit\":\"Bag\\/s\",\"price\":508},{\"code\":\"BC_CNC\",\"description\":\"180ml BIG CUP (6.0-oz) Cookies N\' Cream\",\"quantity\":\"26\",\"unit\":\"Bag\\/s\",\"price\":582},{\"code\":\"BC_CS\",\"description\":\"180ml BIG CUP (6.0-oz) Cheese\",\"quantity\":\"168\",\"unit\":\"Bag\\/s\",\"price\":582},{\"code\":\"BC_HH\",\"description\":\"180ml BIG CUP (6.0-oz) Halo halo\",\"quantity\":\"30\",\"unit\":\"Bag\\/s\",\"price\":582},{\"code\":\"SPS_CHO\",\"description\":\"SPECIAL STICKS Chocolate\",\"quantity\":\"38\",\"unit\":\"Bag\\/s\",\"price\":625},{\"code\":\"SPS_MK\",\"description\":\"SPECIAL STICKS Milk\",\"quantity\":\"42\",\"unit\":\"Bag\\/s\",\"price\":625},{\"code\":\"ICC_RR\",\"description\":\"ICE CREAM CONES Rocky Road\",\"quantity\":\"162\",\"unit\":\"Bag\\/s\",\"price\":468},{\"code\":\"PT_BM\",\"description\":\"PINT Buko Melon\",\"quantity\":\"171\",\"unit\":\"Pc\\/s\",\"price\":48},{\"code\":\"PT_CNC\",\"description\":\"PINT Cookies N\' Cream\",\"quantity\":\"171\",\"unit\":\"Pc\\/s\",\"price\":48},{\"code\":\"PT_CS\",\"description\":\"PINT Cheese\",\"quantity\":\"399\",\"unit\":\"Pc\\/s\",\"price\":48},{\"code\":\"PT_HH\",\"description\":\"PINT Halo halo\",\"quantity\":\"171\",\"unit\":\"Pc\\/s\",\"price\":48},{\"code\":\"PT_MG\",\"description\":\"PINT Mango\",\"quantity\":\"171\",\"unit\":\"Pc\\/s\",\"price\":48},{\"code\":\"PT_MOC\",\"description\":\"PINT Coffee Mocha Fudge\",\"quantity\":\"171\",\"unit\":\"Pc\\/s\",\"price\":48},{\"code\":\"1L_CF\",\"description\":\"1 LITER Chocofi\",\"quantity\":\"72\",\"unit\":\"Pc\\/s\",\"price\":97},{\"code\":\"1L_CNC\",\"description\":\"1 LITER Cookies N\' Cream\",\"quantity\":\"72\",\"unit\":\"Pc\\/s\",\"price\":97},{\"code\":\"1L_CS\",\"description\":\"1 LITER Cheese\",\"quantity\":\"504\",\"unit\":\"Pc\\/s\",\"price\":97},{\"code\":\"1L_MG\",\"description\":\"1 LITER Mango\",\"quantity\":\"72\",\"unit\":\"Bag\\/s\",\"price\":97},{\"code\":\"1L_MOC\",\"description\":\"1 LITER Coffee Mocha Fudge\",\"quantity\":\"72\",\"unit\":\"Bag\\/s\",\"price\":97},{\"code\":\"1.7L_CNC\",\"description\":\"1.7 LITER Cookies N\' Cream\",\"quantity\":\"210\",\"unit\":\"Pc\\/s\",\"price\":170},{\"code\":\"1.7L_CS\",\"description\":\"1.7 LITER Cheese\",\"quantity\":\"945\",\"unit\":\"Pc\\/s\",\"price\":170},{\"code\":\"1.7L_MOC\",\"description\":\"1.7 LITER Coffee Mocha Fudge\",\"quantity\":\"105\",\"unit\":\"Pc\\/s\",\"price\":170},{\"code\":\"1.7L_SS\",\"description\":\"1.7 LITER Strawberry Strawberry\",\"quantity\":\"105\",\"unit\":\"Pc\\/s\",\"price\":170},{\"code\":\"HG_BM\",\"description\":\"HALF GALLON (1.89L) Buko Melon\",\"quantity\":\"180\",\"unit\":\"Pc\\/s\",\"price\":170},{\"code\":\"HG_MG\",\"description\":\"HALF GALLON (1.89L) Mango\",\"quantity\":\"270\",\"unit\":\"Pc\\/s\",\"price\":170},{\"code\":\"HG_VNL\",\"description\":\"HALF GALLON (1.89L) Vanilla\",\"quantity\":\"180\",\"unit\":\"Pc\\/s\",\"price\":170},{\"code\":\"3.6L_CNC\",\"description\":\"3.6 LITER Cookies N\' Cream\",\"quantity\":\"108\",\"unit\":\"Pc\\/s\",\"price\":318},{\"code\":\"3.6L_CS\",\"description\":\"3.6 LITER Cheese\",\"quantity\":\"276\",\"unit\":\"Pc\\/s\",\"price\":318},{\"code\":\"3.6L_HH\",\"description\":\"3.6 LITER Halo halo\",\"quantity\":\"48\",\"unit\":\"Pc\\/s\",\"price\":318},{\"code\":\"3.6L_MG\",\"description\":\"3.6 LITER Mango\",\"quantity\":\"156\",\"unit\":\"Pc\\/s\",\"price\":318},{\"code\":\"3.6L_MOC\",\"description\":\"3.6 LITER Coffee Mocha Fudge\",\"quantity\":\"60\",\"unit\":\"Pc\\/s\",\"price\":318},{\"code\":\"3.6L_SS\",\"description\":\"3.6 LITER Strawberry Strawberry\",\"quantity\":\"48\",\"unit\":\"Pc\\/s\",\"price\":318},{\"code\":\"3.6L_VNL\",\"description\":\"3.6 LITER Vanilla\",\"quantity\":\"60\",\"unit\":\"Pc\\/s\",\"price\":318},{\"code\":\"PT_VNL\",\"description\":\"PINT Vanilla\",\"quantity\":\"171\",\"unit\":\"Pc\\/s\",\"price\":48}]', '2024-06-06 04:52:42', '2024-06-06 05:10:24', 1);
+(1, 'EFTO-CAG', '123456', '2024-06-04', 'Encoding', NULL, '2024-06-04 19:06:54', '2024-06-04 19:07:48', 1),
+(2, 'EFTO-CAG', '28A-240122', '2024-06-02', 'Encoding', NULL, '2024-06-05 01:29:49', '2024-06-05 01:30:18', 1),
+(3, 'EFTO-CAG', '28A-240123', '2024-06-05', 'Encoding', NULL, '2024-06-06 04:52:42', '2024-06-06 05:10:24', 1),
+(4, 'EFTO-CAG', '28A-240124', '2024-06-11', 'Completed', '[{\"order\":1,\"code\":\"SC_CHO\",\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Chocolate\",\"quantity\":\"56\",\"unit\":\"Bag\\/s\",\"price\":600,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:55:23.903115Z\"},{\"order\":1,\"code\":\"SC_MG\",\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Mango\",\"quantity\":\"56\",\"unit\":\"Bag\\/s\",\"price\":600,\"hold\":\"26\",\"created_at\":\"2024-06-12T03:56:00.220517Z\"},{\"order\":2,\"code\":\"MC_CS\",\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese\",\"quantity\":\"86\",\"unit\":\"Bag\\/s\",\"price\":508,\"hold\":\"50\",\"created_at\":\"2024-06-12T03:56:11.519009Z\"},{\"order\":2,\"code\":\"MC_SS\",\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Strawberry Strawberry\",\"quantity\":\"11\",\"unit\":\"Bag\\/s\",\"price\":508,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:56:24.056700Z\"},{\"order\":2,\"code\":\"MC_UC\",\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Ube with Cheese\",\"quantity\":\"82\",\"unit\":\"Bag\\/s\",\"price\":508,\"hold\":\"25\",\"created_at\":\"2024-06-12T03:56:35.242507Z\"},{\"order\":3,\"code\":\"BC_CNC\",\"description\":\"180ml BIG CUP (6.0-oz) Cookies N\' Cream\",\"quantity\":\"82\",\"unit\":\"Bag\\/s\",\"price\":582,\"hold\":\"40\",\"created_at\":\"2024-06-12T03:56:53.604309Z\"},{\"order\":3,\"code\":\"BC_CS\",\"description\":\"180ml BIG CUP (6.0-oz) Cheese\",\"quantity\":\"86\",\"unit\":\"Bag\\/s\",\"price\":582,\"hold\":\"50\",\"created_at\":\"2024-06-12T03:57:02.979979Z\"},{\"order\":5,\"code\":\"ICB_BUKO\",\"description\":\"ICE BUKO BUKO\",\"quantity\":\"60\",\"unit\":\"Bag\\/s\",\"price\":390,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:57:21.369478Z\"},{\"order\":6,\"code\":\"SPS_CHO\",\"description\":\"SPECIAL STICKS Chocolate\",\"quantity\":\"120\",\"unit\":\"Bag\\/s\",\"price\":625,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:57:31.789933Z\"},{\"order\":7,\"code\":\"ICC_CV\",\"description\":\"ICE CREAM CONES Chocovanilla\",\"quantity\":\"132\",\"unit\":\"Bag\\/s\",\"price\":468,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:57:42.383205Z\"},{\"order\":8,\"code\":\"PT_BM\",\"description\":\"PINT Buko Melon\",\"quantity\":\"228\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:57:52.795238Z\"},{\"order\":8,\"code\":\"PT_BP\",\"description\":\"PINT Buko Pandan\",\"quantity\":\"63\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:58:13.711407Z\"},{\"order\":8,\"code\":\"PT_CHO\",\"description\":\"PINT Chocolate\",\"quantity\":\"228\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:58:27.035636Z\"},{\"order\":8,\"code\":\"PT_CV\",\"description\":\"PINT Chocovanilla\",\"quantity\":\"228\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:58:39.198527Z\"},{\"order\":8,\"code\":\"PT_FS\",\"description\":\"PINT Fruit Salad\",\"quantity\":\"228\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:58:51.203761Z\"},{\"order\":8,\"code\":\"PT_MAL\",\"description\":\"PINT Mallows N\' Chocolate\",\"quantity\":\"37\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:59:13.183480Z\"},{\"order\":2,\"code\":\"MC_MRB\",\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Choco Marble\",\"quantity\":\"25\",\"unit\":\"Bag\\/s\",\"price\":508,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:59:38.852118Z\"},{\"order\":8,\"code\":\"PT_RR\",\"description\":\"PINT Rocky Road\",\"quantity\":\"228\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:59:54.809425Z\"},{\"order\":8,\"code\":\"PT_UBE\",\"description\":\"PINT Ube\",\"quantity\":\"228\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:00:07.337592Z\"},{\"order\":8,\"code\":\"PT_UC\",\"description\":\"PINT Ube with Cheese\",\"quantity\":\"228\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:00:17.738692Z\"},{\"order\":8,\"code\":\"PT_VNL\",\"description\":\"PINT Vanilla\",\"quantity\":\"52\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:00:31.623606Z\"},{\"order\":9,\"code\":\"1L_CHO\",\"description\":\"1 LITER Chocolate\",\"quantity\":\"288\",\"unit\":\"Pc\\/s\",\"price\":97,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:00:43.247713Z\"},{\"order\":9,\"code\":\"1L_CV\",\"description\":\"1 LITER Chocovanilla\",\"quantity\":\"432\",\"unit\":\"Pc\\/s\",\"price\":97,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:00:53.689249Z\"},{\"order\":9,\"code\":\"1L_FS\",\"description\":\"1 LITER Fruit Salad\",\"quantity\":\"432\",\"unit\":\"Pc\\/s\",\"price\":97,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:01:29.375484Z\"},{\"order\":10,\"code\":\"1.7L_CNC\",\"description\":\"1.7 LITER Cookies N\' Cream\",\"quantity\":\"210\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:02:50.665022Z\"},{\"order\":10,\"code\":\"1.7L_FS\",\"description\":\"1.7 LITER Fruit Salad\",\"quantity\":\"210\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:03:00.079187Z\"},{\"order\":10,\"code\":\"1.7L_MAL\",\"description\":\"1.7 LITER Mallows N\' Chocolate\",\"quantity\":\"105\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:03:09.800418Z\"},{\"order\":10,\"code\":\"1.7L_MOC\",\"description\":\"1.7 LITER Coffee Mocha Fudge\",\"quantity\":\"105\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:03:20.886595Z\"},{\"order\":10,\"code\":\"1.7L_MRB\",\"description\":\"1.7 LITER Choco Marble\",\"quantity\":\"31\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:03:32.812740Z\"},{\"order\":10,\"code\":\"1.7L_RR\",\"description\":\"1.7 LITER Rocky Road\",\"quantity\":\"211\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:03:43.922280Z\"},{\"order\":10,\"code\":\"1.7L_SS\",\"description\":\"1.7 LITER Strawberry Strawberry\",\"quantity\":\"105\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:03:54.868036Z\"},{\"order\":10,\"code\":\"1.7L_UC\",\"description\":\"1.7 LITER Ube with Cheese\",\"quantity\":\"210\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:04:06.449631Z\"},{\"order\":11,\"code\":\"HG_BM\",\"description\":\"HALF GALLON (1.89L) Buko Melon\",\"quantity\":\"180\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:04:16.296710Z\"},{\"order\":11,\"code\":\"HG_CF\",\"description\":\"HALF GALLON (1.89L) Chocofi\",\"quantity\":\"90\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:04:25.925986Z\"},{\"order\":11,\"code\":\"HG_CHO\",\"description\":\"HALF GALLON (1.89L) Chocolate\",\"quantity\":\"90\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:04:36.034210Z\"},{\"order\":11,\"code\":\"HG_CV\",\"description\":\"HALF GALLON (1.89L) Chocovanilla\",\"quantity\":\"180\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:04:45.266285Z\"},{\"order\":11,\"code\":\"HG_UBE\",\"description\":\"HALF GALLON (1.89L) Ube\",\"quantity\":\"180\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:04:55.131701Z\"},{\"order\":11,\"code\":\"HG_VNL\",\"description\":\"HALF GALLON (1.89L) Vanilla\",\"quantity\":\"180\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:05:03.551282Z\"},{\"order\":12,\"code\":\"3.6L_FS\",\"description\":\"3.6 LITER Fruit Salad\",\"quantity\":\"144\",\"unit\":\"Pc\\/s\",\"price\":318,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:05:15.618527Z\"},{\"order\":12,\"code\":\"3.6L_MAL\",\"description\":\"3.6 LITER Mallows N\' Chocolate\",\"quantity\":\"96\",\"unit\":\"Pc\\/s\",\"price\":318,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:05:24.969300Z\"},{\"order\":12,\"code\":\"3.6L_VNL\",\"description\":\"3.6 LITER Vanilla\",\"quantity\":\"144\",\"unit\":\"Pc\\/s\",\"price\":318,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:05:34.101026Z\"},{\"order\":13,\"code\":\"N3.6L_CS\",\"description\":\"No Label 3.6L Cheese\",\"quantity\":\"87\",\"unit\":\"Pc\\/s\",\"price\":318,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:05:44.753354Z\"}]', '2024-06-12 18:55:07', '2024-06-12 19:07:23', 2);
 
 -- --------------------------------------------------------
 
@@ -295,19 +595,17 @@ INSERT INTO `delivery_purchase_receipts` (`id`, `branch_code`, `dr_no`, `issue_d
 -- Table structure for table `drivers`
 --
 
-DROP TABLE IF EXISTS `drivers`;
-CREATE TABLE IF NOT EXISTS `drivers` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `address` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `contact` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `designation` enum('Driver','Salesman','','') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `default_price_level` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+CREATE TABLE `drivers` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `address` varchar(191) NOT NULL,
+  `contact` varchar(191) NOT NULL,
+  `status` varchar(191) NOT NULL,
+  `designation` enum('Driver','Salesman','','') DEFAULT NULL,
+  `default_price_level` varchar(191) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `drivers`
@@ -315,8 +613,8 @@ CREATE TABLE IF NOT EXISTS `drivers` (
 
 INSERT INTO `drivers` (`id`, `name`, `address`, `contact`, `status`, `designation`, `default_price_level`, `created_at`, `updated_at`) VALUES
 (1, 'Froilan Andal', 'Batangas', '09253652321', 'Active', NULL, '2', '2024-06-04 18:57:43', '2024-06-04 18:57:43'),
-(2, 'Jan-jan Caritativo', 'Nueva Ecija', '0965-049-3904', 'Active', NULL, '1', '2024-06-05 00:23:50', '2024-06-06 01:08:27'),
-(5, 'Aaa', 'Aa', '123123', 'AVAILABLE', NULL, '1', '2024-06-05 05:19:13', '2024-06-05 05:19:13'),
+(2, 'Jan-jan Caritativo', 'Nueva Ecija', '0965-049-3904', 'Inactive', 'Driver', '1', '2024-06-05 00:23:50', '2024-06-12 05:50:09'),
+(5, 'Aaa', 'Aa', '123123', 'Inactive', 'Driver', '3', '2024-06-05 05:19:13', '2024-06-14 19:51:37'),
 (6, 'Mark Anthony Diaz', 'Mallig Isabela', '09550915507', 'Active', NULL, '1', '2024-06-06 01:08:11', '2024-06-06 01:08:21'),
 (7, 'Leonard B Joson', 'SAn Pedro Mallig Isabela', '09996595498', 'Active', 'Driver', '3', '2024-06-06 01:10:56', '2024-06-06 16:42:09');
 
@@ -326,19 +624,17 @@ INSERT INTO `drivers` (`id`, `name`, `address`, `contact`, `status`, `designatio
 -- Table structure for table `employees`
 --
 
-DROP TABLE IF EXISTS `employees`;
-CREATE TABLE IF NOT EXISTS `employees` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `last_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `first_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `address` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `contact_no` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `position` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
+CREATE TABLE `employees` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `last_name` varchar(191) NOT NULL,
+  `first_name` varchar(191) NOT NULL,
+  `email` varchar(191) NOT NULL,
+  `address` varchar(191) NOT NULL,
+  `contact_no` varchar(191) NOT NULL,
+  `position` varchar(191) NOT NULL,
+  `status` varchar(191) NOT NULL DEFAULT 'active',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -347,105 +643,484 @@ CREATE TABLE IF NOT EXISTS `employees` (
 -- Table structure for table `equipment`
 --
 
-DROP TABLE IF EXISTS `equipment`;
-CREATE TABLE IF NOT EXISTS `equipment` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `branch_code` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ownership` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brand` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `serial_no` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `code` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `distributor` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+CREATE TABLE `equipment` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `ownership` varchar(191) NOT NULL,
+  `type` varchar(191) NOT NULL,
+  `brand` varchar(191) NOT NULL,
+  `price` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `serial_no` varchar(191) NOT NULL,
+  `code` varchar(191) DEFAULT NULL,
+  `distributor` varchar(191) DEFAULT NULL,
   `date_delivered` date DEFAULT NULL,
   `date_purchased` date DEFAULT NULL,
-  `status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'available',
-  `model` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(191) NOT NULL DEFAULT 'available',
+  `model` varchar(30) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `equipment_serial_no_unique` (`serial_no`)
-) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `branch_code` varchar(191) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `equipment`
 --
 
-INSERT INTO `equipment` (`id`, `branch_code`, `ownership`, `type`, `brand`, `price`, `serial_no`, `code`, `distributor`, `date_delivered`, `date_purchased`, `status`, `model`, `created_at`, `updated_at`) VALUES
-(1, 'EFTO-CAG', 'Not-Owned', 'Chest Freezer', 'CONDURA', 42000.00, 'ABC123', '123456', NULL, NULL, NULL, 'added', NULL, '2024-06-04 18:57:43', '2024-06-04 19:03:32'),
-(2, 'EFTO-CAG', 'Owned', 'Hard Top', 'HINO', 13400.00, 'H2022-047153', '8475.2021', NULL, '2022-05-04', '2022-05-04', 'available', NULL, '2024-06-05 01:18:25', '2024-06-05 01:18:25'),
-(3, 'EFTO-CAG', 'Owned', 'Hard Top', 'HINO', 13400.00, 'H2022-047154', '8476.2021', NULL, '2022-05-04', '2022-05-04', 'added', NULL, '2024-06-05 01:19:00', '2024-06-19 07:52:44'),
-(4, 'EFTO-CAG', 'Owned', 'Glass Top', 'LIEBHERR', 26800.00, 'L61.420.558.7', '8471.2021', NULL, '2022-05-04', '2022-05-04', 'available', NULL, '2024-06-05 01:19:43', '2024-06-07 18:49:44'),
-(5, 'EFTO-CAG', 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047164', '8486.2021', NULL, '2022-06-05', '2021-02-12', 'available', 'BD-650', '2024-06-07 18:45:21', '2024-06-19 07:58:27'),
-(6, 'EFTO-CAG', 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.989.074.3', '4394.110818', NULL, '2022-04-05', '2018-03-04', 'added', 'EFE-3802', '2024-06-07 18:48:01', '2024-06-07 19:13:20'),
-(7, 'EFTO-CAG', 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047155', '8477.2021', NULL, '2022-05-01', '2022-04-01', 'available', 'BD-650', '2024-06-07 19:07:45', '2024-06-07 19:07:45'),
-(8, 'EFTO-CAG', 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047156', '8478.2021', NULL, '2022-05-01', '2022-04-01', 'available', 'BD-650', '2024-06-07 19:09:04', '2024-06-07 19:09:04'),
-(9, 'EFTO-CAG', 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047157', '8479.2021', NULL, '2022-05-01', '2022-04-01', 'available', 'BD-650', '2024-06-07 19:10:04', '2024-06-07 19:10:04'),
-(10, 'EFTO-CAG', 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.558.7', '8471.2021', NULL, '2022-05-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:12:02', '2024-06-07 19:12:02'),
-(11, 'EFTO-CAG', 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.572.3', '8472.2021', NULL, '2023-11-04', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:13:18', '2024-06-07 19:13:18'),
-(12, 'EFTO-CAG', 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.53.1', '8473.2021', NULL, '2022-07-07', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:14:34', '2024-06-07 19:14:34'),
-(13, 'EFTO-CAG', 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.565.5', '8474.2021', NULL, '2022-07-07', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:15:47', '2024-06-07 19:15:47'),
-(14, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.271.344.2', '6972.2020', NULL, '2022-05-01', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:21:57', '2024-06-07 19:21:57'),
-(15, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61271.379.4', '6964.2022', NULL, '2024-03-19', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:23:19', '2024-06-07 19:23:19'),
-(16, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L661.506.412.1', '9681.2020', NULL, '2023-09-21', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:24:38', '2024-06-07 19:24:38'),
-(17, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.390.9', '8916.2022', NULL, '2022-09-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:26:32', '2024-06-07 19:26:32'),
-(18, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.343.5', '8917.2022', NULL, '2022-09-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:28:03', '2024-06-07 19:28:03'),
-(19, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.533.3', '8918.2022', NULL, '2022-09-10', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:29:26', '2024-06-07 19:29:26'),
-(20, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.339.8', '8919.2022', NULL, '2022-09-15', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:30:58', '2024-06-07 19:30:58'),
-(21, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.399.2', '8920.2022', NULL, '2022-10-03', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:32:19', '2024-06-07 19:32:19'),
-(22, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.396.1', '8921.2022', NULL, '2022-11-03', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:33:11', '2024-06-07 19:33:11'),
-(23, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.422.78', '8922.2022', NULL, '2022-11-03', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:38:48', '2024-06-07 19:38:48'),
-(24, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.409.8', '8923.2022', NULL, '2022-12-08', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:39:38', '2024-06-07 19:39:38'),
-(25, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.424.1', '8924.2022', NULL, '2023-02-06', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:40:41', '2024-06-07 19:40:41'),
-(26, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.418.0', '8925.2022', NULL, '2023-02-08', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:41:28', '2024-06-07 19:41:28'),
-(27, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.407.4', '8926.2022', NULL, '2024-03-04', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:42:23', '2024-06-07 19:42:23'),
-(28, 'EFTO-CAG', 'Owned', 'Hard Top', 'LEIBHERR', 12250.00, 'L61.493.428.9', '8927.2022', NULL, '2023-03-01', '2024-04-01', 'available', 'EFE-3002', '2024-06-07 21:04:02', '2024-06-07 21:04:02'),
-(29, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.337', '8928.2022', NULL, '2023-03-07', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:05:21', '2024-06-07 21:05:21'),
-(30, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.435.7', '8929.2022', NULL, '2024-04-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:08:49', '2024-06-07 21:08:49'),
-(31, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.39.6', '8930.2022', NULL, '2023-07-22', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:11:36', '2024-06-07 21:11:36'),
-(32, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.340.4', '8931.2022', NULL, '2023-03-12', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:12:38', '2024-06-07 21:12:38'),
-(33, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.350.3', '9305.2022', NULL, '2023-03-21', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:15:36', '2024-06-07 21:15:36'),
-(34, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.425.8', '9306', NULL, '2023-04-11', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:23:26', '2024-06-07 21:23:26'),
-(35, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.368.8', '9307.2022', NULL, '2023-05-19', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:24:15', '2024-06-07 21:24:15'),
-(36, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.369.5', '9308.2022', NULL, '2023-05-10', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:25:42', '2024-06-07 21:25:42'),
-(37, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.345.9', '9309.2022', NULL, '2023-07-26', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:26:45', '2024-06-07 21:26:45'),
-(38, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.356.5', '9310.2022', NULL, '2023-07-14', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:27:47', '2024-06-07 21:27:47'),
-(39, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.443.5', '9680.2022', NULL, '2023-08-14', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:30:04', '2024-06-07 21:30:04'),
-(40, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.412.1', '9681.2022', NULL, '2023-09-21', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:32:50', '2024-06-07 21:32:50'),
-(41, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.241.7', '9682.2022', NULL, '2024-01-15', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:34:07', '2024-06-07 21:34:07'),
-(42, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.296.3', '9940.2022', NULL, '2024-01-29', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:35:16', '2024-06-07 21:35:16'),
-(43, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.179.3', '9941.2022', NULL, '2024-01-29', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:36:03', '2024-06-07 21:36:03'),
-(44, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.209.7', '9942.2022', NULL, '2024-02-14', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:36:56', '2024-06-07 21:36:56'),
-(45, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.174.8', '9943.2022', NULL, '2024-02-14', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:37:46', '2024-06-07 21:37:46'),
-(46, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.205.9', '9944.2022', NULL, '2024-04-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:39:38', '2024-06-07 21:39:38'),
-(47, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.169.4', '9945.2022', NULL, '2024-04-08', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:40:33', '2024-06-07 21:40:33'),
-(48, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.366.2', '10400.2022', NULL, '2024-04-25', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:41:33', '2024-06-07 21:41:33'),
-(49, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.151.9', '10401.2022', NULL, '2024-04-26', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:42:27', '2024-06-07 21:42:27'),
-(50, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.341.9', '10402.2022', NULL, '2024-05-01', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:43:52', '2024-06-07 21:43:52'),
-(51, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.589.0', '10403.2022', NULL, '2024-06-07', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:44:42', '2024-06-07 21:44:42'),
-(52, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.357', '10404.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:46:30', '2024-06-07 21:46:30'),
-(53, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.344.0', '10405.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:47:22', '2024-06-07 21:47:22'),
-(54, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.365.5', '10406.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:48:47', '2024-06-07 21:48:47'),
-(55, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'l61.631.349.5', '10407.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:52:15', '2024-06-07 21:52:15'),
-(56, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.625.5', '10408.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:53:06', '2024-06-07 21:53:06'),
-(57, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.350.1', '10409.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:53:45', '2024-06-07 21:53:45'),
-(58, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.352.5', '10410.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:54:35', '2024-06-07 21:54:35'),
-(59, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.342.5', '10411.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:55:31', '2024-06-07 21:55:31'),
-(60, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.762.7', '8256.2021', NULL, '2022-05-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-07 22:14:22', '2024-06-07 22:14:22'),
-(61, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.763.4', '8257.2021', NULL, '2022-05-02', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:17:10', '2024-06-07 22:17:10'),
-(62, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.764.1', '8258.2021', NULL, '2022-05-20', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:18:13', '2024-06-07 22:18:13'),
-(63, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.765.8', '8259.2O21', NULL, '2022-05-02', '2021-03-01', 'available', 'EFE-4602', '2024-06-07 22:20:04', '2024-06-07 22:20:04'),
-(64, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.766.5', '8260.2021', NULL, '2022-05-02', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:21:06', '2024-06-07 22:21:06'),
-(65, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.769.6', '8263.2021', NULL, '2022-05-02', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:22:56', '2024-06-07 22:22:56'),
-(66, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.401.772.6', '8266.2021', NULL, '2024-04-05', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:27:12', '2024-06-07 22:27:12'),
-(67, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.771.9', '8265.2021', NULL, '2022-05-31', '2021-03-01', 'available', 'EFE-3002', '2024-06-07 22:31:58', '2024-06-07 22:31:58'),
-(68, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.773.3', '8267.2021', NULL, '2022-06-08', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:33:22', '2024-06-07 22:33:22'),
-(69, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.774.0', '8268.2021', NULL, '2022-06-08', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:34:49', '2024-06-07 22:34:49'),
-(70, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.775.7', '8269.2021', NULL, '2022-06-08', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:37:21', '2024-06-07 22:37:21'),
-(71, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.491.848.7', '9327.2022', NULL, '2023-03-17', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:39:15', '2024-06-07 22:39:15'),
-(72, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.505.652.2', '9461.2022', NULL, '2022-03-31', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:41:09', '2024-06-07 22:41:09'),
-(73, 'EFTO-CAG', 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.505.665.2', '9462.2022', NULL, '2023-04-02', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:43:18', '2024-06-07 22:43:18');
+INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no`, `code`, `distributor`, `date_delivered`, `date_purchased`, `status`, `model`, `created_at`, `updated_at`, `branch_code`) VALUES
+(1, 'Not-Owned', 'Chest Freezer', 'CONDURA', 42000.00, 'ABC123', '123456', NULL, NULL, NULL, 'added', NULL, '2024-06-04 18:57:43', '2024-06-04 19:03:32', 'EFTO-CAG'),
+(2, 'Owned', 'Hard Top', 'HINO', 13400.00, 'H2022-047153', '8475.2021', NULL, '2022-05-04', '2022-05-04', 'available', NULL, '2024-06-05 01:18:25', '2024-06-05 01:18:25', 'EFTO-CAG'),
+(3, 'Owned', 'Hard Top', 'HINO', 13400.00, 'H2022-047154', '8476.2021', NULL, '2022-05-04', '2022-05-04', 'available', NULL, '2024-06-05 01:19:00', '2024-06-05 01:19:00', 'EFTO-CAG'),
+(4, 'Owned', 'Glass Top', 'LIEBHERR', 26800.00, 'L61.420.558.7', '8471.2021', NULL, '2022-05-04', '2022-05-04', 'available', NULL, '2024-06-05 01:19:43', '2024-06-07 18:49:44', 'EFTO-CAG'),
+(5, 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047164', '8486.2021', NULL, '2022-06-05', '2021-02-12', 'added', 'BD-650', '2024-06-07 18:45:21', '2024-06-14 15:01:24', 'EFTO-CAG'),
+(6, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.989.074.3', '4394.110818', NULL, '2022-04-05', '2018-03-04', 'added', 'EFE-3802', '2024-06-07 18:48:01', '2024-06-07 19:13:20', 'EFTO-CAG'),
+(7, 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047155', '8477.2021', NULL, '2022-05-01', '2022-04-01', 'available', 'BD-650', '2024-06-07 19:07:45', '2024-06-07 19:07:45', 'EFTO-CAG'),
+(8, 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047156', '8478.2021', NULL, '2022-05-01', '2022-04-01', 'available', 'BD-650', '2024-06-07 19:09:04', '2024-06-07 19:09:04', 'EFTO-CAG'),
+(9, 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047157', '8479.2021', NULL, '2022-05-01', '2022-04-01', 'available', 'BD-650', '2024-06-07 19:10:04', '2024-06-07 19:10:04', 'EFTO-CAG'),
+(10, 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.558.7', '8471.2021', NULL, '2022-05-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:12:02', '2024-06-07 19:12:02', 'EFTO-CAG'),
+(11, 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.572.3', '8472.2021', NULL, '2023-11-04', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:13:18', '2024-06-07 19:13:18', 'EFTO-CAG'),
+(12, 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.53.1', '8473.2021', NULL, '2022-07-07', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:14:34', '2024-06-07 19:14:34', 'EFTO-CAG'),
+(13, 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.565.5', '8474.2021', NULL, '2022-07-07', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:15:47', '2024-06-16 03:36:09', 'EFTO-CAG'),
+(14, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.271.344.2', '6972.2020', NULL, '2022-05-01', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:21:57', '2024-06-07 19:21:57', 'EFTO-CAG'),
+(15, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61271.379.4', '6964.2022', NULL, '2024-03-19', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:23:19', '2024-06-07 19:23:19', 'EFTO-CAG'),
+(16, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L661.506.412.1', '9681.2020', NULL, '2023-09-21', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:24:38', '2024-06-07 19:24:38', 'EFTO-CAG'),
+(17, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.390.9', '8916.2022', NULL, '2022-09-05', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:26:32', '2024-06-14 20:57:46', 'EFTO-CAG'),
+(18, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.343.5', '8917.2022', NULL, '2022-09-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:28:03', '2024-06-07 19:28:03', 'EFTO-CAG'),
+(19, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.533.3', '8918.2022', NULL, '2022-09-10', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:29:26', '2024-06-19 20:14:00', 'EFTO-CAG'),
+(20, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.339.8', '8919.2022', NULL, '2022-09-15', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:30:58', '2024-06-07 19:30:58', 'EFTO-CAG'),
+(21, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.399.2', '8920.2022', NULL, '2022-10-03', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:32:19', '2024-06-07 19:32:19', 'EFTO-CAG'),
+(22, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.396.1', '8921.2022', NULL, '2022-11-03', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:33:11', '2024-06-07 19:33:11', 'EFTO-CAG'),
+(23, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.422.78', '8922.2022', NULL, '2022-11-03', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:38:48', '2024-06-19 20:07:10', 'EFTO-CAG'),
+(24, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.409.8', '8923.2022', NULL, '2022-12-08', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:39:38', '2024-06-14 20:01:48', 'EFTO-CAG'),
+(25, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.424.1', '8924.2022', NULL, '2023-02-06', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:40:41', '2024-06-14 20:06:58', 'EFTO-CAG'),
+(26, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.418.0', '8925.2022', NULL, '2023-02-08', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:41:28', '2024-06-07 19:41:28', 'EFTO-CAG'),
+(27, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.407.4', '8926.2022', NULL, '2024-03-04', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:42:23', '2024-06-07 19:42:23', 'EFTO-CAG'),
+(28, 'Owned', 'Hard Top', 'LEIBHERR', 12250.00, 'L61.493.428.9', '8927.2022', NULL, '2023-03-01', '2024-04-01', 'available', 'EFE-3002', '2024-06-07 21:04:02', '2024-06-07 21:04:02', 'EFTO-CAG'),
+(29, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.337', '8928.2022', NULL, '2023-03-07', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:05:21', '2024-06-07 21:05:21', 'EFTO-CAG'),
+(30, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.435.7', '8929.2022', NULL, '2024-04-05', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:08:49', '2024-06-19 20:24:50', 'EFTO-CAG'),
+(31, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.39.6', '8930.2022', NULL, '2023-07-22', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:11:36', '2024-06-19 20:20:40', 'EFTO-CAG'),
+(32, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.340.4', '8931.2022', NULL, '2023-03-12', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:12:38', '2024-06-07 21:12:38', 'EFTO-CAG'),
+(33, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.350.3', '9305.2022', NULL, '2023-03-21', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:15:36', '2024-06-07 21:15:36', 'EFTO-CAG'),
+(34, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.425.8', '9306.2022', NULL, '2023-01-04', '2022-04-11', 'added', 'EFE-3002', '2024-06-07 21:23:26', '2024-06-14 21:29:29', 'EFTO-CAG'),
+(35, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.368.8', '9307.2022', NULL, '2023-05-19', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:24:15', '2024-06-16 03:55:17', 'EFTO-CAG'),
+(36, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.369.5', '9308.2022', NULL, '2023-05-10', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:25:42', '2024-06-16 03:30:14', 'EFTO-CAG'),
+(37, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.345.9', '9309.2022', NULL, '2023-07-26', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:26:45', '2024-06-14 15:21:54', 'EFTO-CAG'),
+(38, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.356.5', '9310.2022', NULL, '2023-07-14', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:27:47', '2024-06-07 21:27:47', 'EFTO-CAG'),
+(39, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.443.5', '9680.2022', NULL, '2023-08-14', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:30:04', '2024-06-07 21:30:04', 'EFTO-CAG'),
+(40, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.412.1', '9681.2022', NULL, '2023-09-21', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:32:50', '2024-06-07 21:32:50', 'EFTO-CAG'),
+(41, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.241.7', '9682.2022', NULL, '2024-01-15', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:34:07', '2024-06-07 21:34:07', 'EFTO-CAG'),
+(42, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.296.3', '9940.2022', NULL, '2024-01-29', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:35:16', '2024-06-16 02:01:11', 'EFTO-CAG'),
+(43, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.179.3', '9941.2022', NULL, '2024-01-29', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:36:03', '2024-06-07 21:36:03', 'EFTO-CAG'),
+(44, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.209.7', '9942.2022', NULL, '2024-02-14', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:36:56', '2024-06-19 20:17:43', 'EFTO-CAG'),
+(45, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.174.8', '9943.2022', NULL, '2024-02-14', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:37:46', '2024-06-07 21:37:46', 'EFTO-CAG'),
+(46, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.205.9', '9944.2022', NULL, '2024-04-05', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:39:38', '2024-06-14 17:59:07', 'EFTO-CAG'),
+(47, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.169.4', '9945.2022', NULL, '2024-04-08', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:40:33', '2024-06-14 18:02:53', 'EFTO-CAG'),
+(48, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.366.2', '10400.2022', NULL, '2024-04-25', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:41:33', '2024-06-07 21:41:33', 'EFTO-CAG'),
+(49, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.151.9', '10401.2022', NULL, '2024-04-26', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:42:27', '2024-06-07 21:42:27', 'EFTO-CAG'),
+(50, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.341.9', '10402.2022', NULL, '2024-05-01', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:43:52', '2024-06-07 21:43:52', 'EFTO-CAG'),
+(51, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.589.0', '10403.2022', NULL, '2024-06-07', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:44:42', '2024-06-07 21:44:42', 'EFTO-CAG'),
+(52, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.357', '10404.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:46:30', '2024-06-07 21:46:30', 'EFTO-CAG'),
+(53, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.344.0', '10405.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:47:22', '2024-06-07 21:47:22', 'EFTO-CAG'),
+(54, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.365.5', '10406.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:48:47', '2024-06-07 21:48:47', 'EFTO-CAG'),
+(55, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'l61.631.349.5', '10407.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:52:15', '2024-06-07 21:52:15', 'EFTO-CAG'),
+(56, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.625.5', '10408.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:53:06', '2024-06-07 21:53:06', 'EFTO-CAG'),
+(57, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.350.1', '10409.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:53:45', '2024-06-07 21:53:45', 'EFTO-CAG'),
+(58, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.352.5', '10410.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:54:35', '2024-06-07 21:54:35', 'EFTO-CAG'),
+(59, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.342.5', '10411.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:55:31', '2024-06-07 21:55:31', 'EFTO-CAG'),
+(60, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.762.7', '8256.2021', NULL, '2022-05-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-07 22:14:22', '2024-06-16 02:12:33', 'EFTO-CAG'),
+(61, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.763.4', '8257.2021', NULL, '2022-05-02', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:17:10', '2024-06-07 22:17:10', 'EFTO-CAG'),
+(62, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.764.1', '8258.2021', NULL, '2022-05-20', '2021-03-01', 'added', 'EFE-3802', '2024-06-07 22:18:13', '2024-06-14 21:01:24', 'EFTO-CAG'),
+(63, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.765.8', '8259.2O21', NULL, '2022-05-02', '2021-03-01', 'available', 'EFE-4602', '2024-06-07 22:20:04', '2024-06-07 22:20:04', 'EFTO-CAG'),
+(64, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.766.5', '8260.2021', NULL, '2022-05-02', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:21:06', '2024-06-07 22:21:06', 'EFTO-CAG'),
+(65, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.769.6', '8263.2021', NULL, '2022-05-02', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:22:56', '2024-06-07 22:22:56', 'EFTO-CAG'),
+(66, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.401.772.6', '8266.2021', NULL, '2024-04-05', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:27:12', '2024-06-07 22:27:12', 'EFTO-CAG'),
+(67, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.771.9', '8265.2021', NULL, '2022-05-31', '2021-03-01', 'available', 'EFE-3002', '2024-06-07 22:31:58', '2024-06-07 22:31:58', 'EFTO-CAG'),
+(68, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.773.3', '8267.2021', NULL, '2022-06-08', '2021-03-01', 'added', 'EFE-3802', '2024-06-07 22:33:22', '2024-06-14 16:31:11', 'EFTO-CAG'),
+(69, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.774.0', '8268.2021', NULL, '2022-06-08', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:34:49', '2024-06-07 22:34:49', 'EFTO-CAG'),
+(70, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.775.7', '8269.2021', NULL, '2022-06-08', '2021-03-01', 'added', 'EFE-3802', '2024-06-07 22:37:21', '2024-06-14 19:45:59', 'EFTO-CAG'),
+(71, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.491.848.7', '9327.2022', NULL, '2023-03-17', '2021-03-01', 'added', 'EFE-3802', '2024-06-07 22:39:15', '2024-06-14 21:34:16', 'EFTO-CAG'),
+(72, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.505.652.2', '9461.2022', NULL, '2022-03-31', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:41:09', '2024-06-07 22:41:09', 'EFTO-CAG'),
+(73, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.505.665.2', '9462.2022', NULL, '2023-04-02', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:43:18', '2024-06-07 22:43:18', 'EFTO-CAG'),
+(74, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.767.2', '8261.2021', NULL, '2022-04-05', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:20:17', '2024-06-11 17:20:17', 'EFTO-CAG'),
+(75, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, '164.407.770.2', '8264.2021', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:21:22', '2024-06-19 20:16:49', 'EFTO-CAG'),
+(76, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.493.799.0', '8863.2022', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:23:36', '2024-06-14 19:59:24', 'EFTO-CAG'),
+(77, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.493.800.3', '8864.2022', NULL, '2022-04-05', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:24:42', '2024-06-11 17:24:42', 'EFTO-CAG'),
+(78, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.492.225.5', '8865.2022', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:25:38', '2024-06-16 03:57:41', 'EFTO-CAG'),
+(79, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.492.234.7', '8866.2022', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:26:38', '2024-06-14 14:57:46', 'EFTO-CAG'),
+(80, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.492.241.5', '8867.2022', NULL, '2022-04-05', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:30:30', '2024-06-11 17:30:30', 'EFTO-CAG'),
+(81, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.492.222.4', '8868.2022', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:31:30', '2024-06-14 16:11:10', 'EFTO-CAG'),
+(82, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.493.807.2', '8869.2022', NULL, '2022-04-05', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:32:17', '2024-06-11 17:32:17', 'EFTO-CAG'),
+(83, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.842.5', '9311.2022', NULL, '2022-04-05', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:33:04', '2024-06-11 17:33:04', 'EFTO-CAG'),
+(84, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.870.8', '9312.2022', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:34:01', '2024-06-14 19:51:15', 'EFTO-CAG'),
+(85, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.846.3', '9313.2022', NULL, '2022-04-05', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:35:13', '2024-06-11 17:35:13', 'EFTO-CAG'),
+(86, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.884.5', '9314.2022', NULL, '2022-04-05', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:35:53', '2024-06-11 17:35:53', 'EFTO-CAG'),
+(87, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.493.801.0', '9315.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:39:16', '2024-06-19 20:26:19', 'EFTO-CAG'),
+(88, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.869.2', '9316.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:39:59', '2024-06-14 19:56:23', 'EFTO-CAG'),
+(89, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.868.5', '9317.2022', NULL, '2024-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:40:42', '2024-06-14 14:43:11', 'EFTO-CAG'),
+(90, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.881.4', '9318.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:41:33', '2024-06-11 17:41:33', 'EFTO-CAG'),
+(91, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.853.1', '9319.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:42:18', '2024-06-11 17:42:18', 'EFTO-CAG'),
+(92, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.862.3', '9320.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:42:57', '2024-06-14 18:25:20', 'EFTO-CAG'),
+(93, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.864.7', '9321.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:43:44', '2024-06-11 17:43:44', 'EFTO-CAG'),
+(94, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.493.779.2', '9322.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:44:51', '2024-06-19 20:21:12', 'EFTO-CAG'),
+(95, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.505.658.4', '9460.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:46:08', '2024-06-11 17:46:08', 'EFTO-CAG'),
+(96, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.505.640.9', '9463.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:46:46', '2024-06-11 17:46:46', 'EFTO-CAG'),
+(97, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.505.629.4', '9464.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:47:30', '2024-06-14 19:14:56', 'EFTO-CAG'),
+(98, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.505.650.8', '9465.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:48:09', '2024-06-14 19:12:17', 'EFTO-CAG'),
+(99, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.505.664.5', '9466.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:48:55', '2024-06-16 02:16:35', 'EFTO-CAG'),
+(100, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.505.666.9', '9467.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:49:41', '2024-06-11 17:49:41', 'EFTO-CAG'),
+(101, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.505.354.5', '9468.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:50:23', '2024-06-11 17:50:23', 'EFTO-CAG'),
+(102, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.505.357.6', '9469.2022', NULL, '2024-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:53:24', '2024-06-11 17:53:24', 'EFTO-CAG'),
+(103, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.505.639.3', '9470.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:54:01', '2024-06-11 17:54:01', 'EFTO-CAG'),
+(104, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.505.010.0', '9471.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:54:36', '2024-06-11 17:54:36', 'EFTO-CAG'),
+(105, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.201.4', '9793.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:55:11', '2024-06-11 17:55:11', 'EFTO-CAG'),
+(106, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.192.5', '9794.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:55:52', '2024-06-19 20:26:47', 'EFTO-CAG'),
+(107, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.190.1', '9795.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:56:34', '2024-06-11 17:56:34', 'EFTO-CAG'),
+(108, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.185.7', '9796.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:57:10', '2024-06-11 17:57:10', 'EFTO-CAG'),
+(109, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.227.4', '9797.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:57:45', '2024-06-11 17:57:45', 'EFTO-CAG'),
+(110, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.177.2', '9800.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:58:24', '2024-06-19 20:20:15', 'EFTO-CAG'),
+(111, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.504.964.7', '9801.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:59:03', '2024-06-14 22:39:19', 'EFTO-CAG'),
+(112, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.178.9', '9802.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 18:00:25', '2024-06-11 18:00:25', 'EFTO-CAG'),
+(113, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.197.0', '9803.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 18:01:25', '2024-06-19 20:27:53', 'EFTO-CAG'),
+(114, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.208.3', '9804.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 18:01:59', '2024-06-14 14:46:21', 'EFTO-CAG'),
+(115, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.204.5', '9805.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 18:02:33', '2024-06-16 03:27:31', 'EFTO-CAG'),
+(116, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.952.5', '10204.2022', NULL, '2024-01-29', '2022-04-01', 'available', 'EFE-3802', '2024-06-11 18:08:56', '2024-06-11 18:08:56', 'EFTO-CAG'),
+(117, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.960.0', '10205.2022', NULL, '2024-01-29', '2023-12-23', 'added', 'EFE-3802', '2024-06-11 18:10:25', '2024-06-19 20:27:21', 'EFTO-CAG'),
+(118, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.942.6', '10206.2022', NULL, '2024-01-29', '2023-12-23', 'available', 'EFE-3802', '2024-06-11 18:11:34', '2024-06-11 18:11:34', 'EFTO-CAG'),
+(119, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.945.7', '10207.2022', NULL, '2024-01-29', '2024-12-23', 'available', 'EFE-3802', '2024-06-11 18:12:56', '2024-06-11 18:12:56', 'EFTO-CAG'),
+(120, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.956.3', '10208.2022', NULL, '2024-01-29', '2023-12-23', 'available', 'EFE-3802', '2024-06-11 18:13:46', '2024-06-11 18:13:46', 'EFTO-CAG'),
+(121, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.979.2', '10209.2022', NULL, '2024-01-29', '2023-12-23', 'available', 'EFE-3802', '2024-06-11 18:14:56', '2024-06-11 18:14:56', 'EFTO-CAG'),
+(122, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.774.3', '10210.2022', NULL, '2024-01-01', '2023-12-23', 'added', 'EFE-3802', '2024-06-11 18:15:44', '2024-06-14 21:04:26', 'EFTO-CAG'),
+(123, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.984.6', '10211.2022', NULL, '2024-01-29', '2024-12-23', 'available', 'EFE-3802', '2024-06-11 18:16:27', '2024-06-11 18:16:27', 'EFTO-CAG'),
+(124, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.633.160.4', '10476.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3802', '2024-06-11 18:19:20', '2024-06-11 18:19:20', 'EFTO-CAG'),
+(125, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.633.673.9', '10477.2022', NULL, '2024-04-09', '2022-04-01', 'added', 'EFE-3802', '2024-06-11 18:20:18', '2024-06-16 04:00:24', 'EFTO-CAG'),
+(126, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.633.666.1', '10478.2022', NULL, '2024-04-09', '2022-04-01', 'added', 'EFE-3802', '2024-06-11 18:21:02', '2024-06-16 01:56:32', 'EFTO-CAG'),
+(127, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.633.693.7', '10479.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3802', '2024-06-11 18:21:55', '2024-06-11 18:21:55', 'EFTO-CAG'),
+(128, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.633.678.4', '10480.2022', NULL, '2024-04-09', '2022-04-01', 'added', 'EFE-3802', '2024-06-11 18:23:13', '2024-06-14 21:09:49', 'EFTO-CAG'),
+(129, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.633.663.3', '10481.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3802', '2024-06-11 18:23:48', '2024-06-11 18:23:48', 'EFTO-CAG'),
+(130, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.420.517.4', '8312.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 18:26:45', '2024-06-16 04:10:43', 'EFTO-CAG'),
+(131, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.420.523.5', '8313.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-4602', '2024-06-11 18:27:36', '2024-06-11 18:27:36', 'EFTO-CAG'),
+(132, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.420.511.2', '8314.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 18:28:23', '2024-06-14 20:48:43', 'EFTO-CAG'),
+(133, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.420.532.7', '8315.2021', NULL, '2022-04-02', '2021-03-01', 'added', 'EFE-4602', '2024-06-11 18:29:02', '2024-06-16 03:53:04', 'EFTO-CAG'),
+(134, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.420.507.5', '8316.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 18:30:02', '2024-06-14 14:53:06', 'EFTO-CAG'),
+(135, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.420.527.3', '8317.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 18:31:22', '2024-06-14 14:44:53', 'EFTO-CAG'),
+(136, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.225.815.8', '8318.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-4602', '2024-06-11 18:32:07', '2024-06-11 18:32:07', 'EFTO-CAG'),
+(137, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.221.317.1', '8319.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 18:33:29', '2024-06-14 20:13:54', 'EFTO-CAG'),
+(138, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.238.224.2', '8320.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-4602', '2024-06-11 18:34:06', '2024-06-11 18:34:06', 'EFTO-CAG'),
+(139, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.225.830.7', '8321.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 18:34:41', '2024-06-14 14:52:32', 'EFTO-CAG'),
+(140, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.341.5', '9381.2022', NULL, '2022-04-02', '2024-03-01', 'available', 'EFE-4602', '2024-06-11 19:28:06', '2024-06-11 19:28:06', 'EFTO-CAG'),
+(141, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.873.1', '9382.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-4602', '2024-06-11 19:29:47', '2024-06-11 19:29:47', 'EFTO-CAG'),
+(142, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.299.9', '9383.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 19:30:39', '2024-06-14 15:32:15', 'EFTO-CAG'),
+(143, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.330.9', '9384.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-4602', '2024-06-11 19:31:41', '2024-06-11 19:31:41', 'EFTO-CAG'),
+(144, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.595.2', '9385.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-4602', '2024-06-11 19:32:18', '2024-06-11 19:32:18', 'EFTO-CAG'),
+(145, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.597.6', '9697.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 19:32:59', '2024-06-11 19:32:59', 'EFTO-CAG'),
+(146, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.346.0', '9698.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 19:35:48', '2024-06-16 03:39:32', 'EFTO-CAG'),
+(147, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.854.0', '9699.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 19:36:27', '2024-06-14 18:13:29', 'EFTO-CAG'),
+(148, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.302.6', '9700.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 19:36:58', '2024-06-14 14:52:04', 'EFTO-CAG'),
+(149, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.324.8', '9701.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 19:37:28', '2024-06-19 20:17:18', 'EFTO-CAG'),
+(150, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.345.3', '9702.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-4602', '2024-06-11 19:38:05', '2024-06-11 19:38:05', 'EFTO-CAG'),
+(151, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.597.334.8', '10280.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 19:39:05', '2024-06-14 22:34:26', 'EFTO-CAG'),
+(152, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.597.316.4', '10281.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 19:39:57', '2024-06-16 03:42:35', 'EFTO-CAG'),
+(153, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.597.317.1', '10282.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 19:40:46', '2024-06-14 21:23:47', 'EFTO-CAG'),
+(154, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.597.355.3', '10283.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-4602', '2024-06-11 19:41:23', '2024-06-11 19:41:23', 'EFTO-CAG'),
+(155, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.597.347.8', '10284.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 19:42:22', '2024-06-14 18:16:22', 'EFTO-CAG'),
+(156, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.597.348.5', '10285.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 19:43:24', '2024-06-14 18:23:15', 'EFTO-CAG'),
+(157, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.597.344.7', '10286.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-4602', '2024-06-11 19:44:37', '2024-06-11 19:44:37', 'EFTO-CAG'),
+(158, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.597.341.6', '10287.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-4602', '2024-06-11 19:45:16', '2024-06-11 19:45:16', 'EFTO-CAG'),
+(159, 'Owned', 'Glass Top', 'HIRRON', 14225.00, 'H2022-047332', '8539.2021', NULL, '2022-04-02', '0022-03-12', 'available', 'SD-450', '2024-06-11 20:01:22', '2024-06-11 20:01:22', 'EFTO-CAG'),
+(160, 'Owned', 'Glass Top', 'HIRRON', 14225.00, 'H2022-047333', '8540.2021', NULL, '2022-04-02', '2021-03-01', 'added', 'SD-450', '2024-06-11 20:02:10', '2024-06-14 21:17:14', 'EFTO-CAG'),
+(161, 'Owned', 'Glass Top', 'HIRRON', 14225.00, 'H2022-047334', '8541.2021', NULL, '2022-04-02', '2021-03-01', 'added', 'SD-450', '2024-06-11 20:02:56', '2024-06-14 21:44:41', 'EFTO-CAG'),
+(162, 'Owned', 'Glass Top', 'HIRRON', 14225.00, 'H2022-047353', '8560.2021', NULL, '2022-04-02', '2022-04-01', 'added', 'SD-450', '2024-06-11 20:03:38', '2024-06-14 20:12:20', 'EFTO-CAG'),
+(163, 'Owned', 'Glass Top', 'HIRRON', 14225.00, 'H2022.047354', '8561.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'SD-450', '2024-06-11 20:04:30', '2024-06-19 20:16:13', 'EFTO-CAG'),
+(164, 'Owned', 'Glass Top', 'HIRRON', 14225.00, 'H2022-047355', '8562.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'SD-450', '2024-06-11 20:05:13', '2024-06-11 20:05:13', 'EFTO-CAG'),
+(165, 'Owned', 'Glass Top', 'HIRRON', 12355.00, 'H2022-047492', '8584.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'SD-350', '2024-06-11 20:09:15', '2024-06-19 20:22:15', 'EFTO-CAG'),
+(166, 'Owned', 'Glass Top', 'HIRRON', 12355.00, 'H2022-047493', '8585.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'SD-350', '2024-06-11 20:09:53', '2024-06-11 20:09:53', 'EFTO-CAG'),
+(167, 'Owned', 'Hard Top', 'HIRRON', 14050.00, 'H2022-047158', '8480.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'BD-650', '2024-06-11 20:13:00', '2024-06-14 15:38:06', 'EFTO-CAG'),
+(168, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047159', '8481.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:14:47', '2024-06-11 20:14:47', 'EFTO-CAG'),
+(169, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047160', '8482.20221', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:15:18', '2024-06-11 20:15:18', 'EFTO-CAG'),
+(170, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047161', '8483.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:16:52', '2024-06-11 20:16:52', 'EFTO-CAG'),
+(171, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047162', '8484.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:17:29', '2024-06-11 20:17:29', 'EFTO-CAG'),
+(172, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047163', '8485.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:18:01', '2024-06-11 20:18:01', 'EFTO-CAG'),
+(173, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047165', '8487.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:18:36', '2024-06-11 20:18:36', 'EFTO-CAG'),
+(174, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047166', '8488.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:19:13', '2024-06-11 20:19:13', 'EFTO-CAG'),
+(175, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047167', '8489.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:19:47', '2024-06-11 20:19:47', 'EFTO-CAG'),
+(176, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047168', '8490.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:20:27', '2024-06-11 20:20:27', 'EFTO-CAG'),
+(177, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047169', '8491.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:20:59', '2024-06-11 20:20:59', 'EFTO-CAG'),
+(178, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047170', '8492.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:21:37', '2024-06-11 20:21:37', 'EFTO-CAG'),
+(179, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047171', '8493.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:22:17', '2024-06-11 20:22:17', 'EFTO-CAG'),
+(180, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047172', '8494.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:22:47', '2024-06-11 20:22:47', 'EFTO-CAG'),
+(181, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047243', '8528.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:23:36', '2024-06-11 20:23:36', 'EFTO-CAG'),
+(182, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047244', '8529.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:24:30', '2024-06-11 20:24:30', 'EFTO-CAG'),
+(183, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047245', '8530.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:25:15', '2024-06-11 20:25:15', 'EFTO-CAG'),
+(184, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047246', '8531.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:25:46', '2024-06-11 20:26:20', 'EFTO-CAG'),
+(185, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047247', '8532.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:27:03', '2024-06-11 20:27:03', 'EFTO-CAG'),
+(186, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047248', '8533.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:27:42', '2024-06-11 20:27:42', 'EFTO-CAG'),
+(187, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047249', '8534.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:28:26', '2024-06-11 20:28:26', 'EFTO-CAG'),
+(188, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047250', '8535.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:29:06', '2024-06-11 20:29:06', 'EFTO-CAG'),
+(189, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047251', '8536.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:29:39', '2024-06-11 20:29:39', 'EFTO-CAG'),
+(190, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047252', '8537.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:30:21', '2024-06-11 20:30:21', 'EFTO-CAG'),
+(191, 'Owned', 'Hard Top', 'LIEBHERR', 15600.00, 'L61.461.421.1', '9338.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:30:56', '2024-06-11 20:30:56', 'EFTO-CAG'),
+(192, 'Owned', 'Hard Top', 'LIEBHERR', 16000.00, 'L61.484.293.5', '9339.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-5002', '2024-06-11 20:33:34', '2024-06-11 20:33:34', 'EFTO-CAG'),
+(193, 'Owned', 'Hard Top', 'LIEBHERR', 16000.00, 'L61.484.289.8', '9340.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-5002', '2024-06-11 20:34:11', '2024-06-11 20:34:11', 'EFTO-CAG'),
+(194, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2023-051929', '10616.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:35:28', '2024-06-11 20:35:28', 'EFTO-CAG'),
+(195, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2023-051932', '10617.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:36:23', '2024-06-11 20:36:23', 'EFTO-CAG'),
+(196, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2023-051930', '10618.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:37:02', '2024-06-11 20:37:02', 'EFTO-CAG'),
+(197, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2023-051931', '10619.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:37:53', '2024-06-11 20:37:53', 'EFTO-CAG'),
+(198, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.122.251.1', '0796.101010', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 21:30:12', '2024-06-11 21:30:12', 'EFTO-CAG'),
+(199, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.122.276.4', '0835.102910', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 21:31:06', '2024-06-11 21:31:06', 'EFTO-CAG'),
+(200, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.147.401.9', '0952.032011', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 21:31:52', '2024-06-11 21:31:52', 'EFTO-CAG'),
+(201, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.369.300.5', '2555.060513', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:36:57', '2024-06-11 21:36:57', 'EFTO-CAG'),
+(202, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.603.336.5', 'GHL-603.336.5', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:38:39', '2024-06-11 21:38:39', 'EFTO-CAG'),
+(203, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.514.944.9', 'G-0011-120414', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:40:52', '2024-06-11 21:40:52', 'EFTO-CAG'),
+(204, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.515.247.0', 'G-0013-120414', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:42:48', '2024-06-11 21:42:48', 'EFTO-CAG'),
+(205, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.603.314.3', 'GHL-009-17', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:44:00', '2024-06-11 21:44:00', 'EFTO-CAG'),
+(206, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.602.315.1', 'GHL-013-17', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:44:39', '2024-06-11 21:44:39', 'EFTO-CAG'),
+(207, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.602.341.0', 'GHL-019-17', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:45:55', '2024-06-11 21:45:55', 'EFTO-CAG'),
+(208, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.987.182.7', 'GHL-022-18', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:46:34', '2024-06-11 21:46:34', 'EFTO-CAG'),
+(209, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.602.806.4', 'GHL-023-17', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:47:23', '2024-06-11 21:47:23', 'EFTO-CAG'),
+(210, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.602.822.4', 'GHL-029-17', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:48:01', '2024-06-11 21:48:01', 'EFTO-CAG'),
+(211, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.603.326.6', 'GHL-032-17', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:48:34', '2024-06-11 21:48:34', 'EFTO-CAG'),
+(212, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L60.825.892.6', 'GHL-035-17', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 21:49:50', '2024-06-14 14:45:47', 'EFTO-CAG'),
+(213, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.775.258.6', 'GHL-038-17', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:59:04', '2024-06-11 21:59:04', 'EFTO-CAG'),
+(214, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.775.292.0', 'GHL-039-17', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:00:14', '2024-06-14 14:58:19', 'EFTO-CAG'),
+(215, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.515.564.8', '3060.022315', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:01:07', '2024-06-11 22:01:07', 'EFTO-CAG'),
+(216, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.775.274.6', 'GHL-042-17', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:02:19', '2024-06-11 22:02:19', 'EFTO-CAG'),
+(217, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.602.243.7', 'GHL-055-18', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:03:09', '2024-06-11 22:03:09', 'EFTO-CAG'),
+(218, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.826.997.7', 'GHL-060-18', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:04:10', '2024-06-11 22:04:10', 'EFTO-CAG'),
+(219, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.827.005.8', 'GHL-061-18', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:05:03', '2024-06-11 22:07:02', 'EFTO-CAG'),
+(220, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.828.063.7', 'GHL-063-18', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:09:22', '2024-06-11 22:09:22', 'EFTO-CAG'),
+(221, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.828.077.4', 'GHL-068-18', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:10:09', '2024-06-11 22:10:09', 'EFTO-CAG'),
+(222, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.987.180.3', 'GHL-075-18', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:11:09', '2024-06-14 20:09:37', 'EFTO-CAG'),
+(223, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.986.726.4', 'GHL-076-18', NULL, '2024-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:11:57', '2024-06-11 22:11:57', 'EFTO-CAG'),
+(224, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.514.752.0', 'G-0025.022315', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:12:42', '2024-06-11 22:12:42', 'EFTO-CAG'),
+(225, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.514.957', 'G.0027.022315', NULL, '2022-04-02', '2021-03-01', 'added', 'EFE-3002', '2024-06-11 22:14:23', '2024-06-14 21:58:06', 'EFTO-CAG'),
+(226, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.516.763.4', 'G-0032.022315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:16:09', '2024-06-14 18:06:09', 'EFTO-CAG'),
+(227, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.516.767.2', 'G-0035-022315', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:16:43', '2024-06-11 22:16:43', 'EFTO-CAG'),
+(228, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.371.651.3', 'G-0036.022315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:17:25', '2024-06-19 20:06:13', 'EFTO-CAG'),
+(229, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.502.980.2', 'G-0037.041315', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:18:01', '2024-06-11 22:18:01', 'EFTO-CAG'),
+(230, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.516.776.4', 'G-0042.041315', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:18:37', '2024-06-11 22:18:37', 'EFTO-CAG'),
+(231, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.516.759.7', 'G-0054.041315', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:19:23', '2024-06-11 22:19:23', 'EFTO-CAG'),
+(232, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.516.774.0', 'G-0046.041315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:20:08', '2024-06-14 16:09:05', 'EFTO-CAG'),
+(233, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.602.381.6', 'G-0053.020117', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:20:43', '2024-06-11 22:20:43', 'EFTO-CAG'),
+(234, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.808.554.6', 'G-0057.022017', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:21:21', '2024-06-11 22:21:21', 'EFTO-CAG'),
+(235, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.808.555.3', 'G-0058.022017', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:21:53', '2024-06-11 22:21:53', 'EFTO-CAG'),
+(236, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.192.403.3', '2100.022812', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 22:22:31', '2024-06-11 22:22:31', 'EFTO-CAG'),
+(237, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.260.269.35', '2233.061912', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:23:14', '2024-06-11 22:23:14', 'EFTO-CAG'),
+(238, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.263.884.7', '2246.062012', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:23:55', '2024-06-11 22:23:55', 'EFTO-CAG'),
+(239, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.353.403.2', '2333.021913', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:24:41', '2024-06-11 22:24:41', 'EFTO-CAG'),
+(240, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.353.477.3', '2368.022713', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:25:31', '2024-06-11 22:25:31', 'EFTO-CAG'),
+(241, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.370.402.2', '2485.050213', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:26:09', '2024-06-11 22:26:09', 'EFTO-CAG'),
+(242, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.570.405.3', '2490.050213', NULL, '2022-04-02', '2021-03-01', 'available', 'EFE-3002', '2024-06-11 22:26:43', '2024-06-11 22:26:43', 'EFTO-CAG'),
+(243, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.369.3791', '2548.060513', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:27:15', '2024-06-11 22:27:15', 'EFTO-CAG'),
+(244, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.364621.6', '2575.071713', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:28:01', '2024-06-11 22:28:01', 'EFTO-CAG'),
+(245, 'Owned', 'Glass Top', 'HIRRON', 17525.00, 'H2013-017420', '2646.111613', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 22:29:59', '2024-06-11 22:29:59', 'EFTO-CAG'),
+(246, 'Owned', 'Hard Top', 'HIRRON', 17525.00, 'H2014-018393', '2708.012114', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 22:31:02', '2024-06-11 22:31:02', 'EFTO-CAG'),
+(247, 'Owned', 'Glass Top', 'HIRRON', 12355.00, 'H2014-018405', '2732.012814', NULL, '2022-04-02', '2022-03-01', 'available', 'SD-350', '2024-06-11 22:33:03', '2024-06-11 22:33:03', 'EFTO-CAG'),
+(248, 'Owned', 'Glass Top', 'HIRRON', 12355.00, 'H2014-018837', '2849.042814', NULL, '2022-04-02', '2022-03-01', 'available', 'SD-350', '2024-06-11 22:34:18', '2024-06-11 22:34:18', 'EFTO-CAG'),
+(249, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.515.233.3', '3004.120414', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 22:34:59', '2024-06-11 22:34:59', 'EFTO-CAG'),
+(250, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.487.390.1', '3005.120414', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 22:35:44', '2024-06-14 16:35:39', 'EFTO-CAG'),
+(251, 'Owned', 'Glass Top', 'LIEBHERR', 12355.00, 'H2014-020226', '3008.120514', NULL, '2022-04-02', '2022-03-01', 'available', 'SD-350', '2024-06-11 22:36:35', '2024-06-11 22:36:35', 'EFTO-CAG'),
+(252, 'Owned', 'Glass Top', 'LIEBHERR', 12355.00, 'H2014-020227', '309-120514', NULL, '2022-04-02', '2022-03-01', 'available', 'SD-350', '2024-06-11 22:38:00', '2024-06-11 22:38:00', 'EFTO-CAG'),
+(253, 'Owned', 'Glass Top', 'LIEBHERR', 12355.00, 'H2014-020228', '3010.120514', NULL, '2022-04-02', '2022-03-01', 'available', 'SD-350', '2024-06-11 22:38:32', '2024-06-11 22:38:32', 'EFTO-CAG'),
+(254, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.424.588.3', '2824.040814', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 22:39:37', '2024-06-11 22:39:37', 'EFTO-CAG'),
+(255, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.424.600.2', '2825.040814', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 22:41:48', '2024-06-11 22:41:48', 'EFTO-CAG'),
+(256, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.206.633.6', '2832.040.814', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 22:43:04', '2024-06-11 22:43:04', 'EFTO-CAG'),
+(257, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.515.558.7', '3056.022315', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 22:43:51', '2024-06-11 22:43:51', 'EFTO-CAG');
+INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no`, `code`, `distributor`, `date_delivered`, `date_purchased`, `status`, `model`, `created_at`, `updated_at`, `branch_code`) VALUES
+(258, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.514.742.1', '3058.022315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 22:46:54', '2024-06-14 21:14:22', 'EFTO-CAG'),
+(259, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.487.347.5', '3063.022315', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 22:50:57', '2024-06-11 22:50:57', 'EFTO-CAG'),
+(260, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.516.768.9', '3066.022315', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 22:51:37', '2024-06-11 22:51:37', 'EFTO-CAG'),
+(261, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.502.941.3', '3099.502.941.3', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 22:53:13', '2024-06-11 22:53:13', 'EFTO-CAG'),
+(262, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.502.990.1', '3100.041315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:54:43', '2024-06-14 20:51:24', 'EFTO-CAG'),
+(263, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.514.897.8', '3121.041515', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 22:55:33', '2024-06-11 22:55:33', 'EFTO-CAG'),
+(264, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.516.773.3', '3533.020117', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:57:56', '2024-06-11 22:57:56', 'EFTO-CAG'),
+(265, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.995.268.7', '4393.110818', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 22:58:48', '2024-06-11 22:58:48', 'EFTO-CAG'),
+(266, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.000.359.0', '4428.110818', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 23:01:49', '2024-06-11 23:01:49', 'EFTO-CAG'),
+(267, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.000.900.4', '4727.110818', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 23:02:32', '2024-06-11 23:02:32', 'EFTO-CAG'),
+(268, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.370.1', '6961.2020', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 23:04:32', '2024-06-11 23:04:32', 'EFTO-CAG'),
+(269, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.394.7', '6962.2020', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 23:05:25', '2024-06-14 22:11:04', 'EFTO-CAG'),
+(270, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.322.0', '6963.2020', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 23:06:09', '2024-06-11 23:06:09', 'EFTO-CAG'),
+(271, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.397.8', '6966.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 23:07:08', '2024-06-11 23:07:08', 'EFTO-CAG'),
+(272, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.403.6', '6967.2020', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 23:08:04', '2024-06-11 23:08:04', 'EFTO-CAG'),
+(273, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.326.8', '6968.2020', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 23:08:49', '2024-06-11 23:08:49', 'EFTO-CAG'),
+(274, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.398.5', '6970.2020', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 23:09:19', '2024-06-11 23:09:19', 'EFTO-CAG'),
+(275, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.306.0', '6971.2020', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 23:10:18', '2024-06-11 23:10:18', 'EFTO-CAG'),
+(276, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.400.5', '6973.2020', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 23:12:09', '2024-06-11 23:12:09', 'EFTO-CAG'),
+(277, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.316.917.0', '7211.2020', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 23:13:27', '2024-06-14 15:28:27', 'EFTO-CAG'),
+(278, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.316.927.9', '7214.2020', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 23:14:16', '2024-06-11 23:14:16', 'EFTO-CAG'),
+(279, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.316.920.0', '7216.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 23:15:06', '2024-06-14 22:04:51', 'EFTO-CAG'),
+(280, 'Owned', 'Glass Top', 'HIRRON', 13400.00, 'L61.316.910.1', '7217.2020', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 23:15:51', '2024-06-14 15:00:24', 'EFTO-CAG'),
+(281, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.316.915.6', '7218.2020', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 23:16:24', '2024-06-11 23:16:24', 'EFTO-CAG'),
+(282, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.316.921.7', '7219.2020', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 23:17:02', '2024-06-11 23:17:02', 'EFTO-CAG'),
+(283, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.316.901.9', '7220.2020', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 23:18:00', '2024-06-11 23:18:00', 'EFTO-CAG'),
+(284, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.316.902.6', '7221.2020', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 23:19:03', '2024-06-11 23:19:03', 'EFTO-CAG'),
+(285, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:26:23', '2024-06-11 23:26:23', 'EFTO-CAG'),
+(286, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL1', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:27:09', '2024-06-11 23:27:09', 'EFTO-CAG'),
+(287, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 2', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:28:06', '2024-06-11 23:28:06', 'EFTO-CAG'),
+(288, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 3', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:28:49', '2024-06-11 23:28:49', 'EFTO-CAG'),
+(289, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 4', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:29:25', '2024-06-11 23:29:25', 'EFTO-CAG'),
+(290, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 5', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:29:55', '2024-06-11 23:29:55', 'EFTO-CAG'),
+(291, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 6', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:30:20', '2024-06-11 23:30:20', 'EFTO-CAG'),
+(292, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 7', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:31:08', '2024-06-11 23:31:08', 'EFTO-CAG'),
+(293, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'FUJIDENZO 5', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:31:55', '2024-06-11 23:31:55', 'EFTO-CAG'),
+(294, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'FUJIDENZO 7', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:32:20', '2024-06-11 23:32:20', 'EFTO-CAG'),
+(295, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'FUJIDENZO 8', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:32:50', '2024-06-11 23:32:50', 'EFTO-CAG'),
+(296, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'LARGE 10', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:33:20', '2024-06-11 23:33:20', 'EFTO-CAG'),
+(297, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'LARGE 11', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:33:47', '2024-06-11 23:33:47', 'EFTO-CAG'),
+(298, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'FUJIDENZO 11', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:34:40', '2024-06-11 23:34:40', 'EFTO-CAG'),
+(299, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'FUJIDENZO 12', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:35:09', '2024-06-11 23:35:09', 'EFTO-CAG'),
+(300, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.271.382.4', '6960.2020', NULL, '2020-01-04', '2020-01-03', 'added', 'EFE-3002', '2024-06-14 16:41:01', '2024-06-19 20:03:40', 'EFTO-CAG'),
+(301, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.817.4', '8177.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 18:36:32', '2024-06-14 18:39:54', 'EFTO-CAG'),
+(302, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.797.9', '8178.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 18:41:25', '2024-06-14 18:41:25', 'EFTO-CAG'),
+(303, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.811.2', '8179.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 18:42:23', '2024-06-14 18:42:23', 'EFTO-CAG'),
+(304, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.811.22', '8180.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 18:45:50', '2024-06-14 18:45:50', 'EFTO-CAG'),
+(305, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.818.1', '8181.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 18:47:04', '2024-06-14 18:47:04', 'EFTO-CAG'),
+(306, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.345.2', '8182.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 18:47:49', '2024-06-14 18:47:49', 'EFTO-CAG'),
+(307, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.353.7', '8183.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 18:48:42', '2024-06-14 18:48:42', 'EFTO-CAG'),
+(308, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.448.0', '8184.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 18:49:24', '2024-06-14 18:49:24', 'EFTO-CAG'),
+(309, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.419.0', '8185.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 18:50:01', '2024-06-14 18:50:01', 'EFTO-CAG'),
+(310, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.396.4', '8186.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 18:50:54', '2024-06-14 18:50:54', 'EFTO-CAG'),
+(311, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.423.7', '8187.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 18:51:42', '2024-06-14 18:51:42', 'EFTO-CAG'),
+(312, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.460.2', '8188.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 18:52:26', '2024-06-14 18:52:26', 'EFTO-CAG'),
+(313, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.366.7', '8189.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 18:54:25', '2024-06-14 18:54:25', 'EFTO-CAG'),
+(314, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.461.9', '8190.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 18:55:12', '2024-06-14 18:55:12', 'EFTO-CAG'),
+(315, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.359.9', '8191.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-14 18:57:04', '2024-06-14 18:57:04', 'EFTO-CAG'),
+(316, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.347.6', '8192.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 19:46:35', '2024-06-14 19:46:35', 'EFTO-CAG'),
+(317, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.369.8', '8193.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 19:47:19', '2024-06-14 19:47:19', 'EFTO-CAG'),
+(318, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.810.5', '8194.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 19:48:34', '2024-06-14 19:48:34', 'EFTO-CAG'),
+(319, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.340.7', '8195.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 19:49:20', '2024-06-14 19:49:20', 'EFTO-CAG'),
+(320, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.454.1', '8196.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 19:50:06', '2024-06-14 19:50:06', 'EFTO-CAG'),
+(321, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.365.0', '8197.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 19:55:42', '2024-06-14 19:55:42', 'EFTO-CAG'),
+(322, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.456.5', '8198.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 19:56:17', '2024-06-14 19:56:17', 'EFTO-CAG'),
+(323, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.420.521.1', '8292.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-4602', '2024-06-14 20:04:09', '2024-06-14 20:04:09', 'EFTO-CAG'),
+(324, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.225.794.6', '8293.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-4602', '2024-06-14 20:05:17', '2024-06-14 20:05:17', 'EFTO-CAG'),
+(325, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.420.531.0', '8294.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-4602', '2024-06-14 20:05:59', '2024-06-14 20:05:59', 'EFTO-CAG'),
+(326, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.225.818.9', '8295.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-4602', '2024-06-14 20:07:34', '2024-06-14 20:07:34', 'EFTO-CAG'),
+(327, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.225.832.5', '8296.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-4602', '2024-06-14 20:08:44', '2024-06-14 20:08:44', 'EFTO-CAG'),
+(328, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.225.821.9', '8297.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-4602', '2024-06-14 20:09:38', '2024-06-14 20:09:38', 'EFTO-CAG'),
+(329, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.420.515.0', '8298.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-4602', '2024-06-14 20:10:27', '2024-06-14 20:10:27', 'EFTO-CAG'),
+(330, 'Owned', 'Hard Top', 'LEIHBERR', 14400.00, 'L61.420.524.2', '8299.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-4602', '2024-06-14 20:11:40', '2024-06-14 20:11:40', 'EFTO-CAG'),
+(331, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.420.518.1', '8300.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-4602', '2024-06-14 20:12:32', '2024-06-14 20:12:32', 'EFTO-CAG'),
+(332, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.420.514.3', '8301.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-4602', '2024-06-14 20:13:23', '2024-06-14 20:13:23', 'EFTO-CAG'),
+(333, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.902.6', '8667.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:14:22', '2024-06-14 20:14:22', 'EFTO-CAG'),
+(334, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.893.7', '8668.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:15:14', '2024-06-14 20:15:14', 'EFTO-CAG'),
+(335, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.892.0', '8669.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:16:03', '2024-06-14 20:16:03', 'EFTO-CAG'),
+(336, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.862.3', '8670.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:17:04', '2024-06-14 20:17:04', 'EFTO-CAG'),
+(337, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.884.9', '8671.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:17:43', '2024-06-14 20:17:43', 'EFTO-CAG'),
+(338, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.842.5', '8672.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:18:28', '2024-06-14 20:18:28', 'EFTO-CAG'),
+(339, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.844.9', '8673.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:20:15', '2024-06-14 20:20:15', 'EFTO-CAG'),
+(340, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.859.3', '8674.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:21:02', '2024-06-14 20:21:02', 'EFTO-CAG'),
+(341, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.885.2', '8675.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:22:00', '2024-06-14 20:22:00', 'EFTO-CAG'),
+(342, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.845.6', '8676.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:23:00', '2024-06-14 20:23:00', 'EFTO-CAG'),
+(343, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.864.7', '8677.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:23:52', '2024-06-14 20:23:52', 'EFTO-CAG'),
+(344, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.866.1', '8678.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:28:05', '2024-06-14 20:28:05', 'EFTO-CAG'),
+(345, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.851.7', '8679.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:40:22', '2024-06-14 20:40:22', 'EFTO-CAG'),
+(346, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.848.7', '8680.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:41:18', '2024-06-14 20:41:18', 'EFTO-CAG'),
+(347, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.905.7', '8681.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:44:21', '2024-06-14 20:44:21', 'EFTO-CAG'),
+(348, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.861.6', '8682.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:45:10', '2024-06-14 20:45:10', 'EFTO-CAG'),
+(349, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.887.6', '8683.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:45:51', '2024-06-14 20:45:51', 'EFTO-CAG'),
+(350, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.894.4', '8684.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:46:37', '2024-06-14 20:46:37', 'EFTO-CAG'),
+(351, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.858.6', '8685.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:48:19', '2024-06-14 20:48:19', 'EFTO-CAG'),
+(352, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.883.8', '8686.20222', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:50:06', '2024-06-14 20:50:06', 'EFTO-CAG'),
+(353, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.878.4', '8687.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:53:53', '2024-06-14 20:53:53', 'EFTO-CAG'),
+(354, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.863.0', '8688.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:55:55', '2024-06-14 21:00:10', 'EFTO-CAG'),
+(355, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.492.238.5', '8856.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:58:18', '2024-06-14 20:58:18', 'EFTO-CAG'),
+(356, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.493.230.9', '8857.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 21:17:45', '2024-06-14 21:17:45', 'EFTO-CAG'),
+(357, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.493.237.8', '8858.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 21:18:45', '2024-06-14 21:18:45', 'EFTO-CAG'),
+(358, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.492.246.0', '8859.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 21:19:37', '2024-06-14 21:19:37', 'EFTO-CAG'),
+(359, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.492.227.9', '8860.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 21:20:41', '2024-06-14 21:20:41', 'EFTO-CAG'),
+(360, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.492.249.1', '8861.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 21:24:42', '2024-06-14 21:24:42', 'EFTO-CAG'),
+(361, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.493.808.9', '8862.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 21:25:35', '2024-06-14 21:25:35', 'EFTO-CAG'),
+(362, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.434.0', '8899.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-14 21:26:35', '2024-06-14 21:26:35', 'EFTO-CAG'),
+(363, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.341.1', '8900.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-14 21:27:15', '2024-06-14 21:27:15', 'EFTO-CAG'),
+(364, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.410.4', '8901.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-14 21:29:00', '2024-06-14 21:29:00', 'EFTO-CAG'),
+(365, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.413.5', '8903.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-14 21:30:04', '2024-06-14 21:30:04', 'EFTO-CAG'),
+(366, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.400.5', '8904.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 21:31:01', '2024-06-14 21:31:01', 'EFTO-CAG'),
+(367, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.370.1', '8905.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-14 21:32:35', '2024-06-14 21:32:35', 'EFTO-CAG'),
+(368, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.351.0', '8906.2022', NULL, '2021-03-02', '2021-02-01', 'available', 'EFE-3002', '2024-06-14 21:33:34', '2024-06-14 21:33:34', 'EFTO-CAG'),
+(369, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.421.0', '8907.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-14 21:43:32', '2024-06-14 21:43:32', 'EFTO-CAG'),
+(370, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.392.3', '8908.2022', NULL, '2021-03-01', '2022-02-01', 'available', 'EFE-3002', '2024-06-14 21:44:16', '2024-06-14 21:44:16', 'EFTO-CAG'),
+(371, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.4119.7', '8909.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-14 21:45:00', '2024-06-14 21:45:00', 'EFTO-CAG'),
+(372, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.402.9', '8910.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-14 21:45:40', '2024-06-14 21:45:40', 'EFTO-CAG'),
+(373, 'Owned', 'Glass Top', 'LIEBHERR', 12250.00, 'L61.407.7689', '8262.2022', NULL, '2022-01-04', '2022-02-05', 'added', 'EFE-3002', '2024-06-14 22:19:26', '2024-06-14 22:19:44', 'EFTO-CAG'),
+(374, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.808.557.7', '3620.022017', NULL, '2018-02-02', '2017-02-02', 'added', 'EFE-3802', '2024-06-16 02:09:03', '2024-06-16 02:09:22', 'EFTO-CAG'),
+(375, 'Owned', 'Glass Top', 'HIRON', 13400.00, 'H2014-020229', '3011.120514', NULL, '2022-02-05', '2014-05-12', 'added', 'SD-350', '2024-06-16 03:49:00', '2024-06-16 03:49:45', 'EFTO-CAG'),
+(376, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.338.1', '8911.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 16:43:29', '2024-06-16 16:43:29', 'EFTO-TAR'),
+(377, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.376.3', '8912.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 16:44:22', '2024-06-16 16:44:22', 'EFTO-TAR'),
+(378, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.426.5', '8913.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 16:45:39', '2024-06-16 16:45:39', 'EFTO-TAR'),
+(379, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.417.3', '8914.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 16:46:15', '2024-06-16 16:46:15', 'EFTO-TAR'),
+(380, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.427.2', '8915.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 16:46:59', '2024-06-16 16:46:59', 'EFTO-TAR'),
+(381, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.185.4', '9670.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 16:47:43', '2024-06-16 16:47:43', 'EFTO-TAR'),
+(382, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.421.3', '9671.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 16:48:39', '2024-06-16 16:48:39', 'EFTO-TAR'),
+(383, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.505.191.5', '9672.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 16:49:18', '2024-06-16 16:49:18', 'EFTO-TAR'),
+(384, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.245.5', '9673.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 16:50:11', '2024-06-16 16:50:11', 'EFTO-TAR'),
+(385, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.176.2', '9674.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 16:51:12', '2024-06-16 16:51:12', 'EFTO-TAR'),
+(386, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.230.1', '9675.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 16:51:57', '2024-06-16 16:51:57', 'EFTO-TAR'),
+(387, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.114.1', '9676.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 16:54:34', '2024-06-16 16:54:34', 'EFTO-TAR'),
+(388, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.423.7', '9677.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 16:55:07', '2024-06-16 16:55:07', 'EFTO-TAR'),
+(389, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.431.2', '9678.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 16:55:52', '2024-06-16 16:55:52', 'EFTO-TAR'),
+(390, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.187.8', '9679.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 16:56:27', '2024-06-16 16:56:27', 'EFTO-TAR'),
+(391, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.505.867.0', '9695.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-4602', '2024-06-16 16:57:17', '2024-06-16 16:57:17', 'EFTO-TAR'),
+(392, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.505.322.4', '9696.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-4602', '2024-06-16 16:57:53', '2024-06-16 16:57:53', 'EFTO-TAR'),
+(393, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.505.036.0', '9729.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 16:59:33', '2024-06-16 16:59:33', 'EFTO-TAR'),
+(394, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.504.988.3', '9730.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:00:09', '2024-06-16 17:00:09', 'EFTO-TAR'),
+(395, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.505.634.8', '9731.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:00:50', '2024-06-16 17:00:50', 'EFTO-TAR'),
+(396, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.505.620.1', '9732.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:01:20', '2024-06-16 17:01:20', 'EFTO-TAR'),
+(397, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.505.630.0', '9733.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:02:10', '2024-06-16 17:02:10', 'EFTO-TAR'),
+(398, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.504.948.7', '9734.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:02:46', '2024-06-16 17:02:46', 'EFTO-TAR'),
+(399, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.504.969.5', '9735.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:23:02', '2024-06-16 17:23:02', 'EFTO-TAR'),
+(400, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.504.971.5', '9736.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:23:46', '2024-06-16 17:23:46', 'EFTO-TAR'),
+(401, 'Owned', 'Hard Top', 'LEIHBERR', 14400.00, 'L61.504.959.3', '9737.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:24:54', '2024-06-16 17:24:54', 'EFTO-TAR'),
+(402, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.504.963.0', '9738.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:25:37', '2024-06-16 17:25:37', 'EFTO-TAR'),
+(403, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.505.028.5', '9739.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:26:16', '2024-06-16 17:26:16', 'EFTO-TAR'),
+(404, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.534.193.2', '9740.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:27:06', '2024-06-16 17:27:06', 'EFTO-TAR'),
+(405, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.699.9', '10488.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:28:14', '2024-06-16 17:28:14', 'EFTO-TAR'),
+(406, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.722.4', '10498.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:29:40', '2024-06-16 17:29:40', 'EFTO-TAR'),
+(407, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.692.0', '10497.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:30:35', '2024-06-16 17:30:35', 'EFTO-TAR'),
+(408, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.726.2', '10495.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:31:15', '2024-06-16 17:31:15', 'EFTO-TAR'),
+(409, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.691.3', '10496.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:32:49', '2024-06-16 17:32:49', 'EFTO-TAR'),
+(410, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.670.8', '10491.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:33:30', '2024-06-16 17:33:30', 'EFTO-TAR'),
+(411, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.707.1', '10492.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:34:08', '2024-06-16 17:34:08', 'EFTO-TAR'),
+(412, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.707.0', '10494.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:38:33', '2024-06-16 17:38:33', 'EFTO-TAR'),
+(413, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.665.4', '10498.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:39:09', '2024-06-16 17:39:09', 'EFTO-TAR'),
+(414, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.701.9', '10490.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:39:58', '2024-06-16 17:39:58', 'EFTO-TAR'),
+(415, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.342.6', '10412.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:41:06', '2024-06-16 17:41:06', 'EFTO-TAR'),
+(416, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.357.0', '10413.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:41:39', '2024-06-16 17:41:39', 'EFTO-TAR'),
+(417, 'Owned', 'Hard Top', 'LEIHBERR', 12250.00, 'L61.631.356.3', '10416.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:42:16', '2024-06-16 17:42:16', 'EFTO-TAR'),
+(418, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.577.7', '10417.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:42:50', '2024-06-16 17:42:50', 'EFTO-TAR'),
+(419, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.582.1', '10418.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:44:30', '2024-06-16 17:44:30', 'EFTO-TAR'),
+(420, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.210.3', '10419.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:45:02', '2024-06-16 17:45:02', 'EFTO-TAR'),
+(421, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.429.9', '10414.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:45:40', '2024-06-16 17:45:40', 'EFTO-TAR'),
+(422, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.364.8', '10421.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:46:43', '2024-06-16 17:46:43', 'EFTO-TAR'),
+(423, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.351.8', '10420.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:47:57', '2024-06-16 17:47:57', 'EFTO-TAR'),
+(424, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.348.8', '10415.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:48:47', '2024-06-16 17:48:47', 'EFTO-TAR'),
+(425, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.345.7', '10422.20252', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:49:22', '2024-06-16 17:49:22', 'EFTO-TAR'),
+(426, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.347.1', '10423.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:50:43', '2024-06-16 17:50:43', 'EFTO-TAR'),
+(427, 'Owned', 'Glass Top', 'HIRON', 12010.00, '2022.047493', '8585.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'SD-350', '2024-06-16 18:05:01', '2024-06-16 18:05:01', 'EFTO-TAR'),
+(428, 'Owned', 'Glass Top', 'HIRON', 12010.00, 'L61.493.368.2', '8902.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'SD-350', '2024-06-16 18:05:45', '2024-06-16 18:05:45', 'EFTO-TAR'),
+(429, 'Owned', 'Glass Top', 'HIRON', 12010.00, 'H2014.018832', '2844.0428', NULL, '2021-03-01', '2021-02-01', 'available', 'SD-350', '2024-06-16 18:06:36', '2024-06-16 18:06:36', 'EFTO-TAR'),
+(430, 'Owned', 'Hard Top', 'HIRON', 15010.00, '2024.0522.03', '10621.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'BD-650', '2024-06-16 18:07:33', '2024-06-16 18:07:33', 'EFTO-TAR'),
+(431, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.316.935.4', '7200.2020', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 18:09:23', '2024-06-16 18:09:23', 'EFTO-TAR'),
+(432, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.106.163.6', '5215.1912', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 18:11:47', '2024-06-16 18:11:47', 'EFTO-TAR'),
+(433, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.386.2', '8902.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 18:13:58', '2024-06-16 18:13:58', 'EFTO-TAR'),
+(434, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.692.1', '8162.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:15:50', '2024-06-16 18:15:50', 'EFTO-TAR'),
+(435, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.689.1', '8163.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:16:32', '2024-06-16 18:16:32', 'EFTO-TAR'),
+(436, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.683.9', '8164.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:17:05', '2024-06-16 18:17:38', 'EFTO-TAR'),
+(437, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.684.6', '8165.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:18:17', '2024-06-16 18:18:17', 'EFTO-TAR'),
+(438, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.688.4', '8166.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:19:08', '2024-06-16 18:19:08', 'EFTO-TAR'),
+(439, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.693.8', '8167.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:19:41', '2024-06-16 18:19:41', 'EFTO-TAR'),
+(440, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.691.4', '8168.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:20:31', '2024-06-16 18:20:31', 'EFTO-TAR'),
+(441, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.680.8', '8169.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:21:05', '2024-06-16 18:21:05', 'EFTO-TAR'),
+(442, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.685.3', '8170.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:21:41', '2024-06-16 18:21:41', 'EFTO-TAR'),
+(443, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.686.0', '8171.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:22:18', '2024-06-16 18:22:18', 'EFTO-TAR'),
+(444, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.694.5', '8172.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:22:57', '2024-06-16 18:22:57', 'EFTO-TAR'),
+(445, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.682.2', '8173.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:27:47', '2024-06-16 18:27:47', 'EFTO-TAR'),
+(446, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.681.5', '8174.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:33:00', '2024-06-16 18:33:00', 'EFTO-TAR'),
+(447, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.690.7', '8175.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:34:55', '2024-06-16 18:34:55', 'EFTO-TAR'),
+(448, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.687.7', '8176.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:35:24', '2024-06-16 18:35:24', 'EFTO-TAR'),
+(449, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.461.452.5', '8689.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:36:23', '2024-06-16 18:36:23', 'EFTO-TAR'),
+(450, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.461.419.8', '8690.2022', NULL, NULL, '2021-03-01', 'available', 'EFL-6005', '2024-06-16 18:36:59', '2024-06-20 21:47:36', 'EFTO-TAR'),
+(451, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.461.445.7', '8691.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:37:39', '2024-06-16 18:37:39', 'EFTO-TAR'),
+(452, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.461.431.6', '8692.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:38:26', '2024-06-16 18:38:26', 'EFTO-TAR'),
+(453, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.461.423.5', '8693.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:39:10', '2024-06-16 18:39:10', 'EFTO-TAR'),
+(454, 'Owned', 'Glass Top', 'HIRON', 14225.00, 'H2022-047331', '8538.2021', NULL, '2021-01-05', '2022-05-02', 'added', 'SD-450', '2024-06-19 20:12:46', '2024-06-19 20:13:12', 'EFTO-CAG');
 
 -- --------------------------------------------------------
 
@@ -453,25 +1128,20 @@ INSERT INTO `equipment` (`id`, `branch_code`, `ownership`, `type`, `brand`, `pri
 -- Table structure for table `equipment_store`
 --
 
-DROP TABLE IF EXISTS `equipment_store`;
-CREATE TABLE IF NOT EXISTS `equipment_store` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `equipment_store` (
+  `id` bigint(20) UNSIGNED NOT NULL,
   `customer_id` bigint(20) UNSIGNED NOT NULL,
   `store_id` bigint(20) UNSIGNED NOT NULL,
   `equipment_id` bigint(20) UNSIGNED NOT NULL,
-  `type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brand` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `serial` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `owned` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pull_status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `remarks` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type` varchar(191) NOT NULL,
+  `brand` varchar(191) NOT NULL,
+  `serial` varchar(191) NOT NULL,
+  `owned` varchar(191) NOT NULL,
+  `pull_status` varchar(191) NOT NULL,
+  `remarks` varchar(191) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `equipment_store_store_id_foreign` (`store_id`),
-  KEY `equipment_store_equipment_id_foreign` (`equipment_id`),
-  KEY `equipment_store_customer_id_foreign` (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `equipment_store`
@@ -480,7 +1150,101 @@ CREATE TABLE IF NOT EXISTS `equipment_store` (
 INSERT INTO `equipment_store` (`id`, `customer_id`, `store_id`, `equipment_id`, `type`, `brand`, `serial`, `owned`, `pull_status`, `remarks`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, 1, 'Chest Freezer', 'CONDURA', 'ABC123', 'Not-Owned', 'no', NULL, '2024-06-04 19:03:32', '2024-06-04 19:03:32'),
 (3, 2, 2, 6, 'Glass Top', 'LIEBHERR', 'L60.989.074.3', 'Owned', 'no', NULL, '2024-06-07 19:13:20', '2024-06-07 19:13:20'),
-(8, 15, 15, 3, 'Hard Top', 'HINO', 'H2022-047154', 'Owned', 'no', NULL, '2024-06-19 07:52:44', '2024-06-19 07:52:44');
+(4, 6, 6, 89, 'Glass Top', 'LIEBHERR', 'L61.491.868.5', 'Owned', 'no', NULL, '2024-06-14 14:43:11', '2024-06-14 14:43:11'),
+(5, 3, 3, 135, 'Glass Top', 'LIEBHERR', 'L61.420.527.3', 'Owned', 'no', NULL, '2024-06-14 14:44:53', '2024-06-14 14:44:53'),
+(6, 4, 4, 212, 'Glass Top', 'LIEBHERR', 'L60.825.892.6', 'Owned', 'no', NULL, '2024-06-14 14:45:47', '2024-06-14 14:45:47'),
+(7, 5, 5, 114, 'Glass Top', 'LIEBHERR', 'L61.534.208.3', 'Owned', 'no', NULL, '2024-06-14 14:46:21', '2024-06-14 14:46:21'),
+(8, 8, 8, 148, 'Glass Top', 'LIEBHERR', 'L61.505.302.6', 'Owned', 'no', NULL, '2024-06-14 14:52:04', '2024-06-14 14:52:04'),
+(9, 11, 11, 139, 'Glass Top', 'LIEBHERR', 'L61.225.830.7', 'Owned', 'no', NULL, '2024-06-14 14:52:32', '2024-06-14 14:52:32'),
+(10, 12, 12, 134, 'Glass Top', 'LIEBHERR', 'L61.420.507.5', 'Owned', 'no', NULL, '2024-06-14 14:53:06', '2024-06-14 14:53:06'),
+(11, 13, 13, 79, 'Glass Top', 'LIEBHERR', 'L61.492.234.7', 'Owned', 'no', NULL, '2024-06-14 14:57:46', '2024-06-14 14:57:46'),
+(12, 14, 14, 214, 'Glass Top', 'LIEBHERR', 'L60.775.292.0', 'Owned', 'no', NULL, '2024-06-14 14:58:19', '2024-06-14 14:58:19'),
+(13, 15, 15, 141, 'Glass Top', 'LIEBHERR', 'L61.505.873.1', 'Owned', 'no', NULL, '2024-06-14 15:00:24', '2024-06-14 15:00:24'),
+(14, 15, 15, 280, 'Glass Top', 'HIRRON', 'L61.316.910.1', 'Owned', 'no', NULL, '2024-06-14 15:00:24', '2024-06-14 15:00:24'),
+(15, 2, 2, 5, 'Hard Top', 'HIRON', 'H2022-047164', 'Owned', 'no', NULL, '2024-06-14 15:01:24', '2024-06-14 15:01:24'),
+(16, 16, 16, 37, 'Glass Top', 'LEIBHERR', 'L61.493.345.9', 'Owned', 'no', NULL, '2024-06-14 15:21:54', '2024-06-14 15:21:54'),
+(17, 17, 17, 277, 'Glass Top', 'LIEBHERR', 'L61.316.917.0', 'Owned', 'no', NULL, '2024-06-14 15:28:27', '2024-06-14 15:28:27'),
+(18, 18, 18, 142, 'Glass Top', 'LIEBHERR', 'L61.505.299.9', 'Owned', 'no', NULL, '2024-06-14 15:32:15', '2024-06-14 15:32:15'),
+(19, 20, 20, 167, 'Hard Top', 'HIRRON', 'H2022-047158', 'Owned', 'no', NULL, '2024-06-14 15:38:06', '2024-06-14 15:38:06'),
+(20, 21, 21, 232, 'Glass Top', 'LIEBHERR', 'L60.516.774.0', 'Owned', 'no', NULL, '2024-06-14 16:09:05', '2024-06-14 16:09:05'),
+(21, 22, 22, 81, 'Glass Top', 'LIEBHERR', 'L61.492.222.4', 'Owned', 'no', NULL, '2024-06-14 16:11:10', '2024-06-14 16:11:10'),
+(23, 25, 25, 68, 'Glass Top', 'LEIBHERR', 'L61.407.773.3', 'Owned', 'no', NULL, '2024-06-14 16:31:11', '2024-06-14 16:31:11'),
+(24, 27, 27, 245, 'Glass Top', 'HIRRON', 'H2013-017420', 'Owned', 'no', NULL, '2024-06-14 16:35:39', '2024-06-14 16:35:39'),
+(25, 27, 27, 250, 'Glass Top', 'LIEBHERR', 'L60.487.390.1', 'Owned', 'no', NULL, '2024-06-14 16:35:39', '2024-06-14 16:35:39'),
+(26, 29, 29, 46, 'Glass Top', 'LEIBHERR', 'L61.506.205.9', 'Owned', 'no', NULL, '2024-06-14 17:59:07', '2024-06-14 17:59:07'),
+(27, 30, 30, 47, 'Glass Top', 'LEIBHERR', 'L61.506.169.4', 'Owned', 'no', NULL, '2024-06-14 18:02:53', '2024-06-14 18:02:53'),
+(28, 31, 31, 226, 'Glass Top', 'LIEBHERR', 'L60.516.763.4', 'Owned', 'no', NULL, '2024-06-14 18:06:09', '2024-06-14 18:06:09'),
+(29, 32, 32, 147, 'Glass Top', 'LIEBHERR', 'L61.505.854.0', 'Owned', 'no', NULL, '2024-06-14 18:13:29', '2024-06-14 18:13:29'),
+(30, 33, 33, 155, 'Glass Top', 'LIEBHERR', 'L61.597.347.8', 'Owned', 'no', NULL, '2024-06-14 18:16:22', '2024-06-14 18:16:22'),
+(31, 34, 34, 156, 'Glass Top', 'LIEBHERR', 'L61.597.348.5', 'Owned', 'no', NULL, '2024-06-14 18:23:15', '2024-06-14 18:23:15'),
+(32, 35, 35, 92, 'Glass Top', 'LIEBHERR', 'L61.491.862.3', 'Owned', 'no', NULL, '2024-06-14 18:25:20', '2024-06-14 18:25:20'),
+(33, 36, 36, 31, 'Glass Top', 'LEIBHERR', 'L61.493.39.6', 'Owned', 'yes', NULL, '2024-06-14 18:29:35', '2024-06-19 20:20:15'),
+(34, 37, 37, 98, 'Glass Top', 'LIEBHERR', 'L61.505.650.8', 'Owned', 'no', NULL, '2024-06-14 19:12:17', '2024-06-14 19:12:17'),
+(35, 38, 38, 97, 'Glass Top', 'LIEBHERR', 'L61.505.629.4', 'Owned', 'no', NULL, '2024-06-14 19:14:56', '2024-06-14 19:14:56'),
+(36, 40, 40, 70, 'Glass Top', 'LEIBHERR', 'L61.407.775.7', 'Owned', 'no', NULL, '2024-06-14 19:45:59', '2024-06-14 19:45:59'),
+(37, 41, 41, 84, 'Glass Top', 'LIEBHERR', 'L61.491.870.8', 'Owned', 'no', NULL, '2024-06-14 19:51:15', '2024-06-14 19:51:15'),
+(38, 42, 42, 88, 'Glass Top', 'LIEBHERR', 'L61.491.869.2', 'Owned', 'no', NULL, '2024-06-14 19:56:23', '2024-06-14 19:56:23'),
+(39, 43, 43, 76, 'Glass Top', 'LIEBHERR', 'L61.493.799.0', 'Owned', 'no', NULL, '2024-06-14 19:59:24', '2024-06-14 19:59:24'),
+(40, 44, 44, 24, 'Glass Top', 'LEIBHERR', 'L61.493.409.8', 'Owned', 'no', NULL, '2024-06-14 20:01:48', '2024-06-14 20:01:48'),
+(41, 45, 45, 25, 'Glass Top', 'LEIBHERR', 'L61.493.424.1', 'Owned', 'no', NULL, '2024-06-14 20:06:58', '2024-06-14 20:06:58'),
+(42, 46, 46, 182, 'Hard Top', 'HIRRON', 'H2022-047244', 'Owned', 'no', NULL, '2024-06-14 20:09:37', '2024-06-14 20:09:37'),
+(43, 46, 46, 222, 'Glass Top', 'LIEBHERR', 'L60.987.180.3', 'Owned', 'no', NULL, '2024-06-14 20:09:37', '2024-06-14 20:09:37'),
+(44, 24, 24, 162, 'Glass Top', 'HIRRON', 'H2022-047353', 'Owned', 'no', NULL, '2024-06-14 20:12:20', '2024-06-14 20:12:20'),
+(45, 23, 23, 137, 'Glass Top', 'LIEBHERR', 'L61.221.317.1', 'Owned', 'no', NULL, '2024-06-14 20:13:54', '2024-06-14 20:13:54'),
+(46, 47, 47, 132, 'Glass Top', 'LIEBHERR', 'L61.420.511.2', 'Owned', 'no', NULL, '2024-06-14 20:48:43', '2024-06-14 20:48:43'),
+(47, 48, 48, 262, 'Glass Top', 'LIEBHERR', 'L60.502.990.1', 'Owned', 'no', NULL, '2024-06-14 20:51:24', '2024-06-14 20:51:24'),
+(48, 49, 49, 17, 'Glass Top', 'LEIBHERR', 'L61.493.390.9', 'Owned', 'no', NULL, '2024-06-14 20:57:46', '2024-06-14 20:57:46'),
+(49, 50, 50, 62, 'Glass Top', 'LEIBHERR', 'L61.407.764.1', 'Owned', 'no', NULL, '2024-06-14 21:01:24', '2024-06-14 21:01:24'),
+(50, 51, 51, 122, 'Glass Top', 'LIEBHERR', 'L61.596.774.3', 'Owned', 'no', NULL, '2024-06-14 21:04:26', '2024-06-14 21:04:26'),
+(51, 52, 52, 128, 'Glass Top', 'LIEBHERR', 'L61.633.678.4', 'Owned', 'no', NULL, '2024-06-14 21:09:49', '2024-06-14 21:09:49'),
+(52, 53, 53, 258, 'Glass Top', 'LIEBHERR', 'L60.514.742.1', 'Owned', 'no', NULL, '2024-06-14 21:14:22', '2024-06-14 21:14:22'),
+(53, 54, 54, 160, 'Glass Top', 'HIRRON', 'H2022-047333', 'Owned', 'no', NULL, '2024-06-14 21:17:14', '2024-06-14 21:17:14'),
+(54, 55, 55, 153, 'Glass Top', 'LIEBHERR', 'L61.597.317.1', 'Owned', 'no', NULL, '2024-06-14 21:23:47', '2024-06-14 21:23:47'),
+(55, 56, 56, 34, 'Glass Top', 'LEIBHERR', 'L61.493.425.8', 'Owned', 'no', NULL, '2024-06-14 21:27:45', '2024-06-14 21:27:45'),
+(56, 57, 57, 71, 'Glass Top', 'LEIBHERR', 'L61.491.848.7', 'Owned', 'no', NULL, '2024-06-14 21:34:16', '2024-06-14 21:34:16'),
+(57, 58, 58, 161, 'Glass Top', 'HIRRON', 'H2022-047334', 'Owned', 'no', NULL, '2024-06-14 21:44:41', '2024-06-14 21:44:41'),
+(58, 59, 59, 109, 'Glass Top', 'LIEBHERR', 'L61.534.227.4', 'Owned', 'no', NULL, '2024-06-14 21:58:06', '2024-06-14 21:58:06'),
+(59, 59, 59, 225, 'Glass Top', 'LIEBHERR', 'L60.514.957', 'Owned', 'no', NULL, '2024-06-14 21:58:06', '2024-06-14 21:58:06'),
+(60, 60, 60, 136, 'Glass Top', 'LIEBHERR', 'L61.225.815.8', 'Owned', 'no', NULL, '2024-06-14 22:04:51', '2024-06-14 22:04:51'),
+(61, 60, 60, 279, 'Glass Top', 'LIEBHERR', 'L61.316.920.0', 'Owned', 'no', NULL, '2024-06-14 22:04:51', '2024-06-14 22:04:51'),
+(62, 61, 61, 269, 'Glass Top', 'LIEBHERR', 'L61.271.394.7', 'Owned', 'no', NULL, '2024-06-14 22:11:04', '2024-06-14 22:11:04'),
+(63, 62, 62, 373, 'Glass Top', 'LIEBHERR', 'L61.407.7689', 'Owned', 'no', NULL, '2024-06-14 22:19:44', '2024-06-14 22:19:44'),
+(64, 63, 63, 151, 'Glass Top', 'LIEBHERR', 'L61.597.334.8', 'Owned', 'no', NULL, '2024-06-14 22:34:26', '2024-06-14 22:34:26'),
+(65, 64, 64, 111, 'Glass Top', 'LIEBHERR', 'L61.504.964.7', 'Owned', 'no', NULL, '2024-06-14 22:39:19', '2024-06-14 22:39:19'),
+(66, 65, 65, 126, 'Glass Top', 'LIEBHERR', 'L61.633.666.1', 'Owned', 'no', NULL, '2024-06-16 01:56:32', '2024-06-16 01:56:32'),
+(67, 66, 66, 42, 'Glass Top', 'LEIBHERR', 'L61.506.296.3', 'Owned', 'no', NULL, '2024-06-16 02:01:11', '2024-06-16 02:01:11'),
+(68, 67, 67, 374, 'Glass Top', 'LIEBHERR', 'L60.808.557.7', 'Owned', 'no', NULL, '2024-06-16 02:09:22', '2024-06-16 02:09:22'),
+(69, 68, 68, 60, 'Glass Top', 'LEIBHERR', 'L61.407.762.7', 'Owned', 'no', NULL, '2024-06-16 02:12:33', '2024-06-16 02:12:33'),
+(70, 69, 69, 99, 'Glass Top', 'LIEBHERR', 'L61.505.664.5', 'Owned', 'no', NULL, '2024-06-16 02:16:35', '2024-06-16 02:16:35'),
+(71, 71, 71, 115, 'Glass Top', 'LIEBHERR', 'L61.534.204.5', 'Owned', 'no', NULL, '2024-06-16 03:27:31', '2024-06-16 03:27:31'),
+(72, 72, 72, 36, 'Glass Top', 'LEIBHERR', 'L61.493.369.5', 'Owned', 'no', NULL, '2024-06-16 03:30:14', '2024-06-16 03:30:14'),
+(73, 73, 73, 13, 'Hard Top', 'HIRON', '420.565.5', 'Owned', 'no', NULL, '2024-06-16 03:36:09', '2024-06-16 03:36:09'),
+(74, 74, 74, 146, 'Glass Top', 'LIEBHERR', 'L61.505.346.0', 'Owned', 'no', NULL, '2024-06-16 03:39:32', '2024-06-16 03:39:32'),
+(75, 75, 75, 152, 'Glass Top', 'LIEBHERR', 'L61.597.316.4', 'Owned', 'no', NULL, '2024-06-16 03:42:35', '2024-06-16 03:42:35'),
+(76, 76, 76, 375, 'Glass Top', 'HIRON', 'H2014-020229', 'Owned', 'no', NULL, '2024-06-16 03:49:45', '2024-06-16 03:49:45'),
+(77, 77, 77, 133, 'Glass Top', 'LIEBHERR', 'L61.420.532.7', 'Owned', 'no', NULL, '2024-06-16 03:53:04', '2024-06-16 03:53:04'),
+(78, 78, 78, 35, 'Glass Top', 'LEIBHERR', 'L61.493.368.8', 'Owned', 'no', NULL, '2024-06-16 03:55:17', '2024-06-16 03:55:17'),
+(79, 79, 79, 78, 'Glass Top', 'LIEBHERR', 'L61.492.225.5', 'Owned', 'no', NULL, '2024-06-16 03:57:41', '2024-06-16 03:57:41'),
+(80, 80, 80, 125, 'Glass Top', 'LIEBHERR', 'L61.633.673.9', 'Owned', 'no', NULL, '2024-06-16 04:00:24', '2024-06-16 04:00:24'),
+(81, 81, 81, 130, 'Glass Top', 'LIEBHERR', 'L61.420.517.4', 'Owned', 'no', NULL, '2024-06-16 04:10:43', '2024-06-16 04:10:43'),
+(82, 28, 28, 300, 'Glass Top', 'LIEBHERR', 'L61.271.382.4', 'Owned', 'no', NULL, '2024-06-19 20:03:40', '2024-06-19 20:03:40'),
+(83, 92, 92, 228, 'Glass Top', 'LIEBHERR', 'L60.371.651.3', 'Owned', 'no', NULL, '2024-06-19 20:06:13', '2024-06-19 20:06:13'),
+(84, 95, 95, 23, 'Glass Top', 'LEIBHERR', 'L61.493.422.78', 'Owned', 'no', NULL, '2024-06-19 20:07:10', '2024-06-19 20:07:10'),
+(85, 97, 97, 454, 'Glass Top', 'HIRON', 'H2022-047331', 'Owned', 'no', NULL, '2024-06-19 20:13:12', '2024-06-19 20:13:12'),
+(86, 98, 98, 19, 'Glass Top', 'LEIBHERR', 'L61.493.533.3', 'Owned', 'no', NULL, '2024-06-19 20:14:00', '2024-06-19 20:14:00'),
+(87, 209, 209, 163, 'Glass Top', 'HIRRON', 'H2022.047354', 'Owned', 'no', NULL, '2024-06-19 20:16:13', '2024-06-19 20:16:13'),
+(88, 208, 208, 75, 'Glass Top', 'LIEBHERR', '164.407.770.2', 'Owned', 'no', NULL, '2024-06-19 20:16:49', '2024-06-19 20:16:49'),
+(89, 207, 207, 149, 'Glass Top', 'LIEBHERR', 'L61.505.324.8', 'Owned', 'no', NULL, '2024-06-19 20:17:18', '2024-06-19 20:17:18'),
+(90, 206, 206, 44, 'Glass Top', 'LEIBHERR', 'L61.506.209.7', 'Owned', 'no', NULL, '2024-06-19 20:17:43', '2024-06-19 20:17:43'),
+(91, 36, 36, 110, 'Glass Top', 'LIEBHERR', 'L61.534.177.2', 'Owned', 'no', NULL, '2024-06-19 20:20:15', '2024-06-19 20:20:15'),
+(92, 205, 205, 31, 'Glass Top', 'LEIBHERR', 'L61.493.39.6', 'Owned', 'no', NULL, '2024-06-19 20:20:40', '2024-06-19 20:20:40'),
+(93, 204, 204, 94, 'Glass Top', 'LIEBHERR', 'L61.493.779.2', 'Owned', 'no', NULL, '2024-06-19 20:21:12', '2024-06-19 20:21:12'),
+(94, 203, 203, 165, 'Glass Top', 'HIRRON', 'H2022-047492', 'Owned', 'no', NULL, '2024-06-19 20:22:15', '2024-06-19 20:22:15'),
+(96, 200, 200, 30, 'Glass Top', 'LEIBHERR', 'L61.493.435.7', 'Owned', 'no', NULL, '2024-06-19 20:24:50', '2024-06-19 20:24:50'),
+(97, 199, 199, 87, 'Glass Top', 'LIEBHERR', 'L61.493.801.0', 'Owned', 'no', NULL, '2024-06-19 20:26:19', '2024-06-19 20:26:19'),
+(98, 198, 198, 106, 'Glass Top', 'LIEBHERR', 'L61.534.192.5', 'Owned', 'no', NULL, '2024-06-19 20:26:47', '2024-06-19 20:26:47'),
+(99, 196, 196, 117, 'Glass Top', 'LIEBHERR', 'L61.596.960.0', 'Owned', 'no', NULL, '2024-06-19 20:27:21', '2024-06-19 20:27:21'),
+(100, 195, 195, 113, 'Glass Top', 'LIEBHERR', 'L61.534.197.0', 'Owned', 'no', NULL, '2024-06-19 20:27:53', '2024-06-19 20:27:53');
 
 -- --------------------------------------------------------
 
@@ -488,12 +1252,10 @@ INSERT INTO `equipment_store` (`id`, `customer_id`, `store_id`, `equipment_id`, 
 -- Table structure for table `expenses`
 --
 
-DROP TABLE IF EXISTS `expenses`;
-CREATE TABLE IF NOT EXISTS `expenses` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `expenses` (
+  `id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -502,17 +1264,14 @@ CREATE TABLE IF NOT EXISTS `expenses` (
 -- Table structure for table `failed_jobs`
 --
 
-DROP TABLE IF EXISTS `failed_jobs`;
-CREATE TABLE IF NOT EXISTS `failed_jobs` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `uuid` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
+CREATE TABLE `failed_jobs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` varchar(191) NOT NULL,
+  `connection` text NOT NULL,
+  `queue` text NOT NULL,
+  `payload` longtext NOT NULL,
+  `exception` longtext NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -521,41 +1280,40 @@ CREATE TABLE IF NOT EXISTS `failed_jobs` (
 -- Table structure for table `inbounds`
 --
 
-DROP TABLE IF EXISTS `inbounds`;
-CREATE TABLE IF NOT EXISTS `inbounds` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `inbounds` (
+  `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` int(11) NOT NULL,
-  `branch_code` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `equipment_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `branch_code` varchar(15) NOT NULL,
+  `equipment_id` varchar(191) NOT NULL,
   `customer_id` int(10) UNSIGNED NOT NULL,
   `store_id` int(10) UNSIGNED NOT NULL,
-  `driver_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `vehicle_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `products` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `driver_id` varchar(191) NOT NULL,
+  `vehicle_id` varchar(191) NOT NULL,
+  `products` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`products`)),
   `with_invoice` tinyint(4) DEFAULT NULL,
   `bad_order` tinyint(4) DEFAULT NULL,
-  `bad_order_id` int(11) DEFAULT NULL,
-  `bo_amount` float DEFAULT NULL,
-  `status` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(10) NOT NULL,
   `pricelevel_id` int(10) UNSIGNED NOT NULL,
-  `payment_type` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `ref_no` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `payment_type` varchar(30) DEFAULT NULL,
+  `ref_no` varchar(30) DEFAULT NULL,
   `delivered_amount` float DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `inbounds_branch_code_index` (`branch_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `inbounds`
 --
 
-INSERT INTO `inbounds` (`id`, `user_id`, `branch_code`, `equipment_id`, `customer_id`, `store_id`, `driver_id`, `vehicle_id`, `products`, `with_invoice`, `bad_order`, `bad_order_id`, `bo_amount`, `status`, `pricelevel_id`, `payment_type`, `ref_no`, `delivered_amount`, `created_at`, `updated_at`) VALUES
-(1, 1, 'EFTO-CAG', '1', 1, 1, '1', '1', '[{\"ptype_code\":\"PT\",\"code\":\"PT_BM\",\"quantity\":\"4\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Buko Melon\"},{\"ptype_code\":\"PT\",\"code\":\"PT_CS\",\"quantity\":\"4\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Cheese\"},{\"ptype_code\":\"PT\",\"code\":\"PT_HH\",\"quantity\":\"4\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Halo halo\"},{\"ptype_code\":\"PT\",\"code\":\"PT_MG\",\"quantity\":12,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Mango\"},{\"ptype_code\":\"BC\",\"code\":\"BC_CS\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cheese\"},{\"ptype_code\":\"BC\",\"code\":\"BC_HH\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Halo halo\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CF\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Chocofi\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CNC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CS\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cheese\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MG\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Mango\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MOC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CNC\",\"quantity\":4,\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CS\",\"quantity\":4,\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cheese\"},{\"ptype_code\":\"SPS\",\"code\":\"SPS_MK\",\"quantity\":\"2\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Milk\"}]', NULL, NULL, NULL, NULL, 'Encoding', 2, NULL, NULL, NULL, '2024-06-04 19:06:32', '2024-06-08 21:35:12'),
-(2, 1, 'EFTO-CAG', '6', 2, 2, '7', '4', '[{\"ptype_code\":\"SC\",\"code\":\"SC_BM\",\"quantity\":1,\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Melon\"},{\"ptype_code\":\"SC\",\"code\":\"SC_BP\",\"quantity\":1,\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan\"},{\"ptype_code\":\"BC\",\"code\":\"BC_CNC\",\"quantity\":1,\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cookies N\' Cream\"},{\"ptype_code\":\"HG\",\"code\":\"HG_BM\",\"quantity\":1,\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Buko Melon\"}]', 1, 0, NULL, NULL, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 19:25:45', '2024-06-07 22:07:38'),
-(3, 1, 'EFTO-CAG', '6', 2, 2, '7', '3', '[{\"ptype_code\":\"SC\",\"code\":\"SC_BP\",\"quantity\":\"1\",\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan\"},{\"ptype_code\":\"MC\",\"code\":\"MC_CS\",\"quantity\":\"1\",\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese\"},{\"ptype_code\":\"BC\",\"code\":\"BC_CNC\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cookies N\' Cream\"},{\"ptype_code\":\"ICC\",\"code\":\"ICC_RR\",\"quantity\":\"1\",\"price\":468,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"ICE CREAM CONES Rocky Road\"},{\"ptype_code\":\"PT\",\"code\":\"PT_HH\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Halo halo\"}]', 1, 0, NULL, NULL, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 22:27:22', '2024-06-07 23:23:42'),
-(4, 2, 'EFTO-CAG', '6', 2, 2, '7', '2', '[{\"ptype_code\":\"SC\",\"code\":\"SC_BP\",\"quantity\":1,\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan\"},{\"ptype_code\":\"MC\",\"code\":\"MC_CS\",\"quantity\":2,\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese\"},{\"ptype_code\":\"BC\",\"code\":\"BC_CS\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cheese\"},{\"ptype_code\":\"SPS\",\"code\":\"SPS_CHO\",\"quantity\":\"1\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Chocolate\"},{\"ptype_code\":\"SPS\",\"code\":\"SPS_MK\",\"quantity\":\"1\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Milk\"},{\"ptype_code\":\"PT\",\"code\":\"PT_BM\",\"quantity\":4,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Buko Melon\"},{\"ptype_code\":\"PT\",\"code\":\"PT_CNC\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Cookies N\' Cream\"},{\"ptype_code\":\"PT\",\"code\":\"PT_CS\",\"quantity\":5,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Cheese\"},{\"ptype_code\":\"PT\",\"code\":\"PT_HH\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Halo halo\"},{\"ptype_code\":\"PT\",\"code\":\"PT_MG\",\"quantity\":5,\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Mango\"},{\"ptype_code\":\"PT\",\"code\":\"PT_MOC\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Coffee Mocha Fudge\"},{\"ptype_code\":\"PT\",\"code\":\"PT_VNL\",\"quantity\":\"2\",\"price\":48,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"PINT Vanilla\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CNC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CF\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Chocofi\"},{\"ptype_code\":\"1L\",\"code\":\"1L_CS\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1 LITER Cheese\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MG\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Mango\"},{\"ptype_code\":\"1L\",\"code\":\"1L_MOC\",\"quantity\":\"2\",\"price\":97,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"1 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CNC\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cookies N\' Cream\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CS\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cheese\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_MOC\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"1.7L\",\"code\":\"1.7L_SS\",\"quantity\":\"5\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Strawberry Strawberry\"},{\"ptype_code\":\"HG\",\"code\":\"HG_BM\",\"quantity\":\"10\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Buko Melon\"},{\"ptype_code\":\"HG\",\"code\":\"HG_MG\",\"quantity\":\"10\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Mango\"},{\"ptype_code\":\"HG\",\"code\":\"HG_VNL\",\"quantity\":\"10\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"HALF GALLON (1.89L) Vanilla\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_CNC\",\"quantity\":9,\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Cookies N\' Cream\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_CS\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Cheese\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_HH\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Halo halo\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_MG\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Mango\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_MOC\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Coffee Mocha Fudge\"},{\"ptype_code\":\"3.6L\",\"code\":\"3.6L_VNL\",\"quantity\":\"5\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Vanilla\"}]', 0, 1, 1, 2855, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 23:07:13', '2024-06-19 02:02:33');
+INSERT INTO `inbounds` (`id`, `user_id`, `branch_code`, `equipment_id`, `customer_id`, `store_id`, `driver_id`, `vehicle_id`, `products`, `with_invoice`, `bad_order`, `status`, `pricelevel_id`, `payment_type`, `ref_no`, `delivered_amount`, `created_at`, `updated_at`) VALUES
+(1, 1, 'EFTO-CAG', '1', 1, 1, '1', '1', NULL, NULL, NULL, 'Encoding', 2, NULL, NULL, NULL, '2024-06-04 19:06:32', '2024-06-08 21:35:12'),
+(2, 1, 'EFTO-CAG', '6', 2, 2, '7', '4', NULL, 1, 0, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 19:25:45', '2024-06-07 22:07:38'),
+(3, 1, 'EFTO-CAG', '6', 2, 2, '7', '3', NULL, 1, 0, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 22:27:22', '2024-06-07 23:23:42'),
+(4, 2, 'EFTO-CAG', '6', 2, 2, '7', '2', NULL, 0, 0, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 23:07:13', '2024-06-07 23:21:47'),
+(5, 2, 'EFTO-CAG', '6', 2, 2, '6', '2', '[{\"order\":2,\"ptype_code\":\"MC\",\"code\":\"MC_CS\",\"quantity\":2,\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese\",\"created_at\":\"2024-06-12T04:21:08.705259Z\"},{\"order\":5,\"ptype_code\":\"ICB\",\"code\":\"ICB_BUKO\",\"quantity\":\"1\",\"price\":390,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"ICE BUKO BUKO\",\"created_at\":\"2024-06-12T04:21:11.451044Z\"},{\"order\":6,\"ptype_code\":\"SPS\",\"code\":\"SPS_CHO\",\"quantity\":\"1\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Chocolate\",\"created_at\":\"2024-06-12T04:21:15.627010Z\"}]', 0, 0, 'Paid', 4, 'Cash', '5', 2031, '2024-06-12 19:21:03', '2024-06-12 19:22:54'),
+(6, 2, 'EFTO-CAG', '89', 6, 6, '6', '2', NULL, NULL, NULL, 'Encoding', 4, NULL, NULL, NULL, '2024-06-15 14:13:44', '2024-06-15 14:13:44'),
+(7, 2, 'EFTO-CAG', '4', 6, 6, '6', '2', '[{\"order\":1,\"ptype_code\":\"SC\",\"code\":\"SC_BM\",\"quantity\":\"1\",\"price\":12.7,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Melon\",\"created_at\":\"2024-06-20T12:04:44.933799Z\"},{\"order\":1,\"ptype_code\":\"SC\",\"code\":\"SC_BP\",\"quantity\":\"1\",\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan\",\"created_at\":\"2024-06-20T12:04:45.760299Z\"},{\"order\":2,\"ptype_code\":\"MC\",\"code\":\"MC_MRB\",\"quantity\":\"1\",\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Choco Marble\",\"created_at\":\"2024-06-20T12:04:50.952040Z\"},{\"order\":2,\"ptype_code\":\"MC\",\"code\":\"MC_SS\",\"quantity\":\"1\",\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Strawberry Strawberry\",\"created_at\":\"2024-06-20T12:04:51.583994Z\"},{\"order\":6,\"ptype_code\":\"SPS\",\"code\":\"SPS_CHO\",\"quantity\":\"1\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Chocolate\",\"created_at\":\"2024-06-20T12:04:55.579663Z\"},{\"order\":10,\"ptype_code\":\"1.7L\",\"code\":\"1.7L_MRB\",\"quantity\":\"1\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Choco Marble\",\"created_at\":\"2024-06-20T12:04:58.578615Z\"},{\"order\":10,\"ptype_code\":\"1.7L\",\"code\":\"1.7L_MOC\",\"quantity\":\"1\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Coffee Mocha Fudge\",\"created_at\":\"2024-06-20T12:04:59.040639Z\"},{\"order\":12,\"ptype_code\":\"3.6L\",\"code\":\"3.6L_MOC\",\"quantity\":\"1\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Coffee Mocha Fudge\",\"created_at\":\"2024-06-20T12:05:03.473167Z\"},{\"order\":12,\"ptype_code\":\"3.6L\",\"code\":\"3.6L_MG\",\"quantity\":\"1\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Mango\",\"created_at\":\"2024-06-20T12:05:03.637829Z\"}]', NULL, NULL, 'Completed', 4, NULL, NULL, NULL, '2024-06-21 03:05:24', '2024-06-21 03:05:24'),
+(8, 2, 'EFTO-CAG', '5', 3, 3, '6', '2', '[{\"order\":1,\"ptype_code\":\"SC\",\"code\":\"SC_BM\",\"quantity\":\"1\",\"price\":12.7,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Melon\",\"created_at\":\"2024-06-22T02:11:11.052661Z\"},{\"order\":2,\"ptype_code\":\"MC\",\"code\":\"MC_CS\",\"quantity\":\"1\",\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese\",\"created_at\":\"2024-06-22T02:11:13.540317Z\"},{\"order\":3,\"ptype_code\":\"BC\",\"code\":\"BC_CNC\",\"quantity\":\"1\",\"price\":582,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"180ml BIG CUP (6.0-oz) Cookies N\' Cream\",\"created_at\":\"2024-06-22T02:11:14.836375Z\"},{\"order\":6,\"ptype_code\":\"SPS\",\"code\":\"SPS_CHO\",\"quantity\":\"1\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Chocolate\",\"created_at\":\"2024-06-22T02:12:05.495616Z\"},{\"order\":10,\"ptype_code\":\"1.7L\",\"code\":\"1.7L_CS\",\"quantity\":\"30\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Cheese\",\"created_at\":\"2024-06-22T02:12:26.333481Z\"}]', NULL, NULL, 'Completed', 4, NULL, NULL, NULL, '2024-06-22 17:13:21', '2024-06-22 17:13:21');
 
 -- --------------------------------------------------------
 
@@ -563,12 +1321,10 @@ INSERT INTO `inbounds` (`id`, `user_id`, `branch_code`, `equipment_id`, `custome
 -- Table structure for table `inventories`
 --
 
-DROP TABLE IF EXISTS `inventories`;
-CREATE TABLE IF NOT EXISTS `inventories` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `inventories` (
+  `id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -577,63 +1333,108 @@ CREATE TABLE IF NOT EXISTS `inventories` (
 -- Table structure for table `item_master_data`
 --
 
-DROP TABLE IF EXISTS `item_master_data`;
-CREATE TABLE IF NOT EXISTS `item_master_data` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `branch_code` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `product_code` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `product_description` varchar(99) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `unit` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL,
+CREATE TABLE `item_master_data` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `branch_code` varchar(15) NOT NULL,
+  `product_code` varchar(15) NOT NULL,
+  `product_description` varchar(99) NOT NULL,
+  `unit` varchar(25) NOT NULL,
   `stocks` int(11) NOT NULL,
-  `reserved` int(11) NOT NULL DEFAULT '0',
+  `reserved` int(11) NOT NULL DEFAULT 0,
+  `hold_quantity` int(11) NOT NULL DEFAULT 0,
+  `hold_details` longtext DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `item_master_data`
 --
 
-INSERT INTO `item_master_data` (`id`, `branch_code`, `product_code`, `product_description`, `unit`, `stocks`, `reserved`, `created_at`, `updated_at`) VALUES
-(1, 'EFTO-CAG', 'SC_RR', 'Small Cup Rocky Road', 'Bag/s', 50, 0, '2024-06-04 19:07:48', '2024-06-04 19:07:48'),
-(2, 'EFTO-CAG', 'SC_BM', '90ml SMALL CUP REGULAR (3.0-oz) Buko Melon', 'Bag/s', 30, 1, '2024-06-06 05:10:24', '2024-06-07 22:07:38'),
-(3, 'EFTO-CAG', 'SC_BP', '90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan', 'Bag/s', 26, 9, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(4, 'EFTO-CAG', 'SC_BU', '90ml SMALL CUP REGULAR (3.0-oz) Buko Ube', 'Bag/s', 26, 0, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
-(5, 'EFTO-CAG', 'SC_MG', '90ml SMALL CUP REGULAR (3.0-oz) Mango', 'Bag/s', 30, 0, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
-(6, 'EFTO-CAG', 'MC_CS', '135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese', 'Bag/s', 112, 15, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(7, 'EFTO-CAG', 'BC_CNC', '180ml BIG CUP (6.0-oz) Cookies N\' Cream', 'Bag/s', 26, 2, '2024-06-06 05:10:24', '2024-06-07 23:23:42'),
-(8, 'EFTO-CAG', 'BC_CS', '180ml BIG CUP (6.0-oz) Cheese', 'Bag/s', 168, 7, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(9, 'EFTO-CAG', 'BC_HH', '180ml BIG CUP (6.0-oz) Halo halo', 'Bag/s', 30, 0, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
-(10, 'EFTO-CAG', 'SPS_CHO', 'SPECIAL STICKS Chocolate', 'Bag/s', 38, 7, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(11, 'EFTO-CAG', 'SPS_MK', 'SPECIAL STICKS Milk', 'Bag/s', 42, 7, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(12, 'EFTO-CAG', 'ICC_RR', 'ICE CREAM CONES Rocky Road', 'Bag/s', 162, 1, '2024-06-06 05:10:24', '2024-06-07 23:23:42'),
-(13, 'EFTO-CAG', 'PT_BM', 'PINT Buko Melon', 'Pc/s', 171, 28, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(14, 'EFTO-CAG', 'PT_CNC', 'PINT Cookies N\' Cream', 'Pc/s', 171, 14, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(15, 'EFTO-CAG', 'PT_CS', 'PINT Cheese', 'Pc/s', 399, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(16, 'EFTO-CAG', 'PT_HH', 'PINT Halo halo', 'Pc/s', 171, 16, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(17, 'EFTO-CAG', 'PT_MG', 'PINT Mango', 'Pc/s', 171, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(18, 'EFTO-CAG', 'PT_MOC', 'PINT Coffee Mocha Fudge', 'Pc/s', 171, 14, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(19, 'EFTO-CAG', '1L_CF', '1 LITER Chocofi', 'Pc/s', 72, 14, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(20, 'EFTO-CAG', '1L_CNC', '1 LITER Cookies N\' Cream', 'Pc/s', 72, 14, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(21, 'EFTO-CAG', '1L_CS', '1 LITER Cheese', 'Pc/s', 504, 14, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(22, 'EFTO-CAG', '1L_MG', '1 LITER Mango', 'Bag/s', 72, 14, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(23, 'EFTO-CAG', '1L_MOC', '1 LITER Coffee Mocha Fudge', 'Bag/s', 72, 14, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(24, 'EFTO-CAG', '1.7L_CNC', '1.7 LITER Cookies N\' Cream', 'Pc/s', 210, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(25, 'EFTO-CAG', '1.7L_CS', '1.7 LITER Cheese', 'Pc/s', 945, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(26, 'EFTO-CAG', '1.7L_MOC', '1.7 LITER Coffee Mocha Fudge', 'Pc/s', 105, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(27, 'EFTO-CAG', '1.7L_SS', '1.7 LITER Strawberry Strawberry', 'Pc/s', 105, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(28, 'EFTO-CAG', 'HG_BM', 'HALF GALLON (1.89L) Buko Melon', 'Pc/s', 180, 71, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(29, 'EFTO-CAG', 'HG_MG', 'HALF GALLON (1.89L) Mango', 'Pc/s', 270, 70, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(30, 'EFTO-CAG', 'HG_VNL', 'HALF GALLON (1.89L) Vanilla', 'Pc/s', 180, 70, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(31, 'EFTO-CAG', '3.6L_CNC', '3.6 LITER Cookies N\' Cream', 'Pc/s', 108, 63, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(32, 'EFTO-CAG', '3.6L_CS', '3.6 LITER Cheese', 'Pc/s', 276, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(33, 'EFTO-CAG', '3.6L_HH', '3.6 LITER Halo halo', 'Pc/s', 48, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(34, 'EFTO-CAG', '3.6L_MG', '3.6 LITER Mango', 'Pc/s', 156, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(35, 'EFTO-CAG', '3.6L_MOC', '3.6 LITER Coffee Mocha Fudge', 'Pc/s', 60, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(36, 'EFTO-CAG', '3.6L_SS', '3.6 LITER Strawberry Strawberry', 'Pc/s', 48, 0, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
-(37, 'EFTO-CAG', '3.6L_VNL', '3.6 LITER Vanilla', 'Pc/s', 60, 35, '2024-06-06 05:10:24', '2024-06-19 02:02:33'),
-(38, 'EFTO-CAG', 'PT_VNL', 'PINT Vanilla', 'Pc/s', 171, 14, '2024-06-06 05:10:24', '2024-06-19 02:02:33');
+INSERT INTO `item_master_data` (`id`, `branch_code`, `product_code`, `product_description`, `unit`, `stocks`, `reserved`, `hold_quantity`, `hold_details`, `created_at`, `updated_at`) VALUES
+(1, 'EFTO-CAG', 'SC_RR', 'Small Cup Rocky Road', 'Bag/s', 50, 0, 0, NULL, '2024-06-04 19:07:48', '2024-06-04 19:07:48'),
+(2, 'EFTO-CAG', 'SC_BM', '90ml SMALL CUP REGULAR (3.0-oz) Buko Melon', 'Bag/s', 30, 3, 0, NULL, '2024-06-06 05:10:24', '2024-06-22 17:13:21'),
+(3, 'EFTO-CAG', 'SC_BP', '90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan', 'Bag/s', 26, 4, 0, NULL, '2024-06-06 05:10:24', '2024-06-21 03:05:24'),
+(4, 'EFTO-CAG', 'SC_BU', '90ml SMALL CUP REGULAR (3.0-oz) Buko Ube', 'Bag/s', 26, 0, 0, NULL, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
+(5, 'EFTO-CAG', 'SC_MG', '90ml SMALL CUP REGULAR (3.0-oz) Mango', 'Bag/s', 86, 0, 0, NULL, '2024-06-06 05:10:24', '2024-06-15 14:15:19'),
+(6, 'EFTO-CAG', 'MC_CS', '135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese', 'Bag/s', 148, 6, 50, NULL, '2024-06-06 05:10:24', '2024-06-22 17:13:21'),
+(7, 'EFTO-CAG', 'BC_CNC', '180ml BIG CUP (6.0-oz) Cookies N\' Cream', 'Bag/s', 108, 3, 0, NULL, '2024-06-06 05:10:24', '2024-06-22 17:13:21'),
+(8, 'EFTO-CAG', 'BC_CS', '180ml BIG CUP (6.0-oz) Cheese', 'Bag/s', 204, 1, 50, NULL, '2024-06-06 05:10:24', '2024-06-12 19:07:23'),
+(9, 'EFTO-CAG', 'BC_HH', '180ml BIG CUP (6.0-oz) Halo halo', 'Bag/s', 30, 0, 0, NULL, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
+(10, 'EFTO-CAG', 'SPS_CHO', 'SPECIAL STICKS Chocolate', 'Bag/s', 158, 4, 0, NULL, '2024-06-06 05:10:24', '2024-06-22 17:13:21'),
+(11, 'EFTO-CAG', 'SPS_MK', 'SPECIAL STICKS Milk', 'Bag/s', 42, 1, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
+(12, 'EFTO-CAG', 'ICC_RR', 'ICE CREAM CONES Rocky Road', 'Bag/s', 162, 1, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:23:42'),
+(13, 'EFTO-CAG', 'PT_BM', 'PINT Buko Melon', 'Pc/s', 399, 4, 0, NULL, '2024-06-06 05:10:24', '2024-06-12 19:07:23'),
+(14, 'EFTO-CAG', 'PT_CNC', 'PINT Cookies N\' Cream', 'Pc/s', 171, 2, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
+(15, 'EFTO-CAG', 'PT_CS', 'PINT Cheese', 'Pc/s', 399, 5, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
+(16, 'EFTO-CAG', 'PT_HH', 'PINT Halo halo', 'Pc/s', 171, 4, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:23:42'),
+(17, 'EFTO-CAG', 'PT_MG', 'PINT Mango', 'Pc/s', 171, 5, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
+(18, 'EFTO-CAG', 'PT_MOC', 'PINT Coffee Mocha Fudge', 'Pc/s', 171, 2, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
+(19, 'EFTO-CAG', '1L_CF', '1 LITER Chocofi', 'Pc/s', 72, 2, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
+(20, 'EFTO-CAG', '1L_CNC', '1 LITER Cookies N\' Cream', 'Pc/s', 72, 2, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
+(21, 'EFTO-CAG', '1L_CS', '1 LITER Cheese', 'Pc/s', 504, 2, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
+(22, 'EFTO-CAG', '1L_MG', '1 LITER Mango', 'Bag/s', 72, 2, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
+(23, 'EFTO-CAG', '1L_MOC', '1 LITER Coffee Mocha Fudge', 'Bag/s', 72, 2, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
+(24, 'EFTO-CAG', '1.7L_CNC', '1.7 LITER Cookies N\' Cream', 'Pc/s', 420, 5, 0, NULL, '2024-06-06 05:10:24', '2024-06-12 19:07:23'),
+(25, 'EFTO-CAG', '1.7L_CS', '1.7 LITER Cheese', 'Pc/s', 945, 35, 0, NULL, '2024-06-06 05:10:24', '2024-06-22 17:13:21'),
+(26, 'EFTO-CAG', '1.7L_MOC', '1.7 LITER Coffee Mocha Fudge', 'Pc/s', 210, 6, 0, NULL, '2024-06-06 05:10:24', '2024-06-21 03:05:24'),
+(27, 'EFTO-CAG', '1.7L_SS', '1.7 LITER Strawberry Strawberry', 'Pc/s', 210, 5, 0, NULL, '2024-06-06 05:10:24', '2024-06-12 19:07:24'),
+(28, 'EFTO-CAG', 'HG_BM', 'HALF GALLON (1.89L) Buko Melon', 'Pc/s', 360, 11, 0, NULL, '2024-06-06 05:10:24', '2024-06-12 19:07:24'),
+(29, 'EFTO-CAG', 'HG_MG', 'HALF GALLON (1.89L) Mango', 'Pc/s', 270, 10, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
+(30, 'EFTO-CAG', 'HG_VNL', 'HALF GALLON (1.89L) Vanilla', 'Pc/s', 360, 10, 0, NULL, '2024-06-06 05:10:24', '2024-06-12 19:07:24'),
+(31, 'EFTO-CAG', '3.6L_CNC', '3.6 LITER Cookies N\' Cream', 'Pc/s', 108, 9, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
+(32, 'EFTO-CAG', '3.6L_CS', '3.6 LITER Cheese', 'Pc/s', 276, 5, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
+(33, 'EFTO-CAG', '3.6L_HH', '3.6 LITER Halo halo', 'Pc/s', 48, 5, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
+(34, 'EFTO-CAG', '3.6L_MG', '3.6 LITER Mango', 'Pc/s', 156, 6, 0, NULL, '2024-06-06 05:10:24', '2024-06-21 03:05:24'),
+(35, 'EFTO-CAG', '3.6L_MOC', '3.6 LITER Coffee Mocha Fudge', 'Pc/s', 60, 6, 0, NULL, '2024-06-06 05:10:24', '2024-06-21 03:05:24'),
+(36, 'EFTO-CAG', '3.6L_SS', '3.6 LITER Strawberry Strawberry', 'Pc/s', 48, 0, 0, NULL, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
+(37, 'EFTO-CAG', '3.6L_VNL', '3.6 LITER Vanilla', 'Pc/s', 204, 5, 0, NULL, '2024-06-06 05:10:24', '2024-06-12 19:07:24'),
+(38, 'EFTO-CAG', 'PT_VNL', 'PINT Vanilla', 'Pc/s', 223, 2, 0, NULL, '2024-06-06 05:10:24', '2024-06-12 19:07:23'),
+(39, 'EFTO-CAG', 'SC_CHO', '90ml SMALL CUP REGULAR (3.0-oz) Chocolate', 'Bag/s', 56, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
+(40, 'EFTO-CAG', 'MC_SS', '135ml MEDIUM CUP SPECIAL (4.5-oz) Strawberry Strawberry', 'Bag/s', 11, 1, 0, NULL, '2024-06-12 19:07:23', '2024-06-21 03:05:24'),
+(41, 'EFTO-CAG', 'MC_UC', '135ml MEDIUM CUP SPECIAL (4.5-oz) Ube with Cheese', 'Bag/s', 57, 0, 25, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
+(42, 'EFTO-CAG', 'ICB_BUKO', 'ICE BUKO BUKO', 'Bag/s', 60, 1, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:21:18'),
+(43, 'EFTO-CAG', 'ICC_CV', 'ICE CREAM CONES Chocovanilla', 'Bag/s', 132, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
+(44, 'EFTO-CAG', 'PT_BP', 'PINT Buko Pandan', 'Pc/s', 63, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
+(45, 'EFTO-CAG', 'PT_CHO', 'PINT Chocolate', 'Pc/s', 228, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
+(46, 'EFTO-CAG', 'PT_CV', 'PINT Chocovanilla', 'Pc/s', 228, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
+(47, 'EFTO-CAG', 'PT_FS', 'PINT Fruit Salad', 'Pc/s', 228, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
+(48, 'EFTO-CAG', 'PT_MAL', 'PINT Mallows N\' Chocolate', 'Pc/s', 37, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
+(49, 'EFTO-CAG', 'MC_MRB', '135ml MEDIUM CUP SPECIAL (4.5-oz) Choco Marble', 'Bag/s', 25, 1, 0, NULL, '2024-06-12 19:07:23', '2024-06-21 03:05:24'),
+(50, 'EFTO-CAG', 'PT_RR', 'PINT Rocky Road', 'Pc/s', 228, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
+(51, 'EFTO-CAG', 'PT_UBE', 'PINT Ube', 'Pc/s', 228, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
+(52, 'EFTO-CAG', 'PT_UC', 'PINT Ube with Cheese', 'Pc/s', 228, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
+(53, 'EFTO-CAG', '1L_CHO', '1 LITER Chocolate', 'Pc/s', 288, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
+(54, 'EFTO-CAG', '1L_CV', '1 LITER Chocovanilla', 'Pc/s', 432, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
+(55, 'EFTO-CAG', '1L_FS', '1 LITER Fruit Salad', 'Pc/s', 432, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
+(56, 'EFTO-CAG', '1.7L_FS', '1.7 LITER Fruit Salad', 'Pc/s', 210, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
+(57, 'EFTO-CAG', '1.7L_MAL', '1.7 LITER Mallows N\' Chocolate', 'Pc/s', 105, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
+(58, 'EFTO-CAG', '1.7L_MRB', '1.7 LITER Choco Marble', 'Pc/s', 31, 1, 0, NULL, '2024-06-12 19:07:24', '2024-06-21 03:05:24'),
+(59, 'EFTO-CAG', '1.7L_RR', '1.7 LITER Rocky Road', 'Pc/s', 211, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
+(60, 'EFTO-CAG', '1.7L_UC', '1.7 LITER Ube with Cheese', 'Pc/s', 210, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
+(61, 'EFTO-CAG', 'HG_CF', 'HALF GALLON (1.89L) Chocofi', 'Pc/s', 90, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
+(62, 'EFTO-CAG', 'HG_CHO', 'HALF GALLON (1.89L) Chocolate', 'Pc/s', 90, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
+(63, 'EFTO-CAG', 'HG_CV', 'HALF GALLON (1.89L) Chocovanilla', 'Pc/s', 180, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
+(64, 'EFTO-CAG', 'HG_UBE', 'HALF GALLON (1.89L) Ube', 'Pc/s', 180, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
+(65, 'EFTO-CAG', '3.6L_FS', '3.6 LITER Fruit Salad', 'Pc/s', 144, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
+(66, 'EFTO-CAG', '3.6L_MAL', '3.6 LITER Mallows N\' Chocolate', 'Pc/s', 96, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
+(67, 'EFTO-CAG', 'N3.6L_CS', 'No Label 3.6L Cheese', 'Pc/s', 87, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jobs`
+--
+
+CREATE TABLE `jobs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `queue` varchar(191) NOT NULL,
+  `payload` longtext NOT NULL,
+  `attempts` tinyint(3) UNSIGNED NOT NULL,
+  `reserved_at` int(10) UNSIGNED DEFAULT NULL,
+  `available_at` int(10) UNSIGNED NOT NULL,
+  `created_at` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -641,19 +1442,17 @@ INSERT INTO `item_master_data` (`id`, `branch_code`, `product_code`, `product_de
 -- Table structure for table `job_batches`
 --
 
-DROP TABLE IF EXISTS `job_batches`;
-CREATE TABLE IF NOT EXISTS `job_batches` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+CREATE TABLE `job_batches` (
+  `id` varchar(191) NOT NULL,
+  `name` varchar(191) NOT NULL,
   `total_jobs` int(11) NOT NULL,
   `pending_jobs` int(11) NOT NULL,
   `failed_jobs` int(11) NOT NULL,
-  `failed_job_ids` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `options` mediumtext COLLATE utf8mb4_unicode_ci,
+  `failed_job_ids` longtext NOT NULL,
+  `options` mediumtext DEFAULT NULL,
   `cancelled_at` int(11) DEFAULT NULL,
   `created_at` int(11) NOT NULL,
-  `finished_at` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `finished_at` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -662,13 +1461,11 @@ CREATE TABLE IF NOT EXISTS `job_batches` (
 -- Table structure for table `migrations`
 --
 
-DROP TABLE IF EXISTS `migrations`;
-CREATE TABLE IF NOT EXISTS `migrations` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `batch` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=331 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `migrations` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `migration` varchar(191) NOT NULL,
+  `batch` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `migrations`
@@ -699,16 +1496,16 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (306, '2024_04_22_070407_create_pricelevels_table', 2),
 (307, '2024_04_22_074027_create_prices_table', 2),
 (308, '2024_04_24_043306_create_inbounds_table', 2),
+(309, '2024_04_24_080214_create_temp_inbounds_table', 2),
 (310, '2024_04_26_004316_create_ph_addrs', 2),
 (311, '2024_05_01_054802_create_equipment_store_table', 2),
 (312, '2024_05_06_120431_create_delivery_purchase_receipts_table', 2),
 (313, '2024_05_17_142735_create_item_master_data', 2),
-(325, '2024_04_24_080214_create_temp_inbounds_table', 3),
-(326, '2024_06_12_005849_create_bad_orders_table', 3),
-(327, '2024_06_12_122146_create_temp_bad_orders', 3),
-(328, '2024_06_13_164819_create_activity_log_table', 3),
-(329, '2024_06_13_164820_add_event_column_to_activity_log_table', 3),
-(330, '2024_06_13_164821_add_batch_uuid_column_to_activity_log_table', 3);
+(314, '2024_06_12_005849_create_bad_orders_table', 3),
+(315, '2024_06_12_122146_create_temp_bad_orders', 3),
+(316, '2024_06_13_164819_create_activity_log_table', 3),
+(317, '2024_06_13_164820_add_event_column_to_activity_log_table', 3),
+(318, '2024_06_13_164821_add_batch_uuid_column_to_activity_log_table', 3);
 
 -- --------------------------------------------------------
 
@@ -716,13 +1513,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 -- Table structure for table `model_has_permissions`
 --
 
-DROP TABLE IF EXISTS `model_has_permissions`;
-CREATE TABLE IF NOT EXISTS `model_has_permissions` (
+CREATE TABLE `model_has_permissions` (
   `permission_id` bigint(20) UNSIGNED NOT NULL,
-  `model_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `model_id` bigint(20) UNSIGNED NOT NULL,
-  PRIMARY KEY (`permission_id`,`model_id`,`model_type`),
-  KEY `model_has_permissions_model_id_model_type_index` (`model_id`,`model_type`)
+  `model_type` varchar(191) NOT NULL,
+  `model_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -731,13 +1525,10 @@ CREATE TABLE IF NOT EXISTS `model_has_permissions` (
 -- Table structure for table `model_has_roles`
 --
 
-DROP TABLE IF EXISTS `model_has_roles`;
-CREATE TABLE IF NOT EXISTS `model_has_roles` (
+CREATE TABLE `model_has_roles` (
   `role_id` bigint(20) UNSIGNED NOT NULL,
-  `model_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `model_id` bigint(20) UNSIGNED NOT NULL,
-  PRIMARY KEY (`role_id`,`model_id`,`model_type`),
-  KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`)
+  `model_type` varchar(191) NOT NULL,
+  `model_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -755,12 +1546,10 @@ INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 -- Table structure for table `password_reset_tokens`
 --
 
-DROP TABLE IF EXISTS `password_reset_tokens`;
-CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`email`)
+CREATE TABLE `password_reset_tokens` (
+  `email` varchar(191) NOT NULL,
+  `token` varchar(191) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -769,16 +1558,13 @@ CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
 -- Table structure for table `permissions`
 --
 
-DROP TABLE IF EXISTS `permissions`;
-CREATE TABLE IF NOT EXISTS `permissions` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `guard_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+CREATE TABLE `permissions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `guard_name` varchar(191) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `permissions_name_guard_name_unique` (`name`,`guard_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `permissions`
@@ -793,14 +1579,12 @@ INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at
 -- Table structure for table `ph_addrs`
 --
 
-DROP TABLE IF EXISTS `ph_addrs`;
-CREATE TABLE IF NOT EXISTS `ph_addrs` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `g_level` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43763 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `ph_addrs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `code` varchar(191) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `g_level` varchar(191) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `ph_addrs`
@@ -44611,19 +45395,16 @@ INSERT INTO `ph_addrs` (`id`, `code`, `name`, `g_level`) VALUES
 -- Table structure for table `pricelevels`
 --
 
-DROP TABLE IF EXISTS `pricelevels`;
-CREATE TABLE IF NOT EXISTS `pricelevels` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `branch_code` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pl_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pl_desc` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pl_status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pl_type` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+CREATE TABLE `pricelevels` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `branch_code` varchar(15) NOT NULL,
+  `pl_name` varchar(191) NOT NULL,
+  `pl_desc` varchar(191) NOT NULL,
+  `pl_status` varchar(191) NOT NULL,
+  `pl_type` varchar(15) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `pricelevels_branch_code_index` (`branch_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `pricelevels`
@@ -44633,7 +45414,10 @@ INSERT INTO `pricelevels` (`id`, `branch_code`, `pl_name`, `pl_desc`, `pl_status
 (1, 'EFTO-TAR', 'SUMMER 2024', 'FP Summer 2024', 'Active', 'CUSTOMER', '2024-06-04 18:57:43', '2024-06-04 18:57:43'),
 (2, 'EFTO-CAG', 'BAD PRICING', 'Bad Order Pricing', 'Active', 'BAD PRICING', '2024-06-04 19:03:58', '2024-06-06 01:22:03'),
 (3, 'EFTO-CAG', 'FACTORY PRICE', '2024', 'ACTIVE', 'FACTORY PRICE', '2024-06-04 19:07:18', '2024-06-04 19:07:18'),
-(4, 'EFTO-CAG', 'CODE 1.27', 'DEALERS PRICE', 'Active', 'CUSTOMER', '2024-06-05 01:13:21', '2024-06-06 01:24:44');
+(4, 'EFTO-CAG', 'CODE 1.27', 'DEALERS PRICE', 'Active', 'CUSTOMER', '2024-06-05 01:13:21', '2024-06-06 01:24:44'),
+(5, 'EFTO-TAR', 'FACTORY PRICE', 'FACTORY PRICE', 'ACTIVE', 'FACTORY PRICE', '2024-06-21 17:08:16', '2024-06-21 17:08:16'),
+(6, 'EFTO-TAR', 'CODE 1.26', 'TARLAC & LA UNION', 'ACTIVE', 'CUSTOMER', '2024-06-21 17:09:03', '2024-06-21 17:09:03'),
+(7, 'EFTO-TAR', 'CODE 1.27', 'ABRA & ILOCOS AREA', 'ACTIVE', 'CUSTOMER', '2024-06-21 17:09:19', '2024-06-21 17:09:19');
 
 -- --------------------------------------------------------
 
@@ -44641,19 +45425,16 @@ INSERT INTO `pricelevels` (`id`, `branch_code`, `pl_name`, `pl_desc`, `pl_status
 -- Table structure for table `prices`
 --
 
-DROP TABLE IF EXISTS `prices`;
-CREATE TABLE IF NOT EXISTS `prices` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `prices` (
+  `id` bigint(20) UNSIGNED NOT NULL,
   `pricelevel_id` int(10) UNSIGNED NOT NULL,
-  `p_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `p_unit` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `p_quant` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
+  `p_code` varchar(191) NOT NULL,
+  `p_unit` varchar(191) DEFAULT NULL,
+  `p_quant` varchar(191) NOT NULL DEFAULT '0',
   `p_price` float NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `prices_pricelevel_id_p_code_unique` (`pricelevel_id`,`p_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=289 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `prices`
@@ -44663,7 +45444,7 @@ INSERT INTO `prices` (`id`, `pricelevel_id`, `p_code`, `p_unit`, `p_quant`, `p_p
 (1, 3, 'SC_RR', 'Bag/s', '15', 450, '2024-06-04 19:07:32', '2024-06-04 19:07:32'),
 (2, 2, 'SC_RR', 'Bag/s', '50', 400, '2024-06-04 19:08:35', '2024-06-04 19:08:35'),
 (4, 3, 'SC_SB', 'Bag/s', '60', 600, '2024-06-06 02:06:54', '2024-06-06 02:06:54'),
-(5, 2, 'SC_BM', 'Bag/s', '60', 600, '2024-06-06 02:07:32', '2024-06-06 02:07:32'),
+(5, 2, 'SC_BM', 'Pc/s', '60', 12.7, '2024-06-06 02:07:32', '2024-06-21 01:01:12'),
 (6, 3, 'SC_BP', 'Bag/s', '60', 600, '2024-06-06 02:26:04', '2024-06-06 02:26:04'),
 (7, 3, 'SC_BS', 'Bag/s', '60', 600, '2024-06-06 02:26:25', '2024-06-06 02:26:25'),
 (8, 3, 'SC_BU', 'Bag/s', '600', 600, '2024-06-06 02:26:58', '2024-06-06 02:26:58'),
@@ -44934,10 +45715,22 @@ INSERT INTO `prices` (`id`, `pricelevel_id`, `p_code`, `p_unit`, `p_quant`, `p_p
 (282, 4, 'N3.6L_VNL', 'Pc/s', '1', 404, '2024-06-07 21:53:08', '2024-06-07 21:53:08'),
 (283, 4, '3.6L_SS', 'Pc/s', '1', 404, '2024-06-07 21:55:52', '2024-06-07 21:55:52'),
 (284, 4, '3.6L_UBE', 'Pc/s', '1', 404, '2024-06-07 21:56:08', '2024-06-07 21:56:08'),
-(285, 2, 'SC', 'Pc/s', '0', 10.2, '2024-06-13 05:04:01', '2024-06-13 05:08:24'),
-(286, 2, 'MC', 'Pc/s', '0', 13.4, '2024-06-18 08:34:21', '2024-06-18 08:34:21'),
-(287, 2, 'BC', 'Pc/s', '0', 17.8, '2024-06-18 08:34:30', '2024-06-18 08:34:30'),
-(288, 2, 'LOL', 'Pc/s', '0', 4.92, '2024-06-18 08:34:41', '2024-06-18 08:34:41');
+(285, 2, 'SC', 'Pc/s', '0', 12.7, '2024-06-21 01:08:18', '2024-06-21 01:08:18'),
+(286, 2, 'MC', 'Pc/s', '0', 18.43, '2024-06-21 01:12:10', '2024-06-21 01:12:10'),
+(287, 5, 'SC_BM', 'Bag/s', '60', 600, '2024-06-21 17:10:06', '2024-06-21 17:10:06'),
+(288, 5, 'SC_BP', 'Bag/s', '60', 600, '2024-06-21 17:10:21', '2024-06-21 17:10:21'),
+(289, 5, 'SC_BS', 'Bag/s', '60', 600, '2024-06-21 17:10:37', '2024-06-21 17:10:37'),
+(290, 2, 'BC', 'Pc/s', '0', 24.4, '2024-06-22 17:03:15', '2024-06-22 17:03:15'),
+(291, 2, 'LOL', 'Pc/s', '0', 6.74, '2024-06-22 17:03:31', '2024-06-22 17:03:31'),
+(292, 2, 'ICB', 'Pc/s', '0', 9.9, '2024-06-22 17:03:44', '2024-06-22 17:03:44'),
+(293, 2, 'SPS', 'Pc/s', '0', 15.88, '2024-06-22 17:03:58', '2024-06-22 17:03:58'),
+(294, 2, 'ICC', 'Pc/s', '0', 24.75, '2024-06-22 17:04:15', '2024-06-22 17:04:15'),
+(295, 2, 'PT', 'Pc/s', '0', 61, '2024-06-22 17:04:28', '2024-06-22 17:04:28'),
+(296, 2, '1L', 'Pc/s', '0', 123, '2024-06-22 17:04:39', '2024-06-22 17:04:39'),
+(297, 2, '1.7L', 'Pc/s', '0', 216, '2024-06-22 17:04:56', '2024-06-22 17:04:56'),
+(298, 2, 'HG', 'Pc/s', '0', 216, '2024-06-22 17:05:09', '2024-06-22 17:05:09'),
+(299, 2, '3.6L', 'Pc/s', '0', 404, '2024-06-22 17:05:21', '2024-06-22 17:05:21'),
+(300, 2, 'N3.6L', 'Pc/s', '0', 404, '2024-06-22 17:05:49', '2024-06-22 17:05:49');
 
 -- --------------------------------------------------------
 
@@ -44945,18 +45738,15 @@ INSERT INTO `prices` (`id`, `pricelevel_id`, `p_code`, `p_unit`, `p_quant`, `p_p
 -- Table structure for table `products`
 --
 
-DROP TABLE IF EXISTS `products`;
-CREATE TABLE IF NOT EXISTS `products` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `product_type_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `product_variant_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `is_active` tinyint(4) NOT NULL DEFAULT '1',
+CREATE TABLE `products` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `code` varchar(191) NOT NULL,
+  `product_type_code` varchar(191) NOT NULL,
+  `product_variant_code` varchar(191) NOT NULL,
+  `is_active` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_product_type_variant` (`product_type_code`,`product_variant_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=144 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `products`
@@ -45110,18 +45900,16 @@ INSERT INTO `products` (`id`, `code`, `product_type_code`, `product_variant_code
 -- Table structure for table `product_types`
 --
 
-DROP TABLE IF EXISTS `product_types`;
-CREATE TABLE IF NOT EXISTS `product_types` (
-  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `volume` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `spoon_pcs_per_bag` int(11) NOT NULL DEFAULT '0',
-  `bo_pricing` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `is_active` tinyint(4) NOT NULL DEFAULT '1',
+CREATE TABLE `product_types` (
+  `code` varchar(191) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `volume` varchar(191) NOT NULL,
+  `spoon_pcs_per_bag` int(11) NOT NULL DEFAULT 0,
+  `bo_pricing` varchar(191) DEFAULT NULL,
+  `is_active` tinyint(4) NOT NULL DEFAULT 1,
   `sequence_no` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`code`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -45149,14 +45937,12 @@ INSERT INTO `product_types` (`code`, `name`, `volume`, `spoon_pcs_per_bag`, `bo_
 -- Table structure for table `product_variants`
 --
 
-DROP TABLE IF EXISTS `product_variants`;
-CREATE TABLE IF NOT EXISTS `product_variants` (
-  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `is_active` tinyint(4) NOT NULL DEFAULT '1',
+CREATE TABLE `product_variants` (
+  `code` varchar(191) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `is_active` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  UNIQUE KEY `product_variants_code_unique` (`code`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -45208,12 +45994,10 @@ INSERT INTO `product_variants` (`code`, `name`, `is_active`, `created_at`, `upda
 -- Table structure for table `purchases`
 --
 
-DROP TABLE IF EXISTS `purchases`;
-CREATE TABLE IF NOT EXISTS `purchases` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `purchases` (
+  `id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -45222,16 +46006,13 @@ CREATE TABLE IF NOT EXISTS `purchases` (
 -- Table structure for table `roles`
 --
 
-DROP TABLE IF EXISTS `roles`;
-CREATE TABLE IF NOT EXISTS `roles` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `guard_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+CREATE TABLE `roles` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `guard_name` varchar(191) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `roles_name_guard_name_unique` (`name`,`guard_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `roles`
@@ -45248,12 +46029,9 @@ INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VAL
 -- Table structure for table `role_has_permissions`
 --
 
-DROP TABLE IF EXISTS `role_has_permissions`;
-CREATE TABLE IF NOT EXISTS `role_has_permissions` (
+CREATE TABLE `role_has_permissions` (
   `permission_id` bigint(20) UNSIGNED NOT NULL,
-  `role_id` bigint(20) UNSIGNED NOT NULL,
-  PRIMARY KEY (`permission_id`,`role_id`),
-  KEY `role_has_permissions_role_id_foreign` (`role_id`)
+  `role_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -45269,12 +46047,10 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 -- Table structure for table `sales`
 --
 
-DROP TABLE IF EXISTS `sales`;
-CREATE TABLE IF NOT EXISTS `sales` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `sales` (
+  `id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -45283,17 +46059,13 @@ CREATE TABLE IF NOT EXISTS `sales` (
 -- Table structure for table `sessions`
 --
 
-DROP TABLE IF EXISTS `sessions`;
-CREATE TABLE IF NOT EXISTS `sessions` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+CREATE TABLE `sessions` (
+  `id` varchar(191) NOT NULL,
   `user_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `user_agent` text COLLATE utf8mb4_unicode_ci,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_activity` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `sessions_user_id_index` (`user_id`),
-  KEY `sessions_last_activity_index` (`last_activity`)
+  `ip_address` varchar(45) DEFAULT NULL,
+  `user_agent` text DEFAULT NULL,
+  `payload` longtext NOT NULL,
+  `last_activity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -45303,32 +46075,47 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
 ('0t8f2vzcKoGIjsgUUyIS12amQm2xcAbrumaSVPZq', NULL, '1.37.67.134', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiVHdxV2ZyNGxoN2ZPcE9IcFhJVWlGaVl6QzlXQjVhVVNFb2E4U1RQOSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vY3VzdG9tZXJzIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717594174),
 ('0wxENsTpcgG73qstxRUABte3fC06wdcDTuUaMlVi', NULL, '65.154.226.167', 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWW5EZDVyNU9oSWRyNFJ5UXpUNVU0cWdDUTFNMTRNV0loWEJpeExlcSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NToiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vb3JkZXJzIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDU6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL29yZGVycyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1717485075),
-('156R1MwpX17BzIqjlvrZizIX1nKNRNyOhA7gCaM5', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiYUh2Mm5zQk40OTdtZ0RwakM1Tm12SXVxV1FIN0I3dlM4SzV3VkowMSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozNzoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2JhZC1vcmRlcnMtbGlzdCI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM1OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvcHJvZHVjdC10eXBlcyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO30=', 1718781375),
 ('1asPcJT8ywTouz5okd7hOVM1Ev9CXZCQMmay1WGh', NULL, '173.236.217.113', '', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiaEt1S3VLdUxrU1ZVZTZmclQzTkQ0bHpESGJpVzZqNzBja2xmSTJWcyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1718008024),
 ('3bW29R7ofQGfGNmyEoPRKwQ8m3EbGMPcWHJ56t15', NULL, '1.37.67.134', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoibDVxZmN5TmpzbHM2RW1UWWpDckY3d3FJWGIzRmVsUUtHblVDdHBDNSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717493163),
+('4m8mrtQtqIt76IhZ2LyRG92RxA2vmWphi2a9Avte', 1, '119.92.228.19', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiNTdIenQxT0Nva0w5dFlEcWJqamlqVER2WEFkZE1oTG1pc1Z5bndrQSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDY6Imh0dHBzOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9vcmRlcnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6MTE6ImJyYW5jaF9jb2RlIjtzOjg6IkVGVE8tQ0FHIjt9', 1718252718),
 ('59ek5GA5HFeUW3LwSjt5cOyW9lW29ed99ImiY7eo', NULL, '1.37.67.135', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiVm45cW9WZjUzUHQwTTU0d2dXMUJBbjZ1MEhuakxrNzk1dXdFWDk0SSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NToiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vYnJhbmNoIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717473494),
+('607qeN3dsqh0V0pSoJKrkdavJvystwuXuFza4qFE', NULL, '65.154.226.170', 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiUk1OSVpjZ2VnSVJwck9YUWlBMHZFdnQxSHAwRkNkMmp1NUY2V2NUYiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1718090465),
+('7ZyFPAnLivT3RWJkVFEvC2HD1kcxkBqSKNNfxNU0', 2, '136.158.118.56', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiZjNQVEVaalBRUlA2eUpsSXlIcUk5SE1mRzVINm1mY0FiNTNvdDJibiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZXF1aXBtZW50Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2VxdWlwbWVudCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1UQVIiO30=', 1718867319),
+('8aUaGHEMjd1ZbyPvtMET1d0L8jGogxZXgKrk4r9J', 2, '122.52.233.63', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoic0ZnOEx1Q3pHMHdhcWdoWGRNVU1BY1ZERERuSVlhMmxJdGlJTFdwOSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo1ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vc2V0LWJyYW5jaC9FRlRPLUNBRyI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQ2OiJodHRwOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9wcmljaW5nIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MjtzOjExOiJicmFuY2hfY29kZSI7czo4OiJFRlRPLVRBUiI7fQ==', 1718935837),
+('9SDxb9xwIAkYftSyqwLhO99VYONNKaX2ijck9TRH', NULL, '112.198.211.214', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZjR3MURscGtwenU2OW5XY0E3V2FibHdDNzFqMXU3VHZwV1RWdzdoVyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo1NzoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vYWRkYmFkb3JkZXIvY3JlYXRlIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTc6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2FkZGJhZG9yZGVyL2NyZWF0ZSI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1719022852),
+('aA8xGTcSRTakHKt6n4yDFGs0WE4Kem74UAgJZbjr', 1, '158.62.10.38', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo3OntzOjY6Il90b2tlbiI7czo0MDoicHNZck9jemNhVHg3enpEQTRyQXI0VEhnTE1obzVka3FBNjZGeUFSQyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHBzOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9kYXNoYm9hcmQiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6MTE6ImJyYW5jaF9jb2RlIjtzOjg6IkVGVE8tQ0FHIjtzOjk6ImluYm91bmRJZCI7czoxOiIxIjtzOjEyOiJwcmljZWxldmVsSWQiO2k6Mjt9', 1718106134),
 ('AOp4lzheXmPPVbOe18Ip1mdH6MabaM5BhtPMDxRp', NULL, '65.154.226.167', 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiRGVPeWFTbkp1SmZCek43V0VRaXRFc094NHlFTlQ0aWRqSFVkbk9ZSyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717485075),
 ('bfJYw24XFPcOZwgy9vvPup7EKhid3llESutesaY4', NULL, '136.158.65.81', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoicFNrR3k4VHdTYjhTSnBvcDNYcnphZ0I0ajN2WWdIY1BSWklDNndxViI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZXF1aXBtZW50Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717747934),
+('BZ320WBpJUQ2AMzIC4rO5fAGUePQirZehsXi1Zq0', 2, '136.158.118.56', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoicGFVaExHcnZiNVZPenBQdE9CM25naFBReDZ0dFBlN0ROeGpKQnZwdyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZXF1aXBtZW50Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2VxdWlwbWVudCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1UQVIiO30=', 1718870731),
 ('csmDjCFbHs91dikci4K5MUkUnvc5d5m5ZTZvcWLl', NULL, '1.37.67.132', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoieEF2QWd4SGJlSHBuOXJiUTA4cDlROFplZEVFUHpuQ2VDbzNkV3JhdiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717740965),
 ('DiLhKL57jpUwOcYofLTmz1biC94dKfWKUmpzvQtf', NULL, '65.154.226.169', 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiQ0dXUjNKdWQzWERkUzRYVHNIZW82dmV4SHgyeVdEWUpEZHBMUkt1OCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo1NToiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZGVsaXZlcnktcGVyc29ucyI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjU1OiJodHRwOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9kZWxpdmVyeS1wZXJzb25zIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717588439),
+('dxr9Ukb1Z3NNdpRuEvYTmkmi6TsayYPruGd3XD66', 2, '122.52.233.63', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YToxMDp7czo2OiJfdG9rZW4iO3M6NDA6ImF2THN1M2poYVFSVmpHSDFsVVpoaG5BZk9uTG85RDZrMEw3YTc4TE4iO3M6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQ1OiJodHRwOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9vcmRlcnMiO31zOjM6InVybCI7YToxOntzOjg6ImludGVuZGVkIjtzOjQ4OiJodHRwOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9kYXNoYm9hcmQiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO3M6MTE6ImJyYW5jaF9jb2RlIjtzOjg6IkVGVE8tQ0FHIjtzOjEyOiJwcmljZWxldmVsSWQiO2k6NDtzOjEyOiJvcmRlckRldGFpbHMiO3M6MTcxOiJ7ImJyYW5jaF9jb2RlIjoiRUZUTy1DQUciLCJlcXVpcG1lbnQiOiIzIiwiY3VzdG9tZXJfaWQiOiIyIiwiY3VzdG9tZXIiOiJDYXJtYWluZSBKb3kgUGFndWxheWFuIiwiZGVsaXZlcnlQZXJzb24iOiI2IiwidmVoaWNsZSI6IjIiLCJwcmljZWxldmVsX2lkIjoiNCIsImJhZF9vcmRlcl9pZCI6bnVsbH0iO3M6MTk6InVwZGF0aW5nRGF0YVJlc3VsdHMiO2E6Mzp7aTowO2E6Mjp7czo0OiJjb2RlIjtzOjU6Ik1DX0NTIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MTthOjI6e3M6NDoiY29kZSI7czo4OiJJQ0JfQlVLTyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjI7YToyOntzOjQ6ImNvZGUiO3M6NzoiU1BTX0NITyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO319czo5OiJpbmJvdW5kSWQiO3M6MToiNiI7fQ==', 1718776689),
 ('ewIXUzSBk3pwQsJtbnR3FKONsOdheW9nL1YmJFLL', NULL, '209.35.172.175', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/601.2.4 (KHTML, like Gecko) Version/9.0.1 Safari/601.2.4 facebookexternalhit/1.1 Facebot Twitterbot/1.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiSjlqRVpOcWhBdEhRMll2T0NEckRObkhLVEJlZ3lTSE9sdEV0UmdMWiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZGFzaGJvYXJkIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717750276),
 ('GMzn2EciiSsN9lOgwIXx7ZurfQtegsKwc4R69Yi0', 2, '209.35.172.174', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiNTJRdEJxb1ZDbTFiR1VjekQzbWNralRMU24zOFNSY2JlMVlRc3dRVyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZGFzaGJvYXJkIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDU6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL29yZGVycyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO30=', 1717750483),
 ('gNRkKrczLekpfFyfUCJTi0Q6J15givuyavT4pfj5', NULL, '1.37.67.133', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/6.5.3 Chrome/108.0.5359.220 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiNjJqOW9iZVVSSlJxcGZiQndKcGM0NHBrYzJ1czk5Tjl4TUxVSGtYZiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo1NToiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vaXRlbS1tYXN0ZXItZGF0YSI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQ0OiJodHRwOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9sb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1717510538),
-('go3QbGEh2y8ZbANbqpMmTMmQ6tW22CpJvHG238BQ', 1, '112.198.228.208', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiaXJmOVY1QkpkSEJaaGtUV1daUWtzeTJEMnZmbTM4bG1ISEptd2ZrZiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTU6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2RlbGl2ZXJ5LXBlcnNvbnMiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6MTE6ImJyYW5jaF9jb2RlIjtzOjg6IkVGVE8tQ0FHIjt9', 1717597297),
-('GpfgIyhgEdU1v6oujk9NHbwbaIpccA0hDwWoINPr', 1, '210.213.142.167', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiTmNLaTJjQklrRDQ1bXlnckdLcVV3azFhSUdvOWphT1hLeGEzQTlUYiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHBzOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9jdXN0b21lcnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6MTE6ImJyYW5jaF9jb2RlIjtzOjg6IkVGVE8tQ0FHIjt9', 1718008137),
-('IIZ20f7dNDWWzPe2G7mmZaKvnRWFIhjYaFX9KHxz', NULL, '136.158.65.81', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiMjhmTjRwdnBIQm11QTF3WEVUUHhOWnhPcGZ3NDV1TXY1aHNJYzJYaSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9fQ==', 1717747746),
+('go3QbGEh2y8ZbANbqpMmTMmQ6tW22CpJvHG238BQ', 1, '112.198.211.214', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo3OntzOjY6Il90b2tlbiI7czo0MDoiaXJmOVY1QkpkSEJaaGtUV1daUWtzeTJEMnZmbTM4bG1ISEptd2ZrZiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDY6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL3ByaWNpbmciO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6MTE6ImJyYW5jaF9jb2RlIjtzOjg6IkVGVE8tQ0FHIjtzOjk6ImluYm91bmRJZCI7czoxOiIxIjtzOjEyOiJwcmljZWxldmVsSWQiO2k6Mjt9', 1719023323),
 ('ivAWGMJuLIHkZj7rDxQrON8jGrFt2IwvWqSAEauD', NULL, '1.37.67.199', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWGEwN1VGSmpKcXlwM3NhTUJOd1poMmRtY2VvQkdPY1luT1VSVTVMVyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NzoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vdmVoaWNsZXMiO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czo0NDoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1717590088),
-('JY6uiQyRu7anYFycYzu4E6BsWarkCCuhJaRDWXrG', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiM2ViZ3ljRnhWR3J0QVhvZWhnWElhVFgzSHU3Sld3VlVkR1g5dDJseiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyOToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL3ByaWNpbmciO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyODoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL29yZGVycyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO30=', 1718256370),
-('K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo5OntzOjY6Il90b2tlbiI7czo0MDoiNHQ2OW1CWmI5Y1BFN1lxRm45Qkp0ZXc5Z1FMSzY4eVRWVGlBckRMbSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozMToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2N1c3RvbWVycyI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM4OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvaXRlbS1tYXN0ZXItZGF0YSI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO3M6MTI6InByaWNlbGV2ZWxJZCI7aToyO3M6MTk6InVwZGF0aW5nRGF0YVJlc3VsdHMiO2E6MzA6e2k6MDthOjI6e3M6NDoiY29kZSI7czo1OiJTQ19CUCI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjE7YToyOntzOjQ6ImNvZGUiO3M6NToiTUNfQ1MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToyO2E6Mjp7czo0OiJjb2RlIjtzOjU6IkJDX0NTIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MzthOjI6e3M6NDoiY29kZSI7czo3OiJTUFNfQ0hPIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6NDthOjI6e3M6NDoiY29kZSI7czo2OiJTUFNfTUsiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aTo1O2E6Mjp7czo0OiJjb2RlIjtzOjU6IlBUX0JNIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6NjthOjI6e3M6NDoiY29kZSI7czo2OiJQVF9DTkMiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aTo3O2E6Mjp7czo0OiJjb2RlIjtzOjU6IlBUX0NTIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6ODthOjI6e3M6NDoiY29kZSI7czo1OiJQVF9ISCI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjk7YToyOntzOjQ6ImNvZGUiO3M6NToiUFRfTUciO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToxMDthOjI6e3M6NDoiY29kZSI7czo2OiJQVF9NT0MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToxMTthOjI6e3M6NDoiY29kZSI7czo2OiJQVF9WTkwiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToxMjthOjI6e3M6NDoiY29kZSI7czo2OiIxTF9DTkMiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToxMzthOjI6e3M6NDoiY29kZSI7czo1OiIxTF9DRiI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjE0O2E6Mjp7czo0OiJjb2RlIjtzOjU6IjFMX0NTIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MTU7YToyOntzOjQ6ImNvZGUiO3M6NToiMUxfTUciO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToxNjthOjI6e3M6NDoiY29kZSI7czo2OiIxTF9NT0MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToxNzthOjI6e3M6NDoiY29kZSI7czo4OiIxLjdMX0NOQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjE4O2E6Mjp7czo0OiJjb2RlIjtzOjc6IjEuN0xfQ1MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToxOTthOjI6e3M6NDoiY29kZSI7czo4OiIxLjdMX01PQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjIwO2E6Mjp7czo0OiJjb2RlIjtzOjc6IjEuN0xfU1MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToyMTthOjI6e3M6NDoiY29kZSI7czo1OiJIR19CTSI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjIyO2E6Mjp7czo0OiJjb2RlIjtzOjU6IkhHX01HIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MjM7YToyOntzOjQ6ImNvZGUiO3M6NjoiSEdfVk5MIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MjQ7YToyOntzOjQ6ImNvZGUiO3M6ODoiMy42TF9DTkMiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToyNTthOjI6e3M6NDoiY29kZSI7czo3OiIzLjZMX0NTIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MjY7YToyOntzOjQ6ImNvZGUiO3M6NzoiMy42TF9ISCI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjI3O2E6Mjp7czo0OiJjb2RlIjtzOjc6IjMuNkxfTUciO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToyODthOjI6e3M6NDoiY29kZSI7czo4OiIzLjZMX01PQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjI5O2E6Mjp7czo0OiJjb2RlIjtzOjg6IjMuNkxfVk5MIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fX1zOjk6ImluYm91bmRJZCI7czoxOiIxIjt9', 1718784207),
-('mvCoQipb8Bjhosv6bna7RkUyhPO5TrCrb9jyQK9b', NULL, '122.52.233.63', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiSnJSbG85cnNqTldhTFFianc5RTlEdm1KTlpTemZHS2RuSEp1WDNJTiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9fQ==', 1717559653),
+('jIy0x62e7HTxNXbItKcAfz4PaBGtoUr3zohsJUth', 2, '136.158.65.114', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo4OntzOjY6Il90b2tlbiI7czo0MDoiS0Y5RTBoOGJpd1pGWjY0Rk5sYXVpNEk4c3FrZFdZd1FzT2c0MDFpbCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2N1c3RvbWVycyI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO3M6MTI6InByaWNlbGV2ZWxJZCI7aTo0O3M6OToiaW5ib3VuZElkIjtzOjE6IjYiO3M6MTI6Im9yZGVyRGV0YWlscyI7czoxNjI6InsiYnJhbmNoX2NvZGUiOiJFRlRPLUNBRyIsImVxdWlwbWVudCI6IjQiLCJjdXN0b21lcl9pZCI6IjYiLCJjdXN0b21lciI6IkpvdmVudGEgQWJyYW4iLCJkZWxpdmVyeVBlcnNvbiI6IjYiLCJ2ZWhpY2xlIjoiMiIsInByaWNlbGV2ZWxfaWQiOiI0IiwiYmFkX29yZGVyX2lkIjpudWxsfSI7fQ==', 1718511454),
+('Jw0jJMle74nWLSd4caVAhYw0NO86nKtWZ2jmHtmA', NULL, '44.234.58.82', 'Mozilla/5.0 (compatible; wpbot/1.1; +https://forms.gle/ajBaxygz9jSR8p8G9)', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiSnByM1FsdldzakZuYjZNSFpSSHZoTzhsZDNEcENjQzNUalFhSXJHbCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1718319697),
+('MU19ATj3Nma3AsQFF31uJbWfcZUIBgacHypyUgcN', 1, '210.213.142.167', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoid3FpemFCQkU1S0ljRU92ZnUxb2JLczU5cmFYalZOYm1mNHlmeWlONyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTI6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL3Byb2R1Y3QtdHlwZXMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6MTE6ImJyYW5jaF9jb2RlIjtzOjg6IkVGVE8tQ0FHIjt9', 1718954082),
+('nkSrGbGa6uoEL6n2lMNqk0yy2fsy3ljvICHEreui', NULL, '49.150.109.103', 'Mozilla/5.0 (Linux; Android 12; V2134 Build/SP1A.210812.003; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/125.0.6422.186 Mobile Safari/537.36 [FB_IAB/FB4A;FBAV/462.2.0.48.109;]', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiRUdwdmJQT2tIZXloYUN3UDFpaU40R3B5RWNVRXRpQVl1VFZCSXh2SSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZXF1aXBtZW50Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1718864931),
+('nzdQtg8OLIxQsHFbP1h6Sw2MHUSfuqobH49yw6Ke', NULL, '112.198.211.214', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiNVdncThJa0t5S0lTa0Vka3k0cGoyeWNZQkd2RHJGVEMzV01WdVFwdSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1719022852),
+('o3XWFxTQbF0UgBsKOm31uFTL8vTVdJyBsMah9Q9Y', 2, '49.150.109.103', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiVEZ2REQ2T0NFblJBbWJLQWZSa3FWcW05QjliaTQyZ1N2QWRPRVBUdSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZXF1aXBtZW50Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2N1c3RvbWVycyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO30=', 1718958334),
 ('OUg8gVWtlkyU5xSeThzvVyWlMqxweB7CiW3ASQmj', NULL, '65.154.226.167', 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiWW5abVZwUDVDQnhKTDNzaU5FY0NvY05NU2FKT0J5eUtGUHJxeDJBZCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2JhZC1vcmRlcnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1717475742),
+('oyo0e4Zg6Ez8sZVzqsvzmjvJNUlyGWXZGIk0bty1', NULL, '210.213.142.167', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoieGVxb1M0SURZYmhjYVlnRm5ta2RIbDZRMFd0Z1IwZGFyUnZkaFVlSSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzk6Imh0dHBzOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbSI7fX0=', 1718009620),
 ('P7VguN7VteFSXVW4ytXcNsf6smcKeVHeyFX5GlU2', NULL, '209.35.172.174', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/601.2.4 (KHTML, like Gecko) Version/9.0.1 Safari/601.2.4 facebookexternalhit/1.1 Facebot Twitterbot/1.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZ3NsbkV6SHVkUzMyQzVKdjNkVjlCYjd2NGNlNGE0dzhsOUhZQ3lSNyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZGFzaGJvYXJkIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717750389),
-('S7NZoIefQqlz1czYb6ipyUNJtnor5boYrjOjmSHU', 2, '136.158.65.81', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo5OntzOjY6Il90b2tlbiI7czo0MDoiU3JDMEt4NGgwRm5rdnVubjhra003ckpXYnRVc0c0dFFqYlB3b0g4ViI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2N1c3RvbWVycyI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO3M6MTI6InByaWNlbGV2ZWxJZCI7aToyO3M6MTk6InVwZGF0aW5nRGF0YVJlc3VsdHMiO2E6NTp7aTowO2E6Mjp7czo0OiJjb2RlIjtzOjU6IlNDX0JQIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MTthOjI6e3M6NDoiY29kZSI7czo1OiJNQ19DUyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjI7YToyOntzOjQ6ImNvZGUiO3M6NjoiQkNfQ05DIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MzthOjI6e3M6NDoiY29kZSI7czo2OiJJQ0NfUlIiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aTo0O2E6Mjp7czo0OiJjb2RlIjtzOjU6IlBUX0hIIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fX1zOjEyOiJvcmRlckRldGFpbHMiO3M6MTUxOiJ7ImJyYW5jaF9jb2RlIjoiRUZUTy1DQUciLCJlcXVpcG1lbnQiOiIzIiwiY3VzdG9tZXJfaWQiOiIyIiwiY3VzdG9tZXIiOiJDYXJtYWluZSBKb3kgUGFndWxheWFuIiwiZGVsaXZlcnlQZXJzb24iOiI3IiwidmVoaWNsZSI6IjIiLCJwcmljZWxldmVsX2lkIjoiNCJ9IjtzOjk6ImluYm91bmRJZCI7czoxOiIxIjt9', 1717857887),
+('RlZUHW6hBKutILqIoeTe6UwLjvFfIIG8IndNeeut', 2, '136.158.118.18', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiTnVTR3ZyU0hLOGQ1RDVJTExKaXJWaVlpcjZmRDFVNmdtWGx3RW10cCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZXF1aXBtZW50Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2N1c3RvbWVycyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1UQVIiO30=', 1718786779),
 ('Sg5OClPYZFtzNtdxLzIXr6mWu9yaoSQglZBurl77', NULL, '210.213.142.167', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoicHY2Qk1maGNIbmY0QTlFT0JVVlRGVnV5SVlBOXN0Tm5iSjc5MHBvOSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0OToiaHR0cHM6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2N1c3RvbWVycyI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQ5OiJodHRwczovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vY3VzdG9tZXJzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1718008141),
 ('TQz9DkIXbnIrZaKwQRJmkzoaVHmWNOQR43OuU0es', 2, '209.35.172.174', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 [FBAN/FBIOS;FBAV/460.2.0.39.109;FBBV/605114142;FBDV/iPhone15,2;FBMD/iPhone;FBSN/iOS;FBSV/16.0.1;FBSS/3;FBCR/;FBID/phone;FBLC/en_US;FBOP/80]', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoid2k1M1ZTbnJ2UkpONDBnYWVVdkNFY3VRS09tZnFPYXpSbzFzbjhUYSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2Rhc2hib2FyZCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO30=', 1717750381),
+('tsmYQ5Pk2maaVgiXEMtR3WpUdVeOSA5rr3lSzw20', NULL, '210.213.142.167', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZjd6cENGT2JKZ0F1NnpDWEFwZnlzYzgwb3lRdmRoY0JYTnY5NE14RiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9fQ==', 1718608309),
+('U8zHVBioqnvpEPZRr6jwaIFL6JQlR1XHiQn9DAs9', NULL, '1.37.67.135', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoibjMxQnNmR25jTnJBQlVqYkhhNGRySEh6TUZBWWl3bGZoZHJoekVoaiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2JhZC1vcmRlcnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1718276145),
+('UbARntGRlOqlvaO51PnZXzNnRee6WwGxSLuDcdoL', 1, '112.198.211.214', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0', 'YTo3OntzOjY6Il90b2tlbiI7czo0MDoiRm5QSmJhVFcyanJraGpmc3U4TjE5cFlaRFE3UGNoRkllZ0hOYmZjeCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTE6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL29yZGVyLzIvZWRpdCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO3M6OToiaW5ib3VuZElkIjtzOjE6IjIiO3M6ODoicHJvZHVjdHMiO2E6OTp7aTowO2E6OTp7czo1OiJvcmRlciI7aToxO3M6MTA6InB0eXBlX2NvZGUiO3M6MjoiU0MiO3M6NDoiY29kZSI7czo1OiJTQ19CTSI7czo4OiJxdWFudGl0eSI7czoxOiIxIjtzOjU6InByaWNlIjtkOjEyLjc7czo0OiJ1bml0IjtzOjQ6IlBjL3MiO3M6NDoic3BwYiI7TjtzOjExOiJkZXNjcmlwdGlvbiI7czo0MjoiOTBtbCBTTUFMTCBDVVAgUkVHVUxBUiAoMy4wLW96KSBCdWtvIE1lbG9uIjtzOjEwOiJjcmVhdGVkX2F0IjtzOjI3OiIyMDI0LTA2LTIwVDEyOjA0OjQ0LjkzMzc5OVoiO31pOjE7YTo5OntzOjU6Im9yZGVyIjtpOjE7czoxMDoicHR5cGVfY29kZSI7czoyOiJTQyI7czo0OiJjb2RlIjtzOjU6IlNDX0JQIjtzOjg6InF1YW50aXR5IjtzOjE6IjEiO3M6NToicHJpY2UiO2k6NjAwO3M6NDoidW5pdCI7czo1OiJCYWcvcyI7czo0OiJzcHBiIjtOO3M6MTE6ImRlc2NyaXB0aW9uIjtzOjQzOiI5MG1sIFNNQUxMIENVUCBSRUdVTEFSICgzLjAtb3opIEJ1a28gUGFuZGFuIjtzOjEwOiJjcmVhdGVkX2F0IjtzOjI3OiIyMDI0LTA2LTIwVDEyOjA0OjQ1Ljc2MDI5OVoiO31pOjI7YTo5OntzOjU6Im9yZGVyIjtpOjI7czoxMDoicHR5cGVfY29kZSI7czoyOiJNQyI7czo0OiJjb2RlIjtzOjY6Ik1DX01SQiI7czo4OiJxdWFudGl0eSI7czoxOiIxIjtzOjU6InByaWNlIjtpOjUwODtzOjQ6InVuaXQiO3M6NToiQmFnL3MiO3M6NDoic3BwYiI7TjtzOjExOiJkZXNjcmlwdGlvbiI7czo0NjoiMTM1bWwgTUVESVVNIENVUCBTUEVDSUFMICg0LjUtb3opIENob2NvIE1hcmJsZSI7czoxMDoiY3JlYXRlZF9hdCI7czoyNzoiMjAyNC0wNi0yMFQxMjowNDo1MC45NTIwNDBaIjt9aTozO2E6OTp7czo1OiJvcmRlciI7aToyO3M6MTA6InB0eXBlX2NvZGUiO3M6MjoiTUMiO3M6NDoiY29kZSI7czo1OiJNQ19TUyI7czo4OiJxdWFudGl0eSI7czoxOiIxIjtzOjU6InByaWNlIjtpOjUwODtzOjQ6InVuaXQiO3M6NToiQmFnL3MiO3M6NDoic3BwYiI7TjtzOjExOiJkZXNjcmlwdGlvbiI7czo1NToiMTM1bWwgTUVESVVNIENVUCBTUEVDSUFMICg0LjUtb3opIFN0cmF3YmVycnkgU3RyYXdiZXJyeSI7czoxMDoiY3JlYXRlZF9hdCI7czoyNzoiMjAyNC0wNi0yMFQxMjowNDo1MS41ODM5OTRaIjt9aTo0O2E6OTp7czo1OiJvcmRlciI7aTo2O3M6MTA6InB0eXBlX2NvZGUiO3M6MzoiU1BTIjtzOjQ6ImNvZGUiO3M6NzoiU1BTX0NITyI7czo4OiJxdWFudGl0eSI7czoxOiIxIjtzOjU6InByaWNlIjtpOjYyNTtzOjQ6InVuaXQiO3M6NToiQmFnL3MiO3M6NDoic3BwYiI7TjtzOjExOiJkZXNjcmlwdGlvbiI7czoyNDoiU1BFQ0lBTCBTVElDS1MgQ2hvY29sYXRlIjtzOjEwOiJjcmVhdGVkX2F0IjtzOjI3OiIyMDI0LTA2LTIwVDEyOjA0OjU1LjU3OTY2M1oiO31pOjU7YTo5OntzOjU6Im9yZGVyIjtpOjEwO3M6MTA6InB0eXBlX2NvZGUiO3M6NDoiMS43TCI7czo0OiJjb2RlIjtzOjg6IjEuN0xfTVJCIjtzOjg6InF1YW50aXR5IjtzOjE6IjEiO3M6NToicHJpY2UiO2k6MTcwO3M6NDoidW5pdCI7czo0OiJQYy9zIjtzOjQ6InNwcGIiO047czoxMToiZGVzY3JpcHRpb24iO3M6MjI6IjEuNyBMSVRFUiBDaG9jbyBNYXJibGUiO3M6MTA6ImNyZWF0ZWRfYXQiO3M6Mjc6IjIwMjQtMDYtMjBUMTI6MDQ6NTguNTc4NjE1WiI7fWk6NjthOjk6e3M6NToib3JkZXIiO2k6MTA7czoxMDoicHR5cGVfY29kZSI7czo0OiIxLjdMIjtzOjQ6ImNvZGUiO3M6ODoiMS43TF9NT0MiO3M6ODoicXVhbnRpdHkiO3M6MToiMSI7czo1OiJwcmljZSI7aToxNzA7czo0OiJ1bml0IjtzOjQ6IlBjL3MiO3M6NDoic3BwYiI7TjtzOjExOiJkZXNjcmlwdGlvbiI7czoyODoiMS43IExJVEVSIENvZmZlZSBNb2NoYSBGdWRnZSI7czoxMDoiY3JlYXRlZF9hdCI7czoyNzoiMjAyNC0wNi0yMFQxMjowNDo1OS4wNDA2MzlaIjt9aTo3O2E6OTp7czo1OiJvcmRlciI7aToxMjtzOjEwOiJwdHlwZV9jb2RlIjtzOjQ6IjMuNkwiO3M6NDoiY29kZSI7czo4OiIzLjZMX01PQyI7czo4OiJxdWFudGl0eSI7czoxOiIxIjtzOjU6InByaWNlIjtpOjMxODtzOjQ6InVuaXQiO3M6NDoiUGMvcyI7czo0OiJzcHBiIjtOO3M6MTE6ImRlc2NyaXB0aW9uIjtzOjI4OiIzLjYgTElURVIgQ29mZmVlIE1vY2hhIEZ1ZGdlIjtzOjEwOiJjcmVhdGVkX2F0IjtzOjI3OiIyMDI0LTA2LTIwVDEyOjA1OjAzLjQ3MzE2N1oiO31pOjg7YTo5OntzOjU6Im9yZGVyIjtpOjEyO3M6MTA6InB0eXBlX2NvZGUiO3M6NDoiMy42TCI7czo0OiJjb2RlIjtzOjc6IjMuNkxfTUciO3M6ODoicXVhbnRpdHkiO3M6MToiMSI7czo1OiJwcmljZSI7aTozMTg7czo0OiJ1bml0IjtzOjQ6IlBjL3MiO3M6NDoic3BwYiI7TjtzOjExOiJkZXNjcmlwdGlvbiI7czoxNToiMy42IExJVEVSIE1hbmdvIjtzOjEwOiJjcmVhdGVkX2F0IjtzOjI3OiIyMDI0LTA2LTIwVDEyOjA1OjAzLjYzNzgyOVoiO319fQ==', 1719024281),
+('uiay95rBclTONxZoZCPcFSjMZ0fwMkMcr8IT8taz', NULL, '52.11.171.106', 'Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZGJFVHA3d0NmVTg2ZTZZdFNweFNKd3Y3aG1QMnBjeEQ3U280MnJUWCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1718541230),
+('vuV4bpigcjJSsS0qMnQIWeQxoB2iWJKu2epYRxF5', 2, '136.158.65.202', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YToxMDp7czo2OiJfdG9rZW4iO3M6NDA6Ik1MRFdXNm1sVVJDdW8wTUsxVnVIdG5UMEtTeDZVQ0oxMDlTMkFUWE0iO3M6MzoidXJsIjthOjE6e3M6ODoiaW50ZW5kZWQiO3M6NDc6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL3Byb2R1Y3RzIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NjU6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xhc3RCYWRPcmRlck9mQ3VzdG9tZXIvMy81Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MjtzOjExOiJicmFuY2hfY29kZSI7czo4OiJFRlRPLUNBRyI7czoxMjoicHJpY2VsZXZlbElkIjtpOjQ7czoxOToidXBkYXRpbmdEYXRhUmVzdWx0cyI7YTo1OntpOjA7YToyOntzOjQ6ImNvZGUiO3M6NToiU0NfQk0iO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aToxO2E6Mjp7czo0OiJjb2RlIjtzOjU6Ik1DX0NTIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MjthOjI6e3M6NDoiY29kZSI7czo2OiJCQ19DTkMiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aTozO2E6Mjp7czo0OiJjb2RlIjtzOjc6IlNQU19DSE8iO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aTo0O2E6Mjp7czo0OiJjb2RlIjtzOjc6IjEuN0xfQ1MiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9fXM6OToiaW5ib3VuZElkIjtzOjE6IjgiO3M6ODoicHJvZHVjdHMiO2E6NTp7aTowO2E6OTp7czo1OiJvcmRlciI7aToxO3M6MTA6InB0eXBlX2NvZGUiO3M6MjoiU0MiO3M6NDoiY29kZSI7czo1OiJTQ19CTSI7czo4OiJxdWFudGl0eSI7czoxOiIxIjtzOjU6InByaWNlIjtkOjEyLjc7czo0OiJ1bml0IjtzOjQ6IlBjL3MiO3M6NDoic3BwYiI7TjtzOjExOiJkZXNjcmlwdGlvbiI7czo0MjoiOTBtbCBTTUFMTCBDVVAgUkVHVUxBUiAoMy4wLW96KSBCdWtvIE1lbG9uIjtzOjEwOiJjcmVhdGVkX2F0IjtzOjI3OiIyMDI0LTA2LTIyVDAyOjExOjExLjA1MjY2MVoiO31pOjE7YTo5OntzOjU6Im9yZGVyIjtpOjI7czoxMDoicHR5cGVfY29kZSI7czoyOiJNQyI7czo0OiJjb2RlIjtzOjU6Ik1DX0NTIjtzOjg6InF1YW50aXR5IjtzOjE6IjEiO3M6NToicHJpY2UiO2k6NTA4O3M6NDoidW5pdCI7czo1OiJCYWcvcyI7czo0OiJzcHBiIjtOO3M6MTE6ImRlc2NyaXB0aW9uIjtzOjQwOiIxMzVtbCBNRURJVU0gQ1VQIFNQRUNJQUwgKDQuNS1veikgQ2hlZXNlIjtzOjEwOiJjcmVhdGVkX2F0IjtzOjI3OiIyMDI0LTA2LTIyVDAyOjExOjEzLjU0MDMxN1oiO31pOjI7YTo5OntzOjU6Im9yZGVyIjtpOjM7czoxMDoicHR5cGVfY29kZSI7czoyOiJCQyI7czo0OiJjb2RlIjtzOjY6IkJDX0NOQyI7czo4OiJxdWFudGl0eSI7czoxOiIxIjtzOjU6InByaWNlIjtpOjU4MjtzOjQ6InVuaXQiO3M6NToiQmFnL3MiO3M6NDoic3BwYiI7TjtzOjExOiJkZXNjcmlwdGlvbiI7czozOToiMTgwbWwgQklHIENVUCAoNi4wLW96KSBDb29raWVzIE4nIENyZWFtIjtzOjEwOiJjcmVhdGVkX2F0IjtzOjI3OiIyMDI0LTA2LTIyVDAyOjExOjE0LjgzNjM3NVoiO31pOjM7YTo5OntzOjU6Im9yZGVyIjtpOjY7czoxMDoicHR5cGVfY29kZSI7czozOiJTUFMiO3M6NDoiY29kZSI7czo3OiJTUFNfQ0hPIjtzOjg6InF1YW50aXR5IjtzOjE6IjEiO3M6NToicHJpY2UiO2k6NjI1O3M6NDoidW5pdCI7czo1OiJCYWcvcyI7czo0OiJzcHBiIjtOO3M6MTE6ImRlc2NyaXB0aW9uIjtzOjI0OiJTUEVDSUFMIFNUSUNLUyBDaG9jb2xhdGUiO3M6MTA6ImNyZWF0ZWRfYXQiO3M6Mjc6IjIwMjQtMDYtMjJUMDI6MTI6MDUuNDk1NjE2WiI7fWk6NDthOjk6e3M6NToib3JkZXIiO2k6MTA7czoxMDoicHR5cGVfY29kZSI7czo0OiIxLjdMIjtzOjQ6ImNvZGUiO3M6NzoiMS43TF9DUyI7czo4OiJxdWFudGl0eSI7czoyOiIzMCI7czo1OiJwcmljZSI7aToxNzA7czo0OiJ1bml0IjtzOjQ6IlBjL3MiO3M6NDoic3BwYiI7TjtzOjExOiJkZXNjcmlwdGlvbiI7czoxNjoiMS43IExJVEVSIENoZWVzZSI7czoxMDoiY3JlYXRlZF9hdCI7czoyNzoiMjAyNC0wNi0yMlQwMjoxMjoyNi4zMzM0ODFaIjt9fX0=', 1719024675),
 ('vzoR8W97O3qgaZHyNLXkUwnrgRIorDS6GoBj2qlQ', NULL, '210.213.142.167', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiV1RCZXhqS2RBZGlpaHlGUUR6RDhHSk9aV245bER2WUxPVE9hOFJsaCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDU6Imh0dHBzOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9sb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1718008141),
-('wiRlCREH3znaO66Pl6KO69B8UTmNVenKTIf4j09p', 1, '210.213.142.167', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo4OntzOjY6Il90b2tlbiI7czo0MDoicExNaThvZG1INGZ1M3AyT3VxenM3dGV0eVA1b1Q2VTk1cnFCS1paNSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTA6Imh0dHBzOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9vcmRlcmluZy8xIjt9czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NzoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vcHJvZHVjdHMiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6MTE6ImJyYW5jaF9jb2RlIjtzOjg6IkVGVE8tQ0FHIjtzOjk6ImluYm91bmRJZCI7czoxOiIxIjtzOjEyOiJwcmljZWxldmVsSWQiO2k6Mjt9', 1718008792),
+('WmMsc3DNw1VS56DGtR2IoBNftgM08EKO2oRMY3b3', 1, '210.213.142.167', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoibElxWU5nSGM4Y2pXT1dKNEVaMHQ2QUpYV2lwZXdmUXdGRE1ENWNXOCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTtzOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czo0NzoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vcHJvZHVjdHMiO31zOjExOiJicmFuY2hfY29kZSI7czo4OiJFRlRPLUNBRyI7fQ==', 1718863998),
 ('YCAuXj1x0vIGZAgbkxcNb8UzvMPp1e5ud9CLBhSf', NULL, '65.154.226.169', 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiYmtqVGExd2VpaVN0UlJtZkh3NTkyU3h0YlFXeEZJN0pid29pVGpDOSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717588440),
+('YJDv88Ajrc6ugZ6xexx0600we2X3ZDfsEEdx02NW', 2, '136.158.65.114', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiOU44U2JxTXBQenpxNzZIbFA5U0pKSnlSVnlCa1FFZEFGbXlKQklTMCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDU6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL29yZGVycyI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO3M6MTk6InVwZGF0aW5nRGF0YVJlc3VsdHMiO2E6OTp7aTowO2E6Mjp7czo0OiJjb2RlIjtzOjU6IlNDX0JNIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MTthOjI6e3M6NDoiY29kZSI7czo1OiJTQ19CUCI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjI7YToyOntzOjQ6ImNvZGUiO3M6NjoiTUNfTVJCIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MzthOjI6e3M6NDoiY29kZSI7czo1OiJNQ19TUyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjQ7YToyOntzOjQ6ImNvZGUiO3M6NzoiU1BTX0NITyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjU7YToyOntzOjQ6ImNvZGUiO3M6ODoiMS43TF9NUkIiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aTo2O2E6Mjp7czo0OiJjb2RlIjtzOjg6IjEuN0xfTU9DIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6NzthOjI6e3M6NDoiY29kZSI7czo4OiIzLjZMX01PQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjg7YToyOntzOjQ6ImNvZGUiO3M6NzoiMy42TF9NRyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO319fQ==', 1719022656),
 ('ZwvclEd6wrgDrklNfn2fqgIqa6ANOwLwqhbXNrL0', NULL, '52.11.171.106', 'Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoieW13MzBpcEFyVTZvSE9FTUg3WExhZ05Uak1HOUFJa1Q5TDRiTThjTiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717936439);
 
 -- --------------------------------------------------------
@@ -45337,27 +46124,24 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 -- Table structure for table `storeinfo`
 --
 
-DROP TABLE IF EXISTS `storeinfo`;
-CREATE TABLE IF NOT EXISTS `storeinfo` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `storeinfo` (
+  `id` bigint(20) UNSIGNED NOT NULL,
   `customer_id` bigint(20) UNSIGNED NOT NULL,
-  `storename` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `contactno` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `region` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `province` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `city` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `brgy` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `subdivision` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `latitude` text COLLATE utf8mb4_unicode_ci,
-  `longitude` text COLLATE utf8mb4_unicode_ci,
-  `listype` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `storename` varchar(191) NOT NULL,
+  `contactno` varchar(191) DEFAULT NULL,
+  `region` varchar(191) DEFAULT NULL,
+  `province` varchar(191) DEFAULT NULL,
+  `city` varchar(191) DEFAULT NULL,
+  `brgy` varchar(191) DEFAULT NULL,
+  `subdivision` varchar(191) DEFAULT NULL,
+  `latitude` text DEFAULT NULL,
+  `longitude` text DEFAULT NULL,
+  `listype` varchar(191) DEFAULT NULL,
   `length_stay` int(11) DEFAULT NULL,
-  `remarks` text COLLATE utf8mb4_unicode_ci,
+  `remarks` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `storeinfo_customer_id_foreign` (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `storeinfo`
@@ -45365,18 +46149,313 @@ CREATE TABLE IF NOT EXISTS `storeinfo` (
 
 INSERT INTO `storeinfo` (`id`, `customer_id`, `storename`, `contactno`, `region`, `province`, `city`, `brgy`, `subdivision`, `latitude`, `longitude`, `listype`, `length_stay`, `remarks`, `created_at`, `updated_at`) VALUES
 (1, 1, 'UB', '09365235214', 'Region II (Cagayan Valley)', 'Cagayan', 'Calayan', 'Magsidel', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-04 19:01:40', '2024-06-04 19:01:40'),
-(2, 2, 'CJM LIQUOR SHOP', '09555423762', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caritan Sur', NULL, '17°37\'17.66\"N', '121°43\'30.01\"E', 'option 1', NULL, NULL, '2024-06-05 00:31:46', '2024-06-05 00:31:46'),
+(2, 2, 'CJM LIQUOR SHOP', '09555423762', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City', 'Caritan Sur', NULL, '17°37\'17.66\"N', '121°43\'30.01\"E', 'option 1', NULL, NULL, '2024-06-05 00:31:46', '2024-06-17 18:53:36'),
 (3, 3, 'Achilles Liquor Shop', '09356483518', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Cataggaman Nuevo', NULL, '17°36\'14.01\"N', '121°42\'52.27\"E', 'option 1', NULL, NULL, '2024-06-05 00:34:33', '2024-06-05 00:34:33'),
-(4, 4, 'Treshiel Mini-mart', '09178099848', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 8 ', NULL, '17°37\'2.38\"N', '121°43\'33.10\"E', 'option 1', NULL, NULL, '2024-06-05 00:37:31', '2024-06-05 00:37:31'),
+(4, 4, 'Treshiel Mini-mart', '09178099848', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City', 'Centro 8', NULL, '17°37\'2.38\"N', '121°43\'33.10\"E', 'option 1', NULL, NULL, '2024-06-05 00:37:31', '2024-06-14 14:54:52'),
 (5, 5, 'Richvonnejoyce Store', '0945-263-8222 / 0956-079-3680', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Atulayan Norte', '436 Danao St Cor Tramo Road', NULL, NULL, 'option 1', NULL, NULL, '2024-06-07 22:30:24', '2024-06-07 22:30:24'),
-(6, 6, 'Abran Store', '0917-487-1212', 'Region I (Ilocos Region)', NULL, NULL, NULL, NULL, '18°33\'30.15\"N', '121°14\'10.22\"E', 'option 1', NULL, NULL, '2024-06-07 22:45:45', '2024-06-07 22:45:45'),
+(6, 6, 'Abran Store', '0917-487-1212', 'Region II', 'Cagayan', 'Sanchez Mira', 'Centro 1', NULL, '18°33\'30.15\"N', '121°14\'10.22\"E', 'option 1', NULL, NULL, '2024-06-07 22:45:45', '2024-06-14 14:39:54'),
 (7, 7, 'Lilian Store', '0927-542-5475', 'Region II (Cagayan Valley)', 'Cagayan', 'Santa Ana', 'Marede', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-07 22:51:14', '2024-06-07 22:51:14'),
 (8, 8, 'Cayle\'s Food Supply Trading', '0917-7907-048', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'San Gabriel', NULL, '17°37\'22.75\"N', '121°42\'39.94\"E', 'option 1', NULL, NULL, '2024-06-07 22:55:34', '2024-06-07 22:55:34'),
 (11, 11, 'Elsie Y Ang Store', '0977-125-5034', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuao', 'Poblacion II', NULL, '17°44\'1.45\"N', '121°27\'21.32\"E', 'option 1', NULL, NULL, '2024-06-09 05:33:24', '2024-06-09 05:33:24'),
-(12, 12, 'ALL-IN-JUAN MINI GROCERY', '0955-830-7175', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caritan Sur', NULL, '17°39\'22.73\"N', '121°44\'43.22\"E', 'option 1', NULL, NULL, '2024-06-09 05:36:07', '2024-06-09 05:36:07'),
+(12, 12, 'ALL-IN-JUAN MINI GROCERY', '0955-830-7175', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City', 'Caritan Sur', NULL, '17°39\'22.73\"N', '121°44\'43.22\"E', 'option 1', NULL, NULL, '2024-06-09 05:36:07', '2024-06-14 17:56:00'),
 (13, 13, 'Isagani Store', '0916-578-1701', 'Region II (Cagayan Valley)', 'Cagayan', 'Camalaniugan', 'Catotoran Norte', 'Stall No 8 Public Market', '18°15\'44.74\"N', '121°41\'16.19\"E', 'option 1', NULL, NULL, '2024-06-09 05:41:36', '2024-06-09 05:41:36'),
-(14, 14, 'MLC Minimart', '0917-622-0136', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 2 ', 'Arellano St', '17°36\'40.36\"N', '121°43\'32.64\"E', 'option 1', NULL, NULL, '2024-06-09 05:44:17', '2024-06-09 05:44:17'),
-(15, 15, 'UB', '123456', 'Cordillera Administrative Region (CAR)', 'kalinga', 'City of Tabuk ', 'Agbannawag', NULL, '17.60619760468376', '121.72787291779376', 'option 1', NULL, NULL, '2024-06-19 07:24:23', '2024-06-19 07:24:23');
+(14, 14, 'MLC Minimart', '0917-622-0136', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City', 'Centro 2', 'Arellano St', '17°36\'40.36\"N', '121°43\'32.64\"E', 'option 1', NULL, NULL, '2024-06-09 05:44:17', '2024-06-14 15:38:33'),
+(15, 15, 'Arlydz Restaurant and Catering Services', '0956-977-3735', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'Quirino', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-14 14:38:19', '2024-06-14 14:38:19'),
+(16, 16, 'Talay Store', '0956-732-5975', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'Capagaypayan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-14 15:21:19', '2024-06-14 15:21:19'),
+(17, 17, 'Baker\'s Percent', '0917-686-5710', 'Region II (Cagayan Valley)', 'Cagayan', 'Lal-Lo', 'Bagumbayan', NULL, '18°11\'45.42\"N', '121°39\'45.20\"E', 'option 1', NULL, NULL, '2024-06-14 15:28:10', '2024-06-14 15:28:10'),
+(18, 18, 'Taradun Convinience Store Allen One Grocery', '0917-311-2452', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 4 ', 'Zone 4 Bartolome St', NULL, NULL, 'option 1', NULL, NULL, '2024-06-14 15:31:39', '2024-06-14 15:31:39'),
+(19, 19, 'Delric Bakery', '0997-109-8082', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Ugac Sur', 'Lecaros St', '17°36\'33.09\"N', '121°43\'11.30\"E', 'option 1', NULL, NULL, '2024-06-14 15:34:28', '2024-06-14 15:34:28'),
+(20, 20, 'D Mixiologist', '0926-240-0604', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caritan Sur', NULL, '17°36\'37.90\"N', '121°43\'28.44\"E', 'option 1', NULL, NULL, '2024-06-14 15:37:45', '2024-06-14 15:37:45'),
+(21, 21, 'Farmacia Cabling', '0917-592-8983', 'Region II (Cagayan Valley)', 'Cagayan', 'Alcala', NULL, NULL, '17°54\'11.49\"N', '121°39\'31.71\"E', 'option 1', NULL, NULL, '2024-06-14 16:08:49', '2024-06-14 16:08:49'),
+(22, 22, 'JC\'s Drug Store', '0917-592-8983', 'Region II (Cagayan Valley)', 'Cagayan', 'Alcala', 'Centro Norte ', NULL, '17°53\'27.43\"N', '121°41\'28.66\"E', 'option 1', NULL, NULL, '2024-06-14 16:10:54', '2024-06-14 16:10:54'),
+(23, 23, 'Bunagan Store', '0945-089-7053', 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Basi East', NULL, '17°40\'11.61\"N', '121°41\'43.99\"E', 'option 1', NULL, NULL, '2024-06-14 16:16:45', '2024-06-14 16:16:45'),
+(24, 24, 'JJJ General Merchandise', '0906-398-0038', 'Cordillera Administrative Region (CAR)', 'Kalinga', NULL, NULL, NULL, '17°24\'43.96\"N', '121°26\'37.97\"E', 'option 1', NULL, NULL, '2024-06-14 16:21:52', '2024-06-14 16:21:52'),
+(25, 25, 'Calayan Sari-sari STore', '0905-358-8203', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Linao East', NULL, '17°39\'12.13\"N', '121°43\'35.81\"E', 'option 1', NULL, NULL, '2024-06-14 16:30:54', '2024-06-14 16:30:54'),
+(26, 26, 'Vance Grocery', '0917-860-9799', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 5 ', NULL, '17°34\'26.65\"N', '121°46\'15.09\"E', 'option 1', NULL, NULL, '2024-06-14 16:32:52', '2024-06-14 16:32:52'),
+(27, 27, 'Castro Store', '0927-912-8683', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'San Gabriel', NULL, '17°37\'19.53\"N', '121°43\'6.70\"E', 'option 1', NULL, NULL, '2024-06-14 16:35:10', '2024-06-14 16:35:10'),
+(28, 28, 'BOZZB Refilling Station', '0917-531-0006', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caritan Sur', '12 Campos St', '17°37\'17.58\"N', '121°43\'34.47\"E', 'option 1', NULL, NULL, '2024-06-14 16:39:30', '2024-06-14 16:39:30'),
+(29, 29, '24/ Yude Mini Grocery', '0967-158-3996', 'Region II (Cagayan Valley)', 'Cagayan', 'Alcala', 'Baybayog', NULL, '17°53\'15.44\"N', '121°41\'37.45\"E', 'option 1', NULL, NULL, '2024-06-14 17:58:33', '2024-06-14 17:58:33'),
+(30, 30, 'Faith Store', '0917-179-1557', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Conner', 'Malama', NULL, '17°48\'41.01\"N', '121°17\'11.19\"E', 'option 1', NULL, NULL, '2024-06-14 18:02:35', '2024-06-14 18:02:35'),
+(31, 31, 'Uriel Store', '0975-664-8518', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Buntun', NULL, '17°36\'49.59\"N', '121°42\'2.85\"E', 'option 1', NULL, NULL, '2024-06-14 18:05:52', '2024-06-14 18:05:52'),
+(32, 32, 'Bulanao 1', '0906-938-9585', 'Cordillera Administrative Region (CAR)', 'Kalinga', NULL, NULL, 'Purok 4', '17°24\'58.85\"N', '17°24\'58.85\"N', 'option 1', NULL, NULL, '2024-06-14 18:13:11', '2024-06-14 18:13:11'),
+(33, 33, 'Bulanao 2', '0906-938-9585', 'Cordillera Administrative Region (CAR)', 'Kalinga', NULL, NULL, NULL, '17°24\'42.78\"N', '121°26\'29.25\"E', 'option 1', NULL, NULL, '2024-06-14 18:15:58', '2024-06-14 18:15:58'),
+(34, 34, 'Casigayan', '0906-938-9585', 'Cordillera Administrative Region (CAR)', 'Kalinga', NULL, NULL, NULL, '17°28\'13.38\"N', '121°28\'9.65\"E', 'option 1', NULL, NULL, '2024-06-14 18:18:02', '2024-06-14 18:18:02'),
+(35, 35, 'Samchiz Mini-mart', '0949-620-6352', 'Region II (Cagayan Valley)', 'Cagayan', 'Sanchez-Mira', 'San Andres', NULL, '18°36\'21.40\"N', '121°10\'18.56\"E', 'option 1', NULL, NULL, '2024-06-14 18:25:08', '2024-06-14 18:25:08'),
+(36, 36, 'SJ Ventura Store', '0936-689-5439', 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Camasi', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-14 18:29:21', '2024-06-14 18:29:21'),
+(37, 37, 'Kids Sari-sari Store', '0977-842-6184', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Larion Bajo', '197 Abraham St', NULL, NULL, 'option 1', NULL, NULL, '2024-06-14 19:12:04', '2024-06-14 19:12:04'),
+(38, 38, 'Viernes Store', '0915-192-5196', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Pudtol', 'San Luis', 'Purok Sun Flower', NULL, NULL, 'option 1', NULL, NULL, '2024-06-14 19:14:38', '2024-06-14 19:14:38'),
+(39, 39, 'Gladdys Store', '0906-318-2317', 'Region II (Cagayan Valley)', 'Cagayan', 'Sanchez-Mira', 'Callungan', NULL, '18°35\'4.83\"N', '121°12\'13.66\"E', 'option 1', NULL, NULL, '2024-06-14 19:40:02', '2024-06-14 19:40:02'),
+(40, 40, '2A\'s Barbershop and Barbecue', '0960-531-6353', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Cataggaman Pardo', NULL, '17°35\'54.04\"N', '121°41\'52.41\"E', 'option 1', NULL, NULL, '2024-06-14 19:45:44', '2024-06-14 19:45:44'),
+(41, 41, 'Palattao\'s Sari-Sari Store', '0965-849-6664', 'Region II (Cagayan Valley)', 'Cagayan', 'Iguig', 'Atulu', 'Mallo St', '17°42\'58.46\"N', '121°44\'22.39\"E', 'option 1', NULL, NULL, '2024-06-14 19:50:58', '2024-06-14 19:50:58'),
+(42, 42, '3J\'s Sari sari Store', '0976-102-5777', 'Region II (Cagayan Valley)', 'Cagayan', 'Amulung', NULL, 'Zone 7 Estefania', '17°47\'37.15\"N', '121°43\'31.77\"E', 'option 1', NULL, NULL, '2024-06-14 19:56:06', '2024-06-14 19:56:06'),
+(43, 43, 'Pascua Sari-sari Store', '0997-091-1291', 'Region II (Cagayan Valley)', 'Cagayan', 'Santa Teresita', 'Simpatuyo', 'Purok Palagao', NULL, NULL, 'option 1', NULL, NULL, '2024-06-14 19:58:58', '2024-06-14 19:58:58'),
+(44, 44, 'Pasicolan Sari-sari Store', '0905-190-1836', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Cataggaman Pardo', '120 Andal St', '17°35\'51.36\"N', '121°42\'10.33\"E', 'option 1', NULL, NULL, '2024-06-14 20:01:25', '2024-06-14 20:01:25'),
+(45, 45, 'DS & PJ Convenience Store', '0908-925-3876', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Ugac Sur', 'The Lace Bldg, Arellano Street', '17°36\'40.26\"N', '121°43\'27.82\"E', 'option 1', NULL, NULL, '2024-06-14 20:06:42', '2024-06-14 20:06:42'),
+(46, 46, 'Uno Tres Store', '0917-623-9282', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Tanza', '6 Purok 7 Maharlika Highway', '17°37\'45.09\"N', '121°44\'17.11\"E', 'option 1', NULL, NULL, '2024-06-14 20:09:10', '2024-06-14 20:09:10'),
+(47, 47, 'Five Zero Seven Mart', '0975-053-6464', 'Region II (Cagayan Valley)', 'Isabela', 'Mallig', 'San Pedro', 'Pagkakaisa St', '17°13\'50.53\"N', '121°36\'31.75\"E', 'option 1', NULL, NULL, '2024-06-14 20:48:23', '2024-06-14 20:48:23'),
+(48, 48, 'Ana Gammad Store', '0936-760-4199', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'San Gabriel', 'Diversion Road', '17°37\'29.30\"N', '121°42\'57.85\"E', 'option 1', NULL, NULL, '2024-06-14 20:50:55', '2024-06-14 20:50:55'),
+(49, 49, 'Kristalee store', '0961-608-5839', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caggay', 'Blk 1 Lot 45 Oxford St. Golden Harvest Subd.', NULL, NULL, 'option 1', NULL, NULL, '2024-06-14 20:57:25', '2024-06-14 20:57:25'),
+(50, 50, 'Arlene Streetfood Store', '0961-837-6881', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'Poblacion', 'Purok Salindeg', NULL, NULL, 'option 1', NULL, NULL, '2024-06-14 21:00:31', '2024-06-14 21:00:31'),
+(51, 51, 'ALIPIO\'S store', '09060224223 / 09365014535 / 078396866', 'Region II (Cagayan Valley)', 'Cagayan', 'Pamplona', 'Abanqueruan', NULL, '18°27\'20.39\"N', '121°21\'6.40\"E', 'option 1', NULL, NULL, '2024-06-14 21:04:06', '2024-06-14 21:04:06'),
+(52, 52, 'C. Divina\'s Store', '09464818431 / 09499150441', 'Region II (Cagayan Valley)', NULL, NULL, NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-14 21:07:12', '2024-06-14 21:07:12'),
+(53, 53, 'Linda Store', '0945-144-6497', 'Cordillera Administrative Region (CAR)', 'Kalinga', NULL, NULL, NULL, '17°28\'12.20\"N', '121°28\'5.26\"E', 'option 1', NULL, NULL, '2024-06-14 21:13:55', '2024-06-14 21:13:55'),
+(54, 54, 'KAISNAGGAN', '0926-234-0023', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'San Isidro Sur', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-14 21:16:47', '2024-06-14 21:16:47'),
+(55, 55, 'Lucas Store', '0975-242-5495  / 0915-190-6373', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Atulayan Sur', '27 Tamaray St.', '17°38\'5.66\"N', '121°43\'7.60\"E', 'option 1', NULL, NULL, '2024-06-14 21:22:37', '2024-06-14 21:22:37'),
+(56, 56, 'Rosalinda Sari Sari store', '0917-163-7504', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Libag Norte', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-14 21:27:19', '2024-06-14 21:27:19'),
+(57, 57, 'Kaydee\'s Sari Sari Store', '0917-637-1985', 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Pinukpuk', 'Taga ', NULL, '17°34\'33.52\"N', '121°22\'5.82\"E', 'option 1', NULL, NULL, '2024-06-14 21:33:37', '2024-06-14 21:33:37'),
+(58, 58, 'Betchay\'s Variety', '0939-019-1376', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Conner', 'Ripang', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-14 21:43:58', '2024-06-14 21:43:58'),
+(59, 59, 'Dragline Variety Store', '0905-772-4253', 'Region II (Cagayan Valley)', 'Cagayan', 'Allacapan', 'Centro West ', NULL, '18°13\'31.74\"N', '121°33\'17.90\"E', 'option 1', NULL, NULL, '2024-06-14 21:57:29', '2024-06-14 21:57:29'),
+(60, 60, 'Paul\'s Hardware', '0917-601-9142', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Ugac Norte', NULL, '17°36\'48.05\"N', '121°43\'19.42\"E', 'option 1', NULL, NULL, '2024-06-14 22:03:55', '2024-06-14 22:03:55'),
+(61, 61, 'Marissa Store', '\'0947-835-1362', 'Region II (Cagayan Valley)', 'Cagayan', 'Claveria', 'Union', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-14 22:10:30', '2024-06-14 22:10:30'),
+(62, 62, 'DB\'s Sari-sari Store', '0955-162-7657', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Libag Norte', 'Sampaguita St', '17°36\'27.01\"N', '121°45\'6.50\"E', 'option 1', NULL, NULL, '2024-06-14 22:17:36', '2024-06-14 22:17:36'),
+(63, 63, 'Beth Store', '0906-177-4081', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'Dagupan', 'Purok Mapalad', NULL, NULL, 'option 1', NULL, NULL, '2024-06-14 22:32:57', '2024-06-14 22:32:57'),
+(64, 64, 'Kyle Mix Style Botique', '0905-843-0200', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'San Gabriel', '24 Lansones St.', '17°37\'11.34\"N', '121°43\'32.52\"E', 'option 1', NULL, NULL, '2024-06-14 22:38:55', '2024-06-14 22:38:55'),
+(65, 65, 'Road and Shine Grill & Restaurant Eat All You Can', '09358364125', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'Quirino', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-16 01:55:58', '2024-06-16 01:57:40'),
+(66, 66, 'Bulan\'s Store', '09358364125', 'Region II (Cagayan Valley)', 'Cagayan', 'Buguey', 'San Lorenzo', 'Zone 2', NULL, NULL, 'option 1', NULL, NULL, '2024-06-16 02:00:27', '2024-06-16 02:00:27'),
+(67, 67, 'DRL Store', '0955123-438', 'Region II (Cagayan Valley)', 'Cagayan', 'Aparri', 'Backiling', 'Magsirulan', NULL, NULL, 'option 1', NULL, NULL, '2024-06-16 02:06:51', '2024-06-16 02:06:51'),
+(68, 68, 'Jennas store', '09653596270', 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Maddarulug', NULL, '17°36\'54.96\"N', '121°40\'49.60\"E', 'option 1', NULL, NULL, '2024-06-16 02:12:09', '2024-06-16 02:12:09'),
+(69, 69, 'DYRE’S sari-sari Store', '09166653345', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Carig', '350 National Highway', NULL, NULL, 'option 1', NULL, NULL, '2024-06-16 02:16:16', '2024-06-16 02:16:16'),
+(70, 70, 'N.B Capili Store', '09068847153', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'San Gabriel', '#9 Tindalo St.', NULL, NULL, 'option 1', NULL, NULL, '2024-06-16 02:18:21', '2024-06-16 02:18:21'),
+(71, 71, 'Balai Isabel', '09360327134', 'Region II (Cagayan Valley)', 'Cagayan', 'Camalaniugan', 'Sapping', 'Balai Isabel Restaurant, National highway', '18°16\'16.28\"N', '121°40\'40.86\"E', 'option 1', NULL, NULL, '2024-06-16 03:27:04', '2024-06-16 03:27:04'),
+(72, 72, 'Arnoks, Luna Branch', '09762435865', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-16 03:29:40', '2024-06-16 03:29:40'),
+(73, 73, 'Park and Buy Vonvenience Store', '09178822227', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'Poblacion', 'Poblacion Branch', NULL, NULL, 'option 1', NULL, NULL, '2024-06-16 03:35:43', '2024-06-16 03:35:43'),
+(74, 74, 'Park and Buy Vonvenience Store', '09178822227', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'San Isidro Sur', 'San Isidro Branch', NULL, NULL, 'option 1', NULL, NULL, '2024-06-16 03:37:59', '2024-06-16 03:37:59'),
+(75, 75, 'Unos sari sari store', '09570693538', 'Region II (Cagayan Valley)', 'Cagayan', 'Piat', 'Santa Barbara', 'Zone 1', '17°45\'27.84\"N', '121°29\'28.94\"E', 'option 1', NULL, NULL, '2024-06-16 03:42:01', '2024-06-16 03:42:01'),
+(76, 76, 'Imelda Dela Cruz Store', '09761603465', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Flora', 'Santa Maria', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-16 03:47:36', '2024-06-16 03:47:36'),
+(77, 77, 'Mariesa Food Store', '09176875957', 'Cordillera Administrative Region (CAR)', 'Kalinga', NULL, NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-16 03:52:43', '2024-06-16 03:52:43'),
+(78, 78, 'Lilia’s Sari- Sari Store - De Leon’s Store', '09056282262 / 09365147838', 'Region II (Cagayan Valley)', 'Cagayan', 'Amulung', 'Anquiray', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-16 03:54:49', '2024-06-16 03:54:49'),
+(79, 79, 'Violys store-Em-em Food House', '09161410418 / 09359132905', 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Malibabag', '07 Purok Okra', NULL, NULL, 'option 1', NULL, NULL, '2024-06-16 03:57:19', '2024-06-16 03:57:19'),
+(80, 80, 'Terrace Grill And Restaurant', '09513952865 / 09059453980', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Conner', NULL, 'Purok 1', NULL, NULL, 'option 1', NULL, NULL, '2024-06-16 04:00:04', '2024-06-16 04:00:04'),
+(81, 81, 'COD CONSUMER GOODS RETALING', '09175738017', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Carig', 'Unit 2 Rhem Square Caronan Bldg Maharlika Highway', '17°39\'0.72\"N', '121°44\'33.31\"E', 'option 1', NULL, NULL, '2024-06-16 04:10:18', '2024-06-16 04:10:18'),
+(82, 82, 'Bon Bon\'s Ice Cream House', '09177772028', 'Region I (Ilocos Region)', 'La Union', 'Naguilian', 'Ortiz ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 18:10:09', '2024-06-17 18:10:09'),
+(83, 83, 'Food Buddies Store', '09388193407/09982975488', 'Region I (Ilocos Region)', 'La Union', 'Agoo', 'San Julian East', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 18:17:55', '2024-06-17 18:17:55'),
+(84, 84, 'N/A', 'N/A', 'Region I (Ilocos Region)', 'La Union', 'San Juan', 'Guinguinabang', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 18:29:09', '2024-06-17 18:29:09'),
+(85, 85, 'Mango Vins Eatery', '09190953651', 'Region I (Ilocos Region)', 'La Union', 'Santo Tomas', 'Lomboy', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 18:32:58', '2024-06-17 18:32:58'),
+(86, 86, 'Yuna Store', '09672703478', 'Region I (Ilocos Region)', 'La Union', 'Santo Tomas', 'Damortis', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 18:37:22', '2024-06-17 18:37:22'),
+(87, 87, 'Isalykalyn Convenience Store', '09452148893/09464530701', 'Region I (Ilocos Region)', 'La Union', 'Rosario', 'Concepcion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 18:41:58', '2024-06-17 18:41:58'),
+(88, 88, 'Ramirez Place', '09467227947', 'Region I (Ilocos Region)', 'La Union', 'Santo Tomas', 'Namonitan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 18:44:52', '2024-06-17 18:44:52'),
+(89, 89, 'L & D Online Store', '09178044604', 'Region I (Ilocos Region)', 'La Union', 'Agoo', 'San Miguel', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 18:48:26', '2024-06-17 18:48:26'),
+(90, 90, 'Denz & Glenn Sari-Sari Store', '09453721739', 'Region I (Ilocos Region)', 'La Union', 'Agoo', 'San Nicolas Central ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 18:52:26', '2024-06-17 18:52:26'),
+(91, 91, '8-16 General Merchandise', '09065310548', 'Region I (Ilocos Region)', 'La Union', 'Aringay', 'Santa Rita West', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 18:57:02', '2024-06-17 18:57:02'),
+(92, 92, 'Cee-Jay Sari-Sari Store', '09751735492', 'Region II (Cagayan Valley)', 'Cagayan', 'Gattaran', 'Newagac', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 18:58:29', '2024-06-17 18:58:29'),
+(93, 93, 'Flores-Lamaroza General Merchandise', '09088820389', 'Region I (Ilocos Region)', 'La Union', 'Naguilian', 'Ortiz ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 19:00:17', '2024-06-17 19:00:17'),
+(94, 94, 'Naragsak Frozen', '09453497180/09672167866', 'Region I (Ilocos Region)', 'La Union', 'Caba', 'Poblacion Sur', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 19:04:16', '2024-06-17 19:04:16'),
+(95, 95, 'Darel Sari-Sari Store', '09958230989', 'Region II (Cagayan Valley)', 'Cagayan', 'Allacapan', 'Labben', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 19:19:52', '2024-06-17 19:19:52'),
+(97, 97, 'Basal Eatery', '0956-296-6348', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Ugac Norte', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 19:31:37', '2024-06-17 19:31:37'),
+(98, 98, 'Enteng Cheesedesal', '09171430477', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Leonarda', '45-a Maharlika Highway', NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 19:37:19', '2024-06-17 19:37:19'),
+(99, 99, 'LAROSE STORE 2', '0906-353-9243', 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Centro Southeast ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 19:41:46', '2024-06-17 19:41:46'),
+(100, 100, '4 VOIS POULTRY SUPPLY', '0961-836-8124', 'Region II (Cagayan Valley)', 'Cagayan', 'Sanchez-Mira', 'Tokitok', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 19:47:33', '2024-06-17 19:47:33'),
+(101, 101, 'Mang Raul\'s Lechon', '09171420382', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Pengue', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 19:58:14', '2024-06-17 19:58:14'),
+(102, 102, 'Mhy Food Hub', '09050626738', 'Region II (Cagayan Valley)', 'Cagayan', 'Santo Niño', 'Centro Norte ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 20:02:43', '2024-06-17 20:02:43'),
+(103, 103, 'Lolita\'s Store', '079355559008', 'Region II (Cagayan Valley)', 'Cagayan', 'Rizal', 'Dungan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 20:08:43', '2024-06-17 20:08:43'),
+(104, 104, 'Ned\'s Beauty and Wellness Product Trading', '09060323448', 'Region I (Ilocos Region)', 'La Union', 'Aringay', 'San Benito Sur', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 20:12:42', '2024-06-17 20:12:42'),
+(105, 105, 'Shellah\'s Pizza Stall', '09166813104', 'Region II (Cagayan Valley)', 'Cagayan', 'Aparri', 'Centro 14 ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 20:13:31', '2024-06-17 20:13:31'),
+(106, 106, 'Henry Appliance Center', '09177160285', 'Region I (Ilocos Region)', 'La Union', 'Rosario', 'Tay-ac', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 20:16:19', '2024-06-17 20:16:19'),
+(107, 107, 'Janella\'s Consumer Goods Trading', '09295607779', 'Region III (Central Luzon)', 'Tarlac', 'Moncada', 'Camposanto 2', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 20:23:44', '2024-06-17 20:23:44'),
+(108, 108, 'Chiz Store', '09295908989', 'Region III (Central Luzon)', 'Tarlac', 'City of Tarlac ', 'Tibag', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 20:45:50', '2024-06-17 20:45:50'),
+(109, 109, 'Sofie Variety Store', '09666850542', 'Region III (Central Luzon)', 'Tarlac', 'Victoria', 'San Andres', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 20:51:43', '2024-06-17 20:51:43'),
+(110, 110, 'N/A', '09158152346', 'Region III (Central Luzon)', 'Tarlac', 'Capas', 'Santa Lucia', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 20:55:42', '2024-06-17 20:55:42'),
+(111, 111, 'E. Seguep Store', '09122005289/09199567205', 'Region III (Central Luzon)', 'Tarlac', 'Victoria', 'Canarem', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 21:06:05', '2024-06-17 21:06:05'),
+(112, 112, 'N/A', '09540947810/09695556690', 'Region III (Central Luzon)', 'Tarlac', 'Santa Ignacia', 'Baldios', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 21:11:07', '2024-06-17 21:11:07'),
+(113, 113, 'NJM Valdez Minimart', '09995246876/09951616316', 'Region III (Central Luzon)', 'Tarlac', 'Camiling', 'Poblacion G', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 21:25:04', '2024-06-17 21:25:04'),
+(114, 114, '3-M store & Digital Printing Services', '09560775769/09260783743', 'Region II (Cagayan Valley)', 'Cagayan', 'Alcala', 'Baybayog', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 21:34:23', '2024-06-17 21:34:23'),
+(115, 115, 'BUY D\' WAY FROZEN FOODS & MEAT SHOP', '09953178717', 'Region II (Cagayan Valley)', 'Cagayan', 'Santa Ana', 'Centro ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 21:40:30', '2024-06-17 21:40:30'),
+(116, 116, 'Daguio Store', '09355715800', 'Region II (Cagayan Valley)', 'Cagayan', 'Iguig', 'San Isidro', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 21:42:57', '2024-06-17 21:42:57'),
+(117, 117, 'Lyndon\'s Special Baliuag Pasalubong Wholesale Retail', '09399107255', 'Region III (Central Luzon)', 'Tarlac', 'City of Tarlac ', 'Buhilit', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 21:44:03', '2024-06-17 21:44:03'),
+(118, 118, 'CKK\'s Eatery', '09386660343', 'Region II (Cagayan Valley)', 'Cagayan', 'Allacapan', 'Centro West ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 21:46:32', '2024-06-17 21:46:32'),
+(119, 119, 'Astrodar Gasoline Station', '09167968860/09267472540', 'Region III (Central Luzon)', 'Tarlac', 'San Manuel', 'San Miguel', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 21:58:54', '2024-06-17 21:58:54'),
+(120, 120, 'M Parairo Trading', '09688546584/09228441411', 'Region III (Central Luzon)', 'Tarlac', 'Pura', 'Buenavista', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:04:22', '2024-06-17 22:04:22'),
+(121, 121, 'Motilla Variety Store', '09505063503', 'Region III (Central Luzon)', 'Tarlac', 'Paniqui', 'Cabayaoasan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:07:18', '2024-06-17 22:07:18'),
+(122, 122, 'Come and Stop Convenience Store', '09335392502', 'Region III (Central Luzon)', 'Tarlac', 'City of Tarlac ', 'San Nicolas', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:11:38', '2024-06-17 22:11:38'),
+(123, 123, 'N/A', '09396534889', 'Region III (Central Luzon)', 'Tarlac', 'Pura', 'Poblacion 2', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:22:34', '2024-06-17 22:22:34'),
+(124, 124, 'L.M. Mamucod Business Center', '09231919478', 'Region III (Central Luzon)', 'Tarlac', 'Moncada', 'San Julian', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:27:33', '2024-06-17 22:27:33'),
+(125, 125, 'Railey Store', '09267733233/09519553660', 'Region III (Central Luzon)', 'Tarlac', 'City of Tarlac ', 'San Vicente', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:32:43', '2024-06-17 22:32:43'),
+(126, 126, '5 JAN\'S VARIETY STORE', '09157036149', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:34:45', '2024-06-17 22:34:45'),
+(127, 127, 'Sari-Sari Store', '09065238010', 'Region III (Central Luzon)', 'Tarlac', 'Gerona', 'Poblacion 1', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:35:36', '2024-06-17 22:35:36'),
+(128, 128, 'Cirelle\'s Bread House', '09057203081', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Ugac Norte', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:38:25', '2024-06-17 22:38:25'),
+(129, 129, 'RJ Gracilla Store', '09568916427', 'Region III (Central Luzon)', 'Tarlac', 'San Clemente', 'Poblacion Norte', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:39:02', '2024-06-17 22:39:02'),
+(130, 130, 'Elmanic Variety Store', '09159646331/09677961607', 'Region III (Central Luzon)', 'Tarlac', 'Capas', 'Cubcub ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:42:09', '2024-06-17 22:42:09'),
+(131, 131, 'GIG\'s food House', '09171661609', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:43:15', '2024-06-17 22:43:15'),
+(132, 132, 'Janette Groceries', '09457611072', 'Region III (Central Luzon)', 'Tarlac', 'Victoria', 'San Gavino ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:46:27', '2024-06-17 22:46:27'),
+(133, 133, 'N/A', '09226244964', 'Region III (Central Luzon)', 'Tarlac', 'Gerona', 'Amacalan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:49:34', '2024-06-17 22:49:34'),
+(134, 134, 'Dela Cruz Store', '09225136063', 'Region III (Central Luzon)', 'Tarlac', 'Paniqui', 'Tablang', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:53:23', '2024-06-17 22:53:23'),
+(135, 135, 'Samatra Store', '09457621313', 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Camasi', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:53:28', '2024-06-17 22:53:28'),
+(136, 136, 'N/A', '09518068109', 'Region III (Central Luzon)', 'Tarlac', 'Capas', 'Cristo Rey', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:55:34', '2024-06-17 22:55:34'),
+(137, 137, 'OFA Realty Corp Coop', '09457717786', 'Region II (Cagayan Valley)', 'Cagayan', 'Santa Ana', 'Centro ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:56:04', '2024-06-17 22:56:04'),
+(138, 138, 'HealthMed Drugstrore', '09914242312/09061748464', 'Region III (Central Luzon)', 'Tarlac', 'Capas', 'Santo Rosario', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:58:18', '2024-06-17 22:58:18'),
+(139, 139, 'BARBIE SARI-SARI STORE', '09450774935', 'Cordillera Administrative Region (CAR)', NULL, 'Pudtol', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 22:59:13', '2024-06-17 22:59:13'),
+(140, 140, 'N/A', '09267383903', 'Region III (Central Luzon)', 'Tarlac', 'Santa Ignacia', 'Botbotones', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:04:06', '2024-06-17 23:04:06'),
+(141, 141, 'N/A', '09279461598/0978268805', 'Region III (Central Luzon)', 'Tarlac', 'Camiling', 'Marawi', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:05:58', '2024-06-17 23:05:58'),
+(142, 142, 'Tenven Consumer Good Wholesaling', '09381748609', 'Region III (Central Luzon)', 'Tarlac', 'City of Tarlac ', 'Burot', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:09:43', '2024-06-17 23:09:43'),
+(143, 143, 'Tita Cel\'s Tindahan', '09688565948', 'Region III (Central Luzon)', 'Tarlac', 'Gerona', 'Parsolingan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:11:49', '2024-06-17 23:11:49'),
+(144, 144, 'Goldwin Shop', '09560772234', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Pengue', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:15:32', '2024-06-17 23:15:32'),
+(145, 145, 'Basteakoy Nami\'s Takoyaki', '09266117261', 'Region III (Central Luzon)', 'Tarlac', 'City of Tarlac ', 'Cut-cut I', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:17:09', '2024-06-17 23:17:09'),
+(146, 146, '3 Roses', '09053586532', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Linao West', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:19:06', '2024-06-17 23:19:06'),
+(147, 147, 'Acosta Grocery store', '0945-466-3029/0977-381-7698', 'Region III (Central Luzon)', 'Tarlac', 'San Manuel', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:19:21', '2024-06-17 23:19:21'),
+(148, 148, 'Hely\'s Sari Sari Store', '09153372909', 'Region II (Cagayan Valley)', 'Cagayan', 'Gattaran', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:21:48', '2024-06-17 23:21:48'),
+(149, 149, 'N/A', '09279194256', 'Region I (Ilocos Region)', 'Ilocos Norte', 'City of Batac', 'San Mateo', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:25:03', '2024-06-17 23:25:03'),
+(150, 150, 'N/A', '09155695919', 'Region I (Ilocos Region)', 'Ilocos Norte', 'City of Batac', 'San Mateo', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:27:28', '2024-06-17 23:27:28'),
+(151, 151, 'Erins Choice Variety Shop', '09177130350', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Leonarda', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:28:49', '2024-06-17 23:28:49'),
+(152, 152, 'DL\'s Sari-Sari Store', '09293808190', 'Region I (Ilocos Region)', 'Ilocos Norte', 'Badoc', 'Alogoog', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:29:13', '2024-06-17 23:29:13'),
+(153, 153, 'Louies Levin\'s Bakery and Store', '0999-991-8286', 'Region I (Ilocos Region)', 'Ilocos Norte', 'Paoay', 'Nagbacalan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:31:33', '2024-06-17 23:31:33'),
+(154, 154, 'Joakris Foodhouse', '09305556484', 'Region I (Ilocos Region)', 'Ilocos Norte', 'Marcos', 'Lydia ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:33:09', '2024-06-17 23:33:09'),
+(155, 155, 'MAMA MIAZ', '09617793680', 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Rizal', 'Bulanao', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:34:21', '2024-06-17 23:34:21'),
+(156, 156, 'MARITONI GROCERY', '09176283339', 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Rizal', 'Dagupan Centro ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:37:58', '2024-06-17 23:37:58'),
+(157, 157, 'Bien Alexis Sari-Sari Store', '09152587003', 'Region I (Ilocos Region)', 'Ilocos Norte', 'Bacarra', 'Santa Rita ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:38:08', '2024-06-17 23:38:08'),
+(158, 158, 'R. Queja Store', '09287366070', 'Region I (Ilocos Region)', 'Ilocos Norte', 'Bacarra', 'Buyon', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:40:20', '2024-06-17 23:40:20'),
+(159, 159, 'N/A', '09157388617', 'Region I (Ilocos Region)', 'Ilocos Norte', 'Bacarra', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:42:24', '2024-06-17 23:42:24'),
+(160, 160, 'Hillside Store', '09189615469', 'Region I (Ilocos Region)', 'Ilocos Norte', 'Badoc', 'Mabusag Norte', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:44:10', '2024-06-17 23:44:10'),
+(161, 161, 'IGNACIO\'S STORE', '09156376455/09560988859', 'Region II (Cagayan Valley)', 'Cagayan', 'Santa Ana', 'Centro ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:45:50', '2024-06-17 23:45:50'),
+(162, 162, 'N/A', '09203902654/09971116214', 'Region I (Ilocos Region)', 'Ilocos Norte', 'Pinili', 'Valbuena ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:46:34', '2024-06-17 23:46:34'),
+(163, 163, 'CALANAN GENERAL MERCHANDISE', '099353432450', 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Rizal', 'San Pascual', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:48:36', '2024-06-17 23:48:36'),
+(164, 164, 'Gieli\"s', '0969223886', 'Region I (Ilocos Region)', 'Ilocos Norte', 'Dumalneg', 'Kalaw', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:48:47', '2024-06-17 23:48:47'),
+(165, 165, 'N/A', '0927-756-7620', 'Region I (Ilocos Region)', 'Ilocos Norte', 'Sarrat', 'San Pedro', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:50:45', '2024-06-17 23:50:45'),
+(166, 166, 'CARMENCITA\'S SARI-SARI STORE', '09072989181', 'Region II (Cagayan Valley)', 'Cagayan', 'Pamplona', 'Bidduang', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:51:13', '2024-06-17 23:51:13'),
+(167, 167, 'N/A', '09773066357', 'Region I (Ilocos Region)', 'Ilocos Norte', 'Pinili', 'Capangdanan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:52:45', '2024-06-17 23:52:45'),
+(168, 168, 'J-dee Store', '09752900493', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Cataggaman Pardo', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:52:53', '2024-06-17 23:52:53'),
+(169, 169, 'ALIM\'S SARI-SARI STORE - JAYLO\'S SNACK HOUSE', '09056514420', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Luna', 'San Isidro Sur', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-17 23:56:31', '2024-06-17 23:56:31'),
+(170, 170, 'Riverside Sari Sari Store', '09175922050', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Buntun', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:00:29', '2024-06-18 00:00:29'),
+(171, 171, 'Ton ton E-load Prepaid Cards &Accessories Trading', '09056552728', 'Region I (Ilocos Region)', 'Ilocos Norte', 'Badoc', 'Garreta ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:00:47', '2024-06-18 00:00:47'),
+(172, 172, 'JKN Variety Store', '09266281809', 'Region I (Ilocos Region)', 'Ilocos Norte', 'Piddig', 'Estancia', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:03:06', '2024-06-18 00:03:06'),
+(173, 173, 'Bas Tea', '09361920854', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Carig', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:03:26', '2024-06-18 00:03:26'),
+(174, 174, 'GEMMA\'S BAKESHOP & GROCERY', '09189395401', 'Region I (Ilocos Region)', 'Ilocos Norte', 'City of Batac', 'Ablan Pob.', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:06:02', '2024-06-18 00:06:02'),
+(175, 175, 'ESC Merchandising', '09565317037', 'Region I (Ilocos Region)', 'Ilocos Norte', 'City of Batac', 'Ablan Pob.', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:08:06', '2024-06-18 00:08:06'),
+(176, 176, 'N/A', '09214772431', 'Region I (Ilocos Region)', 'Ilocos Norte', 'Pasuquin', 'Poblacion 1', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:10:13', '2024-06-18 00:10:13'),
+(177, 177, 'Lorna Flowershop', '09171269885', 'Region I (Ilocos Region)', 'Ilocos Norte', 'San Nicolas', 'San Francisco ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:13:41', '2024-06-18 00:13:41'),
+(178, 178, 'KC\'s Twenty Four-7even Convenient Store', '09159476772', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuao', 'Poblacion I', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:16:10', '2024-06-18 00:16:10'),
+(179, 179, 'KC\'s Twenty Four-7even Convenient Store', '09159476772', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuao', 'Poblacion I', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:17:55', '2024-06-18 00:17:55'),
+(180, 180, 'M. B. MARIBAY STORE', '09753079166', 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Camasi', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:19:31', '2024-06-18 00:19:31'),
+(181, 181, 'S&M Food House and Panciteria', '09774403039', 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Rizal', 'Dagupan Weste', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:22:47', '2024-06-18 00:22:47'),
+(182, 182, 'MTE Store', '0935-833-4368', 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Nannarian', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:24:24', '2024-06-18 00:24:24'),
+(183, 183, 'SARAH SARI-SARI STORE', '09167701786', 'Region II (Cagayan Valley)', 'Cagayan', 'Santa Ana', 'Centro ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:26:36', '2024-06-18 00:26:36'),
+(184, 184, 'AZEA STORE', '09216602384', 'Region II (Cagayan Valley)', 'Cagayan', 'Iguig', 'Gammad', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:29:16', '2024-06-18 00:29:16'),
+(185, 185, 'Perpetual Village Corner Store', '09279491570', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Ugac Sur', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:32:39', '2024-06-18 00:32:39'),
+(186, 186, 'MARCELO\'S Diner', '09175785054', 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Nangalisan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:37:15', '2024-06-18 00:37:15'),
+(187, 187, 'Amelie Aquabreeze Water Refilling Station', '09262714799', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Carig', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:40:12', '2024-06-18 00:40:12'),
+(188, 188, 'BEE\'S MINIMART', '0936-364-9869', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Carig', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:43:21', '2024-06-18 00:43:21'),
+(189, 189, 'ZEUS STORE', '09753987593', 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Centro Northwest ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:45:53', '2024-06-18 00:45:53'),
+(190, 190, 'Aoen-Ruma Sari- Sari Store', '0968-644-6995', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Conner', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:50:00', '2024-06-18 00:50:00'),
+(191, 191, 'Margie B Sabandal', '09175467347', 'Region II (Cagayan Valley)', 'Cagayan', 'Aparri', 'Macanaya', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:51:53', '2024-06-18 00:51:53'),
+(192, 192, 'A & J FOOD HOUSE', '097773665276/09771324308', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Pudtol', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:54:26', '2024-06-18 00:54:26'),
+(193, 193, 'MANG TONY\'S SEAFOOD GRILL HAUS', '09568168885', 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Rizal', 'San Juan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:58:09', '2024-06-18 00:58:09'),
+(194, 194, 'TS Construction Supply', '09458692671', 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Dodan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 01:01:13', '2024-06-18 01:01:13'),
+(195, 195, 'Kelz Pharmaceuticals', '09560695529', 'Region II (Cagayan Valley)', 'Cagayan', 'Lasam', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 01:02:59', '2024-06-18 01:02:59'),
+(196, 196, 'Kuya Richard Pancit Cabagan', '09167427649/09155275114', 'Region II (Cagayan Valley)', 'Cagayan', 'Sanchez-Mira', 'Centro I ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 01:04:33', '2024-06-18 01:04:33'),
+(197, 197, 'Tagama Store', '09976917417', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caritan Sur', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 01:06:17', '2024-06-18 01:06:17'),
+(198, 198, 'Celia Taguibao Store', '09970788838', 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Dodan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 01:08:30', '2024-06-18 01:08:30'),
+(199, 199, 'AZ Mini Mart', '09176296889', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Kabugao ', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 01:10:07', '2024-06-18 01:10:07'),
+(200, 200, 'TEOLOGO SARI SARI STORE', '09559466217/09173916110', 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Iraga', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 01:12:35', '2024-06-18 01:12:35'),
+(201, 201, 'Teologo Sari Sari Store', '09268621658', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Capatan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 01:14:34', '2024-06-18 01:14:34'),
+(202, 202, 'WS Store', '09363547425', 'Region II (Cagayan Valley)', 'Cagayan', 'Lal-Lo', 'Catayauan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 01:16:08', '2024-06-18 01:16:08'),
+(203, 203, 'Tillo Agri & Poultry Supplies', '09672648567', 'Region II (Cagayan Valley)', 'Cagayan', 'Gattaran', 'Sta Maria', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 01:18:41', '2024-06-18 01:19:25'),
+(204, 204, 'Tolentino Sari-Sari Store', '09066593172', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Carig', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 01:21:03', '2024-06-18 01:21:03'),
+(205, 205, 'LORIE\'S STORE', '09169906704', 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Rizal', 'Casigayan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 01:22:37', '2024-06-18 01:22:37'),
+(206, 206, 'Sari-sari Store', '09561060360', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Annafunan West', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 01:24:24', '2024-06-18 01:24:24'),
+(207, 207, 'RK Ubina Family Health Care Clinic and Drugstore', '09178970390', 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Sampaguita', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 01:26:05', '2024-06-18 01:26:05'),
+(208, 208, 'Fhines Water Refilling Station', '09158882938', 'Region II (Cagayan Valley)', 'Cagayan', 'Lal-Lo', 'Centro ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 01:29:27', '2024-06-18 01:29:27'),
+(209, 209, 'YC\'s Variety Store', '09951000511/09682698048', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Pudtol', 'Emilia', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 01:32:34', '2024-06-18 01:32:34'),
+(210, 210, 'A.D. Wandas Store', '09185892391/09666884626', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Suyo', 'Uso', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 19:53:57', '2024-06-19 19:53:57'),
+(211, 211, 'Lucky JJJ Plastics Products Trading', '09459747150', 'Region I (Ilocos Region)', 'Ilocos Sur', 'City of Candon', 'Tablac', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 20:01:35', '2024-06-19 20:01:35'),
+(212, 212, 'Dadas Litson', '09052651675', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Santa Cruz', 'Poblacion Este', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 20:04:33', '2024-06-19 20:04:33'),
+(213, 213, 'JLA\'s Variety Store', '09275269846/09684552393', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Salcedo', 'Poblacion Sur', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 20:07:11', '2024-06-19 20:07:11'),
+(214, 214, 'Teas Marias Cafe', 'N/A', 'Region I (Ilocos Region)', 'Ilocos Sur', 'San Juan', 'Bannuar ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 20:14:10', '2024-06-19 20:14:10'),
+(215, 215, 'Mapples ang Mumbles Variety Store', '09950909148', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Cabugao', 'Rizal ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 20:15:48', '2024-06-19 20:15:48'),
+(216, 216, '1021 Fruit and Tea', '09564405298/09159961580', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Narvacan', 'Quinarayan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:04:52', '2024-06-19 21:04:52'),
+(217, 217, 'A and A Store', '09674292515', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Santo Domingo', 'Camestizoan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:07:16', '2024-06-19 21:07:16'),
+(218, 218, 'Shaira Food Hub', '09177025516', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Bantay', 'Naguiddayan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:09:51', '2024-06-19 21:09:51'),
+(219, 219, 'Amart Minimart', '09772717286', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Santo Domingo', 'Nambaran', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:13:17', '2024-06-19 21:13:17'),
+(220, 220, 'Chefs Boy Bakeshop', '09295334722', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Sinait', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:27:03', '2024-06-19 21:27:03'),
+(221, 221, 'Rodelyn\'s Store', '09214589560/09162405301', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Banayoyo', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:29:28', '2024-06-19 21:29:28'),
+(222, 222, 'Ely Gino 1424', '091735670778', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Banayoyo', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:34:17', '2024-06-19 21:34:17'),
+(223, 223, 'Gieworfe Cafe and Store', '09279332347/09186939625', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Tagudin', 'Dardarat', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:37:54', '2024-06-19 21:37:54'),
+(224, 224, 'Krizz Keith Online Shop', '09706500234', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Sinait', 'Duyayyat', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:40:54', '2024-06-19 21:40:54'),
+(225, 225, 'Jhoella\'s Store', '09955747072/09454573807', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Sinait', 'Namnama ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:44:36', '2024-06-19 21:44:36'),
+(226, 226, 'Ibea\'s Minimart', '09059124282', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Sinait', 'Ricudo', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:46:38', '2024-06-19 21:46:38'),
+(227, 227, 'JJE FOOD MANUFACTURERS STORE', '09354075276', 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Centro Southwest ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:48:14', '2024-06-19 21:48:14'),
+(228, 228, 'Cindy\'s', '09263219739', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Sinait', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:48:39', '2024-06-19 21:48:39'),
+(229, 229, 'MANG RAUL\'S LECHON', '09171420382', 'Region II (Cagayan Valley)', 'Cagayan', 'Enrile', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:49:52', '2024-06-19 21:49:52'),
+(230, 230, 'Magsingal Basteakoy', '09517096423', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Magsingal', 'San Basilio ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:51:07', '2024-06-19 21:51:07'),
+(231, 231, 'Basteakoy', '09360411810', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Cabugao', 'Baclig ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:52:59', '2024-06-19 21:52:59'),
+(232, 232, 'Castillo Store', '09178944975', 'Region II (Cagayan Valley)', 'Cagayan', 'Gattaran', 'Nabaccayan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:54:40', '2024-06-19 21:54:40'),
+(233, 233, 'Bonzai na Kainan Food Houz', '09661997919', 'Region I (Ilocos Region)', 'Ilocos Sur', 'City of Candon', 'San Jose ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:56:37', '2024-06-19 21:56:37'),
+(234, 234, 'Natnat Store', '09499278911', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Suyo', 'Cabugao', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 21:58:30', '2024-06-19 21:58:30'),
+(235, 235, 'Xiann General Merchandise', '09156541885', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Sinait', 'Dadalaquiten Norte', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:00:25', '2024-06-19 22:00:25');
+INSERT INTO `storeinfo` (`id`, `customer_id`, `storename`, `contactno`, `region`, `province`, `city`, `brgy`, `subdivision`, `latitude`, `longitude`, `listype`, `length_stay`, `remarks`, `created_at`, `updated_at`) VALUES
+(236, 236, 'Angela Store', '09156541885', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Santa Maria', 'Lingsat', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:01:53', '2024-06-19 22:01:53'),
+(237, 237, 'N/A', '09983071447', 'Region I (Ilocos Region)', 'Ilocos Sur', 'City of Candon', 'Langlangca Primero', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:03:59', '2024-06-19 22:03:59'),
+(238, 238, 'Mc Eve\'s Store', '09450897621', 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Rizal', 'Magsaysay', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:05:22', '2024-06-19 22:05:22'),
+(239, 239, 'Milkteaza Milktea Shop', '09178295139', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Nagbukel', 'Poblacion West', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:06:24', '2024-06-19 22:06:24'),
+(240, 240, 'Hanans Sari-Sari Store', '09560213253', 'Region I (Ilocos Region)', 'Ilocos Sur', 'San Ildefonso', 'Bungro', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:08:41', '2024-06-19 22:08:41'),
+(241, 241, '3 Roses', '09278275876', 'Region II (Cagayan Valley)', 'Cagayan', 'Amulung', 'Palayag', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:09:22', '2024-06-19 22:09:22'),
+(242, 242, 'NBC Pharmacy and General Merchandise', '09214159979', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Narvacan', 'Lungog', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:10:34', '2024-06-19 22:10:34'),
+(243, 243, 'Emeritz Bread Corner', '09214159979', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Cabugao', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:12:32', '2024-06-19 22:12:32'),
+(244, 244, 'Tropicon', '09175992134', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Ugac Sur', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:13:27', '2024-06-19 22:13:27'),
+(245, 245, 'Ophir Store', '09657254430/09563360115', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Galimuyod', 'Borobor', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:15:08', '2024-06-19 22:15:08'),
+(246, 246, 'Bas Tea', '09361920854', 'Region II (Cagayan Valley)', 'Cagayan', 'Iguig', 'San Esteban', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:15:57', '2024-06-19 22:15:57'),
+(247, 247, 'Kammetek Restaurant', '09169581179/09914956338', 'Region I (Ilocos Region)', 'Ilocos Sur', 'City of Candon', 'San Jose ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:17:35', '2024-06-19 22:17:35'),
+(248, 248, 'Damac Convenience Store', '09171506898', 'Region II (Cagayan Valley)', 'Cagayan', 'Enrile', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:19:27', '2024-06-19 22:19:27'),
+(249, 249, 'N/A', '09266664926', 'Region I (Ilocos Region)', 'Ilocos Sur', 'City of Vigan ', 'Barangay I ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:19:29', '2024-06-19 22:19:29'),
+(250, 250, 'E L Sari-sari Store', '09959309836', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Linao East', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:22:45', '2024-06-19 22:22:45'),
+(251, 251, 'FFE REFILLING', '09358013226', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuao', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:25:55', '2024-06-19 22:25:55'),
+(252, 252, 'tripple A', '09491307886', 'Cordillera Administrative Region (CAR)', 'Abra', 'Luba', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:26:34', '2024-06-19 22:26:34'),
+(253, 253, 'CONNER MINIMART', '0935-990-8920', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Conner', 'Malama', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:29:31', '2024-06-19 22:29:31'),
+(254, 254, 'Jhamila\'s Store', '09355562871', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caggay', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:31:05', '2024-06-19 22:31:05'),
+(255, 255, 'Claustro Honeylette', '09155562231', 'Cordillera Administrative Region (CAR)', 'Abra', 'Lagangilang', 'Laang', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:31:54', '2024-06-19 22:31:54'),
+(256, 256, 'Malakas Store', '09559506497', 'Region II (Cagayan Valley)', 'Cagayan', 'Sanchez-Mira', 'Centro I ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:33:24', '2024-06-19 22:33:24'),
+(257, 257, 'Claor Sari-Sari store', '09358482883', 'Cordillera Administrative Region (CAR)', 'Abra', 'San Isidro', 'Pantoc', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:34:05', '2024-06-19 22:34:05'),
+(258, 258, 'R & R GENERAL MERCHANDISE', NULL, 'Cordillera Administrative Region (CAR)', 'Apayao', 'Kabugao', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:35:57', '2024-06-19 22:36:28'),
+(259, 259, 'Genan\'s General Merchandise', '09774624550/09056706019/09774624717', 'Cordillera Administrative Region (CAR)', 'Abra', 'San Juan', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:36:47', '2024-06-19 22:36:47'),
+(260, 260, 'Reyes Store', '0915-855-0218', 'Region II (Cagayan Valley)', 'Cagayan', 'Gonzaga', 'Baua', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:37:47', '2024-06-19 22:37:47'),
+(261, 261, 'Jonathan Sari-Sari Store', '09995410402', 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Bañacao', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:39:15', '2024-06-19 22:39:15'),
+(262, 262, 'La Herencia Consumer Goods Store', '09178011056/09178785726', 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Agtangao', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:42:19', '2024-06-19 22:42:19'),
+(263, 263, 'Clinica Dela Assumption', '09177997644/09173012478', 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Agtangao', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:45:27', '2024-06-19 22:45:27'),
+(264, 264, 'DERFASIUL', '09173186614', 'Cordillera Administrative Region (CAR)', 'Abra', 'Bucay', 'South Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:47:48', '2024-06-19 22:47:48'),
+(265, 265, 'Basteakoy', '09165519824', 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Zone 6 Pob. ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:49:43', '2024-06-19 22:49:43'),
+(266, 266, 'YumHop', '09056573558', 'Cordillera Administrative Region (CAR)', 'Abra', 'Lagangilang', 'Tagodtod', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:51:24', '2024-06-19 22:51:24'),
+(267, 267, 'Jeg Consumer Trading', '09500924990', 'Cordillera Administrative Region (CAR)', 'Abra', 'Luba', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:53:08', '2024-06-19 22:53:08'),
+(268, 268, 'Green Valley Bakeshop', '09062395994', 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Zone 2 Pob.', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:57:00', '2024-06-19 22:57:00'),
+(269, 269, 'EL-GD Merchandize', '09774863833', 'Cordillera Administrative Region (CAR)', 'Abra', 'Pidigan', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 23:00:59', '2024-06-19 23:00:59'),
+(270, 270, 'Khristma Minmart', '09167803944/09063364596', 'Cordillera Administrative Region (CAR)', 'Abra', 'Pidigan', 'Garreta', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 23:04:06', '2024-06-19 23:04:06'),
+(271, 271, 'Lhiam Sari-Sari Store', '09052769582', 'Cordillera Administrative Region (CAR)', 'Abra', 'Bucay', 'San Miguel', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 23:07:10', '2024-06-19 23:07:10'),
+(272, 272, 'Printing @ xerox services', '09982942877', 'Cordillera Administrative Region (CAR)', 'Abra', 'Lagangilang', 'Tagodtod', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 23:09:42', '2024-06-19 23:09:42'),
+(273, 273, 'Divina\'s Bakery', '09057534074', 'Cordillera Administrative Region (CAR)', 'Abra', 'Tayum', 'Gaddani', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 23:11:52', '2024-06-19 23:11:52'),
+(274, 274, 'N/A', '09774746849', 'Cordillera Administrative Region (CAR)', 'Abra', 'La Paz', 'Bulbulala', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 23:14:31', '2024-06-19 23:14:31'),
+(275, 275, 'N/A', '09360414516/09351417976', 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Cosili West', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 23:17:13', '2024-06-19 23:17:13'),
+(276, 276, 'A and T Trading', '09516470905', 'Cordillera Administrative Region (CAR)', 'Abra', 'Dolores', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 23:21:12', '2024-06-19 23:21:12'),
+(277, 277, 'J&D STORE', '09173693200', 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Zone 5 Pob.', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 23:29:54', '2024-06-19 23:29:54'),
+(278, 278, 'Maria Sari-Sari Store', '09264526365/09953615640', 'Cordillera Administrative Region (CAR)', 'Abra', 'Lagayan', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 23:32:14', '2024-06-19 23:32:14'),
+(279, 279, 'Alas sari-Sari Store', '09151505357/09353391671', 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Zone 3 Pob.', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 23:35:25', '2024-06-19 23:35:25'),
+(280, 280, 'B.T. Millare\'s Gen. Merchandizing', '09558323722', 'Cordillera Administrative Region (CAR)', 'Abra', 'Tayum', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 23:38:37', '2024-06-19 23:38:37'),
+(281, 281, 'B.T AGUILAR', '09556034413', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caggay', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 20:35:11', '2024-06-21 20:35:11'),
+(282, 282, 'GRAXIA\'S STORE', '09675908088', 'Region II (Cagayan Valley)', 'Cagayan', 'Pamplona', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 20:42:31', '2024-06-21 20:42:31'),
+(283, 283, 'AC ALCANTARA', '09176273591', 'Region II (Cagayan Valley)', 'Cagayan', 'Claveria', 'Centro VI', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 20:45:00', '2024-06-21 20:45:00'),
+(284, 284, 'Drop Zone Convenience Store', NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Iguig', 'Nattanzan ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 20:55:34', '2024-06-21 20:55:34'),
+(285, 285, 'Drop Zone Convenience Store', NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Iguig', 'Nattanzan ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 20:55:37', '2024-06-21 20:55:37'),
+(286, 286, 'ZELL MINIMART', '09295822316', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Conner', 'Malama', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 20:58:42', '2024-06-21 20:58:42'),
+(287, 287, 'KM DRUGSTORE', '09271456554', 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Parug-parug', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:00:13', '2024-06-21 21:00:13'),
+(288, 288, 'Wheyne Store', '09557024592', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City', 'Bagay', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:01:55', '2024-06-21 21:03:29'),
+(289, 289, '4J\'s COSMETIC CENTER', '09927085010', 'Region II (Cagayan Valley)', 'Cagayan', 'Iguig', 'Ajat ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:04:48', '2024-06-21 21:04:48'),
+(290, 290, 'Curibang Eatery', '09069489754', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 11 ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:08:05', '2024-06-21 21:08:05'),
+(291, 291, 'Zoey Bernice Sari-sari Store', '09958098057', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Centro 11 ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:09:51', '2024-06-21 21:09:51'),
+(292, 292, 'KING GROCERY', '09454267966', 'Region II (Cagayan Valley)', 'Cagayan', 'Amulung', 'Baculud', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:12:37', '2024-06-21 21:12:37'),
+(293, 293, 'CHEALSEA\'S CONVENIENCE STORE', '09277777251', 'Region II (Cagayan Valley)', 'Cagayan', 'Santa Teresita', 'Centro East ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:14:24', '2024-06-21 21:14:24'),
+(294, 294, 'GHAEL\'S PHARMACY', '09772387927', 'Region II (Cagayan Valley)', 'Cagayan', 'Claveria', 'Centro VI', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:16:29', '2024-06-21 21:16:29'),
+(295, 295, 'RICH ANN FUEL GAS STATION', '09158332848', 'Region II (Cagayan Valley)', 'Cagayan', 'Gonzaga', 'Pateng', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:20:12', '2024-06-21 21:20:12'),
+(296, 296, 'J Stop', '09450753179', 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Alimannao', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:22:42', '2024-06-21 21:22:42'),
+(297, 297, 'SAVE MO-TO MART', '09184765823', 'Region II (Cagayan Valley)', 'Cagayan', 'Camalaniugan', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:26:27', '2024-06-21 21:26:27'),
+(298, 298, 'JC NOTO STORE', '09069219421', 'Region II (Cagayan Valley)', 'Cagayan', 'Piat', 'Poblacion I', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:27:40', '2024-06-21 21:27:40'),
+(299, 299, 'KE GENERAL MERCHANDISE', '09071773475', 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Pinukpuk', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:29:15', '2024-06-21 21:29:15'),
+(300, 300, 'ORTEZA\'S STORE', '09152703164', 'Region II (Cagayan Valley)', 'Cagayan', 'Sanchez-Mira', 'Centro II ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:30:23', '2024-06-21 21:30:23'),
+(301, 301, 'AZ STORE', '09163830027', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Gosi Sur', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:31:43', '2024-06-21 21:31:43'),
+(302, 302, 'ERMIES STORE', '0967-668-4192', 'Cordillera Administrative Region (CAR)', 'Kalinga', 'Pinukpuk', 'Apatan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:33:58', '2024-06-21 21:33:58'),
+(303, 303, 'EILEEN\'S FOOD HOUSEEILEEN\'S FOOD HOUSE', '0975939284', 'Region II (Cagayan Valley)', 'Cagayan', 'Solana', 'Nangalisan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:35:33', '2024-06-21 21:35:33'),
+(304, 304, 'Hadji Store', '09061852997', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caggay', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:36:47', '2024-06-21 21:36:47'),
+(305, 305, 'TABLAC STORE', '09458834361', 'Region II (Cagayan Valley)', 'Cagayan', 'Gonzaga', 'Santa Cruz', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:38:24', '2024-06-21 21:38:24'),
+(306, 306, 'Ma. Angelica Taloma', '09178995436', 'Region II (Cagayan Valley)', 'Cagayan', 'Amulung', 'Cordova', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:39:55', '2024-06-21 21:39:55'),
+(307, 307, 'VFM Food Products', '09554075543', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Santa Marcela', 'San Carlos', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 21:43:02', '2024-06-21 21:43:02'),
+(308, 308, 'Basteakoy', '09190002751', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caritan Sur', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 23:05:49', '2024-06-21 23:05:49'),
+(309, 309, 'BUY D\' WAY FROZEN FOODS & MEAT SHOP', '09953178717', 'Region II (Cagayan Valley)', 'Cagayan', 'Santa Ana', 'Centro ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 23:11:22', '2024-06-21 23:11:22'),
+(311, 311, 'JAVILLONAR\'S STORE', '09063109142', 'Cordillera Administrative Region (CAR)', 'kalinga', 'Rizal', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-21 23:24:54', '2024-06-21 23:24:54');
 
 -- --------------------------------------------------------
 
@@ -45384,37 +46463,21 @@ INSERT INTO `storeinfo` (`id`, `customer_id`, `storename`, `contactno`, `region`
 -- Table structure for table `temp_bad_orders`
 --
 
-DROP TABLE IF EXISTS `temp_bad_orders`;
-CREATE TABLE IF NOT EXISTS `temp_bad_orders` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `temp_bad_orders` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `session_id` varchar(191) NOT NULL,
   `customer_id` bigint(20) UNSIGNED NOT NULL,
   `store_id` bigint(20) UNSIGNED NOT NULL,
-  `ptype_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `unit` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ptype_code` varchar(191) NOT NULL,
+  `code` varchar(191) NOT NULL,
+  `unit` varchar(191) NOT NULL,
+  `description` varchar(191) NOT NULL,
   `quantity` int(11) NOT NULL,
   `price` decimal(8,2) NOT NULL,
   `amount` decimal(8,2) NOT NULL,
-  `session_id` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `temp_bad_orders_customer_id_foreign` (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `temp_bad_orders`
---
-
-INSERT INTO `temp_bad_orders` (`id`, `customer_id`, `store_id`, `ptype_code`, `code`, `unit`, `description`, `quantity`, `price`, `amount`, `session_id`, `created_at`, `updated_at`) VALUES
-(5, 1, 1, 'SC', 'SC', 'Pc/s', '90ml SMALL CUP REGULAR (3.0-oz)', 5, 10.20, 51.00, 'K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', '2024-06-19 06:57:49', '2024-06-19 06:57:49'),
-(6, 1, 1, 'MC', 'MC', 'Pc/s', '135ml MEDIUM CUP SPECIAL (4.5-oz)', 36, 13.40, 482.40, 'K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', '2024-06-19 06:57:57', '2024-06-19 06:57:57'),
-(7, 1, 1, 'BC', 'BC', 'Pc/s', '180ml BIG CUP (6.0-oz)', 36, 17.80, 640.80, 'K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', '2024-06-19 06:58:09', '2024-06-19 06:58:09'),
-(8, 1, 1, 'SC', 'SC', 'Pc/s', '90ml SMALL CUP REGULAR (3.0-oz)', 5, 10.20, 51.00, 'K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', '2024-06-19 07:01:29', '2024-06-19 07:01:29'),
-(9, 1, 1, 'MC', 'MC', 'Pc/s', '135ml MEDIUM CUP SPECIAL (4.5-oz)', 54, 13.40, 723.60, 'K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', '2024-06-19 07:01:40', '2024-06-19 07:01:40'),
-(10, 1, 1, 'SC', 'SC', 'Pc/s', '90ml SMALL CUP REGULAR (3.0-oz)', 65, 10.20, 663.00, 'K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', '2024-06-19 07:05:12', '2024-06-19 07:05:12'),
-(11, 1, 1, 'MC', 'MC', 'Pc/s', '135ml MEDIUM CUP SPECIAL (4.5-oz)', 15, 13.40, 201.00, 'K420eV0uf4uEEz7s88pNxuksB5tMpCHBkPPvJfl0', '2024-06-19 07:07:43', '2024-06-19 07:07:43');
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -45422,16 +46485,14 @@ INSERT INTO `temp_bad_orders` (`id`, `customer_id`, `store_id`, `ptype_code`, `c
 -- Table structure for table `temp_inbounds`
 --
 
-DROP TABLE IF EXISTS `temp_inbounds`;
-CREATE TABLE IF NOT EXISTS `temp_inbounds` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `session` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `product_code` json NOT NULL,
+CREATE TABLE `temp_inbounds` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `session` varchar(191) NOT NULL,
+  `product_code` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`product_code`)),
   `quantity` int(11) NOT NULL,
-  `status` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(10) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -45440,31 +46501,28 @@ CREATE TABLE IF NOT EXISTS `temp_inbounds` (
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `last_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `first_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `contact_no` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+CREATE TABLE `users` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `last_name` varchar(191) NOT NULL,
+  `first_name` varchar(191) NOT NULL,
+  `contact_no` varchar(191) DEFAULT NULL,
+  `address` varchar(191) DEFAULT NULL,
+  `email` varchar(191) NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(191) NOT NULL,
+  `remember_token` varchar(100) DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `last_name`, `first_name`, `contact_no`, `address`, `email`, `email_verified_at`, `password`, `remember_token`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 'Melo', 'Melvin', '09621235214', NULL, 'admin@gmail.com', '2024-06-04 18:57:42', '$2y$12$C8JY/26clD/TI1t2sv/yQuK3/q77yWl7lz45CWtdkhLWWSHYtK/Ya', 'LMsPLDrWFgZxRjhThftmCg2ugVutoVNcQHWSQgqR8lAU5L9RPstIuKBrvUd9', NULL, '2024-06-04 18:57:43', '2024-06-04 18:57:43'),
-(2, 'Comia', 'Nalen', '09176208582', NULL, 'danerics.eolffoodtrading@gmail.com', NULL, '$2y$12$NJku3kZB9GLcopt7etbQQeJDVwr8FMGPtlNsyXQq41T.T6zb29SWG', 'LLD4gLhGYHiEv6UcGVkRUcSHGak41vrs46eZ6aBu2JOmcV5hQoctpOmb8xvx', NULL, '2024-06-05 00:15:27', '2024-06-05 00:16:16'),
+(1, 'Melo', 'Melvin', '09621235214', NULL, 'admin@gmail.com', '2024-06-04 18:57:42', '$2y$12$C8JY/26clD/TI1t2sv/yQuK3/q77yWl7lz45CWtdkhLWWSHYtK/Ya', 'lWNXQMYGykZh8ljtFKwOqvmZjPNbUGHK5UESj60XpVS00PIpXuTMfkUJh1KZ', NULL, '2024-06-04 18:57:43', '2024-06-04 18:57:43'),
+(2, 'Comia', 'Nalen', '09176208582', NULL, 'danerics.eolffoodtrading@gmail.com', NULL, '$2y$12$NJku3kZB9GLcopt7etbQQeJDVwr8FMGPtlNsyXQq41T.T6zb29SWG', 'Of5MY9V6o9BHI7lIB7XB9RWgNKokbsFEvqPkiuLWE7vMOnghumfboirEZ4EF', NULL, '2024-06-05 00:15:27', '2024-06-05 00:16:16'),
 (3, 'Comia', 'Jof', '09171661609', NULL, 'jofren_comia@yahoo.com', NULL, '$2y$12$222Kw9Kci03QQ0h06f9gLOibWwhw4BhXYRQqSqfRFRtfPokVEr8ei', NULL, NULL, '2024-06-06 01:02:38', '2024-06-06 01:03:00');
 
 -- --------------------------------------------------------
@@ -45473,21 +46531,19 @@ INSERT INTO `users` (`id`, `last_name`, `first_name`, `contact_no`, `address`, `
 -- Table structure for table `vehicles`
 --
 
-DROP TABLE IF EXISTS `vehicles`;
-CREATE TABLE IF NOT EXISTS `vehicles` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `plateno` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brand` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `size` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `capacity` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `remarks` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+CREATE TABLE `vehicles` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `plateno` varchar(191) NOT NULL,
+  `brand` varchar(191) DEFAULT NULL,
+  `description` varchar(191) DEFAULT NULL,
+  `type` varchar(191) DEFAULT NULL,
+  `size` varchar(191) DEFAULT NULL,
+  `capacity` varchar(191) DEFAULT NULL,
+  `remarks` varchar(191) DEFAULT NULL,
+  `status` varchar(191) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `vehicles`
@@ -45500,8 +46556,493 @@ INSERT INTO `vehicles` (`id`, `plateno`, `brand`, `description`, `type`, `size`,
 (4, 'NEQ-8149', 'ISUZU', 'CLOSE VAN', 'Closed', 'S', '300000', NULL, 'ACTIVE', '2024-06-07 19:25:08', '2024-06-07 19:25:08');
 
 --
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `activity_log`
+--
+ALTER TABLE `activity_log`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `subject` (`subject_type`,`subject_id`),
+  ADD KEY `causer` (`causer_type`,`causer_id`),
+  ADD KEY `activity_log_log_name_index` (`log_name`);
+
+--
+-- Indexes for table `bad_orders`
+--
+ALTER TABLE `bad_orders`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `branches`
+--
+ALTER TABLE `branches`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `cache`
+--
+ALTER TABLE `cache`
+  ADD PRIMARY KEY (`key`);
+
+--
+-- Indexes for table `cache_locks`
+--
+ALTER TABLE `cache_locks`
+  ADD PRIMARY KEY (`key`);
+
+--
+-- Indexes for table `chart_of_accounts`
+--
+ALTER TABLE `chart_of_accounts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `company_details`
+--
+ALTER TABLE `company_details`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `customers`
+--
+ALTER TABLE `customers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `customers_branch_code_index` (`branch_code`);
+
+--
+-- Indexes for table `deliveries`
+--
+ALTER TABLE `deliveries`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `delivery_purchase_receipts`
+--
+ALTER TABLE `delivery_purchase_receipts`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `delivery_purchase_receipts_dr_no_unique` (`dr_no`),
+  ADD KEY `delivery_purchase_receipts_branch_code_index` (`branch_code`);
+
+--
+-- Indexes for table `drivers`
+--
+ALTER TABLE `drivers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `employees`
+--
+ALTER TABLE `employees`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `equipment`
+--
+ALTER TABLE `equipment`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `equipment_serial_no_unique` (`serial_no`);
+
+--
+-- Indexes for table `equipment_store`
+--
+ALTER TABLE `equipment_store`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `equipment_store_store_id_foreign` (`store_id`),
+  ADD KEY `equipment_store_equipment_id_foreign` (`equipment_id`),
+  ADD KEY `equipment_store_customer_id_foreign` (`customer_id`);
+
+--
+-- Indexes for table `expenses`
+--
+ALTER TABLE `expenses`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
+
+--
+-- Indexes for table `inbounds`
+--
+ALTER TABLE `inbounds`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `inbounds_branch_code_index` (`branch_code`);
+
+--
+-- Indexes for table `inventories`
+--
+ALTER TABLE `inventories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `item_master_data`
+--
+ALTER TABLE `item_master_data`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jobs`
+--
+ALTER TABLE `jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `jobs_queue_index` (`queue`);
+
+--
+-- Indexes for table `job_batches`
+--
+ALTER TABLE `job_batches`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `migrations`
+--
+ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `model_has_permissions`
+--
+ALTER TABLE `model_has_permissions`
+  ADD PRIMARY KEY (`permission_id`,`model_id`,`model_type`),
+  ADD KEY `model_has_permissions_model_id_model_type_index` (`model_id`,`model_type`);
+
+--
+-- Indexes for table `model_has_roles`
+--
+ALTER TABLE `model_has_roles`
+  ADD PRIMARY KEY (`role_id`,`model_id`,`model_type`),
+  ADD KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`);
+
+--
+-- Indexes for table `password_reset_tokens`
+--
+ALTER TABLE `password_reset_tokens`
+  ADD PRIMARY KEY (`email`);
+
+--
+-- Indexes for table `permissions`
+--
+ALTER TABLE `permissions`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `permissions_name_guard_name_unique` (`name`,`guard_name`);
+
+--
+-- Indexes for table `ph_addrs`
+--
+ALTER TABLE `ph_addrs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `pricelevels`
+--
+ALTER TABLE `pricelevels`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pricelevels_branch_code_index` (`branch_code`);
+
+--
+-- Indexes for table `prices`
+--
+ALTER TABLE `prices`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `prices_pricelevel_id_p_code_unique` (`pricelevel_id`,`p_code`);
+
+--
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_product_type_variant` (`product_type_code`,`product_variant_code`);
+
+--
+-- Indexes for table `product_types`
+--
+ALTER TABLE `product_types`
+  ADD PRIMARY KEY (`code`);
+
+--
+-- Indexes for table `product_variants`
+--
+ALTER TABLE `product_variants`
+  ADD UNIQUE KEY `product_variants_code_unique` (`code`);
+
+--
+-- Indexes for table `purchases`
+--
+ALTER TABLE `purchases`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `roles_name_guard_name_unique` (`name`,`guard_name`);
+
+--
+-- Indexes for table `role_has_permissions`
+--
+ALTER TABLE `role_has_permissions`
+  ADD PRIMARY KEY (`permission_id`,`role_id`),
+  ADD KEY `role_has_permissions_role_id_foreign` (`role_id`);
+
+--
+-- Indexes for table `sales`
+--
+ALTER TABLE `sales`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `sessions`
+--
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sessions_user_id_index` (`user_id`),
+  ADD KEY `sessions_last_activity_index` (`last_activity`);
+
+--
+-- Indexes for table `storeinfo`
+--
+ALTER TABLE `storeinfo`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `storeinfo_customer_id_foreign` (`customer_id`);
+
+--
+-- Indexes for table `temp_bad_orders`
+--
+ALTER TABLE `temp_bad_orders`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `temp_inbounds`
+--
+ALTER TABLE `temp_inbounds`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_email_unique` (`email`);
+
+--
+-- Indexes for table `vehicles`
+--
+ALTER TABLE `vehicles`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `activity_log`
+--
+ALTER TABLE `activity_log`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
+-- AUTO_INCREMENT for table `bad_orders`
+--
+ALTER TABLE `bad_orders`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `branches`
+--
+ALTER TABLE `branches`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `chart_of_accounts`
+--
+ALTER TABLE `chart_of_accounts`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `company_details`
+--
+ALTER TABLE `company_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `customers`
+--
+ALTER TABLE `customers`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=312;
+
+--
+-- AUTO_INCREMENT for table `deliveries`
+--
+ALTER TABLE `deliveries`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `delivery_purchase_receipts`
+--
+ALTER TABLE `delivery_purchase_receipts`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `drivers`
+--
+ALTER TABLE `drivers`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `employees`
+--
+ALTER TABLE `employees`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `equipment`
+--
+ALTER TABLE `equipment`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=455;
+
+--
+-- AUTO_INCREMENT for table `equipment_store`
+--
+ALTER TABLE `equipment_store`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
+
+--
+-- AUTO_INCREMENT for table `expenses`
+--
+ALTER TABLE `expenses`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `inbounds`
+--
+ALTER TABLE `inbounds`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `inventories`
+--
+ALTER TABLE `inventories`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `item_master_data`
+--
+ALTER TABLE `item_master_data`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+
+--
+-- AUTO_INCREMENT for table `jobs`
+--
+ALTER TABLE `jobs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=319;
+
+--
+-- AUTO_INCREMENT for table `permissions`
+--
+ALTER TABLE `permissions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `ph_addrs`
+--
+ALTER TABLE `ph_addrs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43763;
+
+--
+-- AUTO_INCREMENT for table `pricelevels`
+--
+ALTER TABLE `pricelevels`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `prices`
+--
+ALTER TABLE `prices`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=301;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+
+--
+-- AUTO_INCREMENT for table `purchases`
+--
+ALTER TABLE `purchases`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `sales`
+--
+ALTER TABLE `sales`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `storeinfo`
+--
+ALTER TABLE `storeinfo`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=312;
+
+--
+-- AUTO_INCREMENT for table `temp_bad_orders`
+--
+ALTER TABLE `temp_bad_orders`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `temp_inbounds`
+--
+ALTER TABLE `temp_inbounds`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `vehicles`
+--
+ALTER TABLE `vehicles`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `equipment_store`
+--
+ALTER TABLE `equipment_store`
+  ADD CONSTRAINT `equipment_store_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `equipment_store_equipment_id_foreign` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `equipment_store_store_id_foreign` FOREIGN KEY (`store_id`) REFERENCES `storeinfo` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `model_has_permissions`

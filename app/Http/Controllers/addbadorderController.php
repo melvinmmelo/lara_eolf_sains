@@ -95,7 +95,7 @@ class addbadorderController extends Controller
             $bo_percentage = $request->input('bo_percentage');
             $remarks = $request->input('remarks');
 
-            if (!$customer_id || !$re_dr) {
+            if (!$customer_id) {
                 return response()->json(['error' => 'Required fields are missing'], 400);
             }
 
