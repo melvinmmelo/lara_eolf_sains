@@ -6,7 +6,7 @@ use App\Models\EquipmentStore; // Import the EquipmentStore model
 use App\Models\Equipment; // Import the Equipment model
 use App\Models\Customers as Customer;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Redirect;
 
 class EquipmentStoreController extends Controller
 {
@@ -32,7 +32,7 @@ class EquipmentStoreController extends Controller
         //dd($equipments);
 
         // Retrieve available equipment from the equipment table
-        $availableEquipments = Equipment::where('status', 'available')->get();
+        $availableEquipments = Equipment::where('status', 'Active')->get();
 
         // Get the IDs of equipment already added to equipment_store for the specified customer and store
         $selectedEquipmentIds = $equipments->pluck('equipment_id')->toArray();
@@ -104,7 +104,8 @@ class EquipmentStoreController extends Controller
             ->withProperties(['customer_id' => $customer_id, 'store_id' => $store_id, 'equipment_ids' => $equipment_ids, 'pull_statuses' => $pull_statuses])
             ->log('equipment added to store');
 
-        return redirect()->back()->with('success', 'Equipment added successfully.');
+        // return redirect()->back()->with('success', 'Equipment added successfully.');
+        return Redirect::route('customers')->with('success', 'Equipment added successfully.');
     }
 
 
@@ -123,7 +124,7 @@ class EquipmentStoreController extends Controller
         $equipment = Equipment::findOrFail($equipmentId);
 
         // Update the status of the equipment to "available"
-        $equipment->status = 'available';
+        $equipment->status = 'Active';
         $equipment->save();
 
         activity('equipment-store')
@@ -154,7 +155,7 @@ class EquipmentStoreController extends Controller
         $equipmentStore->save();
 
         $equipment = Equipment::findOrFail($pullEquipmentId);
-        $equipment->status = 'available';
+        $equipment->status = 'Active';
         $equipment->save();
 
         $replaceEquipmentIds = $request->input('replace_equipment_id');

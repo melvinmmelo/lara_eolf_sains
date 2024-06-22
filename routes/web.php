@@ -147,9 +147,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/equipment', [EquipmentController::class, 'index'])->name('equipment.index');
     Route::post('/equipment/store', [EquipmentController::class, 'store'])->name('equipment.store');
-    Route::delete('/equipment/{id}', [EquipmentController::class, 'destroy'])->name('equipment.destroy');
+    // Route::delete('/equipment/{id}', [EquipmentController::class, 'destroy'])->name('equipment.destroy');
     Route::get('/equipment/{id}/edit', [EquipmentController::class, 'edit'])->name('equipment.edit');
     Route::patch('/equipment/', [EquipmentController::class, 'update'])->name('equipment.update');
+    Route::delete('/equipment/bulk-delete', [EquipmentController::class, 'bulkDelete'])->name('equipment.bulk-delete');
+
 
     Route::get('/get-regions', [PhAddrController::class, 'getRegions']);
     Route::get('/get-provinces/{regionId}', [PhAddrController::class, 'getProvinces']);

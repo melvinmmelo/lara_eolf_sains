@@ -46,75 +46,150 @@
         @endif
         <!-- Default box -->
         <div class="card">
+    @include('layouts.errors')
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-            @include('layouts.errors')
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-            <div class="card-body">
-                <div class="pb-2">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
-                        Add New
-                    </button>
-                </div>
-                <table id="example1" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>Model</th>
-                            <th>Serial No.</th>
-                            <th>Code</th>
-                            <th>Customer</th>
-                            <th>Status</th>
-                            <th>Date Assigned</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($equipments as $equipment)
-                            <tr>
-                                <td>{{ $equipment->model }}</td>
-                                <td>{{ $equipment->serial_no }}</td>
-                                <td>{{ $equipment->code }}</td>
-                                <td>{{ $equipment->equipmentStore->customer->fullName ?? '' }}</td>
-                                <td>{!! statusBadge($equipment->status) !!}</td>
-                                <td>{{ $equipment->equipmentStore->dateCreated ?? '' }}</td>
-                                <td>
-                                    <button class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
-                                        data-target="#edit-equipment"
-                                        onclick="setToUpdateEquipment('{{ $equipment->id }}','{{ $equipment->ownership }}','{{ $equipment->type }}','{{ $equipment->brand }}','{{ $equipment->price }}','{{ $equipment->serial_no }}','{{ $equipment->model }}','{{ $equipment->code }}','{{ $equipment->distributor }}','{{ $equipment->date_delivered }}','{{ $equipment->date_purchased }}')">Edit</button>
+<div class="card">
+    <div class="card-body">
+        <!-- <div class="pb-2">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
+                Add New
+            </button>
+        </div> -->
+        <form id="bulk-delete-form" action="{{ route('equipment.bulk-delete') }}" method="POST">
+    @csrf
+    @method('DELETE')
+    <table id="example1e" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th></th> <!-- Checkbox column -->
+                <th>Model</th>
+                <th>Serial No.</th>
+                <th>Code</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>Date Assigned</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($equipments as $equipment)
+                <tr>
+                    <td align='center'>
+                        @if ($equipment->status == 'Active')
+                            <input type="checkbox" class="equipment-checkbox" name="equipment_ids[]" value="{{ $equipment->id }}">
+                        @else
+                            &nbsp;
+                        @endif
+                    </td>
+                    <td>{{ $equipment->model }}</td>
+                    <td>{{ $equipment->serial_no }}</td>
+                    <td>{{ $equipment->code }}</td>
+                    <td>{{ $equipment->equipmentStore->customer->fullName ?? '' }}</td>
+                    <td>{!! statusBadge($equipment->status) !!}</td>
+                    <td>{{ $equipment->equipmentStore->dateCreated ?? '' }}</td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
+                            data-target="#edit-equipment"
+                            onclick="setToUpdateEquipment('{{ $equipment->id }}','{{ $equipment->ownership }}','{{ $equipment->type }}','{{ $equipment->brand }}','{{ $equipment->price }}','{{ $equipment->serial_no }}','{{ $equipment->model }}','{{ $equipment->code }}','{{ $equipment->distributor }}','{{ $equipment->date_delivered }}','{{ $equipment->date_purchased }}')">Edit</button>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+        <tfoot>
+            <tr>
+                <th></th>
+                <th>Model</th>
+                <th>Serial No.</th>
+                <th>Code</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>Date Assigned</th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
+        Add New
+    </button>
+    <button type="submit" class="btn btn-danger ml-2">
+        Delete Selected
+    </button>
+</form>
 
-                                    {{-- <form action="{{ route('equipment.destroy', $equipment->id) }}" method="POST"
-                                        style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Are you sure you want to delete this equipment?')">Delete</button>
-                                    </form> --}}
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th>Model</th>
-                            <th>Serial No.</th>
-                            <th>Code</th>
-                            <th>Customer</th>
-                            <th>Status</th>
-                            <th>Date Assigned</th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
-                </table>
+    </div>
+    <!-- /.card-body -->
+    <!-- <div class="card-footer">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
+            Add New
+        </button>
+    </div> -->
+    <!-- /.card-footer-->
+</div>
+
+    <!-- /.card-body -->
+    <!-- <div class="card-footer">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
+            Add New
+        </button>
+        <button type="button" class="btn btn-danger ml-2" id="delete-selected">
+            Delete Selected
+        </button>
+    </div> -->
+    <!-- /.card-footer-->
+</div>
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    $('#delete-selected').click(function () {
+        console.log('Delete button clicked.');
+
+        var ids = [];
+        $('.equipment-checkbox:checked').each(function () {
+            ids.push($(this).val());
+        });
+
+        console.log('Selected IDs:', ids);
+
+        if (ids.length > 0) {
+            console.log('Deleting equipment with IDs:', ids);
+
+            $.ajax({
+                url: '{{ route("equipment.bulk-delete") }}',
+                type: 'POST',
+                data: {
+                    _method: 'DELETE',
+                    ids: ids,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (data) {
+                    console.log('Delete request successful:', data);
+                    location.reload(); // Refresh the page after deletion
+                },
+                error: function (xhr) {
+                    console.error('Error while deleting:', xhr);
+                    alert('Error while deleting equipment.');
+                }
+            });
+        } else {
+            alert('Please select at least one equipment to delete.');
+        }
+    });
+});
 
 
-            </div>
-            <!-- /.card-body -->
-            <div class="card-footer">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
-                    Add New
-                </button>
-            </div>
-            <!-- /.card-footer-->
-        </div>
+</script>
+@endpush
+
+
+
+
+
         <!-- /.card -->
         <div class="modal fade" id="modal-equipment">
             <div class="modal-dialog">
@@ -135,8 +210,7 @@
                             <div class="form-group">
                                 <div class="row mb-2">
                                     <div class="col-sm-6">
-                                        <label class="form-label" for="ownership"><i
-                                                style="color:red">*</i>Ownership</label>
+                                        <label class="form-label" for="ownership">Ownership</label>
                                         <select class="form-control" id="ownership" name="ownership" required>
                                             <option value="Owned">Owned</option>
                                             <option value="Customer-Owned">Customer-Owned</option>
@@ -144,7 +218,7 @@
                                     </div>
 
                                     <div class="col-sm-6">
-                                        <label class="form-label" for="type"><i style="color:red">*</i>Type</label>
+                                        <label class="form-label" for="type">Type</label>
                                         <select class="form-control" id="type" name="type" required>
                                             <option value="Hard Top">Hard Top</option>
                                             <option value="Glass Top">Glass Top</option>
@@ -155,12 +229,12 @@
                             <div class="form-group">
                                 <div class="row mb-2">
                                     <div class="col-sm-6">
-                                        <label class="form-label" for="brand"><i style="color:red">*</i>Brand</label>
+                                        <label class="form-label" for="brand">Brand</label>
                                         <input type="text" class="form-control" id="brand" name="brand" required>
                                     </div>
 
                                     <div class="col-sm-6">
-                                        <label class="form-label" for="model"><i style="color:red">*</i>Model</label>
+                                        <label class="form-label" for="model">Model</label>
                                         <select name="model" id="model" class="form-control" required>
                                             <option value="">--Select--</option>
                                             <option value="EFE-3002">EFE-3002</option>
@@ -187,7 +261,7 @@
                                     </div>
 
                                     <div class="col-sm-6">
-                                        <label class="form-label" for="serial_no"><i style="color:red">*</i>Serial
+                                        <label class="form-label" for="serial_no">Serial
                                             No.</label>
                                         <input type="text" class="form-control" id="serial_no" name="serial_no">
                                     </div>
@@ -198,7 +272,7 @@
                             <div class="form-group">
                                 <div class="row mb-2">
                                     <div class="col-sm-6">
-                                        <label class="form-label" for="code"><i style="color:red">*</i>Code</label>
+                                        <label class="form-label" for="code">Code</label>
                                         <input type="text" class="form-control" id="code" name="code" required>
                                     </div>
                                 </div>
@@ -255,8 +329,6 @@
                                     <label class="form-label" for="edit-ownership">Ownership</label>
                                     <select class="form-control" id="edit-ownership" name="ownership">
                                         <option value="Owned">Owned</option>
-                                        <option value="Leased">Leased</option>
-                                        <option value="Rented">Rented</option>
                                         <option value="Customer-Owned">Customer-Owned</option>
                                     </select>
                                 </div>

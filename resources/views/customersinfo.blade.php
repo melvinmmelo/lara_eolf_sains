@@ -2,6 +2,7 @@
 
 @section('contents')
     <!-- Content Header (Page header) -->
+     
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -33,7 +34,7 @@
                         Add New
                     </button>
                 </div>
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="customer" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             {{-- <th>ID</th>
@@ -144,9 +145,6 @@
                         </tr>
                     </tfoot>
                 </table>
-
-
-
 
 
 
@@ -892,6 +890,21 @@
 
 
 @section('custom_js')
+
+<script>
+    $(document).ready(function() {
+        if (!$.fn.DataTable.isDataTable('#example1')) {
+            $('#example1').DataTable({
+                "order": [
+                    [0, 'asc'] // Sorting by the second column (Name)
+                ]
+            });
+        }
+    });
+</script>
+
+
+
     <script>
         let map2;
         let map;

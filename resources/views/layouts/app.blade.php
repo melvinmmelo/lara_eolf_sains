@@ -180,6 +180,30 @@
                 "autoWidth": false,
                 "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            
+
+            $("#customer").DataTable({
+                "order": [0, 'asc'],
+                "paging": false,
+                "scrollY": "1000px",
+                "scrollCollapse": true,
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#customer_wrapper .col-md-6:eq(0)');
+            
+
+            $("#example1e").DataTable({
+                "order": [3, 'asc'],
+                "paging": false,
+                "scrollY": "1000px",
+                "scrollCollapse": true,
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#example1e_wrapper .col-md-6:eq(0)');
 
             $('#example2').DataTable({
                 "paging": true,
