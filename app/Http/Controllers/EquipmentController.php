@@ -106,4 +106,18 @@ class EquipmentController extends Controller
         return redirect()->route('equipment.index')->with('success', 'Equipment deleted successfully.');
 
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('equipment_ids');
+
+        if ($ids && is_array($ids)) {
+            // Delete equipment where status is 'Active'
+            Equipment::whereIn('id', $ids)->where('status', 'Active')->delete();
+            return redirect()->route('equipment.index')->with('success', 'Selected equipment deleted successfully.');
+        }
+
+        return redirect()->route('equipment.index')->with('error', 'No equipment selected for deletion.');
+    }
+    
 }

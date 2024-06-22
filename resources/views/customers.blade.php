@@ -49,7 +49,7 @@
 
             <div class="card-body">
                 @include('layouts.errors')
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="customer" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>ID</th>
