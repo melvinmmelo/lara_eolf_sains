@@ -466,6 +466,9 @@ class InboundController extends Controller
 
         if ($products) {
             $inboundList = json_decode($products, true);
+            if($inboundList == null){
+                $inboundList = [];
+            }
 
             $inboundService = new InboundProductsService($products);
 

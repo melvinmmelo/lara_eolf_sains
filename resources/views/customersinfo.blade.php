@@ -2,7 +2,7 @@
 
 @section('contents')
     <!-- Content Header (Page header) -->
-     
+
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -34,7 +34,7 @@
                         Add New
                     </button>
                 </div>
-                <table id="customer" class="table table-bordered table-striped">
+                <table id="customer_tb" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             {{-- <th>ID</th>

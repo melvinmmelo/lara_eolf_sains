@@ -180,7 +180,7 @@
                                 <label class="form-label" for="button types">Types</label>
                                 <div class="">
                                     @foreach ($productTypes as $type)
-                                        <button type="button" class="btn btn-primary w-100 mb-2"
+                                        <button type="button" class="btn btn-default w-100 mb-2"
                                             onclick="getProducts('{{ $type->code }}')">{{ $type->code }}</button>
                                     @endforeach
                                 </div>
@@ -191,29 +191,29 @@
                             <div style="min-height: 520px;">
                                 <label class="form-label" for="button types">Quantity</label>
                                 <div class="">
-                                    <button type="button" class="btn btn-primary w-100 mb-2"
+                                    <button type="button" class="btn btn-default w-100 mb-2"
                                         onclick="setQty(1)">1</button>
-                                    <button type="button" class="btn btn-primary w-100 mb-2"
+                                    <button type="button" class="btn btn-default w-100 mb-2"
                                         onclick="setQty(2)">2</button>
-                                    <button type="button" class="btn btn-primary w-100 mb-2"
+                                    <button type="button" class="btn btn-default w-100 mb-2"
                                         onclick="setQty(3)">3</button>
-                                    <button type="button" class="btn btn-primary w-100 mb-2"
+                                    <button type="button" class="btn btn-default w-100 mb-2"
                                         onclick="setQty(4)">4</button>
-                                    <button type="button" class="btn btn-primary w-100 mb-2"
+                                    <button type="button" class="btn btn-default w-100 mb-2"
                                         onclick="setQty(5)">5</button>
-                                    <button type="button" class="btn btn-primary w-100 mb-2"
+                                    <button type="button" class="btn btn-default w-100 mb-2"
                                         onclick="setQty(10)">10</button>
-                                    <button type="button" class="btn btn-primary w-100 mb-2"
+                                    <button type="button" class="btn btn-default w-100 mb-2"
                                         onclick="setQty(15)">15</button>
-                                    <button type="button" class="btn btn-primary w-100 mb-2"
+                                    <button type="button" class="btn btn-default w-100 mb-2"
                                         onclick="setQty(20)">20</button>
-                                    <button type="button" class="btn btn-primary w-100 mb-2"
+                                    <button type="button" class="btn btn-default w-100 mb-2"
                                         onclick="setQty(25)">25</button>
-                                    <button type="button" class="btn btn-primary w-100 mb-2"
+                                    <button type="button" class="btn btn-default w-100 mb-2"
                                         onclick="setQty(30)">30</button>
-                                    <button type="button" class="btn btn-primary w-100 mb-2"
+                                    <button type="button" class="btn btn-default w-100 mb-2"
                                         onclick="setQty(35)">35</button>
-                                    <button type="button" class="btn btn-primary w-100 mb-2"
+                                    <button type="button" class="btn btn-default w-100 mb-2"
                                         onclick="setQty(40)">40</button>
                                 </div>
                             </div>

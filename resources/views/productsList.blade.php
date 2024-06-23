@@ -7,7 +7,7 @@
             @php
                 $product = (object) $product;
             @endphp
-            <button type="button" class="btn btn-primary d-block mb-2 w-100"
+            <button type="button" class="btn btn-default d-block mb-2 w-100"
                 onclick="addProduct('{{ $product->code }}')">{{ $product->code }}
                 ({{ $product->qty }})
             </button>

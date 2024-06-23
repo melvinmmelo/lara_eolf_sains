@@ -170,60 +170,69 @@
     <script>
         $(function() {
 
-            $("#example1").DataTable({
-                "order": [],
-                "paging": false,
-                "scrollY": "1000px",
-                "scrollCollapse": true,
-                "responsive": true,
-                "lengthChange": false,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-            
+            if (document.getElementById('example1')) {
+                $("#example1").DataTable({
+                    "order": [],
+                    "paging": false,
+                    "scrollY": "1000px",
+                    "scrollCollapse": true,
+                    "responsive": true,
+                    "lengthChange": false,
+                    "autoWidth": false,
+                    "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+                }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            }
 
-            $("#customer").DataTable({
-                "order": [0, 'asc'],
-                "paging": false,
-                "scrollY": "1000px",
-                "scrollCollapse": true,
-                "responsive": true,
-                "lengthChange": false,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#customer_wrapper .col-md-6:eq(0)');
-            
 
-            $("#example1e").DataTable({
-                "order": [3, 'asc'],
-                "paging": false,
-                "scrollY": "1000px",
-                "scrollCollapse": true,
-                "responsive": true,
-                "lengthChange": false,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#example1e_wrapper .col-md-6:eq(0)');
+            if (document.getElementById('customer_tb')) {
+                $("#customer_tb").DataTable({
+                    "order": [0, 'asc'],
+                    "paging": false,
+                    "scrollY": "1000px",
+                    "scrollCollapse": true,
+                    "responsive": true,
+                    "lengthChange": false,
+                    "autoWidth": false,
+                    "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+                }).buttons().container().appendTo('#customer_tb_wrapper .col-md-6:eq(0)');
+            }
 
-            $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-            });
+            if (document.getElementById('example1e')) {
+                $("#example1e").DataTable({
+                    "order": [3, 'asc'],
+                    "paging": false,
+                    "scrollY": "1000px",
+                    "scrollCollapse": true,
+                    "responsive": true,
+                    "lengthChange": false,
+                    "autoWidth": false,
+                    "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+                }).buttons().container().appendTo('#example1e_wrapper .col-md-6:eq(0)');
+            }
 
-            $('#example3').DataTable({
-                "paging": false,
-                "lengthChange": false,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-            });
+            if (document.getElementById('example2')) {
+                $('#example2').DataTable({
+                    "paging": true,
+                    "lengthChange": false,
+                    "searching": false,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": false,
+                    "responsive": true,
+                });
+            }
+
+            if (document.getElementById('example3')) {
+                $('#example3').DataTable({
+                    "paging": false,
+                    "lengthChange": false,
+                    "searching": true,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": true,
+                    "responsive": true,
+                });
+            }
 
             const Toast = Swal.mixin({
                 toast: true,
