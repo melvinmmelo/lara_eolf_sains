@@ -32,7 +32,7 @@ class EquipmentStoreController extends Controller
         //dd($equipments);
 
         // Retrieve available equipment from the equipment table
-        $availableEquipments = Equipment::where('status', 'Active')->get();
+        $availableEquipments = Equipment::where('status', 'available')->get();
 
         // Get the IDs of equipment already added to equipment_store for the specified customer and store
         $selectedEquipmentIds = $equipments->pluck('equipment_id')->toArray();
@@ -92,7 +92,7 @@ class EquipmentStoreController extends Controller
             $equipmentStore->save();
 
 
-            $equipment->status = 'added';
+            $equipment->status = 'available';
             $equipment->save();
         }
 
@@ -189,7 +189,7 @@ class EquipmentStoreController extends Controller
                 $newEquipmentStore->save();
 
                 // Update the status of the new equipment in the Equipment table
-                $newEquipment->status = 'added';
+                $newEquipment->status = 'available';
                 $newEquipment->save();
             }
         }
