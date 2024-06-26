@@ -46,145 +46,144 @@
         @endif
         <!-- Default box -->
         <div class="card">
-    @include('layouts.errors')
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            @include('layouts.errors')
+            <!-- jQuery -->
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Bootstrap JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            <!-- Bootstrap JS -->
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<div class="card">
-    <div class="card-body">
-        <!-- <div class="pb-2">
+            <div class="card">
+                <div class="card-body">
+                    <!-- <div class="pb-2">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
+                    Add New
+                </button>
+            </div> -->
+                    <form id="bulk-delete-form" action="{{ route('equipment.bulk-delete') }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <table id="example1e" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th></th> <!-- Checkbox column -->
+                                    <th>Model</th>
+                                    <th>Serial No.</th>
+                                    <th>Code</th>
+                                    <th>Customer</th>
+                                    <th>Status</th>
+                                    <th>Date Assigned</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($equipments as $equipment)
+                                    <tr>
+                                        <td align='center'>
+                                            @if ($equipment->status == 'Active')
+                                                <input type="checkbox" class="equipment-checkbox" name="equipment_ids[]"
+                                                    value="{{ $equipment->id }}">
+                                            @else
+                                                &nbsp;
+                                            @endif
+                                        </td>
+                                        <td>{{ $equipment->model }}</td>
+                                        <td>{{ $equipment->serial_no }}</td>
+                                        <td>{{ $equipment->code }}</td>
+                                        <td>{{ $equipment->equipmentStore->customer->fullName ?? '' }}</td>
+                                        <td>{!! statusBadge($equipment->status) !!}</td>
+                                        <td>{{ $equipment->equipmentStore->dateCreated ?? '' }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary btn-sm edit-btn"
+                                                data-toggle="modal" data-target="#edit-equipment"
+                                                onclick="setToUpdateEquipment('{{ $equipment->id }}','{{ $equipment->ownership }}','{{ $equipment->type }}','{{ $equipment->brand }}','{{ $equipment->price }}','{{ $equipment->serial_no }}','{{ $equipment->model }}','{{ $equipment->code }}','{{ $equipment->distributor }}','{{ $equipment->date_delivered }}','{{ $equipment->date_purchased }}')">Edit</button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th>Model</th>
+                                    <th>Serial No.</th>
+                                    <th>Code</th>
+                                    <th>Customer</th>
+                                    <th>Status</th>
+                                    <th>Date Assigned</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
+                            Add New
+                        </button>
+                        <button type="submit" class="btn btn-danger ml-2">
+                            Delete Selected
+                        </button>
+                    </form>
+
+                </div>
+                <!-- /.card-body -->
+                <!-- <div class="card-footer">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
                 Add New
             </button>
         </div> -->
-        <form id="bulk-delete-form" action="{{ route('equipment.bulk-delete') }}" method="POST">
-    @csrf
-    @method('DELETE')
-    <table id="example1e" class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th></th> <!-- Checkbox column -->
-                <th>Model</th>
-                <th>Serial No.</th>
-                <th>Code</th>
-                <th>Customer</th>
-                <th>Status</th>
-                <th>Date Assigned</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($equipments as $equipment)
-                <tr>
-                    <td align='center'>
-                        @if ($equipment->status == 'Active')
-                            <input type="checkbox" class="equipment-checkbox" name="equipment_ids[]" value="{{ $equipment->id }}">
-                        @else
-                            &nbsp;
-                        @endif
-                    </td>
-                    <td>{{ $equipment->model }}</td>
-                    <td>{{ $equipment->serial_no }}</td>
-                    <td>{{ $equipment->code }}</td>
-                    <td>{{ $equipment->equipmentStore->customer->fullName ?? '' }}</td>
-                    <td>{!! statusBadge($equipment->status) !!}</td>
-                    <td>{{ $equipment->equipmentStore->dateCreated ?? '' }}</td>
-                    <td>
-                        <button type="button" class="btn btn-primary btn-sm edit-btn" data-toggle="modal"
-                            data-target="#edit-equipment"
-                            onclick="setToUpdateEquipment('{{ $equipment->id }}','{{ $equipment->ownership }}','{{ $equipment->type }}','{{ $equipment->brand }}','{{ $equipment->price }}','{{ $equipment->serial_no }}','{{ $equipment->model }}','{{ $equipment->code }}','{{ $equipment->distributor }}','{{ $equipment->date_delivered }}','{{ $equipment->date_purchased }}')">Edit</button>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-        <tfoot>
-            <tr>
-                <th></th>
-                <th>Model</th>
-                <th>Serial No.</th>
-                <th>Code</th>
-                <th>Customer</th>
-                <th>Status</th>
-                <th>Date Assigned</th>
-                <th></th>
-            </tr>
-        </tfoot>
-    </table>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
-        Add New
-    </button>
-    <button type="submit" class="btn btn-danger ml-2">
-        Delete Selected
-    </button>
-</form>
+                <!-- /.card-footer-->
+            </div>
 
-    </div>
-    <!-- /.card-body -->
-    <!-- <div class="card-footer">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
-            Add New
-        </button>
-    </div> -->
-    <!-- /.card-footer-->
-</div>
+            <!-- /.card-body -->
+            <!-- <div class="card-footer">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
+                Add New
+            </button>
+            <button type="button" class="btn btn-danger ml-2" id="delete-selected">
+                Delete Selected
+            </button>
+        </div> -->
+            <!-- /.card-footer-->
+        </div>
 
-    <!-- /.card-body -->
-    <!-- <div class="card-footer">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
-            Add New
-        </button>
-        <button type="button" class="btn btn-danger ml-2" id="delete-selected">
-            Delete Selected
-        </button>
-    </div> -->
-    <!-- /.card-footer-->
-</div>
+        @push('scripts')
+            <script>
+                $(document).ready(function() {
+                    $('#delete-selected').click(function() {
+                        console.log('Delete button clicked.');
 
-@push('scripts')
-<script>
-$(document).ready(function() {
-    $('#delete-selected').click(function () {
-        console.log('Delete button clicked.');
+                        var ids = [];
+                        $('.equipment-checkbox:checked').each(function() {
+                            ids.push($(this).val());
+                        });
 
-        var ids = [];
-        $('.equipment-checkbox:checked').each(function () {
-            ids.push($(this).val());
-        });
+                        console.log('Selected IDs:', ids);
 
-        console.log('Selected IDs:', ids);
+                        if (ids.length > 0) {
+                            console.log('Deleting equipment with IDs:', ids);
 
-        if (ids.length > 0) {
-            console.log('Deleting equipment with IDs:', ids);
-
-            $.ajax({
-                url: '{{ route("equipment.bulk-delete") }}',
-                type: 'POST',
-                data: {
-                    _method: 'DELETE',
-                    ids: ids,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function (data) {
-                    console.log('Delete request successful:', data);
-                    location.reload(); // Refresh the page after deletion
-                },
-                error: function (xhr) {
-                    console.error('Error while deleting:', xhr);
-                    alert('Error while deleting equipment.');
-                }
-            });
-        } else {
-            alert('Please select at least one equipment to delete.');
-        }
-    });
-});
-
-
-</script>
-@endpush
+                            $.ajax({
+                                url: '{{ route('equipment.bulk-delete') }}',
+                                type: 'POST',
+                                data: {
+                                    _method: 'DELETE',
+                                    ids: ids,
+                                    _token: '{{ csrf_token() }}'
+                                },
+                                success: function(data) {
+                                    console.log('Delete request successful:', data);
+                                    location.reload(); // Refresh the page after deletion
+                                },
+                                error: function(xhr) {
+                                    console.error('Error while deleting:', xhr);
+                                    alert('Error while deleting equipment.');
+                                }
+                            });
+                        } else {
+                            alert('Please select at least one equipment to delete.');
+                        }
+                    });
+                });
+            </script>
+        @endpush
 
 
 
@@ -261,8 +260,7 @@ $(document).ready(function() {
                                     </div>
 
                                     <div class="col-sm-6">
-                                        <label class="form-label" for="serial_no">Serial
-                                            No.</label>
+                                        <label class="form-label" for="serial_no">Serial No.</label>
                                         <input type="text" class="form-control" id="serial_no" name="serial_no">
                                     </div>
 
@@ -273,7 +271,8 @@ $(document).ready(function() {
                                 <div class="row mb-2">
                                     <div class="col-sm-6">
                                         <label class="form-label" for="code">Code</label>
-                                        <input type="text" class="form-control" id="code" name="code" required>
+                                        <input type="text" class="form-control" id="code" name="code"
+                                            required>
                                     </div>
                                 </div>
                             </div>
@@ -350,7 +349,7 @@ $(document).ready(function() {
                                 <div class="col-sm-6">
                                     <label class="form-label" for="edit-price">Price</label>
                                     <input type="text" pattern="[0-9]*" inputmode="numeric" class="form-control"
-                                        id="edit-price" name="price" placeholder="Enter price" required>
+                                        id="edit-price" name="price" placeholder="Enter price">
                                 </div>
                             </div>
                         </div>

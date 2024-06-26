@@ -27,7 +27,7 @@ class EquipmentController extends Controller
             'type' => 'required',
             'brand' => 'required',
             'price' => 'nullable|numeric',
-            'serial_no' => 'required|unique:equipment',
+            'serial_no' => 'nullable',
             'model' => 'required',
             'code' => 'required',
             'distributor' => 'nullable',
@@ -119,5 +119,5 @@ class EquipmentController extends Controller
 
         return redirect()->route('equipment.index')->with('error', 'No equipment selected for deletion.');
     }
-    
+
 }

@@ -63,9 +63,9 @@
                                     <td>
                                         @if ($store->equipmentStores->isNotEmpty())
                                             @foreach ($store->equipmentStores as $equipmentStore)
-                                                {{ $equipmentStore->equipment_id }}
+                                                {{ $equipmentStore->equipment->code }}
                                                 @if (!$loop->last)
-                                                    , <!-- Add comma if it's not the last equipment -->
+                                                    ,
                                                 @endif
                                             @endforeach
                                         @else
@@ -298,29 +298,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <div class="row mb-1">
-                                                    <div class="col-sm-12">
-                                                        <label class="form-label" for="latitude">Latitude</label>
-                                                        <input type="text" class="form-control" name="latitude"
-                                                            id="latitude">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <div class="row mb-1">
-                                                    <div class="col-sm-12">
-                                                        <label class="form-label" for="longitude">Longitude</label>
-                                                        <input type="text" class="form-control" name="longitude"
-                                                            id="longitude">
-
-                                                        <a href="#" data-toggle="modal"
-                                                            data-target="#setLatLongMap">Get</a>
-
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -439,6 +416,9 @@
                                                             name="longitude2">
                                                     </div>
                                                 </div>
+
+                                                  <a href="#" data-toggle="modal"
+                                                            data-target="#setLatLongMap">Get</a>
                                             </div>
 
                                             <div class="form-group">
@@ -527,8 +507,8 @@
                                 readonly>
 
 
-                            Customer ID <input type="hidden" class="form-control" name="id" id="id" required readonly><br>
-                            Store ID <input type="hidden" class="form-control" name="store_id" id="store_id" required readonly><br>
+                            Customer ID <input type="text" class="form-control" name="id" id="id" required readonly><br>
+                            Store ID <input type="text" class="form-control" name="store_id" id="store_id" required readonly><br>
                             <div class="row mb-2">
                                 {{-- customer info card --}}
                                 <div class="col-sm-6">
@@ -648,29 +628,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <div class="row mb-1">
-                                                    <div class="col-sm-12">
-
-                                                        <a href="#" data-toggle="modal"
-                                                            data-target="#setLatLongMap">Get</a>
-
-                                                        <label class="form-label" for="latitude">Latitude</label>
-                                                        <input type="text" class="form-control" name="latitude"
-                                                            id="e_latitude">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <div class="row mb-1">
-                                                    <div class="col-sm-12">
-                                                        <label class="form-label" for="longitude">Longitude</label>
-                                                        <input type="text" class="form-control" name="longitude"
-                                                            id="e_longitude">
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -774,6 +731,8 @@
                                                             name="latitude2">
                                                     </div>
                                                 </div>
+
+
                                             </div>
 
                                             <div class="form-group">
@@ -784,6 +743,9 @@
                                                             name="longitude2">
                                                     </div>
                                                 </div>
+
+                                                 <a href="#" data-toggle="modal"
+                                                            data-target="#setLatLongMap">Get</a>
                                             </div>
 
                                             <div class="form-group">
@@ -979,8 +941,7 @@
             document.getElementById("e_city").value = city;
             document.getElementById("e_brgy").value = brgy;
             document.getElementById("subdivision").value = subv;
-            document.getElementById("longitude").value = long;
-            document.getElementById("latitude").value = lat;
+
 
             // Populate store information fields
             document.getElementById("store_id").value = store_id;
@@ -991,8 +952,6 @@
             document.getElementById("e_city2").value = city2;
             document.getElementById("e_brgy2").value = brgy2;
             document.getElementById("subdivision2").value = subv2;
-            document.getElementById("latitude2").value = lat2;
-            document.getElementById("longitude2").value = long2;
 
             document.getElementById("listype2").value = listype;
             document.getElementById("length_stay2").value = length_stay;
@@ -1463,12 +1422,6 @@
             var cust_city2 = document.querySelector('select[name="city2"]');
             var cust_brgy2 = document.querySelector('select[name="brgy2"]');
 
-            // get latitude and longitude
-            var latitude = document.querySelector('input[name="latitude"]');
-            var longitude = document.querySelector('input[name="longitude"]');
-            var latitude2 = document.querySelector('input[name="latitude2"]');
-            var longitude2 = document.querySelector('input[name="longitude2"]');
-
             checkbox.addEventListener('change', function() {
                 if (this.checked) {
 
@@ -1482,16 +1435,13 @@
                     cust_city2.value = cust_city.value;
                     cust_brgy2.value = cust_brgy.value;
 
-                    // set latitude and longitude
-                    latitude2.value = latitude.value;
-                    longitude2.value = longitude.value;
+
 
                 }
             });
         }
 
         $('#setLatLongMap').on('shown.bs.modal', function() {
-            console.log('shown');
             if (!map) {
 
                 map = L.map('map').setView([17.6022249, 121.6770603], 10);
@@ -1505,14 +1455,12 @@
                     var lat = e.latlng.lat;
                     var lng = e.latlng.lng;
 
-                    document.getElementById('latitude').value = lat;
-                    document.getElementById('longitude').value = lng;
-
                     document.getElementById('latitude2').value = lat;
                     document.getElementById('longitude2').value = lng;
 
-                    // document.getElementById('cust_latitude2').value = lat;
-                    // document.getElementById('cust_longitude2').value = lng;
+                    document.getElementById('cust_latitude2').value = lat;
+                    document.getElementById('cust_longitude2').value = lng;
+
 
                     $('#setLatLongMap').modal('hide');
 
