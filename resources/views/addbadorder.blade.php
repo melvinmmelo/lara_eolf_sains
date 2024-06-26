@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
             method: 'POST',
             data: formData,
             success: function(response) {
-                window.location.href = '{{ route("addbadorder.create") }}';
+                window.location.href = '{{ route("badOrders.index") }}';
             },
             error: function(xhr, status, error) {
                 console.error(xhr.responseText);

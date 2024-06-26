@@ -19,7 +19,7 @@ class BadOrderController extends Controller
 
     public function index()
     {
-        $badOrders = BadOrder::with('customer')->get();
+        $badOrders = BadOrder::with('customer')->where('is_active', 1)->get();
 
         // Group by bo_id and summarize the total amount
         $summarizedBadOrders = $badOrders->groupBy('bo_id')->map(function ($group) {
@@ -27,6 +27,7 @@ class BadOrderController extends Controller
                 'bo_id' => $group->first()->bo_id,
                 'customer' => $group->first()->customer,
                 'storeinfo' => $group->first()->customer->storeinfo,
+                'bo_percentage' => $group->first()->bo_percentage,
                 'created_at' => $group->first()->created_at,
                 'amount' => $group->sum('amount'),
                 'remarks' => $group->first()->remarks,
