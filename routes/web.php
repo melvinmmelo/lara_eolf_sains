@@ -23,6 +23,7 @@ use App\Http\Controllers\ItemMasterDataController;
 use App\Http\Controllers\addbadorderController;
 use App\Http\Controllers\TempBadOrderController;
 use App\Http\Controllers\BadOrderController;
+use App\Http\Controllers\MaterialsInventoryController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -254,6 +255,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/idm-addQtyFromHold', [ItemMasterDataController::class, 'addQtyFromHold'])->name('imd.addQtyFromHold');
 
     Route::put('/branch', [BranchesController::class, 'update'])->name('branch.update');
+
+
+    Route::get('/materials-inventory', [MaterialsInventoryController::class, 'index'])->name('materialsInventory.index');
+    Route::post('/materials-inventory', [MaterialsInventoryController::class, 'store'])->name('materialsInventory.store');
+    Route::patch('/materials-inventory', [MaterialsInventoryController::class, 'update'])->name('materialsInventory.update');
+
+    Route::get('/materials-inventory/{id}/history', [MaterialsInventoryController::class, 'history'])->name('materialsInventory.history');
+
+
+
+
 });
 
 require __DIR__ . '/auth.php';

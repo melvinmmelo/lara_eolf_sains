@@ -182,7 +182,7 @@
                     </ul>
                 </li>
 
-                <li class="nav-item {{ Route::currentRouteNamed('delivery-purchase-receipts.index') || Route::currentRouteNamed('itemdata.index') || Route::currentRouteNamed('drp.products') ? 'menu-is-opening menu-open' : '' }}"
+                <li class="nav-item {{ Route::currentRouteNamed('delivery-purchase-receipts.index') || Route::currentRouteNamed('itemdata.index') || Route::currentRouteNamed('drp.products') || Route::currentRouteNamed('materialsInventory.index') || Route::currentRouteNamed('materialsInventory.history')  ? 'menu-is-opening menu-open' : '' }}"
                     ||>
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-warehouse" style="color: #74C0FC;"></i>
@@ -206,6 +206,14 @@
                                 class="nav-link {{ Route::currentRouteNamed('itemdata.index') ? 'active' : '' }}">
                                 <i class="fas fa-database nav-icon"></i>
                                 <p>Item master data</p>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('materialsInventory.index') }}"
+                                class="nav-link {{ Route::currentRouteNamed('materialsInventory.index') || Route::currentRouteNamed('materialsInventory.history') ? 'active' : '' }}">
+                                <i class="fas fa-database nav-icon"></i>
+                                <p>General Inventory</p>
                             </a>
                         </li>
 
