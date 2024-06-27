@@ -10,6 +10,15 @@ class EquipmentController extends Controller
     public function index()
     {
         $equipments = Equipment::branchCode(session('branch_code'))->get();
+
+        // foreach ($equipments as $equipment) {
+        //     $update = $equipment->equipmentStore->customer->fullName ?? 'update';
+        //     if($update != 'update' and $equipment->status === 'available'){
+        //         $equipment->status = 'added';
+        //         $equipment->save();
+        //     }
+        // }
+
         return view('equipment', compact('equipments'));
     }
 
@@ -77,7 +86,6 @@ class EquipmentController extends Controller
             'code' => 'required',
             'date_delivered' => 'nullable|date',
             'date_purchased' => 'nullable|date',
-            // Add more validation rules as needed
         ]);
 
         $equipment->update([
@@ -112,8 +120,7 @@ class EquipmentController extends Controller
         $ids = $request->input('equipment_ids');
 
         if ($ids && is_array($ids)) {
-            // Delete equipment where status is 'Active'
-            Equipment::whereIn('id', $ids)->where('status', 'Active')->delete();
+            Equipment::whereIn('id', $ids)->where('status', 'available')->delete();
             return redirect()->route('equipment.index')->with('success', 'Selected equipment deleted successfully.');
         }
 

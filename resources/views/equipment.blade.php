@@ -80,7 +80,7 @@
                                 @foreach ($equipments as $equipment)
                                     <tr>
                                         <td align='center'>
-                                            @if ($equipment->status == 'Active')
+                                            @if ($equipment->status == 'available')
                                                 <input type="checkbox" class="equipment-checkbox" name="equipment_ids[]"
                                                     value="{{ $equipment->id }}">
                                             @else
@@ -148,6 +148,11 @@
             <script>
                 $(document).ready(function() {
                     $('#delete-selected').click(function() {
+
+                        if (!confirm('Are you sure you want to delete the selected equipment?')) {
+                            return;
+                        }
+
                         console.log('Delete button clicked.');
 
                         var ids = [];

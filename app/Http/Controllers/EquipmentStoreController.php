@@ -121,7 +121,7 @@ class EquipmentStoreController extends Controller
         $equipment = Equipment::findOrFail($equipmentId);
 
         // Update the status of the equipment to "available"
-        $equipment->status = 'Active';
+        $equipment->status = 'available';
         $equipment->save();
 
         activity('equipment-store')
@@ -160,7 +160,7 @@ class EquipmentStoreController extends Controller
         // $equipmentStore->save();
 
         $equipment = Equipment::findOrFail($pullEquipmentId);
-        $equipment->status = 'Active';
+        $equipment->status = 'available';
         $equipment->save();
 
         $replaceEquipmentIds = [];
