@@ -213,7 +213,7 @@
                             <a href="{{ route('materialsInventory.index') }}"
                                 class="nav-link {{ Route::currentRouteNamed('materialsInventory.index') || Route::currentRouteNamed('materialsInventory.history') ? 'active' : '' }}">
                                 <i class="fas fa-database nav-icon"></i>
-                                <p>General Inventory</p>
+                                <p>Materials Inventory</p>
                             </a>
                         </li>
 

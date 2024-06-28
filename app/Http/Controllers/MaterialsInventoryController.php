@@ -55,6 +55,14 @@ class MaterialsInventoryController extends Controller
         ]);
 
         $material = MaterialsInventory::find($request->inv_id);
+
+        $old = $material->getOriginal();
+
+        activity('general-inventory')
+            ->performedOn($material)
+            ->withProperties($old)
+            ->log("Updated $material->name details");
+
         $material->name = $request->e_name;
         $material->unit = $request->e_unit;
         $material->quantity = $request->e_quantity;
@@ -62,13 +70,6 @@ class MaterialsInventoryController extends Controller
         $material->remarks = $request->e_remarks;
         $material->modified_by = auth()->user()->fullName;
         $material->save();
-
-        $changes = $material->getChanges();
-
-        activity('general-inventory')
-            ->performedOn($material)
-            ->withProperties($changes)
-            ->log("Updated $material->name details");
 
         return back()->with('success', 'Data saved.');
 
