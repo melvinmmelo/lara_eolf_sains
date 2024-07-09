@@ -953,6 +953,9 @@
             document.getElementById("e_brgy2").value = brgy2;
             document.getElementById("subdivision2").value = subv2;
 
+            document.getElementById("latitude2").value = lat2;
+            document.getElementById("longitude2").value = long2;
+
             document.getElementById("listype2").value = listype;
             document.getElementById("length_stay2").value = length_stay;
             document.getElementById("remarks2").value = remarks;
