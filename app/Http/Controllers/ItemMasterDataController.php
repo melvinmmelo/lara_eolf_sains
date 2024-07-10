@@ -74,7 +74,13 @@ class ItemMasterDataController extends Controller
             'quantity' => 'required|numeric',
         ]);
 
+
         $product = ItemMasterData::find($request->imd_id);
+
+        if($request->quantity > $product->hold_quantity) {
+            return redirect()->back()->withErrors('Failed to add quantity.');
+        }
+
         $product->stocks += $request->quantity;
         $product->hold_quantity -= $request->quantity;
         $product->save();

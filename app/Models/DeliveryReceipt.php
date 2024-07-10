@@ -10,8 +10,7 @@ class DeliveryReceipt extends Model
     use HasFactory;
     protected $fillable = [
         'dr_no',
-        'date', // Add 'date' here
+        'date',
         'generated_by',
-        // Add other attributes here as needed
     ];
 }
