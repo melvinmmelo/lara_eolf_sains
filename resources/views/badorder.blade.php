@@ -163,7 +163,7 @@
                 <td align="right">${formatNumber(item.amount)}</td>
             </tr>
         `).join('');
-                    console.log(data);
+                    //console.log(data);
 
                     var totalAmount = data.reduce((total, item) => total + parseFloat(item.amount), 0);
                     var created = data[0].created_at;

@@ -30,21 +30,25 @@
 
 
                 <table id="example1" class="table table-bordered table-striped">
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label class="form-label" for="code">From</label>
-                                <input type="date" class="form-control" name="code" required>
-
-                            </div>
-
-                            <div class="col-md-3">
-                                <label class="form-label" for="code">To</label>
-                                <input type="date" class="form-control" name="code" required>
-
-                            </div>
-                        </div>
+                <form action="{{ route('deliveryreceipt.index') }}" method="GET">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label" for="from_date">From</label>
+                        <input type="date" class="form-control" name="from_date" required value="{{ request('from_date') }}">
                     </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label" for="to_date">To</label>
+                        <input type="date" class="form-control" name="to_date" required value="{{ request('to_date') }}">
+                    </div>
+
+                    <div class="col-md-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                    </div>
+                </div>
+            </div>
+        </form>
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -60,23 +64,20 @@
                         </tr>
                     </thead>
                     <tbody>
-
-
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-
-
-                        </tr>
-
-                    </tbody>
+            @foreach($deliveryReceipts as $receipt)
+            <tr>
+                <td>{{ $receipt->date }}</td>
+                <td>{{ $receipt->dr_no }}</td>
+                <td>{{ $receipt->generated_by }}</td>
+                <td>{{ $receipt->total_amount }}</td>
+                <td>{{ $receipt->bad_orders }}</td>
+                <td>{{ $receipt->discount }}</td>
+                <td>{{ $receipt->amount_due }}</td>
+                <td>{{ $receipt->amount_paid }}</td>
+                <td>{{ $receipt->balance }}</td>
+            </tr>
+            @endforeach
+        </tbody>
                     <tfoot>
                         <tr>
                             <th>Date</th>
@@ -109,102 +110,94 @@
         <!-- /.card -->
         <div class="modal fade" id="modal-branch">
             <div class="modal-dialog">
-                <form method="POST" action="#">
-                    @csrf
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Add Delivery Receipt</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="code"><i style="color:red">*</i>Date</label>
-                                        <input type="date" class="form-control" name="" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="code"><i style="color:red">*</i>DR No.</label>
-                                        <input type="text" class="form-control" name="" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="address">Generate By</label>
-                                        <input type="text" class="form-control" name="">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="address">Total Amount</label>
-                                        <input type="text" class="form-control" name="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="address">Bad Orders</label>
-                                        <input type="text" class="form-control" name="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="address">Discount</label>
-                                        <input type="text" class="form-control" name="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="address">Amount Due</label>
-                                        <input type="text" class="form-control" name="">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="address">Amount Paid</label>
-                                        <input type="text" class="form-control" name="">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="address">Balance</label>
-                                        <input type="text" class="form-control" name="">
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-success">Save changes</button>
-
+            <form method="POST" action="{{ route('delivery-receipt.store') }}">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Delivery Receipt</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label class="form-label" for="date"><i style="color:red">*</i>Date</label>
+                                <input type="date" class="form-control" name="date" required>
                             </div>
                         </div>
-                </form>
-                <!-- /.modal-content -->
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label class="form-label" for="dr_no"><i style="color:red">*</i>DR No.</label>
+                                <input type="text" class="form-control" name="dr_no" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label class="form-label" for="generated_by">Generated By</label>
+                                <input type="text" class="form-control" name="generated_by">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label class="form-label" for="total_amount">Total Amount</label>
+                                <input type="text" class="form-control" name="total_amount">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label class="form-label" for="bad_orders">Bad Orders</label>
+                                <input type="text" class="form-control" name="bad_orders">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label class="form-label" for="discount">Discount</label>
+                                <input type="text" class="form-control" name="discount">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label class="form-label" for="amount_due">Amount Due</label>
+                                <input type="text" class="form-control" name="amount_due">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label class="form-label" for="amount_paid">Amount Paid</label>
+                                <input type="text" class="form-control" name="amount_paid">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label class="form-label" for="balance">Balance</label>
+                                <input type="text" class="form-control" name="balance">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Save changes</button>
+                </div>
+            </div>
+        </form>
             </div>
             <!-- /.modal-dialog -->
         </div>

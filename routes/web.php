@@ -24,6 +24,7 @@ use App\Http\Controllers\addbadorderController;
 use App\Http\Controllers\TempBadOrderController;
 use App\Http\Controllers\BadOrderController;
 use App\Http\Controllers\MaterialsInventoryController;
+use App\Http\Controllers\DeliveryReceiptController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -39,9 +40,10 @@ Route::get('/', function () {
 });
 
 
-Route::get('/delivery-receipt', function () {
-    return view('delivery-receipt');
-});
+// Route::get('/delivery-receipt', function () {
+//     return view('delivery-receipt');
+// });
+
 
 Route::get('/deliveryreceipt', function () {
     return view('deliveryreceipt');
@@ -56,6 +58,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/lastBadOrderOfCustomer/{customerId}/{storeId}', [BadOrderController::class, 'fetchLastBadOrderOfCustomer']);
     Route::get('/getBoDetails', [BadOrderController::class, 'getBoDetails']);
+
+    // routes/web.php
+Route::post('/delivery-receipt', [DeliveryReceiptController::class, 'store'])->name('delivery-receipt.store');
+// Route to display DRprint view
+Route::get('/drprint/{id}', [DeliveryReceiptController::class, 'show'])->name('drprint');
+Route::get('/deliveryreceipt', [DeliveryReceiptController::class, 'index'])->name('deliveryreceipt.index');
+
 
 
     Route::get('/api/getCustomerItems/{customerId}', [addbadorderController::class, 'getCustomerItems']);
