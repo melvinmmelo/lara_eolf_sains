@@ -69,6 +69,11 @@ class Inbound extends Model
         return $query->where('branch_code', $branch_code);
     }
 
+    public function scopeWithProducts($query)
+    {
+        return $query->whereNotNull('products');
+    }
+
     // get the total amount of the products
     public function getTotalAmountAttribute()
     {

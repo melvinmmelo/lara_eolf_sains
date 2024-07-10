@@ -56,15 +56,14 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/lastBadOrderOfCustomer/{customerId}/{storeId}', [BadOrderController::class, 'fetchLastBadOrderOfCustomer']);
+
     Route::get('/getBoDetails', [BadOrderController::class, 'getBoDetails']);
 
-    // routes/web.php
     Route::post('/delivery-receipt', [DeliveryReceiptController::class, 'store'])->name('delivery-receipt.store');
-    // Route to display DRprint view
+
     Route::get('/drprint/{id}', [DeliveryReceiptController::class, 'show'])->name('drprint');
+
     Route::get('/deliveryreceipt', [DeliveryReceiptController::class, 'index'])->name('deliveryreceipt.index');
-
-
 
     Route::get('/api/getCustomerItems/{customerId}', [addbadorderController::class, 'getCustomerItems']);
 
@@ -77,7 +76,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/bad-orders-list', [BadOrderController::class, 'index'])->name('badOrders.index');
 
     Route::delete('/bad-orders/{id}', [BadOrderController::class, 'destroy'])->name('badOrders.destroy');
-
 
     Route::post('/save-temp-bad-order', [TempBadOrderController::class, 'store']);
 
@@ -115,14 +113,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/addbadorder/create', [addbadorderController::class, 'create'])->name('addbadorder.create');
     Route::post('/addbadorder/store', [addbadorderController::class, 'store'])->name('addbadorder.store');
-    // Route::post('/save-temp-bad-order', [addbadorderController::class, 'saveTempBadOrder']);
-
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit'); // views
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update'); // backend
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // backend
 
-    // views
     Route::get('/company', [CompanyDetailsController::class, 'index'])->name('company');
     Route::get('/edit-company', [CompanyDetailsController::class, 'edit'])->name('company.edit');
     Route::put('/edit-company/{companyDetails}', [CompanyDetailsController::class, 'update'])->name('company.update');
@@ -135,15 +130,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/branch/store', [BranchesController::class, 'store']);
     Route::get('/edit-branch/{id}', [BranchesController::class, 'edit'])->name('branch.edit');
 
-    // Route::get('/customers', [CustomersController::class, 'index'])->name('customers');
-    // Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customer.edit');
-    // Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
-    // Route::post('/customers/store', [CustomersController::class, 'store'])->name('customers.store'); // Corrected route definition
-    // Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
-
-    // Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
-    // Route::delete('/customer/{customer}/store/{store}', [CustomerController::class, 'destroy'])->name('customer.destroy');
-
     Route::get('/customers', [CustomersController::class, 'index'])->name('customers');
     Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customer.edit');
     Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
@@ -152,11 +138,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
     Route::delete('/customers/{customer}/store/{store}', [CustomersController::class, 'destroyStore'])->name('customer.store.destroy');
 
-    // Route::get('/customersinfo', [CustomersController::class, 'index'])->name('customersinfo');
-
     Route::get('/equipment', [EquipmentController::class, 'index'])->name('equipment.index');
     Route::post('/equipment/store', [EquipmentController::class, 'store'])->name('equipment.store');
-    // Route::delete('/equipment/{id}', [EquipmentController::class, 'destroy'])->name('equipment.destroy');
     Route::get('/equipment/{id}/edit', [EquipmentController::class, 'edit'])->name('equipment.edit');
     Route::patch('/equipment/', [EquipmentController::class, 'update'])->name('equipment.update');
     Route::delete('/equipment/bulk-delete', [EquipmentController::class, 'bulkDelete'])->name('equipment.bulk-delete');
@@ -233,8 +216,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/submit/process-one', [InboundController::class, 'submitProcessOne'])->name('order.submitProcessOne');
 
     Route::get('/ordering/{inbound}', [InboundController::class, 'orderProcessTwoUI'])->name('order.processTwo');
-
-    // ajax
 
     Route::get('/order/create', [InboundController::class, 'create'])->name('order.create');
 
