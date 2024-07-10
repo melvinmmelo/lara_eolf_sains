@@ -60,7 +60,7 @@
                             <th>Amount Due</th>
                             <th>Amount Paid</th>
                             <th>Balance</th>
-
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -75,6 +75,9 @@
                 <td>{{ $receipt->amount_due }}</td>
                 <td>{{ $receipt->amount_paid }}</td>
                 <td>{{ $receipt->balance }}</td>
+                <td>
+                    <a href="{{ route('drprint', ['id' => $receipt->id ]) }}"><button type="button" class="btn btn-primary">Print</button></a>
+                </td>
             </tr>
             @endforeach
         </tbody>
@@ -89,6 +92,7 @@
                             <th>Amount Due</th>
                             <th>Amount Paid</th>
                             <th>Balance</th>
+                            <th></th>
                         </tr>
                     </tfoot>
                 </table>
@@ -100,7 +104,7 @@
                     Add New
                 </button>
 
-                <button type="button" class="btn btn-success"><i class="fas fa-print"></i>&nbsp;Delivery Receipt</button>
+                {{-- <button type="button" class="btn btn-success"><i class="fas fa-print"></i>&nbsp;Delivery Receipt</button> --}}
             </div>
             <!-- /.card-footer-->
         </div>

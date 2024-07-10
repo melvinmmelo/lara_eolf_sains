@@ -51,8 +51,8 @@ class DeliveryReceiptController extends Controller
     {
         // Fetch delivery receipt by ID
         $deliveryReceipt = DeliveryReceipt::findOrFail($id);
-        $inbound = Inbound::findOrFail($id);
-        return view('DRprint', compact('deliveryReceipt'));
+        $inbound = Inbound::findOrFail($deliveryReceipt->dr_no);
+        return view('DRprint', compact('deliveryReceipt', 'inbound'));
     }
-    
+
 }

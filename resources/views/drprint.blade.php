@@ -6,27 +6,35 @@
             max-height: 580px;
             overflow: auto;
         }
+
         body {
             font-family: "Arial", Helvetica, sans-serif;
             font-size: 9pt;
             word-wrap: break-word;
         }
+
         hr {
             border: 0;
             border-top: 1px solid #000;
             margin: 10px 0;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
-        table, th, td {
+
+        table,
+        th,
+        td {
             border: 1px solid black;
             padding: 8px;
         }
+
         th {
             background-color: #f2f2f2;
         }
+
         td {
             text-align: left;
         }
@@ -70,23 +78,34 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                                        @foreach ($inbound->products as $product)
-                                <tr>
-                                    <td>{{ $product->product_type }}</td>
-                                    <td>{{ $product->quantity }}</td>
-                                    <td>{{ $product->amount }}</td>
-                                </tr>
-                            @endforeach
+
+                                @php
+                                    if ($inbound->products) {
+                                        $products = json_decode($inbound->products);
+                                    }
+                                @endphp
+
+                                @foreach ($products as $product)
+                                    <tr>
+                                        <td>{{ $product->ptype_code }}</td>
+                                        <td>{{ $product->quantity }}</td>
+                                        <td>{{ $product->price }}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
                     <div class="col-md-4">
                         <table width="100%">
                             <tr>
-                                <td colspan="4"><center>EOLF FOOD TRADING OPC</center></td>
+                                <td colspan="4">
+                                    <center>EOLF FOOD TRADING OPC</center>
+                                </td>
                             </tr>
                             <tr>
-                                <td colspan="4"><center>DELIVERY RECEIPT</center></td>
+                                <td colspan="4">
+                                    <center>DELIVERY RECEIPT</center>
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan="4">DR No.: {{ $deliveryReceipt->dr_no }}</td>
@@ -105,13 +124,13 @@
                                 <td>Price</td>
                                 <td align="right">Amount</td>
                             </tr>
-                            @foreach ($inbound->products as $product)
-    <tr>
-        <td>{{ $product->product_type }}</td>
-        <td>{{ $product->quantity }}</td>
-        <td>{{ $product->amount }}</td>
-    </tr>
-@endforeach
+                            @foreach ($products as $product)
+                                <tr>
+                                    <td>{{ $product->ptype_code }}</td>
+                                    <td>{{ $product->quantity }}</td>
+                                    <td>{{ $product->price }}</td>
+                                </tr>
+                            @endforeach
                             <tr>
                                 <td align="left">Total Sales:</td>
                                 <td align="right">{{ $deliveryReceipt->total_sales }}</td>
@@ -163,9 +182,11 @@
                 var mywindow = window.open('', 'PRINT', 'height=600,width=600');
                 mywindow.document.write('<html><head><title>DELIVERY RECEIPT</title>');
                 mywindow.document.write('<style>');
-                mywindow.document.write('body{ font-family:"Arial",Helvetica,sans-serif;font-size: 9pt;word-wrap: break-word; }');
+                mywindow.document.write(
+                    'body{ font-family:"Arial",Helvetica,sans-serif;font-size: 9pt;word-wrap: break-word; }');
                 mywindow.document.write('hr { border: 0; border-top: 1px solid #000; margin: 10px 0; }');
-                mywindow.document.write('td { font-family:"Arial",Helvetica,sans-serif;font-size: 9pt;word-wrap: break-word; }');
+                mywindow.document.write(
+                'td { font-family:"Arial",Helvetica,sans-serif;font-size: 9pt;word-wrap: break-word; }');
                 mywindow.document.write('</style>');
                 mywindow.document.write('</head><body>');
                 mywindow.document.write('<center>EOLF FOOD TRADING OPC</center><br>');
@@ -176,16 +197,25 @@
                 mywindow.document.write('Distributor: {{ $deliveryReceipt->distributor }}<br>');
                 mywindow.document.write('<table width="100%">');
                 mywindow.document.write('<tr><td>Qty</td><td>Items</td><td>Price</td><td align="right">Amount</td></tr>');
-                @foreach ($inbound->products as $product)
-                    mywindow.document.write('<tr><td>{{ $product->quantity }}</td><td>{{ $product->product_type }}</td><td>{{ $product->price }}</td><td align="right">{{ $product->amount }}</td></tr>');
+                @foreach ($products as $product)
+                    mywindow.document.write(
+                        '<tr><td>{{ $product->quantity }}</td><td>{{ $product->ptype_code }}</td><td>{{ $product->price }}</td><td align="right">{{ $product->price }}</td></tr>'
+                        );
                 @endforeach
                 mywindow.document.write('</table>');
                 mywindow.document.write('<hr>');
                 mywindow.document.write('<table width="100%">');
-                mywindow.document.write('<tr><td align="left">Total Sales:</td><td align="right">{{ $deliveryReceipt->total_sales }}</td></tr>');
-                mywindow.document.write('<tr><td align="left">Less BO:</td><td align="right">{{ $deliveryReceipt->less_bo }}</td></tr>');
-                mywindow.document.write('<tr><td align="left">Discount (%):</td><td align="right">{{ $deliveryReceipt->discount_percent }}</td></tr>');
-                mywindow.document.write('<tr><td align="left">Total Amount:</td><td align="right">{{ $deliveryReceipt->total_amount }}</td></tr>');
+                mywindow.document.write(
+                    '<tr><td align="left">Total Sales:</td><td align="right">{{ $deliveryReceipt->total_sales }}</td></tr>'
+                    );
+                mywindow.document.write(
+                    '<tr><td align="left">Less BO:</td><td align="right">{{ $deliveryReceipt->less_bo }}</td></tr>');
+                mywindow.document.write(
+                    '<tr><td align="left">Discount (%):</td><td align="right">{{ $deliveryReceipt->discount_percent }}</td></tr>'
+                    );
+                mywindow.document.write(
+                    '<tr><td align="left">Total Amount:</td><td align="right">{{ $deliveryReceipt->total_amount }}</td></tr>'
+                    );
                 mywindow.document.write('</table>');
                 mywindow.document.write('<br><br><br>');
                 mywindow.document.write('---------------------------------<br>');

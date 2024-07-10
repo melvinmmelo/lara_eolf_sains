@@ -45,25 +45,24 @@ Route::get('/', function () {
 // });
 
 
-Route::get('/deliveryreceipt', function () {
-    return view('deliveryreceipt');
-});
 
-Route::get('/loading-ticket', function () {
-    return view('loading-ticket');
-});
 
 
 Route::middleware('auth')->group(function () {
+
+    Route::get('/loading-ticket', function () {
+        return view('loading-ticket');
+    });
+
 
     Route::get('/lastBadOrderOfCustomer/{customerId}/{storeId}', [BadOrderController::class, 'fetchLastBadOrderOfCustomer']);
     Route::get('/getBoDetails', [BadOrderController::class, 'getBoDetails']);
 
     // routes/web.php
-Route::post('/delivery-receipt', [DeliveryReceiptController::class, 'store'])->name('delivery-receipt.store');
-// Route to display DRprint view
-Route::get('/drprint/{id}', [DeliveryReceiptController::class, 'show'])->name('drprint');
-Route::get('/deliveryreceipt', [DeliveryReceiptController::class, 'index'])->name('deliveryreceipt.index');
+    Route::post('/delivery-receipt', [DeliveryReceiptController::class, 'store'])->name('delivery-receipt.store');
+    // Route to display DRprint view
+    Route::get('/drprint/{id}', [DeliveryReceiptController::class, 'show'])->name('drprint');
+    Route::get('/deliveryreceipt', [DeliveryReceiptController::class, 'index'])->name('deliveryreceipt.index');
 
 
 
@@ -271,10 +270,6 @@ Route::get('/deliveryreceipt', [DeliveryReceiptController::class, 'index'])->nam
     Route::patch('/materials-inventory', [MaterialsInventoryController::class, 'update'])->name('materialsInventory.update');
 
     Route::get('/materials-inventory/{id}/history', [MaterialsInventoryController::class, 'history'])->name('materialsInventory.history');
-
-
-
-
 });
 
 require __DIR__ . '/auth.php';
