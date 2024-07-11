@@ -11,6 +11,8 @@ class EquipmentController extends Controller
     {
         $equipments = Equipment::branchCode(session('branch_code'))->get();
 
+        // ! update status
+
         // foreach ($equipments as $equipment) {
         //     $update = $equipment->equipmentStore->customer->fullName ?? 'update';
         //     if($update != 'update' and $equipment->status === 'available'){

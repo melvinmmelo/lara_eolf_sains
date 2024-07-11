@@ -47,19 +47,13 @@
         <!-- Default box -->
         <div class="card">
             @include('layouts.errors')
-            <!-- jQuery -->
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-            <!-- Bootstrap JS -->
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
             <div class="card">
                 <div class="card-body">
                     <!-- <div class="pb-2">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
-                    Add New
-                </button>
-            </div> -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
+                                Add New
+                            </button>
+                        </div> -->
                     <form id="bulk-delete-form" action="{{ route('equipment.bulk-delete') }}" method="POST">
                         @csrf
                         @method('DELETE')
@@ -125,74 +119,24 @@
                 </div>
                 <!-- /.card-body -->
                 <!-- <div class="card-footer">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
-                Add New
-            </button>
-        </div> -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
+                            Add New
+                        </button>
+                    </div> -->
                 <!-- /.card-footer-->
             </div>
 
             <!-- /.card-body -->
             <!-- <div class="card-footer">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
-                Add New
-            </button>
-            <button type="button" class="btn btn-danger ml-2" id="delete-selected">
-                Delete Selected
-            </button>
-        </div> -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
+                            Add New
+                        </button>
+                        <button type="button" class="btn btn-danger ml-2" id="delete-selected">
+                            Delete Selected
+                        </button>
+                    </div> -->
             <!-- /.card-footer-->
         </div>
-
-        @push('scripts')
-            <script>
-                $(document).ready(function() {
-                    $('#delete-selected').click(function() {
-
-                        if (!confirm('Are you sure you want to delete the selected equipment?')) {
-                            return;
-                        }
-
-                        console.log('Delete button clicked.');
-
-                        var ids = [];
-                        $('.equipment-checkbox:checked').each(function() {
-                            ids.push($(this).val());
-                        });
-
-                        console.log('Selected IDs:', ids);
-
-                        if (ids.length > 0) {
-                            console.log('Deleting equipment with IDs:', ids);
-
-                            $.ajax({
-                                url: '{{ route('equipment.bulk-delete') }}',
-                                type: 'POST',
-                                data: {
-                                    _method: 'DELETE',
-                                    ids: ids,
-                                    _token: '{{ csrf_token() }}'
-                                },
-                                success: function(data) {
-                                    console.log('Delete request successful:', data);
-                                    location.reload(); // Refresh the page after deletion
-                                },
-                                error: function(xhr) {
-                                    console.error('Error while deleting:', xhr);
-                                    alert('Error while deleting equipment.');
-                                }
-                            });
-                        } else {
-                            alert('Please select at least one equipment to delete.');
-                        }
-                    });
-                });
-            </script>
-        @endpush
-
-
-
-
 
         <!-- /.card -->
         <div class="modal fade" id="modal-equipment">
@@ -418,6 +362,58 @@
 
 @section('custom_js')
     <script>
+        $(document).ready(function() {
+            $('#delete-selected').click(function() {
+
+                if (!confirm('Are you sure you want to delete the selected equipment?')) {
+                    return;
+                }
+
+                console.log('Delete button clicked.');
+
+                var ids = [];
+                $('.equipment-checkbox:checked').each(function() {
+                    ids.push($(this).val());
+                });
+
+                console.log('Selected IDs:', ids);
+
+                if (ids.length > 0) {
+                    console.log('Deleting equipment with IDs:', ids);
+
+                    $.ajax({
+                        url: '{{ route('equipment.bulk-delete') }}',
+                        type: 'POST',
+                        data: {
+                            _method: 'DELETE',
+                            ids: ids,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(data) {
+                            console.log('Delete request successful:', data);
+                            location.reload(); // Refresh the page after deletion
+                        },
+                        error: function(xhr) {
+                            console.error('Error while deleting:', xhr);
+                            alert('Error while deleting equipment.');
+                        }
+                    });
+                } else {
+                    alert('Please select at least one equipment to delete.');
+                }
+            });
+
+            $('#price').on('input', function() {
+                var input = $(this);
+                var regex = /^[0-9]*$/;
+                if (!regex.test(input.val())) {
+                    input.addClass('is-invalid');
+                } else {
+                    input.removeClass('is-invalid');
+                }
+            });
+        });
+
         function setToUpdateEquipment(id, ownership, type, brand, price, serial_no, model, code, date_delivered,
             date_purchased) {
             document.getElementById("equipment_id").value = id;
@@ -432,22 +428,5 @@
             document.getElementById("edit-date_delivered").value = date_delivered;
             document.getElementById("edit-date_purchased").value = date_purchased;
         }
-    </script>
-
-
-
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
-    <script>
-        $(document).ready(function() {
-            $('#price').on('input', function() {
-                var input = $(this);
-                var regex = /^[0-9]*$/;
-                if (!regex.test(input.val())) {
-                    input.addClass('is-invalid');
-                } else {
-                    input.removeClass('is-invalid');
-                }
-            });
-        });
     </script>
 @endsection
