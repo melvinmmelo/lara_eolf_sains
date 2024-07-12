@@ -26,6 +26,8 @@ class Inbound extends Model
         'payment_type',
         'ref_no',
         'delivered_amount',
+        'grp_print_ticket_no',
+        'ticket_sequence_no',
     ];
 
     protected $appends = ['f_created_at', 'f_updated_at'];
@@ -67,6 +69,16 @@ class Inbound extends Model
     public function scopeBranch($query, $branch_code)
     {
         return $query->where('branch_code', $branch_code);
+    }
+
+    public function scopeCompleted($query)
+    {
+        return $query->where('status', 'Completed');
+    }
+
+    public function scopeForLoading($query)
+    {
+        return $query->where('status', 'Completed')->where('ticket_sequence_no' , 0);
     }
 
     public function scopeWithProducts($query)

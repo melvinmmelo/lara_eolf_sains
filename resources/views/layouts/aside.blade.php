@@ -148,7 +148,7 @@
                 </li>
 
                 <li
-                    class="nav-item {{ Route::currentRouteNamed('order.index') || Route::currentRouteNamed('order.processTwo') || Route::currentRouteNamed('badOrders.index') || Route::currentRouteNamed('addbadorder.create') || Route::currentRouteNamed('order.create') || Route::currentRouteNamed('order.edit') || Route::currentRouteNamed('deliveryreceipt.index') || Route::currentRouteNamed('drprint') ? 'menu-is-opening menu-open' : '' }}">
+                    class="nav-item {{ Route::currentRouteNamed('order.index') || Route::currentRouteNamed('order.processTwo') || Route::currentRouteNamed('badOrders.index') || Route::currentRouteNamed('addbadorder.create') || Route::currentRouteNamed('order.create') || Route::currentRouteNamed('order.edit') || Route::currentRouteNamed('deliveryreceipt.index') || Route::currentRouteNamed('drprint') || Route::currentRouteNamed('generate-ticket')|| Route::currentRouteNamed('print-ticket') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-coins" style="color: #74C0FC;"></i>
                         <p>
@@ -163,6 +163,14 @@
                                 class="nav-link {{ Route::currentRouteNamed('order.index') || Route::currentRouteNamed('order.processTwo') || Route::currentRouteNamed('order.create') || Route::currentRouteNamed('order.edit') ? 'active' : '' }}">
                                 <i class="fas fa-circle-left nav-icon"></i>
                                 <p>Outbound</p>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/generate-ticket"
+                                class="nav-link {{ Route::currentRouteNamed('generate-ticket') || Route::currentRouteNamed('print-ticket') ? 'active' : '' }}">
+                                <i class="fas fa-circle-left nav-icon"></i>
+                                <p>Ticket</p>
                             </a>
                         </li>
 

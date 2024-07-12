@@ -25,6 +25,7 @@ use App\Http\Controllers\TempBadOrderController;
 use App\Http\Controllers\BadOrderController;
 use App\Http\Controllers\MaterialsInventoryController;
 use App\Http\Controllers\DeliveryReceiptController;
+use App\Http\Controllers\TicketController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -53,6 +54,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/loading-ticket', function () {
         return view('loading-ticket');
     });
+
+    Route::get('/generate-ticket', [TicketController::class, 'generate'])->name('generate-ticket');
+
+    Route::post('/print-ticket', [TicketController::class, 'print'])->name('print-ticket');
+
 
 
     Route::get('/lastBadOrderOfCustomer/{customerId}/{storeId}', [BadOrderController::class, 'fetchLastBadOrderOfCustomer']);

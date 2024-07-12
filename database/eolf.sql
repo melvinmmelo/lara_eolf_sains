@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Jun 27, 2024 at 07:55 PM
--- Server version: 10.6.18-MariaDB-cll-lve
--- PHP Version: 8.1.16
+-- Host: 127.0.0.1:3306
+-- Generation Time: Jul 11, 2024 at 12:12 PM
+-- Server version: 5.7.26
+-- PHP Version: 7.2.18
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -27,20 +27,25 @@ SET time_zone = "+00:00";
 -- Table structure for table `activity_log`
 --
 
-CREATE TABLE `activity_log` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `log_name` varchar(191) DEFAULT NULL,
-  `description` text NOT NULL,
-  `subject_type` varchar(191) DEFAULT NULL,
-  `event` varchar(191) DEFAULT NULL,
+DROP TABLE IF EXISTS `activity_log`;
+CREATE TABLE IF NOT EXISTS `activity_log` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `log_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `subject_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `event` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `subject_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `causer_type` varchar(191) DEFAULT NULL,
+  `causer_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `causer_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `properties` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`properties`)),
-  `batch_uuid` char(36) DEFAULT NULL,
+  `properties` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `batch_uuid` char(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `subject` (`subject_type`,`subject_id`),
+  KEY `causer` (`causer_type`,`causer_id`),
+  KEY `activity_log_log_name_index` (`log_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=312 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `activity_log`
@@ -315,7 +320,50 @@ INSERT INTO `activity_log` (`id`, `log_name`, `description`, `subject_type`, `ev
 (265, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"388\",\"store_id\":\"388\",\"equipment_ids\":[\"177\"],\"pull_statuses\":null}', NULL, '2024-06-28 00:45:44', '2024-06-28 00:45:44'),
 (266, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"388\",\"store_id\":\"388\",\"equipment_ids\":[\"185\"],\"pull_statuses\":null}', NULL, '2024-06-28 00:47:17', '2024-06-28 00:47:17'),
 (267, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"388\",\"store_id\":\"388\",\"equipment_ids\":[\"2\",\"3\",\"7\",\"8\",\"9\",\"90\",\"168\",\"169\",\"170\",\"171\",\"172\",\"173\",\"174\",\"175\",\"176\",\"178\",\"179\",\"180\",\"183\",\"184\",\"186\",\"187\",\"188\",\"189\",\"190\",\"191\",\"192\",\"193\",\"194\",\"195\",\"196\",\"197\"],\"pull_statuses\":null}', NULL, '2024-06-28 00:59:39', '2024-06-28 00:59:39'),
-(268, 'default', 'Quantity added from hold.', 'App\\Models\\ItemMasterData', NULL, 6, 'App\\Models\\User', 2, '{\"quantity\":\"50\"}', NULL, '2024-06-28 01:07:06', '2024-06-28 01:07:06');
+(268, 'default', 'Quantity added from hold.', 'App\\Models\\ItemMasterData', NULL, 6, 'App\\Models\\User', 2, '{\"quantity\":\"50\"}', NULL, '2024-06-28 01:07:06', '2024-06-28 01:07:06'),
+(269, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"306\",\"store_id\":\"306\",\"equipment_ids\":[\"26\"],\"pull_statuses\":null}', NULL, '2024-06-28 19:57:28', '2024-06-28 19:57:28'),
+(270, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"370\",\"store_id\":\"370\",\"equipment_ids\":[\"93\"],\"pull_statuses\":null}', NULL, '2024-06-28 19:58:46', '2024-06-28 19:58:46'),
+(271, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"371\",\"store_id\":\"371\",\"equipment_ids\":[\"123\"],\"pull_statuses\":null}', NULL, '2024-06-28 20:00:12', '2024-06-28 20:00:12'),
+(272, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"372\",\"store_id\":\"372\",\"equipment_ids\":[\"74\"],\"pull_statuses\":null}', NULL, '2024-06-28 20:01:04', '2024-06-28 20:01:04'),
+(273, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"373\",\"store_id\":\"373\",\"equipment_ids\":[\"273\"],\"pull_statuses\":null}', NULL, '2024-06-28 20:02:25', '2024-06-28 20:02:25'),
+(274, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"330\",\"store_id\":\"330\",\"equipment_ids\":[\"83\"],\"pull_statuses\":null}', NULL, '2024-06-28 22:33:29', '2024-06-28 22:33:29'),
+(275, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"192\",\"store_id\":\"192\",\"equipment_ids\":[\"403\"],\"pull_statuses\":null}', NULL, '2024-06-28 22:38:50', '2024-06-28 22:38:50'),
+(276, 'equipment-store', 'equipment store entry deleted', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"equipment_store_id\":\"729\",\"equipment_id\":\"403\"}', NULL, '2024-06-28 22:40:49', '2024-06-28 22:40:49'),
+(277, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"192\",\"store_id\":\"192\",\"equipment_ids\":[\"403\"],\"pull_statuses\":null}', NULL, '2024-06-28 22:41:27', '2024-06-28 22:41:27'),
+(278, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"391\",\"store_id\":\"391\",\"equipment_ids\":[\"52\"],\"pull_statuses\":null}', NULL, '2024-06-28 22:48:20', '2024-06-28 22:48:20'),
+(279, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"389\",\"store_id\":\"389\",\"equipment_ids\":[\"43\"],\"pull_statuses\":null}', NULL, '2024-06-28 22:48:53', '2024-06-28 22:48:53'),
+(280, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"392\",\"store_id\":\"392\",\"equipment_ids\":[\"121\"],\"pull_statuses\":null}', NULL, '2024-06-28 22:50:00', '2024-06-28 22:50:00'),
+(281, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"393\",\"store_id\":\"393\",\"equipment_ids\":[\"127\"],\"pull_statuses\":null}', NULL, '2024-06-28 22:50:38', '2024-06-28 22:50:38'),
+(282, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"394\",\"store_id\":\"394\",\"equipment_ids\":[\"256\"],\"pull_statuses\":null}', NULL, '2024-06-28 22:51:19', '2024-06-28 22:51:19'),
+(283, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"390\",\"store_id\":\"390\",\"equipment_ids\":[\"51\"],\"pull_statuses\":null}', NULL, '2024-06-28 22:52:41', '2024-06-28 22:52:41'),
+(284, 'general-inventory', 'Added Lock & Key - Liebherr to inventory', NULL, NULL, NULL, 'App\\Models\\User', 2, '[]', NULL, '2024-07-02 03:42:27', '2024-07-02 03:42:27'),
+(285, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"395\",\"store_id\":\"395\",\"equipment_ids\":[\"415\"],\"pull_statuses\":null}', NULL, '2024-07-03 22:55:57', '2024-07-03 22:55:57'),
+(286, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"396\",\"store_id\":\"396\",\"equipment_ids\":[\"428\"],\"pull_statuses\":null}', NULL, '2024-07-03 22:58:41', '2024-07-03 22:58:41'),
+(287, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"397\",\"store_id\":\"397\",\"equipment_ids\":[\"10\",\"16\",\"26\",\"43\",\"49\",\"51\",\"52\",\"53\",\"54\",\"55\",\"56\",\"57\",\"58\",\"59\",\"69\",\"74\",\"77\",\"83\",\"86\",\"93\",\"116\",\"121\",\"123\",\"127\",\"129\",\"144\",\"181\",\"199\",\"200\",\"202\",\"205\",\"206\",\"209\",\"210\",\"211\",\"216\",\"221\",\"223\",\"224\",\"227\",\"229\",\"233\",\"234\",\"238\",\"240\",\"241\",\"242\",\"243\",\"244\",\"246\",\"248\",\"252\",\"253\",\"256\",\"257\",\"259\",\"260\",\"264\",\"267\",\"273\",\"285\",\"286\",\"287\",\"288\",\"289\",\"290\",\"291\",\"292\",\"293\",\"294\",\"295\",\"296\",\"297\",\"298\",\"299\",\"309\",\"314\",\"320\",\"322\",\"329\",\"335\",\"345\",\"353\",\"358\",\"363\",\"380\",\"394\",\"398\",\"399\",\"400\",\"401\",\"402\",\"403\",\"405\",\"406\",\"407\",\"408\",\"409\",\"410\",\"411\",\"412\",\"413\",\"414\",\"415\",\"416\",\"417\",\"418\",\"419\",\"420\",\"421\",\"422\",\"423\",\"424\",\"425\",\"426\",\"427\",\"428\",\"430\",\"431\",\"434\",\"435\",\"436\",\"437\",\"438\",\"439\",\"440\",\"441\",\"442\",\"443\",\"444\",\"445\",\"446\",\"447\",\"448\",\"449\",\"450\",\"451\",\"452\",\"453\",\"491\",\"492\",\"493\",\"494\",\"495\",\"496\",\"497\",\"498\",\"500\",\"501\",\"502\",\"503\",\"504\",\"505\",\"506\",\"508\",\"510\",\"511\",\"512\",\"514\",\"517\"],\"pull_statuses\":null}', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(288, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"388\",\"store_id\":\"388\",\"equipment_ids\":[\"518\"],\"pull_statuses\":null}', NULL, '2024-07-05 22:37:51', '2024-07-05 22:37:51'),
+(289, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"388\",\"store_id\":\"388\",\"equipment_ids\":[\"519\"],\"pull_statuses\":null}', NULL, '2024-07-05 22:38:26', '2024-07-05 22:38:26'),
+(290, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"388\",\"store_id\":\"388\",\"equipment_ids\":[\"520\"],\"pull_statuses\":null}', NULL, '2024-07-05 22:39:06', '2024-07-05 22:39:06'),
+(291, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"388\",\"store_id\":\"388\",\"equipment_ids\":[\"521\"],\"pull_statuses\":null}', NULL, '2024-07-05 22:39:24', '2024-07-05 22:39:24'),
+(292, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"388\",\"store_id\":\"388\",\"equipment_ids\":[\"522\"],\"pull_statuses\":null}', NULL, '2024-07-05 22:39:53', '2024-07-05 22:39:53'),
+(293, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"388\",\"store_id\":\"388\",\"equipment_ids\":[\"523\"],\"pull_statuses\":null}', NULL, '2024-07-05 22:40:14', '2024-07-05 22:40:14'),
+(294, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"388\",\"store_id\":\"388\",\"equipment_ids\":[\"524\"],\"pull_statuses\":null}', NULL, '2024-07-05 22:40:37', '2024-07-05 22:40:37'),
+(295, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"388\",\"store_id\":\"388\",\"equipment_ids\":[\"525\"],\"pull_statuses\":null}', NULL, '2024-07-05 22:41:21', '2024-07-05 22:41:21'),
+(296, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"388\",\"store_id\":\"388\",\"equipment_ids\":[\"525\"],\"pull_statuses\":null}', NULL, '2024-07-05 22:41:25', '2024-07-05 22:41:25'),
+(297, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"388\",\"store_id\":\"388\",\"equipment_ids\":[\"526\"],\"pull_statuses\":null}', NULL, '2024-07-05 22:41:53', '2024-07-05 22:41:53'),
+(298, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"388\",\"store_id\":\"388\",\"equipment_ids\":[\"527\"],\"pull_statuses\":null}', NULL, '2024-07-05 22:42:14', '2024-07-05 22:42:14'),
+(299, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"368\",\"store_id\":\"368\",\"equipment_ids\":[\"531\"],\"pull_statuses\":null}', NULL, '2024-07-06 20:53:14', '2024-07-06 20:53:14'),
+(300, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"305\",\"store_id\":\"305\",\"equipment_ids\":[\"532\"],\"pull_statuses\":null}', NULL, '2024-07-06 20:58:04', '2024-07-06 20:58:04'),
+(301, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"359\",\"store_id\":\"359\",\"equipment_ids\":[\"529\"],\"pull_statuses\":null}', NULL, '2024-07-06 20:59:40', '2024-07-06 20:59:40'),
+(302, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"128\",\"store_id\":\"128\",\"equipment_ids\":[\"528\"],\"pull_statuses\":null}', NULL, '2024-07-06 21:00:19', '2024-07-06 21:00:19'),
+(303, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"367\",\"store_id\":\"367\",\"equipment_ids\":[\"533\"],\"pull_statuses\":null}', NULL, '2024-07-06 21:07:03', '2024-07-06 21:07:03'),
+(304, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"302\",\"store_id\":\"302\",\"equipment_ids\":[\"534\"],\"pull_statuses\":null}', NULL, '2024-07-06 21:07:54', '2024-07-06 21:07:54'),
+(305, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"364\",\"store_id\":\"364\",\"equipment_ids\":[\"537\"],\"pull_statuses\":null}', NULL, '2024-07-06 21:08:28', '2024-07-06 21:08:28'),
+(306, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"361\",\"store_id\":\"361\",\"equipment_ids\":[\"535\"],\"pull_statuses\":null}', NULL, '2024-07-06 21:08:55', '2024-07-06 21:08:55'),
+(307, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"354\",\"store_id\":\"354\",\"equipment_ids\":[\"536\"],\"pull_statuses\":null}', NULL, '2024-07-06 21:09:18', '2024-07-06 21:09:18'),
+(308, 'equipment-store', 'equipment added to store', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer_id\":\"398\",\"store_id\":\"398\",\"equipment_ids\":[\"538\"],\"pull_statuses\":null}', NULL, '2024-07-10 21:10:21', '2024-07-10 21:10:21'),
+(309, 'outbound', 'Order completed.', 'App\\Models\\Inbound', NULL, 9, 'App\\Models\\User', 2, '[]', NULL, '2024-07-11 03:17:43', '2024-07-11 03:17:43'),
+(310, 'default', 'Quantity added from hold.', 'App\\Models\\ItemMasterData', NULL, 41, 'App\\Models\\User', 2, '{\"quantity\":\"25\"}', NULL, '2024-07-11 03:20:24', '2024-07-11 03:20:24'),
+(311, 'manage-equipment-store', 'pullOut', NULL, NULL, NULL, 'App\\Models\\User', 2, '{\"customer\":\"Gueni Garcia\",\"store\":\"Ton ton E-load Prepaid Cards &Accessories Trading\",\"equipment\":\"8195.2021\",\"pull_equipment_id\":\"319\",\"replace_equipment_ids\":[],\"remarks\":\"DEFFECTIVE COMPRESSOR\"}', NULL, '2024-07-11 18:58:06', '2024-07-11 18:58:06');
 
 -- --------------------------------------------------------
 
@@ -323,35 +371,27 @@ INSERT INTO `activity_log` (`id`, `log_name`, `description`, `subject_type`, `ev
 -- Table structure for table `bad_orders`
 --
 
-CREATE TABLE `bad_orders` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `bo_id` varchar(191) NOT NULL,
+DROP TABLE IF EXISTS `bad_orders`;
+CREATE TABLE IF NOT EXISTS `bad_orders` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `bo_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `customer_id` bigint(20) UNSIGNED NOT NULL,
   `store_id` bigint(20) UNSIGNED NOT NULL,
-  `re_dr` varchar(191) DEFAULT NULL,
-  `bo_percentage` varchar(191) DEFAULT NULL,
-  `remarks` varchar(191) DEFAULT NULL,
-  `ptype_code` varchar(191) NOT NULL,
-  `code` varchar(191) NOT NULL,
+  `re_dr` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `bo_percentage` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remarks` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ptype_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `quantity` int(11) NOT NULL,
   `price` double NOT NULL,
-  `unit` varchar(191) NOT NULL,
-  `description` varchar(191) NOT NULL,
+  `unit` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `amount` double NOT NULL,
-  `is_active` tinyint(4) NOT NULL DEFAULT 1,
+  `is_active` tinyint(4) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `bad_orders`
---
-
-INSERT INTO `bad_orders` (`id`, `bo_id`, `customer_id`, `store_id`, `re_dr`, `bo_percentage`, `remarks`, `ptype_code`, `code`, `quantity`, `price`, `unit`, `description`, `amount`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, '1', 2, 2, '1234', '100', 'test', 'SC', 'SC', 2, 12.7, 'Pc/s', '90ml SMALL CUP REGULAR (3.0-oz)', 25.4, 1, '2024-06-22 17:31:19', '2024-06-22 17:31:19'),
-(2, '2', 1, 1, NULL, '100', 'testing', 'SC', 'SC', 2, 12.7, 'Pc/s', '90ml SMALL CUP REGULAR (3.0-oz)', 25.4, 1, '2024-06-22 17:38:41', '2024-06-22 17:38:41'),
-(3, '2', 1, 1, NULL, '100', 'testing', 'MC', 'MC', 2, 18.43, 'Pc/s', '135ml MEDIUM CUP SPECIAL (4.5-oz)', 36.86, 1, '2024-06-22 17:38:41', '2024-06-22 17:38:41'),
-(4, '3', 3, 3, NULL, '50', 'BROWN OUT', 'BC', 'BC', 5, 24.4, 'Pc/s', '180ml BIG CUP (6.0-oz)', 122, 1, '2024-06-22 17:45:41', '2024-06-22 17:45:41');
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -359,15 +399,17 @@ INSERT INTO `bad_orders` (`id`, `bo_id`, `customer_id`, `store_id`, `re_dr`, `bo
 -- Table structure for table `branches`
 --
 
-CREATE TABLE `branches` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `code` varchar(191) NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `address` varchar(191) NOT NULL,
-  `office_no` varchar(191) NOT NULL,
+DROP TABLE IF EXISTS `branches`;
+CREATE TABLE IF NOT EXISTS `branches` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `address` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `office_no` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `branches`
@@ -383,10 +425,12 @@ INSERT INTO `branches` (`id`, `code`, `name`, `address`, `office_no`, `created_a
 -- Table structure for table `cache`
 --
 
-CREATE TABLE `cache` (
-  `key` varchar(191) NOT NULL,
-  `value` mediumtext NOT NULL,
-  `expiration` int(11) NOT NULL
+DROP TABLE IF EXISTS `cache`;
+CREATE TABLE IF NOT EXISTS `cache` (
+  `key` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int(11) NOT NULL,
+  PRIMARY KEY (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -407,10 +451,12 @@ INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
 -- Table structure for table `cache_locks`
 --
 
-CREATE TABLE `cache_locks` (
-  `key` varchar(191) NOT NULL,
-  `owner` varchar(191) NOT NULL,
-  `expiration` int(11) NOT NULL
+DROP TABLE IF EXISTS `cache_locks`;
+CREATE TABLE IF NOT EXISTS `cache_locks` (
+  `key` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `owner` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int(11) NOT NULL,
+  PRIMARY KEY (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -419,10 +465,12 @@ CREATE TABLE `cache_locks` (
 -- Table structure for table `chart_of_accounts`
 --
 
-CREATE TABLE `chart_of_accounts` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `chart_of_accounts`;
+CREATE TABLE IF NOT EXISTS `chart_of_accounts` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -431,16 +479,18 @@ CREATE TABLE `chart_of_accounts` (
 -- Table structure for table `company_details`
 --
 
-CREATE TABLE `company_details` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `contact_no` varchar(191) DEFAULT NULL,
-  `email` varchar(191) DEFAULT NULL,
-  `address` varchar(191) DEFAULT NULL,
-  `logo` varchar(191) DEFAULT NULL,
+DROP TABLE IF EXISTS `company_details`;
+CREATE TABLE IF NOT EXISTS `company_details` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `contact_no` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `logo` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `company_details`
@@ -455,28 +505,31 @@ INSERT INTO `company_details` (`id`, `name`, `contact_no`, `email`, `address`, `
 -- Table structure for table `customers`
 --
 
-CREATE TABLE `customers` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `distributor` varchar(191) NOT NULL,
-  `branch_code` varchar(15) NOT NULL,
-  `lastname` varchar(191) NOT NULL,
-  `firstname` varchar(191) NOT NULL,
-  `middlename` varchar(191) DEFAULT NULL,
-  `companyname` varchar(191) NOT NULL,
-  `tin` varchar(191) DEFAULT NULL,
-  `contact_no` varchar(191) DEFAULT NULL,
-  `email` varchar(191) DEFAULT NULL,
-  `address` varchar(191) DEFAULT NULL,
-  `region` varchar(191) DEFAULT NULL,
-  `province` varchar(191) DEFAULT NULL,
-  `city` varchar(191) DEFAULT NULL,
-  `brgy` varchar(191) DEFAULT NULL,
-  `subdivision` varchar(191) DEFAULT NULL,
-  `latitude` varchar(191) DEFAULT NULL,
-  `longitude` varchar(191) DEFAULT NULL,
+DROP TABLE IF EXISTS `customers`;
+CREATE TABLE IF NOT EXISTS `customers` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `distributor` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `branch_code` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `lastname` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `firstname` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `middlename` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `companyname` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tin` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `contact_no` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `region` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `province` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `city` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `brgy` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `subdivision` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `latitude` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `longitude` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `customers_branch_code_index` (`branch_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=399 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `customers`
@@ -656,7 +709,7 @@ INSERT INTO `customers` (`id`, `distributor`, `branch_code`, `lastname`, `firstn
 (174, 'n/a', 'EFTO-TAR', 'Chua', 'Gemma Aurora', 'D.', 'GEMMA\'S BAKESHOP & GROCERY', 'N/A', '09189395401', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'City of Batac', 'Ablan Pob.', NULL, NULL, NULL, '2024-06-18 00:06:02', '2024-06-18 00:06:02'),
 (175, 'n/a', 'EFTO-TAR', 'Co', 'Erlinda', 'S.', 'ESC Merchandising', '936944294', '09565317037', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'City of Batac', 'Ablan Pob.', NULL, NULL, NULL, '2024-06-18 00:08:06', '2024-06-18 00:08:06'),
 (176, 'n/a', 'EFTO-TAR', 'Alvarez', 'John Stephen', 'N/A', 'N/A', 'N/A', '09214772431', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'Pasuquin', 'Poblacion 1', NULL, NULL, NULL, '2024-06-18 00:10:13', '2024-06-18 00:10:13'),
-(177, 'n/a', 'EFTO-TAR', 'Aguilar', 'Lorna', 'B.', 'Lorna Flowershop', 'N/A', '09171269885', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'San Nicolas', 'San Francisco ', NULL, NULL, NULL, '2024-06-18 00:13:41', '2024-06-18 00:13:41'),
+(177, 'n/a', 'EFTO-TAR', 'Aguilar', 'Lorna', 'B.', 'Lorna Flowershop', 'N/A', '09171269885', NULL, NULL, 'Region I (Ilocos Region)', 'Ilocos Norte', 'San Nicolas', 'San Francisco', NULL, NULL, NULL, '2024-06-18 00:13:41', '2024-07-05 23:11:32'),
 (178, 'n/a', 'EFTO-CAG', 'Mamba', 'Mary Corinne', 'P', 'KC\'s Twenty Four-7even Convenient Store', '917819057', '09159476772', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuao', 'Poblacion I', NULL, NULL, NULL, '2024-06-18 00:16:10', '2024-06-18 00:16:10'),
 (179, 'n/a', 'EFTO-CAG', 'Mamba', 'Mary Corinne', 'P', 'KC\'s Twenty Four-7even Convenient Store', '917819057', '09159476772', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuao', 'Poblacion I', NULL, NULL, NULL, '2024-06-18 00:17:55', '2024-06-18 00:17:55'),
 (180, 'n/a', 'EFTO-CAG', 'Maribay', 'Maribel', 'B', 'M. B. MARIBAY STORE', '919978961', '09753079166', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Camasi', NULL, NULL, NULL, '2024-06-18 00:19:31', '2024-06-18 00:19:31'),
@@ -867,7 +920,17 @@ INSERT INTO `customers` (`id`, `distributor`, `branch_code`, `lastname`, `firstn
 (385, 'n/a', 'EFTO-TAR', 'Lopez', 'Yolly', 'N/A', 'CLASS 88- ALPHA Store', 'N/A', '09669532431', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'Abra', 'Bucloc', 'Bangbangcag', NULL, NULL, NULL, '2024-06-26 21:18:05', '2024-06-26 21:18:05'),
 (386, 'n/a', 'EFTO-TAR', 'Ayomen', 'Veronica', 'N.', 'Park N\' Shop Grocery Store', 'N/A', '09091446637', NULL, NULL, 'Region I (Ilocos Region)', 'La Union', 'Rosario', 'Udiao', NULL, NULL, NULL, '2024-06-27 17:07:50', '2024-06-27 17:07:50'),
 (387, 'n/a', 'EFTO-CAG', 'Agcaoili', 'Shirly', NULL, 'GRAXIA\'S STORE', '09675908088', NULL, NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Pamplona', NULL, NULL, NULL, NULL, '2024-06-27 21:43:05', '2024-06-27 21:43:05'),
-(388, 'n/a', 'EFTO-CAG', 'Comia', 'Jofren', 'D', 'EOLF FOOD TRADING OPC', NULL, '09171661609', NULL, NULL, 'Region II (Cagayan Valley)', 'Isabela', 'Mallig', NULL, NULL, NULL, NULL, '2024-06-28 00:43:51', '2024-06-28 00:43:51');
+(388, 'n/a', 'EFTO-CAG', 'Comia', 'Jofren', 'D', 'EOLF FOOD TRADING OPC', NULL, '09171661609', NULL, NULL, 'Region II (Cagayan Valley)', 'Isabela', 'Mallig', NULL, NULL, NULL, NULL, '2024-06-28 00:43:51', '2024-06-28 00:43:51'),
+(389, 'n/a', 'EFTO-CAG', 'Dumallag', 'Anthony', 'T', '3A-C SARI-SARI STORE', NULL, '09605827933', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Dodan', 'Zone 4', NULL, NULL, '2024-06-28 21:54:59', '2024-06-28 21:54:59'),
+(390, 'n/a', 'EFTO-CAG', 'Galicia', 'Vanessa', NULL, 'SNACKVILLE FOOD AND BEVERAGE TRADING', NULL, '09171198144/09358003573', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'kalinga', 'Rizal', 'Bulanao', 'Hidalgo Bldg. Provincial Road Cor Ancheta St.', NULL, NULL, '2024-06-28 21:56:52', '2024-06-28 21:56:52'),
+(391, 'n/a', 'EFTO-CAG', 'Sibal', 'Michelle', NULL, 'JB\'S SARI-SARI STORE', NULL, '09563482114', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Libag Norte', NULL, NULL, NULL, '2024-06-28 21:58:36', '2024-06-28 21:58:36'),
+(392, 'n/a', 'EFTO-CAG', 'Mariani', 'Manuel', NULL, 'n/a', NULL, '09561267896', NULL, NULL, 'Cordillera Administrative Region (CAR)', 'kalinga', 'Rizal', 'Bulanao', 'Purok 6', NULL, NULL, '2024-06-28 22:02:13', '2024-06-28 22:02:13'),
+(393, 'n/a', 'EFTO-CAG', 'Reyes', 'Planeta Reina', 'R.', 'BGR\'S STORE', NULL, '09952209708', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caggay', 'Maharlika Highway', NULL, NULL, '2024-06-28 22:05:00', '2024-06-28 22:05:00'),
+(394, 'n/a', 'EFTO-CAG', 'Riguis', 'Melony', 'G.', 'CATH & XYLA\'S PANCITERIA', NULL, '09771339798', NULL, NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Piat', 'Maguilling', 'Zone 1', NULL, NULL, '2024-06-28 22:08:02', '2024-06-28 22:08:02'),
+(395, 'n/a', 'EFTO-TAR', 'Lomibao', 'Jeffrey', 'G', 'POPOY CONVENIENCE STORE', NULL, '09685897110', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-07-03 22:55:40', '2024-07-03 22:55:40'),
+(396, 'n/a', 'EFTO-TAR', 'Fiesta', 'Jake', 'M', 'ISKOMPYUTER INTERNET CAFE', NULL, '09947957183', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-07-03 22:58:16', '2024-07-03 22:58:16'),
+(397, 'n/a', 'EFTO-TAR', 'Comia', 'Jofren', 'D.', 'Depot Tarlac', 'N/A', '09171661609', NULL, NULL, 'Region III (Central Luzon)', 'Tarlac', 'San Manuel', 'San Miguel', NULL, NULL, NULL, '2024-07-05 21:19:34', '2024-07-05 21:19:34'),
+(398, 'n/a', 'EFTO-CAG', 'Domingo', 'Jenny Cris', 'A', 'FGD VARIETY STORE', NULL, '09055600600', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-07-10 21:08:53', '2024-07-10 21:08:53');
 
 -- --------------------------------------------------------
 
@@ -875,10 +938,12 @@ INSERT INTO `customers` (`id`, `distributor`, `branch_code`, `lastname`, `firstn
 -- Table structure for table `deliveries`
 --
 
-CREATE TABLE `deliveries` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `deliveries`;
+CREATE TABLE IF NOT EXISTS `deliveries` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -887,27 +952,44 @@ CREATE TABLE `deliveries` (
 -- Table structure for table `delivery_purchase_receipts`
 --
 
-CREATE TABLE `delivery_purchase_receipts` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `branch_code` varchar(191) NOT NULL,
-  `dr_no` varchar(191) NOT NULL,
+DROP TABLE IF EXISTS `delivery_purchase_receipts`;
+CREATE TABLE IF NOT EXISTS `delivery_purchase_receipts` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `branch_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `dr_no` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `issue_date` date NOT NULL,
-  `status` varchar(191) NOT NULL DEFAULT 'Encoding',
-  `products` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`products`)),
+  `status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Encoding',
+  `products` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `delivery_purchase_receipts_dr_no_unique` (`dr_no`),
+  KEY `delivery_purchase_receipts_branch_code_index` (`branch_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `delivery_purchase_receipts`
+-- Table structure for table `delivery_receipts`
 --
 
-INSERT INTO `delivery_purchase_receipts` (`id`, `branch_code`, `dr_no`, `issue_date`, `status`, `products`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'EFTO-CAG', '123456', '2024-06-04', 'Encoding', NULL, '2024-06-04 19:06:54', '2024-06-04 19:07:48', 1),
-(2, 'EFTO-CAG', '28A-240122', '2024-06-02', 'Encoding', NULL, '2024-06-05 01:29:49', '2024-06-05 01:30:18', 1),
-(3, 'EFTO-CAG', '28A-240123', '2024-06-05', 'Encoding', NULL, '2024-06-06 04:52:42', '2024-06-06 05:10:24', 1),
-(4, 'EFTO-CAG', '28A-240124', '2024-06-11', 'Completed', '[{\"order\":1,\"code\":\"SC_CHO\",\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Chocolate\",\"quantity\":\"56\",\"unit\":\"Bag\\/s\",\"price\":600,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:55:23.903115Z\"},{\"order\":1,\"code\":\"SC_MG\",\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Mango\",\"quantity\":\"56\",\"unit\":\"Bag\\/s\",\"price\":600,\"hold\":\"26\",\"created_at\":\"2024-06-12T03:56:00.220517Z\"},{\"order\":2,\"code\":\"MC_CS\",\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese\",\"quantity\":\"86\",\"unit\":\"Bag\\/s\",\"price\":508,\"hold\":\"50\",\"created_at\":\"2024-06-12T03:56:11.519009Z\"},{\"order\":2,\"code\":\"MC_SS\",\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Strawberry Strawberry\",\"quantity\":\"11\",\"unit\":\"Bag\\/s\",\"price\":508,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:56:24.056700Z\"},{\"order\":2,\"code\":\"MC_UC\",\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Ube with Cheese\",\"quantity\":\"82\",\"unit\":\"Bag\\/s\",\"price\":508,\"hold\":\"25\",\"created_at\":\"2024-06-12T03:56:35.242507Z\"},{\"order\":3,\"code\":\"BC_CNC\",\"description\":\"180ml BIG CUP (6.0-oz) Cookies N\' Cream\",\"quantity\":\"82\",\"unit\":\"Bag\\/s\",\"price\":582,\"hold\":\"40\",\"created_at\":\"2024-06-12T03:56:53.604309Z\"},{\"order\":3,\"code\":\"BC_CS\",\"description\":\"180ml BIG CUP (6.0-oz) Cheese\",\"quantity\":\"86\",\"unit\":\"Bag\\/s\",\"price\":582,\"hold\":\"50\",\"created_at\":\"2024-06-12T03:57:02.979979Z\"},{\"order\":5,\"code\":\"ICB_BUKO\",\"description\":\"ICE BUKO BUKO\",\"quantity\":\"60\",\"unit\":\"Bag\\/s\",\"price\":390,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:57:21.369478Z\"},{\"order\":6,\"code\":\"SPS_CHO\",\"description\":\"SPECIAL STICKS Chocolate\",\"quantity\":\"120\",\"unit\":\"Bag\\/s\",\"price\":625,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:57:31.789933Z\"},{\"order\":7,\"code\":\"ICC_CV\",\"description\":\"ICE CREAM CONES Chocovanilla\",\"quantity\":\"132\",\"unit\":\"Bag\\/s\",\"price\":468,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:57:42.383205Z\"},{\"order\":8,\"code\":\"PT_BM\",\"description\":\"PINT Buko Melon\",\"quantity\":\"228\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:57:52.795238Z\"},{\"order\":8,\"code\":\"PT_BP\",\"description\":\"PINT Buko Pandan\",\"quantity\":\"63\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:58:13.711407Z\"},{\"order\":8,\"code\":\"PT_CHO\",\"description\":\"PINT Chocolate\",\"quantity\":\"228\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:58:27.035636Z\"},{\"order\":8,\"code\":\"PT_CV\",\"description\":\"PINT Chocovanilla\",\"quantity\":\"228\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:58:39.198527Z\"},{\"order\":8,\"code\":\"PT_FS\",\"description\":\"PINT Fruit Salad\",\"quantity\":\"228\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:58:51.203761Z\"},{\"order\":8,\"code\":\"PT_MAL\",\"description\":\"PINT Mallows N\' Chocolate\",\"quantity\":\"37\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:59:13.183480Z\"},{\"order\":2,\"code\":\"MC_MRB\",\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Choco Marble\",\"quantity\":\"25\",\"unit\":\"Bag\\/s\",\"price\":508,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:59:38.852118Z\"},{\"order\":8,\"code\":\"PT_RR\",\"description\":\"PINT Rocky Road\",\"quantity\":\"228\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T03:59:54.809425Z\"},{\"order\":8,\"code\":\"PT_UBE\",\"description\":\"PINT Ube\",\"quantity\":\"228\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:00:07.337592Z\"},{\"order\":8,\"code\":\"PT_UC\",\"description\":\"PINT Ube with Cheese\",\"quantity\":\"228\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:00:17.738692Z\"},{\"order\":8,\"code\":\"PT_VNL\",\"description\":\"PINT Vanilla\",\"quantity\":\"52\",\"unit\":\"Pc\\/s\",\"price\":48,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:00:31.623606Z\"},{\"order\":9,\"code\":\"1L_CHO\",\"description\":\"1 LITER Chocolate\",\"quantity\":\"288\",\"unit\":\"Pc\\/s\",\"price\":97,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:00:43.247713Z\"},{\"order\":9,\"code\":\"1L_CV\",\"description\":\"1 LITER Chocovanilla\",\"quantity\":\"432\",\"unit\":\"Pc\\/s\",\"price\":97,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:00:53.689249Z\"},{\"order\":9,\"code\":\"1L_FS\",\"description\":\"1 LITER Fruit Salad\",\"quantity\":\"432\",\"unit\":\"Pc\\/s\",\"price\":97,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:01:29.375484Z\"},{\"order\":10,\"code\":\"1.7L_CNC\",\"description\":\"1.7 LITER Cookies N\' Cream\",\"quantity\":\"210\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:02:50.665022Z\"},{\"order\":10,\"code\":\"1.7L_FS\",\"description\":\"1.7 LITER Fruit Salad\",\"quantity\":\"210\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:03:00.079187Z\"},{\"order\":10,\"code\":\"1.7L_MAL\",\"description\":\"1.7 LITER Mallows N\' Chocolate\",\"quantity\":\"105\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:03:09.800418Z\"},{\"order\":10,\"code\":\"1.7L_MOC\",\"description\":\"1.7 LITER Coffee Mocha Fudge\",\"quantity\":\"105\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:03:20.886595Z\"},{\"order\":10,\"code\":\"1.7L_MRB\",\"description\":\"1.7 LITER Choco Marble\",\"quantity\":\"31\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:03:32.812740Z\"},{\"order\":10,\"code\":\"1.7L_RR\",\"description\":\"1.7 LITER Rocky Road\",\"quantity\":\"211\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:03:43.922280Z\"},{\"order\":10,\"code\":\"1.7L_SS\",\"description\":\"1.7 LITER Strawberry Strawberry\",\"quantity\":\"105\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:03:54.868036Z\"},{\"order\":10,\"code\":\"1.7L_UC\",\"description\":\"1.7 LITER Ube with Cheese\",\"quantity\":\"210\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:04:06.449631Z\"},{\"order\":11,\"code\":\"HG_BM\",\"description\":\"HALF GALLON (1.89L) Buko Melon\",\"quantity\":\"180\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:04:16.296710Z\"},{\"order\":11,\"code\":\"HG_CF\",\"description\":\"HALF GALLON (1.89L) Chocofi\",\"quantity\":\"90\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:04:25.925986Z\"},{\"order\":11,\"code\":\"HG_CHO\",\"description\":\"HALF GALLON (1.89L) Chocolate\",\"quantity\":\"90\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:04:36.034210Z\"},{\"order\":11,\"code\":\"HG_CV\",\"description\":\"HALF GALLON (1.89L) Chocovanilla\",\"quantity\":\"180\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:04:45.266285Z\"},{\"order\":11,\"code\":\"HG_UBE\",\"description\":\"HALF GALLON (1.89L) Ube\",\"quantity\":\"180\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:04:55.131701Z\"},{\"order\":11,\"code\":\"HG_VNL\",\"description\":\"HALF GALLON (1.89L) Vanilla\",\"quantity\":\"180\",\"unit\":\"Pc\\/s\",\"price\":170,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:05:03.551282Z\"},{\"order\":12,\"code\":\"3.6L_FS\",\"description\":\"3.6 LITER Fruit Salad\",\"quantity\":\"144\",\"unit\":\"Pc\\/s\",\"price\":318,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:05:15.618527Z\"},{\"order\":12,\"code\":\"3.6L_MAL\",\"description\":\"3.6 LITER Mallows N\' Chocolate\",\"quantity\":\"96\",\"unit\":\"Pc\\/s\",\"price\":318,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:05:24.969300Z\"},{\"order\":12,\"code\":\"3.6L_VNL\",\"description\":\"3.6 LITER Vanilla\",\"quantity\":\"144\",\"unit\":\"Pc\\/s\",\"price\":318,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:05:34.101026Z\"},{\"order\":13,\"code\":\"N3.6L_CS\",\"description\":\"No Label 3.6L Cheese\",\"quantity\":\"87\",\"unit\":\"Pc\\/s\",\"price\":318,\"hold\":\"0\",\"created_at\":\"2024-06-12T04:05:44.753354Z\"}]', '2024-06-12 18:55:07', '2024-06-12 19:07:23', 2);
+DROP TABLE IF EXISTS `delivery_receipts`;
+CREATE TABLE IF NOT EXISTS `delivery_receipts` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `date` date NOT NULL,
+  `dr_no` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `generated_by` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `total_amount` decimal(10,2) DEFAULT NULL,
+  `bad_orders` decimal(10,2) DEFAULT NULL,
+  `discount` decimal(10,2) DEFAULT NULL,
+  `amount_due` decimal(10,2) DEFAULT NULL,
+  `amount_paid` decimal(10,2) DEFAULT NULL,
+  `balance` decimal(10,2) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -915,17 +997,19 @@ INSERT INTO `delivery_purchase_receipts` (`id`, `branch_code`, `dr_no`, `issue_d
 -- Table structure for table `drivers`
 --
 
-CREATE TABLE `drivers` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `address` varchar(191) NOT NULL,
-  `contact` varchar(191) NOT NULL,
-  `status` varchar(191) NOT NULL,
-  `designation` enum('Driver','Salesman','','') DEFAULT NULL,
-  `default_price_level` varchar(191) DEFAULT NULL,
+DROP TABLE IF EXISTS `drivers`;
+CREATE TABLE IF NOT EXISTS `drivers` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `address` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `contact` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `designation` enum('Driver','Salesman','','') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `default_price_level` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `drivers`
@@ -944,17 +1028,19 @@ INSERT INTO `drivers` (`id`, `name`, `address`, `contact`, `status`, `designatio
 -- Table structure for table `employees`
 --
 
-CREATE TABLE `employees` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `last_name` varchar(191) NOT NULL,
-  `first_name` varchar(191) NOT NULL,
-  `email` varchar(191) NOT NULL,
-  `address` varchar(191) NOT NULL,
-  `contact_no` varchar(191) NOT NULL,
-  `position` varchar(191) NOT NULL,
-  `status` varchar(191) NOT NULL DEFAULT 'active',
+DROP TABLE IF EXISTS `employees`;
+CREATE TABLE IF NOT EXISTS `employees` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `last_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `first_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `address` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `contact_no` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `position` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -963,23 +1049,25 @@ CREATE TABLE `employees` (
 -- Table structure for table `equipment`
 --
 
-CREATE TABLE `equipment` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `ownership` varchar(191) NOT NULL,
-  `type` varchar(191) NOT NULL,
-  `brand` varchar(191) NOT NULL,
-  `price` decimal(10,2) DEFAULT 0.00,
-  `serial_no` varchar(191) DEFAULT NULL,
-  `code` varchar(191) DEFAULT NULL,
-  `distributor` varchar(191) DEFAULT NULL,
+DROP TABLE IF EXISTS `equipment`;
+CREATE TABLE IF NOT EXISTS `equipment` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ownership` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `brand` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `price` decimal(10,2) DEFAULT '0.00',
+  `serial_no` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `code` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `distributor` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `date_delivered` date DEFAULT NULL,
   `date_purchased` date DEFAULT NULL,
-  `status` varchar(191) NOT NULL DEFAULT 'available',
-  `model` varchar(30) DEFAULT NULL,
+  `status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'available',
+  `model` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `branch_code` varchar(191) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `branch_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=539 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `equipment`
@@ -989,19 +1077,19 @@ INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no
 (1, 'Not-Owned', 'Chest Freezer', 'CONDURA', 42000.00, 'ABC123', '123456', NULL, NULL, NULL, 'added', NULL, '2024-06-04 18:57:43', '2024-06-04 19:03:32', 'EFTO-CAG'),
 (2, 'Owned', 'Hard Top', 'HINO', 13400.00, 'H2022-047153', '8475.2021', NULL, '2022-05-04', '2022-05-04', 'added', NULL, '2024-06-05 01:18:25', '2024-06-28 02:41:04', 'EFTO-CAG'),
 (3, 'Owned', 'Hard Top', 'HINO', 13400.00, 'H2022-047154', '8476.2021', NULL, '2022-05-04', '2022-05-04', 'added', NULL, '2024-06-05 01:19:00', '2024-06-28 02:41:04', 'EFTO-CAG'),
-(4, 'Owned', 'Glass Top', 'LIEBHERR', 26800.00, 'L61.420.558.7', '8471.2021', NULL, '2022-05-04', '2022-05-04', 'added', NULL, '2024-06-05 01:19:43', '2024-06-28 02:41:04', 'EFTO-CAG'),
+(4, 'Owned', 'Glass Top', 'LIEBHERR', 26800.00, 'L61.420.558.7', '8471.2021', NULL, NULL, '2022-05-04', 'added', 'EFE-3002', '2024-06-05 01:19:43', '2024-06-28 22:28:18', 'EFTO-CAG'),
 (5, 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047164', '8486.2021', NULL, '2022-06-05', '2021-02-12', 'added', 'BD-650', '2024-06-07 18:45:21', '2024-06-14 15:01:24', 'EFTO-CAG'),
 (6, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.989.074.3', '4394.110818', NULL, '2022-04-05', '2018-03-04', 'added', 'EFE-3802', '2024-06-07 18:48:01', '2024-06-07 19:13:20', 'EFTO-CAG'),
 (7, 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047155', '8477.2021', NULL, '2022-05-01', '2022-04-01', 'added', 'BD-650', '2024-06-07 19:07:45', '2024-06-28 02:41:04', 'EFTO-CAG'),
 (8, 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047156', '8478.2021', NULL, '2022-05-01', '2022-04-01', 'added', 'BD-650', '2024-06-07 19:09:04', '2024-06-28 02:41:04', 'EFTO-CAG'),
 (9, 'Owned', 'Hard Top', 'HIRON', 15600.00, 'H2022-047157', '8479.2021', NULL, '2022-05-01', '2022-04-01', 'added', 'BD-650', '2024-06-07 19:10:04', '2024-06-28 02:41:04', 'EFTO-CAG'),
-(10, 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.558.7', '8471.2021', NULL, '2022-05-05', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:12:02', '2024-06-07 19:12:02', 'EFTO-CAG'),
+(10, 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.558.7', '8471.2021', NULL, '2022-05-05', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:12:02', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (11, 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.572.3', '8472.2021', NULL, '2023-11-04', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:13:18', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (12, 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.53.1', '8473.2021', NULL, '2022-07-07', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:14:34', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (13, 'Owned', 'Hard Top', 'HIRON', 15600.00, '420.565.5', '8474.2021', NULL, '2022-07-07', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:15:47', '2024-06-16 03:36:09', 'EFTO-CAG'),
 (14, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.271.344.2', '6972.2020', NULL, '2022-05-01', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:21:57', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (15, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61271.379.4', '6964.2022', NULL, '2024-03-19', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:23:19', '2024-06-28 02:42:19', 'EFTO-CAG'),
-(16, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L661.506.412.1', '9681.2020', NULL, '2023-09-21', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:24:38', '2024-06-07 19:24:38', 'EFTO-CAG'),
+(16, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L661.506.412.1', '9681.2020', NULL, '2023-09-21', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:24:38', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (17, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.390.9', '8916.2022', NULL, '2022-09-05', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:26:32', '2024-06-14 20:57:46', 'EFTO-CAG'),
 (18, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.343.5', '8917.2022', NULL, '2022-09-05', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:28:03', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (19, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.533.3', '8918.2022', NULL, '2022-09-10', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:29:26', '2024-06-19 20:14:00', 'EFTO-CAG'),
@@ -1011,7 +1099,7 @@ INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no
 (23, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.422.78', '8922.2022', NULL, '2022-11-03', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:38:48', '2024-06-19 20:07:10', 'EFTO-CAG'),
 (24, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.409.8', '8923.2022', NULL, '2022-12-08', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:39:38', '2024-06-14 20:01:48', 'EFTO-CAG'),
 (25, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.424.1', '8924.2022', NULL, '2023-02-06', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:40:41', '2024-06-14 20:06:58', 'EFTO-CAG'),
-(26, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.418.0', '8925.2022', NULL, '2023-02-08', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 19:41:28', '2024-06-07 19:41:28', 'EFTO-CAG'),
+(26, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.418.0', '8925.2022', NULL, '2023-02-08', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:41:28', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (27, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.407.4', '8926.2022', NULL, '2024-03-04', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 19:42:23', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (28, 'Owned', 'Hard Top', 'LEIBHERR', 12250.00, 'L61.493.428.9', '8927.2022', NULL, '2023-03-01', '2024-04-01', 'added', 'EFE-3002', '2024-06-07 21:04:02', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (29, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.493.337', '8928.2022', NULL, '2023-03-07', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:05:21', '2024-06-28 02:42:19', 'EFTO-CAG'),
@@ -1028,23 +1116,23 @@ INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no
 (40, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.412.1', '9681.2022', NULL, '2023-09-21', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:32:50', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (41, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.241.7', '9682.2022', NULL, '2024-01-15', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:34:07', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (42, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.296.3', '9940.2022', NULL, '2024-01-29', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:35:16', '2024-06-16 02:01:11', 'EFTO-CAG'),
-(43, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.179.3', '9941.2022', NULL, '2024-01-29', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:36:03', '2024-06-07 21:36:03', 'EFTO-CAG'),
+(43, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.179.3', '9941.2022', NULL, '2024-01-29', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:36:03', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (44, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.209.7', '9942.2022', NULL, '2024-02-14', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:36:56', '2024-06-19 20:17:43', 'EFTO-CAG'),
 (45, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.174.8', '9943.2022', NULL, '2024-02-14', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:37:46', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (46, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.205.9', '9944.2022', NULL, '2024-04-05', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:39:38', '2024-06-14 17:59:07', 'EFTO-CAG'),
 (47, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.169.4', '9945.2022', NULL, '2024-04-08', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:40:33', '2024-06-14 18:02:53', 'EFTO-CAG'),
 (48, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.366.2', '10400.2022', NULL, '2024-04-25', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:41:33', '2024-06-28 02:42:19', 'EFTO-CAG'),
-(49, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.151.9', '10401.2022', NULL, '2024-04-26', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:42:27', '2024-06-07 21:42:27', 'EFTO-CAG'),
+(49, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.151.9', '10401.2022', NULL, '2024-04-26', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:42:27', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (50, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.341.9', '10402.2022', NULL, '2024-05-01', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:43:52', '2024-06-28 02:42:19', 'EFTO-CAG'),
-(51, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.589.0', '10403.2022', NULL, '2024-06-07', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:44:42', '2024-06-07 21:44:42', 'EFTO-CAG'),
-(52, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.357', '10404.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:46:30', '2024-06-07 21:46:30', 'EFTO-CAG'),
-(53, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.344.0', '10405.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:47:22', '2024-06-07 21:47:22', 'EFTO-CAG'),
-(54, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.365.5', '10406.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:48:47', '2024-06-07 21:48:47', 'EFTO-CAG'),
-(55, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'l61.631.349.5', '10407.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:52:15', '2024-06-07 21:52:15', 'EFTO-CAG'),
-(56, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.625.5', '10408.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:53:06', '2024-06-07 21:53:06', 'EFTO-CAG'),
-(57, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.350.1', '10409.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:53:45', '2024-06-07 21:53:45', 'EFTO-CAG'),
-(58, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.352.5', '10410.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:54:35', '2024-06-07 21:54:35', 'EFTO-CAG'),
-(59, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.342.5', '10411.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3002', '2024-06-07 21:55:31', '2024-06-07 21:55:31', 'EFTO-CAG'),
+(51, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.589.0', '10403.2022', NULL, '2024-06-07', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:44:42', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(52, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.357', '10404.2022', NULL, '2024-04-09', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:46:30', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(53, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.344.0', '10405.2022', NULL, '2024-04-09', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:47:22', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(54, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.365.5', '10406.2022', NULL, '2024-04-09', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:48:47', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(55, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'l61.631.349.5', '10407.2022', NULL, '2024-04-09', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:52:15', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(56, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.506.625.5', '10408.2022', NULL, '2024-04-09', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:53:06', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(57, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.350.1', '10409.2022', NULL, '2024-04-09', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:53:45', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(58, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.352.5', '10410.2022', NULL, '2024-04-09', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:54:35', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(59, 'Owned', 'Glass Top', 'LEIBHERR', 12250.00, 'L61.631.342.5', '10411.2022', NULL, '2024-04-09', '2022-04-01', 'added', 'EFE-3002', '2024-06-07 21:55:31', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (60, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.762.7', '8256.2021', NULL, '2022-05-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-07 22:14:22', '2024-06-16 02:12:33', 'EFTO-CAG'),
 (61, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.763.4', '8257.2021', NULL, '2022-05-02', '2021-03-01', 'added', 'EFE-3802', '2024-06-07 22:17:10', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (62, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.764.1', '8258.2021', NULL, '2022-05-20', '2021-03-01', 'added', 'EFE-3802', '2024-06-07 22:18:13', '2024-06-14 21:01:24', 'EFTO-CAG'),
@@ -1054,31 +1142,31 @@ INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no
 (66, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.401.772.6', '8266.2021', NULL, '2024-04-05', '2021-03-01', 'added', 'EFE-3802', '2024-06-07 22:27:12', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (67, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.771.9', '8265.2021', NULL, '2022-05-31', '2021-03-01', 'added', 'EFE-3002', '2024-06-07 22:31:58', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (68, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.773.3', '8267.2021', NULL, '2022-06-08', '2021-03-01', 'added', 'EFE-3802', '2024-06-07 22:33:22', '2024-06-14 16:31:11', 'EFTO-CAG'),
-(69, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.774.0', '8268.2021', NULL, '2022-06-08', '2021-03-01', 'available', 'EFE-3802', '2024-06-07 22:34:49', '2024-06-07 22:34:49', 'EFTO-CAG'),
+(69, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.774.0', '8268.2021', NULL, '2022-06-08', '2021-03-01', 'added', 'EFE-3802', '2024-06-07 22:34:49', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (70, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.407.775.7', '8269.2021', NULL, '2022-06-08', '2021-03-01', 'added', 'EFE-3802', '2024-06-07 22:37:21', '2024-06-14 19:45:59', 'EFTO-CAG'),
 (71, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.491.848.7', '9327.2022', NULL, '2023-03-17', '2021-03-01', 'added', 'EFE-3802', '2024-06-07 22:39:15', '2024-06-14 21:34:16', 'EFTO-CAG'),
 (72, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.505.652.2', '9461.2022', NULL, '2022-03-31', '2021-03-01', 'added', 'EFE-3802', '2024-06-07 22:41:09', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (73, 'Owned', 'Glass Top', 'LEIBHERR', 13400.00, 'L61.505.665.2', '9462.2022', NULL, '2023-04-02', '2021-03-01', 'added', 'EFE-3802', '2024-06-07 22:43:18', '2024-06-28 02:42:19', 'EFTO-CAG'),
-(74, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.767.2', '8261.2021', NULL, '2022-04-05', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:20:17', '2024-06-11 17:20:17', 'EFTO-CAG'),
+(74, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.767.2', '8261.2021', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:20:17', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (75, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, '164.407.770.2', '8264.2021', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:21:22', '2024-06-19 20:16:49', 'EFTO-CAG'),
 (76, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.493.799.0', '8863.2022', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:23:36', '2024-06-14 19:59:24', 'EFTO-CAG'),
-(77, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.493.800.3', '8864.2022', NULL, '2022-04-05', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:24:42', '2024-06-11 17:24:42', 'EFTO-CAG'),
+(77, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.493.800.3', '8864.2022', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:24:42', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (78, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.492.225.5', '8865.2022', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:25:38', '2024-06-16 03:57:41', 'EFTO-CAG'),
 (79, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.492.234.7', '8866.2022', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:26:38', '2024-06-14 14:57:46', 'EFTO-CAG'),
 (80, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.492.241.5', '8867.2022', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:30:30', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (81, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.492.222.4', '8868.2022', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:31:30', '2024-06-14 16:11:10', 'EFTO-CAG'),
 (82, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.493.807.2', '8869.2022', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:32:17', '2024-06-28 02:42:19', 'EFTO-CAG'),
-(83, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.842.5', '9311.2022', NULL, '2022-04-05', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:33:04', '2024-06-11 17:33:04', 'EFTO-CAG'),
+(83, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.842.5', '9311.2022', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:33:04', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (84, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.870.8', '9312.2022', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:34:01', '2024-06-14 19:51:15', 'EFTO-CAG'),
 (85, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.846.3', '9313.2022', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:35:13', '2024-06-28 02:42:19', 'EFTO-CAG'),
-(86, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.884.5', '9314.2022', NULL, '2022-04-05', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:35:53', '2024-06-11 17:35:53', 'EFTO-CAG'),
+(86, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.884.5', '9314.2022', NULL, '2022-04-05', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:35:53', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (87, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.493.801.0', '9315.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:39:16', '2024-06-19 20:26:19', 'EFTO-CAG'),
 (88, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.869.2', '9316.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:39:59', '2024-06-14 19:56:23', 'EFTO-CAG'),
 (89, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.868.5', '9317.2022', NULL, '2024-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:40:42', '2024-06-14 14:43:11', 'EFTO-CAG'),
 (90, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.881.4', '9318.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:41:33', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (91, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.853.1', '9319.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:42:18', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (92, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.862.3', '9320.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:42:57', '2024-06-14 18:25:20', 'EFTO-CAG'),
-(93, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.864.7', '9321.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 17:43:44', '2024-06-11 17:43:44', 'EFTO-CAG'),
+(93, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.491.864.7', '9321.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:43:44', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (94, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.493.779.2', '9322.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:44:51', '2024-06-19 20:21:12', 'EFTO-CAG'),
 (95, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.505.658.4', '9460.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:46:08', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (96, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.505.640.9', '9463.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:46:46', '2024-06-28 02:42:19', 'EFTO-CAG'),
@@ -1090,7 +1178,7 @@ INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no
 (102, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.505.357.6', '9469.2022', NULL, '2024-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:53:24', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (103, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.505.639.3', '9470.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:54:01', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (104, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.505.010.0', '9471.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:54:36', '2024-06-28 02:42:19', 'EFTO-CAG'),
-(105, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.201.4', '9793.2022', NULL, '2022-04-02', '2022-03-01', 'Active', 'EFE-3802', '2024-06-11 17:55:11', '2024-06-27 23:49:41', 'EFTO-CAG'),
+(105, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.201.4', '9793.2022', NULL, NULL, '2022-04-02', 'Active', 'EFE-3802', '2024-06-11 17:55:11', '2024-06-28 22:38:04', 'EFTO-CAG'),
 (106, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.192.5', '9794.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:55:52', '2024-06-19 20:26:47', 'EFTO-CAG'),
 (107, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.190.1', '9795.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:56:34', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (108, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.185.7', '9796.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 17:57:10', '2024-06-28 02:42:19', 'EFTO-CAG'),
@@ -1101,20 +1189,20 @@ INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no
 (113, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.197.0', '9803.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 18:01:25', '2024-06-19 20:27:53', 'EFTO-CAG'),
 (114, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.208.3', '9804.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 18:01:59', '2024-06-14 14:46:21', 'EFTO-CAG'),
 (115, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.534.204.5', '9805.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 18:02:33', '2024-06-16 03:27:31', 'EFTO-CAG'),
-(116, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.952.5', '10204.2022', NULL, '2024-01-29', '2022-04-01', 'available', 'EFE-3802', '2024-06-11 18:08:56', '2024-06-11 18:08:56', 'EFTO-CAG'),
+(116, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.952.5', '10204.2022', NULL, '2024-01-29', '2022-04-01', 'added', 'EFE-3802', '2024-06-11 18:08:56', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (117, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.960.0', '10205.2022', NULL, '2024-01-29', '2023-12-23', 'added', 'EFE-3802', '2024-06-11 18:10:25', '2024-06-19 20:27:21', 'EFTO-CAG'),
 (118, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.942.6', '10206.2022', NULL, '2024-01-29', '2023-12-23', 'added', 'EFE-3802', '2024-06-11 18:11:34', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (119, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.945.7', '10207.2022', NULL, '2024-01-29', '2024-12-23', 'added', 'EFE-3802', '2024-06-11 18:12:56', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (120, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.956.3', '10208.2022', NULL, '2024-01-29', '2023-12-23', 'added', 'EFE-3802', '2024-06-11 18:13:46', '2024-06-28 02:42:19', 'EFTO-CAG'),
-(121, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.979.2', '10209.2022', NULL, '2024-01-29', '2023-12-23', 'available', 'EFE-3802', '2024-06-11 18:14:56', '2024-06-11 18:14:56', 'EFTO-CAG'),
+(121, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.979.2', '10209.2022', NULL, '2024-01-29', '2023-12-23', 'added', 'EFE-3802', '2024-06-11 18:14:56', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (122, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.774.3', '10210.2022', NULL, '2024-01-01', '2023-12-23', 'added', 'EFE-3802', '2024-06-11 18:15:44', '2024-06-14 21:04:26', 'EFTO-CAG'),
-(123, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.984.6', '10211.2022', NULL, '2024-01-29', '2024-12-23', 'available', 'EFE-3802', '2024-06-11 18:16:27', '2024-06-11 18:16:27', 'EFTO-CAG'),
+(123, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.596.984.6', '10211.2022', NULL, '2024-01-29', '2024-12-23', 'added', 'EFE-3802', '2024-06-11 18:16:27', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (124, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.633.160.4', '10476.2022', NULL, '2024-04-09', '2022-04-01', 'added', 'EFE-3802', '2024-06-11 18:19:20', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (125, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.633.673.9', '10477.2022', NULL, '2024-04-09', '2022-04-01', 'added', 'EFE-3802', '2024-06-11 18:20:18', '2024-06-16 04:00:24', 'EFTO-CAG'),
 (126, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.633.666.1', '10478.2022', NULL, '2024-04-09', '2022-04-01', 'added', 'EFE-3802', '2024-06-11 18:21:02', '2024-06-16 01:56:32', 'EFTO-CAG'),
-(127, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.633.693.7', '10479.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3802', '2024-06-11 18:21:55', '2024-06-11 18:21:55', 'EFTO-CAG'),
+(127, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.633.693.7', '10479.2022', NULL, '2024-04-09', '2022-04-01', 'added', 'EFE-3802', '2024-06-11 18:21:55', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (128, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.633.678.4', '10480.2022', NULL, '2024-04-09', '2022-04-01', 'added', 'EFE-3802', '2024-06-11 18:23:13', '2024-06-14 21:09:49', 'EFTO-CAG'),
-(129, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.633.663.3', '10481.2022', NULL, '2024-04-09', '2022-04-01', 'available', 'EFE-3802', '2024-06-11 18:23:48', '2024-06-11 18:23:48', 'EFTO-CAG'),
+(129, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.633.663.3', '10481.2022', NULL, '2024-04-09', '2022-04-01', 'added', 'EFE-3802', '2024-06-11 18:23:48', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (130, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.420.517.4', '8312.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 18:26:45', '2024-06-16 04:10:43', 'EFTO-CAG'),
 (131, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.420.523.5', '8313.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 18:27:36', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (132, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.420.511.2', '8314.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 18:28:23', '2024-06-14 20:48:43', 'EFTO-CAG'),
@@ -1129,7 +1217,7 @@ INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no
 (141, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.873.1', '9382.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 19:29:47', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (142, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.299.9', '9383.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 19:30:39', '2024-06-14 15:32:15', 'EFTO-CAG'),
 (143, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.330.9', '9384.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 19:31:41', '2024-06-28 02:42:19', 'EFTO-CAG'),
-(144, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.595.2', '9385.2022', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-4602', '2024-06-11 19:32:18', '2024-06-11 19:32:18', 'EFTO-CAG'),
+(144, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.595.2', '9385.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 19:32:18', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (145, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.597.6', '9697.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 19:32:59', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (146, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.346.0', '9698.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 19:35:48', '2024-06-16 03:39:32', 'EFTO-CAG'),
 (147, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L61.505.854.0', '9699.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 19:36:27', '2024-06-14 18:13:29', 'EFTO-CAG'),
@@ -1166,7 +1254,7 @@ INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no
 (178, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047170', '8492.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'BD-650', '2024-06-11 20:21:37', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (179, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047171', '8493.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'BD-650', '2024-06-11 20:22:17', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (180, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047172', '8494.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'BD-650', '2024-06-11 20:22:47', '2024-06-28 02:42:19', 'EFTO-CAG'),
-(181, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047243', '8528.2021', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 20:23:36', '2024-06-11 20:23:36', 'EFTO-CAG'),
+(181, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047243', '8528.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'BD-650', '2024-06-11 20:23:36', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (182, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047244', '8529.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'BD-650', '2024-06-11 20:24:30', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (183, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047245', '8530.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'BD-650', '2024-06-11 20:25:15', '2024-06-28 02:42:19', 'EFTO-CAG'),
 (184, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2022-047246', '8531.2021', NULL, '2022-04-02', '2022-03-01', 'added', 'BD-650', '2024-06-11 20:25:46', '2024-06-28 02:42:19', 'EFTO-CAG'),
@@ -1184,82 +1272,82 @@ INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no
 (196, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2023-051930', '10618.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'BD-650', '2024-06-11 20:37:02', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (197, 'Owned', 'Hard Top', 'HIRRON', 15600.00, 'H2023-051931', '10619.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'BD-650', '2024-06-11 20:37:53', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (198, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.122.251.1', '0796.101010', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 21:30:12', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(199, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.122.276.4', '0835.102910', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 21:31:06', '2024-06-11 21:31:06', 'EFTO-CAG'),
-(200, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.147.401.9', '0952.032011', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 21:31:52', '2024-06-11 21:31:52', 'EFTO-CAG'),
+(199, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.122.276.4', '0835.102910', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 21:31:06', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(200, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.147.401.9', '0952.032011', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 21:31:52', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (201, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.369.300.5', '2555.060513', NULL, NULL, NULL, 'added', 'EFE-3002', '2024-06-11 21:36:57', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(202, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.603.336.5', 'GHL-603.336.5', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:38:39', '2024-06-11 21:38:39', 'EFTO-CAG'),
+(202, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.603.336.5', 'GHL-603.336.5', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 21:38:39', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (203, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.514.944.9', 'G-0011-120414', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 21:40:52', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (204, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.515.247.0', 'G-0031.17', NULL, NULL, '2022-04-02', 'added', 'EFE-3002', '2024-06-11 21:42:48', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(205, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.603.314.3', 'GHL-009-17', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:44:00', '2024-06-11 21:44:00', 'EFTO-CAG'),
-(206, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.602.315.1', 'GHL-013-17', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:44:39', '2024-06-11 21:44:39', 'EFTO-CAG'),
+(205, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.603.314.3', 'GHL-009-17', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 21:44:00', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(206, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.602.315.1', 'GHL-013-17', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 21:44:39', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (207, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.602.341.0', 'GHL-019-17', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 21:45:55', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (208, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.987.182.7', 'GHL-062-18', NULL, NULL, '2022-04-02', 'added', 'EFE-3002', '2024-06-11 21:46:34', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(209, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.602.806.4', 'GHL-023-17', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:47:23', '2024-06-11 21:47:23', 'EFTO-CAG'),
-(210, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.602.822.4', 'GHL-029-17', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:48:01', '2024-06-11 21:48:01', 'EFTO-CAG'),
-(211, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.603.326.6', 'GHL-032-17', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 21:48:34', '2024-06-11 21:48:34', 'EFTO-CAG'),
+(209, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.602.806.4', 'GHL-023-17', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 21:47:23', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(210, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.602.822.4', 'GHL-029-17', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 21:48:01', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(211, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.603.326.6', 'GHL-032-17', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 21:48:34', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (212, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L60.825.892.6', 'GHL-035-17', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-4602', '2024-06-11 21:49:50', '2024-06-14 14:45:47', 'EFTO-CAG'),
 (213, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.775.258.6', 'GHL-038-17', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 21:59:04', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (214, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.775.292.0', 'GHL-039-17', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:00:14', '2024-06-14 14:58:19', 'EFTO-CAG'),
 (215, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.515.564.8', '3060.022315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:01:07', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(216, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.775.274.6', 'GHL-042-17', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:02:19', '2024-06-11 22:02:19', 'EFTO-CAG'),
+(216, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.775.274.6', 'GHL-042-17', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:02:19', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (217, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.602.243.7', 'GHL-055-18', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:03:09', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (218, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.826.997.7', 'GHL-050-18', NULL, NULL, '2022-04-02', 'added', 'EFE-3002', '2024-06-11 22:04:10', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (219, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.827.005.8', 'GHL-061-18', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:05:03', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (220, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.828.063.7', 'GHL-063-18', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:09:22', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(221, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.828.077.4', 'GHL-068-18', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:10:09', '2024-06-11 22:10:09', 'EFTO-CAG'),
+(221, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.828.077.4', 'GHL-068-18', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:10:09', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (222, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.987.180.3', 'GHL-075-18', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:11:09', '2024-06-14 20:09:37', 'EFTO-CAG'),
-(223, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.986.726.4', 'GHL-076-18', NULL, '2024-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:11:57', '2024-06-11 22:11:57', 'EFTO-CAG'),
-(224, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.514.752.0', 'G-0025.022315', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:12:42', '2024-06-11 22:12:42', 'EFTO-CAG'),
+(223, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.986.726.4', 'GHL-076-18', NULL, '2024-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:11:57', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(224, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.514.752.0', 'G-0025.022315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:12:42', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (225, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.514.957', 'G.0027.022315', NULL, '2022-04-02', '2021-03-01', 'added', 'EFE-3002', '2024-06-11 22:14:23', '2024-06-14 21:58:06', 'EFTO-CAG'),
 (226, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.516.763.4', 'G-0032.022315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:16:09', '2024-06-14 18:06:09', 'EFTO-CAG'),
-(227, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.516.767.2', 'G-0035-022315', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:16:43', '2024-06-11 22:16:43', 'EFTO-CAG'),
+(227, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.516.767.2', 'G-0035-022315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:16:43', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (228, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.371.651.3', 'G-0036.022315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:17:25', '2024-06-19 20:06:13', 'EFTO-CAG'),
-(229, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.502.980.2', 'G-0037.041315', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:18:01', '2024-06-11 22:18:01', 'EFTO-CAG'),
+(229, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.502.980.2', 'G-0037.041315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:18:01', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (230, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.516.776.4', 'G-0042.041315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:18:37', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (231, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.516.759.7', 'G-0045.041315', NULL, NULL, '2022-04-02', 'added', 'EFE-3002', '2024-06-11 22:19:23', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (232, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.516.774.0', 'G-0046.041315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:20:08', '2024-06-14 16:09:05', 'EFTO-CAG'),
-(233, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.602.381.6', 'G-0053.020117', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:20:43', '2024-06-11 22:20:43', 'EFTO-CAG'),
-(234, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.808.554.6', 'G-0057.022017', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:21:21', '2024-06-11 22:21:21', 'EFTO-CAG'),
+(233, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.602.381.6', 'G-0053.020117', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:20:43', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(234, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.808.554.6', 'G-0057.022017', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:21:21', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (235, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.808.555.3', 'G-0058.022017', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:21:53', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (236, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.192.403.3', '2100.022812', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 22:22:31', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (237, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.260.269.35', '2233.061912', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:23:14', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(238, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.263.884.7', '2246.062012', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:23:55', '2024-06-11 22:23:55', 'EFTO-CAG'),
+(238, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.263.884.7', '2246.062012', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:23:55', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (239, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.353.403.2', '2333.021913', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:24:41', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(240, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.353.477.3', '2368.022713', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:25:31', '2024-06-11 22:25:31', 'EFTO-CAG'),
-(241, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.370.402.2', '2485.050213', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:26:09', '2024-06-11 22:26:09', 'EFTO-CAG'),
-(242, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.570.405.3', '2490.050213', NULL, '2022-04-02', '2021-03-01', 'available', 'EFE-3002', '2024-06-11 22:26:43', '2024-06-11 22:26:43', 'EFTO-CAG'),
-(243, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.369.3791', '2548.060513', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:27:15', '2024-06-11 22:27:15', 'EFTO-CAG'),
-(244, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.364621.6', '2575.071713', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:28:01', '2024-06-11 22:28:01', 'EFTO-CAG'),
+(240, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.353.477.3', '2368.022713', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:25:31', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(241, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.370.402.2', '2485.050213', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:26:09', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(242, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.570.405.3', '2490.050213', NULL, '2022-04-02', '2021-03-01', 'added', 'EFE-3002', '2024-06-11 22:26:43', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(243, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.369.3791', '2548.060513', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:27:15', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(244, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.364621.6', '2575.071713', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:28:01', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (245, 'Owned', 'Glass Top', 'HIRRON', 17525.00, 'H2013-017420', '2646.111613', NULL, '2022-04-02', '2022-03-01', 'added', 'BD-650', '2024-06-11 22:29:59', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(246, 'Owned', 'Hard Top', 'HIRRON', 17525.00, 'H2014-018393', '2708.012114', NULL, '2022-04-02', '2022-03-01', 'available', 'BD-650', '2024-06-11 22:31:02', '2024-06-11 22:31:02', 'EFTO-CAG'),
+(246, 'Owned', 'Hard Top', 'HIRRON', 17525.00, 'H2014-018393', '2708.012114', NULL, '2022-04-02', '2022-03-01', 'added', 'BD-650', '2024-06-11 22:31:02', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (247, 'Owned', 'Glass Top', 'HIRRON', 12355.00, 'H2014-018405', '2732.012814', NULL, '2022-04-02', '2022-03-01', 'added', 'SD-350', '2024-06-11 22:33:03', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(248, 'Owned', 'Glass Top', 'HIRRON', 12355.00, 'H2014-018837', '2849.042814', NULL, '2022-04-02', '2022-03-01', 'available', 'SD-350', '2024-06-11 22:34:18', '2024-06-11 22:34:18', 'EFTO-CAG'),
+(248, 'Owned', 'Glass Top', 'HIRRON', 12355.00, 'H2014-018837', '2849.042814', NULL, '2022-04-02', '2022-03-01', 'added', 'SD-350', '2024-06-11 22:34:18', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (249, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.515.233.3', '3004.120414', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 22:34:59', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (250, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.487.390.1', '3005.120414', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 22:35:44', '2024-06-14 16:35:39', 'EFTO-CAG'),
 (251, 'Owned', 'Glass Top', 'LIEBHERR', 12355.00, 'H2014-020226', '3009.120514', NULL, NULL, '2022-04-02', 'added', 'SD-350', '2024-06-11 22:36:35', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(252, 'Owned', 'Glass Top', 'LIEBHERR', 12355.00, 'H2014-020227', '309-120514', NULL, '2022-04-02', '2022-03-01', 'available', 'SD-350', '2024-06-11 22:38:00', '2024-06-11 22:38:00', 'EFTO-CAG'),
-(253, 'Owned', 'Glass Top', 'LIEBHERR', 12355.00, 'H2014-020228', '3010.120514', NULL, '2022-04-02', '2022-03-01', 'available', 'SD-350', '2024-06-11 22:38:32', '2024-06-11 22:38:32', 'EFTO-CAG'),
+(252, 'Owned', 'Glass Top', 'LIEBHERR', 12355.00, 'H2014-020227', '309-120514', NULL, '2022-04-02', '2022-03-01', 'added', 'SD-350', '2024-06-11 22:38:00', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(253, 'Owned', 'Glass Top', 'LIEBHERR', 12355.00, 'H2014-020228', '3010.120514', NULL, '2022-04-02', '2022-03-01', 'added', 'SD-350', '2024-06-11 22:38:32', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (254, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.424.588.3', '2824.040814', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 22:39:37', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (255, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.424.600.2', '2823.040814', NULL, NULL, '2022-04-02', 'added', 'EFE-3802', '2024-06-11 22:41:48', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(256, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.206.633.6', '2832.040.814', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 22:43:04', '2024-06-11 22:43:04', 'EFTO-CAG'),
-(257, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.515.558.7', '3056.022315', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 22:43:51', '2024-06-11 22:43:51', 'EFTO-CAG'),
+(256, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.206.633.6', '2832.040.814', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 22:43:04', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(257, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.515.558.7', '3056.022315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 22:43:51', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (258, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.514.742.1', '3058.022315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 22:46:54', '2024-06-14 21:14:22', 'EFTO-CAG'),
-(259, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.487.347.5', '3063.022315', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 22:50:57', '2024-06-11 22:50:57', 'EFTO-CAG'),
-(260, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.516.768.9', '3066.022315', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 22:51:37', '2024-06-11 22:51:37', 'EFTO-CAG');
+(259, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.487.347.5', '3063.022315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 22:50:57', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(260, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.516.768.9', '3066.022315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 22:51:37', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(261, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.502.941.3', '3099.502.941.3', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 22:53:13', '2024-06-28 02:42:20', 'EFTO-CAG');
 INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no`, `code`, `distributor`, `date_delivered`, `date_purchased`, `status`, `model`, `created_at`, `updated_at`, `branch_code`) VALUES
-(261, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.502.941.3', '3099.502.941.3', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 22:53:13', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (262, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.502.990.1', '3100.041315', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:54:43', '2024-06-14 20:51:24', 'EFTO-CAG'),
 (263, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.514.897.8', '3121.041515', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 22:55:33', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(264, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.516.773.3', '3533.020117', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 22:57:56', '2024-06-11 22:57:56', 'EFTO-CAG'),
+(264, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.516.773.3', '3533.020117', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 22:57:56', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (265, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.995.268.7', '4393.110818', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 22:58:48', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (266, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.000.359.0', '4428.110818', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 23:01:49', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(267, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.000.900.4', '4727.110818', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3802', '2024-06-11 23:02:32', '2024-06-11 23:02:32', 'EFTO-CAG'),
+(267, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.000.900.4', '4727.110818', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 23:02:32', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (268, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.370.1', '6961.2020', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 23:04:32', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (269, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.394.7', '6962.2020', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 23:05:25', '2024-06-14 22:11:04', 'EFTO-CAG'),
 (270, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.322.0', '6963.2020', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 23:06:09', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (271, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.397.8', '6966.2022', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 23:07:08', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (272, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.403.6', '6967.2020', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 23:08:04', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(273, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.326.8', '6968.2020', NULL, '2022-04-02', '2022-03-01', 'available', 'EFE-3002', '2024-06-11 23:08:49', '2024-06-11 23:08:49', 'EFTO-CAG'),
+(273, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.326.8', '6968.2020', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 23:08:49', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (274, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.398.5', '6970.2020', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 23:09:19', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (275, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.306.0', '6971.2020', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 23:10:18', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (276, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.400.5', '6973.2020', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3002', '2024-06-11 23:12:09', '2024-06-28 02:42:20', 'EFTO-CAG'),
@@ -1271,21 +1359,21 @@ INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no
 (282, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.316.921.7', '7219.2020', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 23:17:02', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (283, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.316.901.9', '7220.2020', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 23:18:00', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (284, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.316.902.6', '7221.2020', NULL, '2022-04-02', '2022-03-01', 'added', 'EFE-3802', '2024-06-11 23:19:03', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(285, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:26:23', '2024-06-11 23:26:23', 'EFTO-CAG'),
-(286, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL1', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:27:09', '2024-06-11 23:27:09', 'EFTO-CAG'),
-(287, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 2', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:28:06', '2024-06-11 23:28:06', 'EFTO-CAG'),
-(288, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 3', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:28:49', '2024-06-11 23:28:49', 'EFTO-CAG'),
-(289, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 4', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:29:25', '2024-06-11 23:29:25', 'EFTO-CAG'),
-(290, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 5', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:29:55', '2024-06-11 23:29:55', 'EFTO-CAG'),
-(291, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 6', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:30:20', '2024-06-11 23:30:20', 'EFTO-CAG'),
-(292, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 7', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:31:08', '2024-06-11 23:31:08', 'EFTO-CAG'),
-(293, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'FUJIDENZO 5', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:31:55', '2024-06-11 23:31:55', 'EFTO-CAG'),
-(294, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'FUJIDENZO 7', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:32:20', '2024-06-11 23:32:20', 'EFTO-CAG'),
-(295, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'FUJIDENZO 8', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:32:50', '2024-06-11 23:32:50', 'EFTO-CAG'),
-(296, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'LARGE 10', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:33:20', '2024-06-11 23:33:20', 'EFTO-CAG'),
-(297, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'LARGE 11', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:33:47', '2024-06-11 23:33:47', 'EFTO-CAG'),
-(298, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'FUJIDENZO 11', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:34:40', '2024-06-11 23:34:40', 'EFTO-CAG'),
-(299, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'FUJIDENZO 12', 'N/A', NULL, '2022-04-02', '2022-03-01', 'available', 'Fujidenzo', '2024-06-11 23:35:09', '2024-06-11 23:35:09', 'EFTO-CAG'),
+(285, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL', 'N/A', NULL, '2022-04-02', '2022-03-01', 'added', 'Fujidenzo', '2024-06-11 23:26:23', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(286, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL1', 'N/A', NULL, '2022-04-02', '2022-03-01', 'added', 'Fujidenzo', '2024-06-11 23:27:09', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(287, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 2', 'N/A', NULL, '2022-04-02', '2022-03-01', 'added', 'Fujidenzo', '2024-06-11 23:28:06', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(288, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 3', 'N/A', NULL, '2022-04-02', '2022-03-01', 'added', 'Fujidenzo', '2024-06-11 23:28:49', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(289, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 4', 'N/A', NULL, '2022-04-02', '2022-03-01', 'added', 'Fujidenzo', '2024-06-11 23:29:25', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(290, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 5', 'N/A', NULL, '2022-04-02', '2022-03-01', 'added', 'Fujidenzo', '2024-06-11 23:29:55', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(291, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 6', 'N/A', NULL, '2022-04-02', '2022-03-01', 'added', 'Fujidenzo', '2024-06-11 23:30:20', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(292, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'SMALL 7', 'N/A', NULL, '2022-04-02', '2022-03-01', 'added', 'Fujidenzo', '2024-06-11 23:31:08', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(293, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'FUJIDENZO 5', 'N/A', NULL, '2022-04-02', '2022-03-01', 'added', 'Fujidenzo', '2024-06-11 23:31:55', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(294, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'FUJIDENZO 7', 'N/A', NULL, '2022-04-02', '2022-03-01', 'added', 'Fujidenzo', '2024-06-11 23:32:20', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(295, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'FUJIDENZO 8', 'N/A', NULL, '2022-04-02', '2022-03-01', 'added', 'Fujidenzo', '2024-06-11 23:32:50', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(296, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'LARGE 10', 'N/A', NULL, '2022-04-02', '2022-03-01', 'added', 'Fujidenzo', '2024-06-11 23:33:20', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(297, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'LARGE 11', 'N/A', NULL, '2022-04-02', '2022-03-01', 'added', 'Fujidenzo', '2024-06-11 23:33:47', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(298, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'FUJIDENZO 11', 'N/A', NULL, '2022-04-02', '2022-03-01', 'added', 'Fujidenzo', '2024-06-11 23:34:40', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(299, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'FUJIDENZO 12', 'N/A', NULL, '2022-04-02', '2022-03-01', 'added', 'Fujidenzo', '2024-06-11 23:35:09', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (300, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.271.382.4', '6960.2020', NULL, '2020-01-04', '2020-01-03', 'added', 'EFE-3002', '2024-06-14 16:41:01', '2024-06-19 20:03:40', 'EFTO-CAG'),
 (301, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.817.4', '8177.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 18:36:32', '2024-06-23 18:09:12', 'EFTO-CAG'),
 (302, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.797.9', '8178.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 18:41:25', '2024-06-23 21:33:07', 'EFTO-CAG'),
@@ -1295,33 +1383,32 @@ INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no
 (306, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.345.2', '8182.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 18:47:49', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (307, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.353.7', '8183.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 18:48:42', '2024-06-23 18:09:55', 'EFTO-CAG'),
 (308, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.448.0', '8184.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 18:49:24', '2024-06-23 17:44:38', 'EFTO-CAG'),
-(309, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.419.0', '8185.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 18:50:01', '2024-06-14 18:50:01', 'EFTO-CAG'),
+(309, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.419.0', '8185.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 18:50:01', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (310, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.396.4', '8186.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 18:50:54', '2024-06-23 21:08:43', 'EFTO-CAG'),
 (311, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.423.7', '8187.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 18:51:42', '2024-06-23 21:20:05', 'EFTO-CAG'),
 (312, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.460.2', '8188.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 18:52:26', '2024-06-23 20:22:48', 'EFTO-CAG'),
 (313, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.366.7', '8189.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 18:54:25', '2024-06-23 21:31:23', 'EFTO-CAG'),
-(314, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.461.9', '8190.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 18:55:12', '2024-06-14 18:55:12', 'EFTO-CAG'),
+(314, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.407.461.9', '8190.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 18:55:12', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (315, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.359.9', '8191.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-14 18:57:04', '2024-06-23 18:05:54', 'EFTO-CAG'),
 (316, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.347.6', '8192.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 19:46:35', '2024-06-23 19:02:55', 'EFTO-CAG'),
 (317, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.369.8', '8193.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 19:47:19', '2024-06-23 21:54:27', 'EFTO-CAG'),
 (318, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.810.5', '8194.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 19:48:34', '2024-06-23 20:05:51', 'EFTO-CAG'),
-(319, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.340.7', '8195.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 19:49:20', '2024-06-23 20:38:08', 'EFTO-CAG'),
-(320, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.454.1', '8196.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 19:50:06', '2024-06-14 19:50:06', 'EFTO-CAG'),
+(320, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.454.1', '8196.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 19:50:06', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (321, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.365.0', '8197.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 19:55:42', '2024-06-23 21:49:29', 'EFTO-CAG'),
-(322, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.456.5', '8198.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 19:56:17', '2024-06-14 19:56:17', 'EFTO-CAG'),
+(322, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.456.5', '8198.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 19:56:17', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (323, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.420.521.1', '8292.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-4602', '2024-06-14 20:04:09', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (324, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.225.794.6', '8293.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-4602', '2024-06-14 20:05:17', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (325, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.420.531.0', '8294.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-4602', '2024-06-14 20:05:59', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (326, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.225.818.9', '8295.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-4602', '2024-06-14 20:07:34', '2024-06-23 16:38:34', 'EFTO-CAG'),
 (327, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.225.832.5', '8296.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-4602', '2024-06-14 20:08:44', '2024-06-23 17:43:56', 'EFTO-CAG'),
 (328, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.225.821.9', '8297.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-4602', '2024-06-14 20:09:38', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(329, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.420.515.0', '8298.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-4602', '2024-06-14 20:10:27', '2024-06-14 20:10:27', 'EFTO-CAG'),
+(329, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.420.515.0', '8298.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-4602', '2024-06-14 20:10:27', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (330, 'Owned', 'Hard Top', 'LEIHBERR', 14400.00, 'L61.420.524.2', '8299.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-4602', '2024-06-14 20:11:40', '2024-06-23 22:00:46', 'EFTO-CAG'),
 (331, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.420.518.1', '8300.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-4602', '2024-06-14 20:12:32', '2024-06-23 22:01:53', 'EFTO-CAG'),
 (332, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.420.514.3', '8301.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-4602', '2024-06-14 20:13:23', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (333, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.902.6', '8667.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:14:22', '2024-06-23 22:03:00', 'EFTO-CAG'),
 (334, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.893.7', '8668.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:15:14', '2024-06-23 21:25:52', 'EFTO-CAG'),
-(335, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.892.0', '8669.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:16:03', '2024-06-14 20:16:03', 'EFTO-CAG'),
+(335, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.892.0', '8669.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:16:03', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (336, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.862.3', '8670.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:17:04', '2024-06-23 21:57:48', 'EFTO-CAG'),
 (337, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.884.9', '8671.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:17:43', '2024-06-23 22:12:27', 'EFTO-CAG'),
 (338, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.842.5', '8672.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:18:28', '2024-06-23 17:22:12', 'EFTO-CAG'),
@@ -1331,7 +1418,7 @@ INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no
 (342, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.845.6', '8676.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:23:00', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (343, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.864.7', '8677.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:23:52', '2024-06-23 22:05:35', 'EFTO-CAG'),
 (344, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.866.1', '8678.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:28:05', '2024-06-28 02:42:20', 'EFTO-CAG'),
-(345, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.851.7', '8679.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:40:22', '2024-06-14 20:40:22', 'EFTO-CAG'),
+(345, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.851.7', '8679.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:40:22', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (346, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.848.7', '8680.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:41:18', '2024-06-23 20:33:11', 'EFTO-CAG'),
 (347, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.905.7', '8681.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:44:21', '2024-06-23 17:33:34', 'EFTO-CAG'),
 (348, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.861.6', '8682.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:45:10', '2024-06-28 02:42:20', 'EFTO-CAG'),
@@ -1339,17 +1426,17 @@ INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no
 (350, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.894.4', '8684.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:46:37', '2024-06-23 22:07:45', 'EFTO-CAG'),
 (351, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.858.6', '8685.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:48:19', '2024-06-23 18:06:49', 'EFTO-CAG'),
 (352, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.883.8', '8686.20222', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:50:06', '2024-06-23 21:43:05', 'EFTO-CAG'),
-(353, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.878.4', '8687.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 20:53:53', '2024-06-14 20:53:53', 'EFTO-CAG'),
+(353, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.878.4', '8687.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:53:53', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (354, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.863.0', '8688.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:55:55', '2024-06-28 02:42:20', 'EFTO-CAG'),
 (355, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.492.238.5', '8856.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 20:58:18', '2024-06-23 20:39:57', 'EFTO-CAG'),
 (356, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.493.230.9', '8857.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 21:17:45', '2024-06-23 20:14:39', 'EFTO-CAG'),
 (357, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.493.237.8', '8858.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 21:18:45', '2024-06-23 19:08:08', 'EFTO-CAG'),
-(358, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.492.246.0', '8859.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-14 21:19:37', '2024-06-14 21:19:37', 'EFTO-CAG'),
+(358, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.492.246.0', '8859.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 21:19:37', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (359, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.492.227.9', '8860.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 21:20:41', '2024-06-23 20:01:26', 'EFTO-CAG'),
 (360, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.492.249.1', '8861.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 21:24:42', '2024-06-23 17:43:05', 'EFTO-CAG'),
 (361, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.493.808.9', '8862.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 21:25:35', '2024-06-23 19:53:01', 'EFTO-CAG'),
 (362, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.434.0', '8899.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-14 21:26:35', '2024-06-23 20:02:41', 'EFTO-CAG'),
-(363, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.341.1', '8900.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-14 21:27:15', '2024-06-14 21:27:15', 'EFTO-CAG'),
+(363, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.341.1', '8900.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-14 21:27:15', '2024-07-11 16:15:55', 'EFTO-CAG'),
 (364, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.410.4', '8901.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-14 21:29:00', '2024-06-23 21:05:06', 'EFTO-CAG'),
 (365, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.413.5', '8903.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-14 21:30:04', '2024-06-23 17:35:22', 'EFTO-CAG'),
 (366, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.400.5', '8904.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-14 21:31:01', '2024-06-23 17:30:55', 'EFTO-CAG'),
@@ -1366,7 +1453,7 @@ INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no
 (377, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.376.3', '8912.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 16:44:22', '2024-06-23 21:26:43', 'EFTO-TAR'),
 (378, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.426.5', '8913.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 16:45:39', '2024-06-23 20:07:04', 'EFTO-TAR'),
 (379, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.417.3', '8914.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 16:46:15', '2024-06-23 21:42:22', 'EFTO-TAR'),
-(380, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.427.2', '8915.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 16:46:59', '2024-06-16 16:46:59', 'EFTO-TAR'),
+(380, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.427.2', '8915.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 16:46:59', '2024-07-11 17:53:11', 'EFTO-TAR'),
 (381, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.185.4', '9670.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 16:47:43', '2024-06-23 21:44:26', 'EFTO-TAR'),
 (382, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.421.3', '9671.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 16:48:39', '2024-06-28 02:44:45', 'EFTO-TAR'),
 (383, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.505.191.5', '9672.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 16:49:18', '2024-06-23 20:29:08', 'EFTO-TAR'),
@@ -1380,66 +1467,65 @@ INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no
 (391, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.505.867.0', '9695.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-4602', '2024-06-16 16:57:17', '2024-06-23 20:38:58', 'EFTO-TAR'),
 (392, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.505.322.4', '9696.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-4602', '2024-06-16 16:57:53', '2024-06-23 21:20:48', 'EFTO-TAR'),
 (393, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.505.036.0', '9729.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 16:59:33', '2024-06-23 22:10:56', 'EFTO-TAR'),
-(394, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.504.988.3', '9730.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:00:09', '2024-06-16 17:00:09', 'EFTO-TAR'),
+(394, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.504.988.3', '9730.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:00:09', '2024-07-11 17:53:11', 'EFTO-TAR'),
 (395, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.505.634.8', '9731.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:00:50', '2024-06-23 20:42:49', 'EFTO-TAR'),
 (396, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.505.620.1', '9732.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:01:20', '2024-06-23 20:09:03', 'EFTO-TAR'),
 (397, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.505.630.0', '9733.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:02:10', '2024-06-23 21:43:50', 'EFTO-TAR'),
-(398, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.504.948.7', '9734.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:02:46', '2024-06-16 17:02:46', 'EFTO-TAR'),
-(399, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.504.969.5', '9735.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:23:02', '2024-06-16 17:23:02', 'EFTO-TAR'),
-(400, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.504.971.5', '9736.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:23:46', '2024-06-16 17:23:46', 'EFTO-TAR'),
-(401, 'Owned', 'Hard Top', 'LEIHBERR', 14400.00, 'L61.504.959.3', '9737.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:24:54', '2024-06-16 17:24:54', 'EFTO-TAR'),
-(402, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.504.963.0', '9738.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:25:37', '2024-06-16 17:25:37', 'EFTO-TAR'),
-(403, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.505.028.5', '9739.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:26:16', '2024-06-16 17:26:16', 'EFTO-TAR'),
+(398, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.504.948.7', '9734.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:02:46', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(399, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.504.969.5', '9735.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:23:02', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(400, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.504.971.5', '9736.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:23:46', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(401, 'Owned', 'Hard Top', 'LEIHBERR', 14400.00, 'L61.504.959.3', '9737.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:24:54', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(402, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.504.963.0', '9738.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:25:37', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(403, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.505.028.5', '9739.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:26:16', '2024-07-11 17:53:11', 'EFTO-TAR'),
 (404, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.534.193.2', '9740.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:27:06', '2024-06-28 02:44:45', 'EFTO-TAR'),
-(405, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.699.9', '10488.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:28:14', '2024-06-16 17:28:14', 'EFTO-TAR'),
-(406, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.722.4', '10498.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:29:40', '2024-06-16 17:29:40', 'EFTO-TAR'),
-(407, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.692.0', '10497.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:30:35', '2024-06-16 17:30:35', 'EFTO-TAR'),
-(408, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.726.2', '10495.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:31:15', '2024-06-16 17:31:15', 'EFTO-TAR'),
-(409, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.691.3', '10496.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:32:49', '2024-06-16 17:32:49', 'EFTO-TAR'),
-(410, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.670.8', '10491.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:33:30', '2024-06-16 17:33:30', 'EFTO-TAR'),
-(411, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.707.1', '10492.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:34:08', '2024-06-16 17:34:08', 'EFTO-TAR'),
-(412, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.707.0', '10494.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:38:33', '2024-06-16 17:38:33', 'EFTO-TAR'),
-(413, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.665.4', '10498.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:39:09', '2024-06-16 17:39:09', 'EFTO-TAR'),
-(414, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.701.9', '10490.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 17:39:58', '2024-06-16 17:39:58', 'EFTO-TAR'),
-(415, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.342.6', '10412.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:41:06', '2024-06-16 17:41:06', 'EFTO-TAR'),
-(416, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.357.0', '10413.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:41:39', '2024-06-16 17:41:39', 'EFTO-TAR'),
-(417, 'Owned', 'Hard Top', 'LEIHBERR', 12250.00, 'L61.631.356.3', '10416.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:42:16', '2024-06-16 17:42:16', 'EFTO-TAR'),
-(418, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.577.7', '10417.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:42:50', '2024-06-16 17:42:50', 'EFTO-TAR'),
-(419, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.582.1', '10418.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:44:30', '2024-06-16 17:44:30', 'EFTO-TAR'),
-(420, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.210.3', '10419.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:45:02', '2024-06-16 17:45:02', 'EFTO-TAR'),
-(421, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.429.9', '10414.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:45:40', '2024-06-16 17:45:40', 'EFTO-TAR'),
-(422, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.364.8', '10421.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:46:43', '2024-06-16 17:46:43', 'EFTO-TAR'),
-(423, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.351.8', '10420.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:47:57', '2024-06-16 17:47:57', 'EFTO-TAR'),
-(424, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.348.8', '10415.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:48:47', '2024-06-16 17:48:47', 'EFTO-TAR'),
-(425, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.345.7', '10422.20252', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:49:22', '2024-06-16 17:49:22', 'EFTO-TAR'),
-(426, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.347.1', '10423.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 17:50:43', '2024-06-16 17:50:43', 'EFTO-TAR'),
-(427, 'Owned', 'Glass Top', 'HIRON', 12010.00, '2022.047493', '8585.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'SD-350', '2024-06-16 18:05:01', '2024-06-16 18:05:01', 'EFTO-TAR'),
-(428, 'Owned', 'Glass Top', 'HIRON', 12010.00, 'L61.493.368.2', '8902.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'SD-350', '2024-06-16 18:05:45', '2024-06-16 18:05:45', 'EFTO-TAR'),
+(405, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.699.9', '10488.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:28:14', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(406, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.722.4', '10498.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:29:40', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(407, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.692.0', '10497.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:30:35', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(408, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.726.2', '10495.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:31:15', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(409, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.691.3', '10496.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:32:49', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(410, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.670.8', '10491.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:33:30', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(411, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.707.1', '10492.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:34:08', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(412, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.707.0', '10494.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:38:33', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(413, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.665.4', '10498.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:39:09', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(414, 'Owned', 'Glass Top', 'LEIHBERR', 14400.00, 'L61.633.701.9', '10490.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 17:39:58', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(415, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.342.6', '10412.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 17:41:06', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(416, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.357.0', '10413.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 17:41:39', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(417, 'Owned', 'Hard Top', 'LEIHBERR', 12250.00, 'L61.631.356.3', '10416.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 17:42:16', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(418, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.577.7', '10417.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 17:42:50', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(419, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.582.1', '10418.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 17:44:30', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(420, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.210.3', '10419.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 17:45:02', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(421, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.429.9', '10414.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 17:45:40', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(422, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.364.8', '10421.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 17:46:43', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(423, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.351.8', '10420.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 17:47:57', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(424, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.348.8', '10415.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 17:48:47', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(425, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.345.7', '10422.20252', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 17:49:22', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(426, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.631.347.1', '10423.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 17:50:43', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(427, 'Owned', 'Glass Top', 'HIRON', 12010.00, '2022.047493', '8585.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'SD-350', '2024-06-16 18:05:01', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(428, 'Owned', 'Glass Top', 'LIEBHERR', 12010.00, 'L61.493.368.2', '8902.2022', NULL, NULL, '2021-03-01', 'added', 'EFE-3002', '2024-06-16 18:05:45', '2024-07-11 17:53:11', 'EFTO-TAR'),
 (429, 'Owned', 'Glass Top', 'HIRON', 12010.00, 'H2014.018832', '2844.042814', NULL, '2021-02-01', '2021-03-01', 'added', 'SD-350', '2024-06-16 18:06:36', '2024-06-28 02:44:45', 'EFTO-TAR'),
-(430, 'Owned', 'Hard Top', 'HIRON', 15010.00, '2024.0522.03', '10621.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'BD-650', '2024-06-16 18:07:33', '2024-06-16 18:07:33', 'EFTO-TAR'),
-(431, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.316.935.4', '7200.2020', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-16 18:09:23', '2024-06-16 18:09:23', 'EFTO-TAR'),
+(430, 'Owned', 'Hard Top', 'HIRON', 15010.00, '2024.0522.03', '10621.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'BD-650', '2024-06-16 18:07:33', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(431, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.316.935.4', '7200.2020', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-16 18:09:23', '2024-07-11 17:53:11', 'EFTO-TAR'),
 (432, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.106.163.6', '5215.1912', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-16 18:11:47', '2024-06-28 02:44:45', 'EFTO-TAR'),
-(433, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.386.2', '8902.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-16 18:13:58', '2024-06-16 18:13:58', 'EFTO-TAR'),
-(434, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.692.1', '8162.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:15:50', '2024-06-16 18:15:50', 'EFTO-TAR'),
-(435, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.689.1', '8163.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:16:32', '2024-06-16 18:16:32', 'EFTO-TAR'),
-(436, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.683.9', '8164.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:17:05', '2024-06-16 18:17:38', 'EFTO-TAR'),
-(437, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.684.6', '8165.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:18:17', '2024-06-16 18:18:17', 'EFTO-TAR'),
-(438, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.688.4', '8166.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:19:08', '2024-06-16 18:19:08', 'EFTO-TAR'),
-(439, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.693.8', '8167.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:19:41', '2024-06-16 18:19:41', 'EFTO-TAR'),
-(440, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.691.4', '8168.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:20:31', '2024-06-16 18:20:31', 'EFTO-TAR'),
-(441, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.680.8', '8169.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:21:05', '2024-06-16 18:21:05', 'EFTO-TAR'),
-(442, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.685.3', '8170.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:21:41', '2024-06-16 18:21:41', 'EFTO-TAR'),
-(443, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.686.0', '8171.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:22:18', '2024-06-16 18:22:18', 'EFTO-TAR'),
-(444, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.694.5', '8172.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:22:57', '2024-06-16 18:22:57', 'EFTO-TAR'),
-(445, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.682.2', '8173.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:27:47', '2024-06-16 18:27:47', 'EFTO-TAR'),
-(446, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.681.5', '8174.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:33:00', '2024-06-16 18:33:00', 'EFTO-TAR'),
-(447, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.690.7', '8175.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:34:55', '2024-06-16 18:34:55', 'EFTO-TAR'),
-(448, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.687.7', '8176.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:35:24', '2024-06-16 18:35:24', 'EFTO-TAR'),
-(449, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.461.452.5', '8689.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:36:23', '2024-06-16 18:36:23', 'EFTO-TAR'),
-(450, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.461.419.8', '8690.2022', NULL, NULL, '2021-03-01', 'available', 'EFL-6005', '2024-06-16 18:36:59', '2024-06-20 21:47:36', 'EFTO-TAR'),
-(451, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.461.445.7', '8691.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:37:39', '2024-06-16 18:37:39', 'EFTO-TAR'),
-(452, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.461.431.6', '8692.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:38:26', '2024-06-16 18:38:26', 'EFTO-TAR'),
-(453, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.461.423.5', '8693.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFL-6005', '2024-06-16 18:39:10', '2024-06-16 18:39:10', 'EFTO-TAR'),
+(434, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.692.1', '8162.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:15:50', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(435, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.689.1', '8163.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:16:32', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(436, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.683.9', '8164.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:17:05', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(437, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.684.6', '8165.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:18:17', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(438, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.688.4', '8166.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:19:08', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(439, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.693.8', '8167.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:19:41', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(440, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.691.4', '8168.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:20:31', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(441, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.680.8', '8169.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:21:05', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(442, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.685.3', '8170.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:21:41', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(443, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.686.0', '8171.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:22:18', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(444, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.694.5', '8172.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:22:57', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(445, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.682.2', '8173.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:27:47', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(446, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.681.5', '8174.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:33:00', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(447, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.690.7', '8175.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:34:55', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(448, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.403.687.7', '8176.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:35:24', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(449, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.461.452.5', '8689.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:36:23', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(450, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.461.419.8', '8690.2022', NULL, NULL, '2021-03-01', 'added', 'EFL-6005', '2024-06-16 18:36:59', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(451, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.461.445.7', '8691.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:37:39', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(452, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.461.431.6', '8692.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:38:26', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(453, 'Owned', 'Hard Top', 'LEIHBERR', 15600.00, 'L61.461.423.5', '8693.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFL-6005', '2024-06-16 18:39:10', '2024-07-11 17:53:11', 'EFTO-TAR'),
 (454, 'Owned', 'Glass Top', 'HIRON', 14225.00, 'H2022-047331', '8538.2021', NULL, '2021-01-05', '2022-05-02', 'added', 'SD-450', '2024-06-19 20:12:46', '2024-06-19 20:13:12', 'EFTO-CAG'),
 (455, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.371.402.9', '6949.2020', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-23 23:52:00', '2024-06-28 02:44:45', 'EFTO-TAR'),
 (456, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.316.906.4', '7201.2020', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-26 17:55:59', '2024-06-28 02:44:45', 'EFTO-TAR'),
@@ -1477,33 +1563,55 @@ INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no
 (488, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.406.177.3', '5217.191205', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-26 19:02:16', '2024-06-28 02:44:45', 'EFTO-TAR'),
 (489, 'Owned', 'Glass Top', 'lEIHBERR', 12250.00, 'l60.363.658.9', '2402.031913', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-26 20:09:29', '2024-06-28 02:44:45', 'EFTO-TAR'),
 (490, 'Owned', 'Glass Top', 'lEIHBERR', 13400.00, 'l61.316.897.5', '7202.2020', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-26 20:10:38', '2024-06-28 02:44:45', 'EFTO-TAR'),
-(491, 'Owned', 'Glass Top', 'HIRON', 12010.00, 'L61.316.911.8', '7203.2020', NULL, '2021-03-02', '2021-02-01', 'available', 'SD-350', '2024-06-26 23:01:42', '2024-06-26 23:01:42', 'EFTO-TAR'),
-(492, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'E06F2800197', '0179.062808', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-26 23:05:28', '2024-06-26 23:05:28', 'EFTO-TAR'),
-(493, 'Owned', 'Glass Top', 'lEIHBERR', 12250.00, 'L61.271.332.9', '6951.2020', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-26 23:06:43', '2024-06-26 23:06:43', 'EFTO-TAR'),
-(494, 'Owned', 'Glass Top', 'lEIHBERR', 12250.00, 'L61.271.343.5', '6955.2020', NULL, '2021-03-02', '2021-02-01', 'available', 'EFE-3002', '2024-06-26 23:08:05', '2024-06-26 23:08:05', 'EFTO-TAR'),
-(495, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.370.426.8', '2512.050713', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-26 23:12:13', '2024-06-26 23:12:13', 'EFTO-TAR'),
-(496, 'Owned', 'Glass Top', 'lEIHBERR', 13400.00, 'L61.407.416.9', '8190.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-26 23:13:43', '2024-06-26 23:13:43', 'EFTO-TAR'),
-(497, 'Owned', 'Glass Top', 'LEIHBERR', 12010.00, 'H2013.0159.45', '2399.031913', NULL, '2021-03-01', '2021-02-01', 'available', 'SD-350', '2024-06-26 23:14:39', '2024-06-26 23:14:39', 'EFTO-TAR'),
-(498, 'Owned', 'Glass Top', 'LEIHBERR', 12010.00, 'H2014.018403', '2730.012814', NULL, '2021-03-01', '2021-02-01', 'available', 'SD-350', '2024-06-26 23:17:34', '2024-06-26 23:17:34', 'EFTO-TAR'),
+(491, 'Owned', 'Glass Top', 'HIRON', 12010.00, 'L61.316.911.8', '7203.2020', NULL, '2021-03-02', '2021-02-01', 'added', 'SD-350', '2024-06-26 23:01:42', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(492, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'E06F2800197', '0179.062808', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-26 23:05:28', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(493, 'Owned', 'Glass Top', 'lEIHBERR', 12250.00, 'L61.271.332.9', '6951.2020', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-26 23:06:43', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(494, 'Owned', 'Glass Top', 'lEIHBERR', 12250.00, 'L61.271.343.5', '6955.2020', NULL, '2021-03-02', '2021-02-01', 'added', 'EFE-3002', '2024-06-26 23:08:05', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(495, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.370.426.8', '2512.050713', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-26 23:12:13', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(496, 'Owned', 'Glass Top', 'lEIHBERR', 13400.00, 'L61.407.416.9', '8190.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-26 23:13:43', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(497, 'Owned', 'Glass Top', 'LEIHBERR', 12010.00, 'H2013.0159.45', '2399.031913', NULL, '2021-03-01', '2021-02-01', 'added', 'SD-350', '2024-06-26 23:14:39', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(498, 'Owned', 'Glass Top', 'LEIHBERR', 12010.00, 'H2014.018403', '2730.012814', NULL, '2021-03-01', '2021-02-01', 'added', 'SD-350', '2024-06-26 23:17:34', '2024-07-11 17:53:11', 'EFTO-TAR'),
 (499, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L60.365.724.2', '2439.040313', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-26 23:20:59', '2024-06-28 02:44:45', 'EFTO-TAR'),
-(500, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L60.224.565.6', '2808.040414', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-26 23:21:45', '2024-06-26 23:21:45', 'EFTO-TAR'),
-(501, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.106.169.8', '5216.19120.5', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-26 23:22:40', '2024-06-26 23:22:40', 'EFTO-TAR'),
-(502, 'Owned', 'Glass Top', 'HIRON', 12010.00, 'H2016-023504', '3281.020616', NULL, '2021-03-01', '2021-02-01', 'available', 'SD-350', '2024-06-26 23:25:56', '2024-06-26 23:25:56', 'EFTO-TAR'),
-(503, 'Owned', 'Glass Top', 'lEIHBERR', 12250.00, 'L60.503.673.5', 'G-0039.041315', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-26 23:29:27', '2024-06-26 23:29:27', 'EFTO-TAR'),
-(504, 'Owned', 'Glass Top', 'lEIHBERR', 12250.00, 'L60.808.556.0', 'GH-059.022017', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-26 23:30:30', '2024-06-26 23:30:30', 'EFTO-TAR'),
-(505, 'Owned', 'Glass Top', 'lEIHBERR', 12250.00, 'L61.271.339.8', '7200.2020', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-26 23:32:18', '2024-06-26 23:32:18', 'EFTO-TAR'),
-(506, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.345.2', '8182.2021', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-27 15:49:54', '2024-06-27 15:49:54', 'EFTO-TAR'),
+(500, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L60.224.565.6', '2808.040414', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-26 23:21:45', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(501, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.106.169.8', '5216.19120.5', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-26 23:22:40', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(502, 'Owned', 'Glass Top', 'HIRON', 12010.00, 'H2016-023504', '3281.020616', NULL, '2021-03-01', '2021-02-01', 'added', 'SD-350', '2024-06-26 23:25:56', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(503, 'Owned', 'Glass Top', 'lEIHBERR', 12250.00, 'L60.503.673.5', 'G-0039.041315', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-26 23:29:27', '2024-07-11 17:53:11', 'EFTO-TAR'),
+(504, 'Owned', 'Glass Top', 'lEIHBERR', 12250.00, 'L60.808.556.0', 'GH-059.022017', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-26 23:30:30', '2024-07-11 17:53:12', 'EFTO-TAR'),
+(505, 'Owned', 'Glass Top', 'lEIHBERR', 12250.00, 'L61.271.339.8', '7200.2020', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-26 23:32:18', '2024-07-11 17:53:12', 'EFTO-TAR'),
+(506, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.407.345.2', '8182.2021', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-27 15:49:54', '2024-07-11 17:53:12', 'EFTO-TAR'),
 (507, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.887.6', '8683.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-27 16:04:57', '2024-06-28 02:44:45', 'EFTO-TAR'),
-(508, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.863.0', '8688.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-27 16:50:51', '2024-06-27 16:50:51', 'EFTO-TAR'),
+(508, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.460.863.0', '8688.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-27 16:50:51', '2024-07-11 17:53:12', 'EFTO-TAR'),
 (509, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.316.911.8', '7203.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-27 16:51:52', '2024-06-28 02:44:45', 'EFTO-TAR'),
-(510, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.370.1', '8905.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-27 16:53:13', '2024-06-27 16:53:13', 'EFTO-TAR'),
-(511, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.230.1', '9675.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-27 16:54:20', '2024-06-27 16:54:20', 'EFTO-TAR'),
-(512, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L60.365.724.2', '2439.040313', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-27 16:55:15', '2024-06-27 16:55:15', 'EFTO-TAR'),
+(510, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.493.370.1', '8905.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-27 16:53:13', '2024-07-11 17:53:12', 'EFTO-TAR'),
+(511, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L61.506.230.1', '9675.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-27 16:54:20', '2024-07-11 17:53:12', 'EFTO-TAR'),
+(512, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L60.365.724.2', '2439.040313', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-27 16:55:15', '2024-07-11 17:53:12', 'EFTO-TAR'),
 (513, 'Owned', 'Glass Top', 'HIRON', NULL, 'L61.506.191.5', '9672.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'Others', '2024-06-27 16:58:51', '2024-06-28 02:44:45', 'EFTO-TAR'),
-(514, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L60.369.600.6', '2423.040313', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3002', '2024-06-27 16:59:41', '2024-06-27 16:59:41', 'EFTO-TAR'),
+(514, 'Owned', 'Glass Top', 'LEIHBERR', 12250.00, 'L60.369.600.6', '2423.040313', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3002', '2024-06-27 16:59:41', '2024-07-11 17:53:12', 'EFTO-TAR'),
 (515, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'N/A', 'G.066.18', NULL, '2021-03-01', '2021-02-01', 'Active', 'Others', '2024-06-27 17:00:34', '2024-06-27 18:54:22', 'EFTO-TAR'),
 (516, 'Owned', 'Glass Top', 'FUJIDENZO', 0.00, 'N/A', 'FD.11ADF', NULL, '2021-03-01', '2021-02-01', 'Active', 'Others', '2024-06-27 17:03:17', '2024-06-27 18:54:00', 'EFTO-TAR'),
-(517, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.504.948.7', '9734.2022', NULL, '2021-03-01', '2021-02-01', 'available', 'EFE-3802', '2024-06-27 17:09:33', '2024-06-27 17:09:33', 'EFTO-TAR');
+(517, 'Owned', 'Glass Top', 'LEIHBERR', 13400.00, 'L61.504.948.7', '9734.2022', NULL, '2021-03-01', '2021-02-01', 'added', 'EFE-3802', '2024-06-27 17:09:33', '2024-07-11 17:53:12', 'EFTO-TAR'),
+(518, 'Owned', 'Hard Top', 'HIRRON', 15600.00, '2022.046793', '8335.2021', NULL, '2024-03-29', NULL, 'added', 'EFE-4602', '2024-07-05 22:30:06', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(519, 'Owned', 'Hard Top', 'HIRRON', 15600.00, '2022.046797', '8339.2021', NULL, NULL, '2022-07-07', 'added', 'BD-650', '2024-07-05 22:31:21', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(520, 'Owned', 'Hard Top', 'LIEBHERR', 15600.00, '2022.046792', '8334.2021', NULL, NULL, '2022-07-07', 'added', 'BD-650', '2024-07-05 22:32:01', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(521, 'Owned', 'Hard Top', 'FUJIDENZO', 15600.00, 'f600h0945', '0263.011309', NULL, NULL, '2022-03-25', 'added', 'Fujidenzo', '2024-07-05 22:33:01', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(522, 'Owned', 'Hard Top', 'HIRRON', 15600.00, '2022.046790', '8332.2021', NULL, NULL, '2022-07-07', 'added', 'BD-650', '2024-07-05 22:33:36', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(523, 'Owned', 'Hard Top', 'HIRRON', 15600.00, '2022.047167', '8341.2021', NULL, NULL, '2022-07-07', 'added', 'BD-650', '2024-07-05 22:34:26', '2024-07-11 16:15:55', 'EFTO-CAG');
+INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no`, `code`, `distributor`, `date_delivered`, `date_purchased`, `status`, `model`, `created_at`, `updated_at`, `branch_code`) VALUES
+(524, 'Owned', 'Hard Top', 'HIRRON', 15600.00, '2022.046794', '8336.2021', NULL, NULL, '2022-07-07', 'added', 'BD-650', '2024-07-05 22:35:17', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(525, 'Owned', 'Hard Top', 'HIRRON', 15600.00, '2022.046791', '8333.2021', NULL, NULL, '2022-07-07', 'added', 'BD-650', '2024-07-05 22:36:08', '2024-07-11 16:15:55', 'EFTO-CAG'),
+(526, 'Owned', 'Hard Top', 'HIRRON', 15600.00, '2022.046796', '8338.2021', NULL, NULL, '2022-07-07', 'added', 'BD-650', '2024-07-05 22:36:37', '2024-07-11 16:15:56', 'EFTO-CAG'),
+(527, 'Owned', 'Hard Top', 'HIRRON', 15600.00, '2022.046803', '8340.2021', NULL, NULL, '2022-07-07', 'added', 'BD-650', '2024-07-05 22:37:12', '2024-07-11 16:15:56', 'EFTO-CAG'),
+(528, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.271.335.0', '6969.2022', NULL, '2022-04-29', '2022-05-01', 'added', 'EFE-3002', '2024-07-06 11:39:04', '2024-07-11 16:15:56', 'EFTO-CAG'),
+(529, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L61.316.898.2', '7215.2020', NULL, '2022-04-29', '2022-05-02', 'added', 'EFE-3802', '2024-07-06 11:40:34', '2024-07-11 16:15:56', 'EFTO-CAG'),
+(530, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.826.997.7', 'GHL-060-18', NULL, NULL, '2022-07-07', 'available', 'EFE-3002', '2024-07-06 20:49:59', '2024-07-06 20:49:59', 'EFTO-CAG'),
+(531, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.826.997.7', 'GHL-060-18', NULL, NULL, '2022-07-07', 'added', 'EFE-3002', '2024-07-06 20:50:00', '2024-07-11 16:15:56', 'EFTO-CAG'),
+(532, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'n/a', '6965.2020', NULL, NULL, '2022-05-02', 'added', 'EFE-3002', '2024-07-06 20:51:13', '2024-07-11 16:15:56', 'EFTO-CAG'),
+(533, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'n/a', '2597.090413', NULL, '2022-04-30', '2022-05-02', 'added', 'EFE-3002', '2024-07-06 21:01:46', '2024-07-11 16:15:56', 'EFTO-CAG'),
+(534, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.603.336.5', 'GHL-010-12', NULL, NULL, '2022-05-22', 'added', 'EFE-3002', '2024-07-06 21:02:53', '2024-07-11 16:15:56', 'EFTO-CAG'),
+(535, 'Owned', 'Glass Top', 'LIEBHERR', 12200.00, 'L60.603.365.5', 'GHL-016-17', NULL, NULL, '2022-05-22', 'added', 'EFE-3002', '2024-07-06 21:04:10', '2024-07-11 16:15:56', 'EFTO-CAG'),
+(536, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L60.332.123.6', 'G-0051.0413.315', NULL, NULL, '2022-05-02', 'added', 'Others', '2024-07-06 21:05:20', '2024-07-11 16:15:56', 'EFTO-CAG'),
+(537, 'Owned', 'Glass Top', 'LIEBHERR', 14400.00, 'L60.514.749.0', 'G-0021.022.315', NULL, NULL, '2022-05-22', 'added', 'EFE-3802', '2024-07-06 21:06:29', '2024-07-11 16:15:56', 'EFTO-CAG'),
+(538, 'Owned', 'Glass Top', 'LIEBHERR', 13400.00, 'L61.000.900.4', '4427.110818', NULL, NULL, NULL, 'added', 'EFE-3802', '2024-07-10 21:09:57', '2024-07-11 16:15:56', 'EFTO-CAG');
 
 -- --------------------------------------------------------
 
@@ -1511,20 +1619,25 @@ INSERT INTO `equipment` (`id`, `ownership`, `type`, `brand`, `price`, `serial_no
 -- Table structure for table `equipment_store`
 --
 
-CREATE TABLE `equipment_store` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `equipment_store`;
+CREATE TABLE IF NOT EXISTS `equipment_store` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `customer_id` bigint(20) UNSIGNED NOT NULL,
   `store_id` bigint(20) UNSIGNED NOT NULL,
   `equipment_id` bigint(20) UNSIGNED NOT NULL,
-  `type` varchar(191) NOT NULL,
-  `brand` varchar(191) NOT NULL,
-  `serial` varchar(191) NOT NULL,
-  `owned` varchar(191) NOT NULL,
-  `pull_status` varchar(191) NOT NULL,
-  `remarks` varchar(191) DEFAULT NULL,
+  `type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `brand` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `serial` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `owned` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pull_status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remarks` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `equipment_store_store_id_foreign` (`store_id`),
+  KEY `equipment_store_equipment_id_foreign` (`equipment_id`),
+  KEY `equipment_store_customer_id_foreign` (`customer_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=920 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `equipment_store`
@@ -1661,7 +1774,6 @@ INSERT INTO `equipment_store` (`id`, `customer_id`, `store_id`, `equipment_id`, 
 (131, 158, 158, 312, 'Glass Top', 'LIEBHERR', 'L61.407.460.2', 'Owned', 'no', NULL, '2024-06-23 20:22:48', '2024-06-23 20:22:48'),
 (132, 160, 160, 383, 'Glass Top', 'LEIHBERR', 'L61.505.191.5', 'Owned', 'no', NULL, '2024-06-23 20:29:08', '2024-06-23 20:29:08'),
 (133, 164, 164, 346, 'Glass Top', 'LEIHBERR', 'L61.460.848.7', 'Owned', 'no', NULL, '2024-06-23 20:33:11', '2024-06-23 20:33:11'),
-(134, 171, 171, 319, 'Glass Top', 'LEIHBERR', 'L61.407.340.7', 'Owned', 'no', NULL, '2024-06-23 20:38:08', '2024-06-23 20:38:08'),
 (135, 172, 172, 391, 'Glass Top', 'LEIHBERR', 'L61.505.867.0', 'Owned', 'no', NULL, '2024-06-23 20:38:58', '2024-06-23 20:38:58'),
 (136, 174, 174, 355, 'Glass Top', 'LEIHBERR', 'L61.492.238.5', 'Owned', 'no', NULL, '2024-06-23 20:39:57', '2024-06-23 20:39:57'),
 (137, 176, 176, 395, 'Glass Top', 'LEIHBERR', 'L61.505.634.8', 'Owned', 'no', NULL, '2024-06-23 20:42:49', '2024-06-23 20:42:49'),
@@ -1889,7 +2001,204 @@ INSERT INTO `equipment_store` (`id`, `customer_id`, `store_id`, `equipment_id`, 
 (719, 388, 388, 194, 'Hard Top', 'HIRRON', 'H2023-051929', 'Owned', 'no', NULL, '2024-06-28 00:59:39', '2024-06-28 00:59:39'),
 (720, 388, 388, 195, 'Hard Top', 'HIRRON', 'H2023-051932', 'Owned', 'no', NULL, '2024-06-28 00:59:39', '2024-06-28 00:59:39'),
 (721, 388, 388, 196, 'Hard Top', 'HIRRON', 'H2023-051930', 'Owned', 'no', NULL, '2024-06-28 00:59:39', '2024-06-28 00:59:39'),
-(722, 388, 388, 197, 'Hard Top', 'HIRRON', 'H2023-051931', 'Owned', 'no', NULL, '2024-06-28 00:59:39', '2024-06-28 00:59:39');
+(722, 388, 388, 197, 'Hard Top', 'HIRRON', 'H2023-051931', 'Owned', 'no', NULL, '2024-06-28 00:59:39', '2024-06-28 00:59:39'),
+(723, 306, 306, 26, 'Glass Top', 'LEIBHERR', 'L61.493.418.0', 'Owned', 'no', NULL, '2024-06-28 19:57:28', '2024-06-28 19:57:28'),
+(724, 370, 370, 93, 'Glass Top', 'LIEBHERR', 'L61.491.864.7', 'Owned', 'no', NULL, '2024-06-28 19:58:46', '2024-06-28 19:58:46'),
+(725, 371, 371, 123, 'Glass Top', 'LIEBHERR', 'L61.596.984.6', 'Owned', 'no', NULL, '2024-06-28 20:00:12', '2024-06-28 20:00:12'),
+(726, 372, 372, 74, 'Glass Top', 'LIEBHERR', 'L61.407.767.2', 'Owned', 'no', NULL, '2024-06-28 20:01:04', '2024-06-28 20:01:04'),
+(727, 373, 373, 273, 'Glass Top', 'LIEBHERR', 'L61.271.326.8', 'Owned', 'no', NULL, '2024-06-28 20:02:25', '2024-06-28 20:02:25'),
+(728, 330, 330, 83, 'Glass Top', 'LIEBHERR', 'L61.491.842.5', 'Owned', 'no', NULL, '2024-06-28 22:33:29', '2024-06-28 22:33:29'),
+(730, 192, 192, 403, 'Glass Top', 'LEIHBERR', 'L61.505.028.5', 'Owned', 'no', NULL, '2024-06-28 22:41:27', '2024-06-28 22:41:27'),
+(731, 391, 391, 52, 'Glass Top', 'LEIBHERR', 'L61.631.357', 'Owned', 'no', NULL, '2024-06-28 22:48:20', '2024-06-28 22:48:20'),
+(732, 389, 389, 43, 'Glass Top', 'LEIBHERR', 'L61.506.179.3', 'Owned', 'no', NULL, '2024-06-28 22:48:53', '2024-06-28 22:48:53'),
+(733, 392, 392, 121, 'Glass Top', 'LIEBHERR', 'L61.596.979.2', 'Owned', 'no', NULL, '2024-06-28 22:50:00', '2024-06-28 22:50:00'),
+(734, 393, 393, 127, 'Glass Top', 'LIEBHERR', 'L61.633.693.7', 'Owned', 'no', NULL, '2024-06-28 22:50:38', '2024-06-28 22:50:38'),
+(735, 394, 394, 256, 'Glass Top', 'LIEBHERR', 'L60.206.633.6', 'Owned', 'no', NULL, '2024-06-28 22:51:19', '2024-06-28 22:51:19'),
+(736, 390, 390, 51, 'Glass Top', 'LEIBHERR', 'L61.506.589.0', 'Owned', 'no', NULL, '2024-06-28 22:52:41', '2024-06-28 22:52:41'),
+(737, 395, 395, 415, 'Glass Top', 'LEIHBERR', 'L61.631.342.6', 'Owned', 'no', NULL, '2024-07-03 22:55:57', '2024-07-03 22:55:57'),
+(738, 396, 396, 428, 'Glass Top', 'HIRON', 'L61.493.368.2', 'Owned', 'no', NULL, '2024-07-03 22:58:41', '2024-07-03 22:58:41'),
+(739, 397, 397, 10, 'Hard Top', 'HIRON', '420.558.7', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(740, 397, 397, 16, 'Glass Top', 'LEIBHERR', 'L661.506.412.1', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(741, 397, 397, 26, 'Glass Top', 'LEIBHERR', 'L61.493.418.0', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(742, 397, 397, 43, 'Glass Top', 'LEIBHERR', 'L61.506.179.3', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(743, 397, 397, 49, 'Glass Top', 'LEIBHERR', 'L61.506.151.9', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(744, 397, 397, 51, 'Glass Top', 'LEIBHERR', 'L61.506.589.0', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(745, 397, 397, 52, 'Glass Top', 'LEIBHERR', 'L61.631.357', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(746, 397, 397, 53, 'Glass Top', 'LEIBHERR', 'L61.631.344.0', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(747, 397, 397, 54, 'Glass Top', 'LEIBHERR', 'L61.631.365.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(748, 397, 397, 55, 'Glass Top', 'LEIBHERR', 'l61.631.349.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(749, 397, 397, 56, 'Glass Top', 'LEIBHERR', 'L61.506.625.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(750, 397, 397, 57, 'Glass Top', 'LEIBHERR', 'L61.631.350.1', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(751, 397, 397, 58, 'Glass Top', 'LEIBHERR', 'L61.631.352.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(752, 397, 397, 59, 'Glass Top', 'LEIBHERR', 'L61.631.342.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(753, 397, 397, 69, 'Glass Top', 'LEIBHERR', 'L61.407.774.0', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(754, 397, 397, 74, 'Glass Top', 'LIEBHERR', 'L61.407.767.2', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(755, 397, 397, 77, 'Glass Top', 'LIEBHERR', 'L61.493.800.3', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(756, 397, 397, 83, 'Glass Top', 'LIEBHERR', 'L61.491.842.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27');
+INSERT INTO `equipment_store` (`id`, `customer_id`, `store_id`, `equipment_id`, `type`, `brand`, `serial`, `owned`, `pull_status`, `remarks`, `created_at`, `updated_at`) VALUES
+(757, 397, 397, 86, 'Glass Top', 'LIEBHERR', 'L61.491.884.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(758, 397, 397, 93, 'Glass Top', 'LIEBHERR', 'L61.491.864.7', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(759, 397, 397, 116, 'Glass Top', 'LIEBHERR', 'L61.596.952.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(760, 397, 397, 121, 'Glass Top', 'LIEBHERR', 'L61.596.979.2', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(761, 397, 397, 123, 'Glass Top', 'LIEBHERR', 'L61.596.984.6', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(762, 397, 397, 127, 'Glass Top', 'LIEBHERR', 'L61.633.693.7', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(763, 397, 397, 129, 'Glass Top', 'LIEBHERR', 'L61.633.663.3', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(764, 397, 397, 144, 'Glass Top', 'LIEBHERR', 'L61.505.595.2', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(765, 397, 397, 181, 'Hard Top', 'HIRRON', 'H2022-047243', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(766, 397, 397, 199, 'Glass Top', 'LIEBHERR', 'L60.122.276.4', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(767, 397, 397, 200, 'Glass Top', 'LIEBHERR', 'L60.147.401.9', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(768, 397, 397, 202, 'Glass Top', 'LIEBHERR', 'L60.603.336.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(769, 397, 397, 205, 'Glass Top', 'LIEBHERR', 'L60.603.314.3', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(770, 397, 397, 206, 'Glass Top', 'LIEBHERR', 'L60.602.315.1', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(771, 397, 397, 209, 'Glass Top', 'LIEBHERR', 'L60.602.806.4', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(772, 397, 397, 210, 'Glass Top', 'LIEBHERR', 'L60.602.822.4', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(773, 397, 397, 211, 'Glass Top', 'LIEBHERR', 'L60.603.326.6', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(774, 397, 397, 216, 'Glass Top', 'LIEBHERR', 'L60.775.274.6', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(775, 397, 397, 221, 'Glass Top', 'LIEBHERR', 'L60.828.077.4', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(776, 397, 397, 223, 'Glass Top', 'LIEBHERR', 'L60.986.726.4', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(777, 397, 397, 224, 'Glass Top', 'LIEBHERR', 'L60.514.752.0', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(778, 397, 397, 227, 'Glass Top', 'LIEBHERR', 'L60.516.767.2', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(779, 397, 397, 229, 'Glass Top', 'LIEBHERR', 'L60.502.980.2', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(780, 397, 397, 233, 'Glass Top', 'LIEBHERR', 'L60.602.381.6', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(781, 397, 397, 234, 'Glass Top', 'LIEBHERR', 'L60.808.554.6', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(782, 397, 397, 238, 'Glass Top', 'LIEBHERR', 'L60.263.884.7', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(783, 397, 397, 240, 'Glass Top', 'LIEBHERR', 'L60.353.477.3', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(784, 397, 397, 241, 'Glass Top', 'LIEBHERR', 'L60.370.402.2', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(785, 397, 397, 242, 'Glass Top', 'LIEBHERR', 'L60.570.405.3', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(786, 397, 397, 243, 'Glass Top', 'LIEBHERR', 'L60.369.3791', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(787, 397, 397, 244, 'Glass Top', 'LIEBHERR', 'L60.364621.6', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(788, 397, 397, 246, 'Hard Top', 'HIRRON', 'H2014-018393', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(789, 397, 397, 248, 'Glass Top', 'HIRRON', 'H2014-018837', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(790, 397, 397, 252, 'Glass Top', 'LIEBHERR', 'H2014-020227', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(791, 397, 397, 253, 'Glass Top', 'LIEBHERR', 'H2014-020228', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(792, 397, 397, 256, 'Glass Top', 'LIEBHERR', 'L60.206.633.6', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(793, 397, 397, 257, 'Glass Top', 'LIEBHERR', 'L60.515.558.7', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(794, 397, 397, 259, 'Glass Top', 'LIEBHERR', 'L60.487.347.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(795, 397, 397, 260, 'Glass Top', 'LIEBHERR', 'L60.516.768.9', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(796, 397, 397, 264, 'Glass Top', 'LIEBHERR', 'L60.516.773.3', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(797, 397, 397, 267, 'Glass Top', 'LIEBHERR', 'L61.000.900.4', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(798, 397, 397, 273, 'Glass Top', 'LIEBHERR', 'L61.271.326.8', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(799, 397, 397, 285, 'Glass Top', 'FUJIDENZO', 'SMALL', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(800, 397, 397, 286, 'Glass Top', 'FUJIDENZO', 'SMALL1', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(801, 397, 397, 287, 'Glass Top', 'FUJIDENZO', 'SMALL 2', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(802, 397, 397, 288, 'Glass Top', 'FUJIDENZO', 'SMALL 3', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(803, 397, 397, 289, 'Glass Top', 'FUJIDENZO', 'SMALL 4', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(804, 397, 397, 290, 'Glass Top', 'FUJIDENZO', 'SMALL 5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(805, 397, 397, 291, 'Glass Top', 'FUJIDENZO', 'SMALL 6', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(806, 397, 397, 292, 'Glass Top', 'FUJIDENZO', 'SMALL 7', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(807, 397, 397, 293, 'Glass Top', 'FUJIDENZO', 'FUJIDENZO 5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(808, 397, 397, 294, 'Glass Top', 'FUJIDENZO', 'FUJIDENZO 7', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(809, 397, 397, 295, 'Glass Top', 'FUJIDENZO', 'FUJIDENZO 8', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(810, 397, 397, 296, 'Glass Top', 'FUJIDENZO', 'LARGE 10', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(811, 397, 397, 297, 'Glass Top', 'FUJIDENZO', 'LARGE 11', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(812, 397, 397, 298, 'Glass Top', 'FUJIDENZO', 'FUJIDENZO 11', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(813, 397, 397, 299, 'Glass Top', 'FUJIDENZO', 'FUJIDENZO 12', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(814, 397, 397, 309, 'Glass Top', 'LIEBHERR', 'L61.407.419.0', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(815, 397, 397, 314, 'Glass Top', 'LIEBHERR', 'L61.407.461.9', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(816, 397, 397, 320, 'Glass Top', 'LEIHBERR', 'L61.407.454.1', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(817, 397, 397, 322, 'Glass Top', 'LEIHBERR', 'L61.407.456.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(818, 397, 397, 329, 'Glass Top', 'LEIHBERR', 'L61.420.515.0', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(819, 397, 397, 335, 'Glass Top', 'LEIHBERR', 'L61.460.892.0', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(820, 397, 397, 345, 'Glass Top', 'LEIHBERR', 'L61.460.851.7', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(821, 397, 397, 353, 'Glass Top', 'LEIHBERR', 'L61.460.878.4', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(822, 397, 397, 358, 'Glass Top', 'LEIHBERR', 'L61.492.246.0', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(823, 397, 397, 363, 'Glass Top', 'LEIHBERR', 'L61.493.341.1', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(824, 397, 397, 380, 'Glass Top', 'LEIHBERR', 'L61.493.427.2', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(825, 397, 397, 394, 'Glass Top', 'LEIHBERR', 'L61.504.988.3', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(826, 397, 397, 398, 'Glass Top', 'LEIHBERR', 'L61.504.948.7', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(827, 397, 397, 399, 'Glass Top', 'LEIHBERR', 'L61.504.969.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(828, 397, 397, 400, 'Glass Top', 'LEIHBERR', 'L61.504.971.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(829, 397, 397, 401, 'Hard Top', 'LEIHBERR', 'L61.504.959.3', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(830, 397, 397, 402, 'Glass Top', 'LEIHBERR', 'L61.504.963.0', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(831, 397, 397, 403, 'Glass Top', 'LEIHBERR', 'L61.505.028.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(832, 397, 397, 405, 'Glass Top', 'LEIHBERR', 'L61.633.699.9', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(833, 397, 397, 406, 'Glass Top', 'LEIHBERR', 'L61.633.722.4', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(834, 397, 397, 407, 'Glass Top', 'LEIHBERR', 'L61.633.692.0', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(835, 397, 397, 408, 'Glass Top', 'LEIHBERR', 'L61.633.726.2', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(836, 397, 397, 409, 'Glass Top', 'LEIHBERR', 'L61.633.691.3', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(837, 397, 397, 410, 'Glass Top', 'LEIHBERR', 'L61.633.670.8', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(838, 397, 397, 411, 'Glass Top', 'LEIHBERR', 'L61.633.707.1', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(839, 397, 397, 412, 'Glass Top', 'LEIHBERR', 'L61.633.707.0', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(840, 397, 397, 413, 'Glass Top', 'LEIHBERR', 'L61.633.665.4', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(841, 397, 397, 414, 'Glass Top', 'LEIHBERR', 'L61.633.701.9', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(842, 397, 397, 415, 'Glass Top', 'LEIHBERR', 'L61.631.342.6', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(843, 397, 397, 416, 'Glass Top', 'LEIHBERR', 'L61.631.357.0', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(844, 397, 397, 417, 'Hard Top', 'LEIHBERR', 'L61.631.356.3', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(845, 397, 397, 418, 'Glass Top', 'LEIHBERR', 'L61.506.577.7', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(846, 397, 397, 419, 'Glass Top', 'LEIHBERR', 'L61.506.582.1', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(847, 397, 397, 420, 'Glass Top', 'LEIHBERR', 'L61.506.210.3', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(848, 397, 397, 421, 'Glass Top', 'LEIHBERR', 'L61.506.429.9', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(849, 397, 397, 422, 'Glass Top', 'LEIHBERR', 'L61.631.364.8', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(850, 397, 397, 423, 'Glass Top', 'LEIHBERR', 'L61.631.351.8', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(851, 397, 397, 424, 'Glass Top', 'LEIHBERR', 'L61.631.348.8', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(852, 397, 397, 425, 'Glass Top', 'LEIHBERR', 'L61.631.345.7', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(853, 397, 397, 426, 'Glass Top', 'LEIHBERR', 'L61.631.347.1', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(854, 397, 397, 427, 'Glass Top', 'HIRON', '2022.047493', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(855, 397, 397, 428, 'Glass Top', 'LIEBHERR', 'L61.493.368.2', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(856, 397, 397, 430, 'Hard Top', 'HIRON', '2024.0522.03', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(857, 397, 397, 431, 'Glass Top', 'LEIHBERR', 'L61.316.935.4', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(858, 397, 397, 434, 'Hard Top', 'LEIHBERR', 'L61.403.692.1', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(859, 397, 397, 435, 'Hard Top', 'LEIHBERR', 'L61.403.689.1', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(860, 397, 397, 436, 'Hard Top', 'LEIHBERR', 'L61.403.683.9', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(861, 397, 397, 437, 'Hard Top', 'LEIHBERR', 'L61.403.684.6', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(862, 397, 397, 438, 'Hard Top', 'LEIHBERR', 'L61.403.688.4', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(863, 397, 397, 439, 'Hard Top', 'LEIHBERR', 'L61.403.693.8', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(864, 397, 397, 440, 'Hard Top', 'LEIHBERR', 'L61.403.691.4', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(865, 397, 397, 441, 'Hard Top', 'LEIHBERR', 'L61.403.680.8', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(866, 397, 397, 442, 'Hard Top', 'LEIHBERR', 'L61.403.685.3', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(867, 397, 397, 443, 'Hard Top', 'LEIHBERR', 'L61.403.686.0', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(868, 397, 397, 444, 'Hard Top', 'LEIHBERR', 'L61.403.694.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(869, 397, 397, 445, 'Hard Top', 'LEIHBERR', 'L61.403.682.2', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(870, 397, 397, 446, 'Hard Top', 'LEIHBERR', 'L61.403.681.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(871, 397, 397, 447, 'Hard Top', 'LEIHBERR', 'L61.403.690.7', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(872, 397, 397, 448, 'Hard Top', 'LEIHBERR', 'L61.403.687.7', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(873, 397, 397, 449, 'Hard Top', 'LEIHBERR', 'L61.461.452.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(874, 397, 397, 450, 'Hard Top', 'LEIHBERR', 'L61.461.419.8', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(875, 397, 397, 451, 'Hard Top', 'LEIHBERR', 'L61.461.445.7', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(876, 397, 397, 452, 'Hard Top', 'LEIHBERR', 'L61.461.431.6', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(877, 397, 397, 453, 'Hard Top', 'LEIHBERR', 'L61.461.423.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(878, 397, 397, 491, 'Glass Top', 'HIRON', 'L61.316.911.8', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(879, 397, 397, 492, 'Glass Top', 'LEIHBERR', 'E06F2800197', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(880, 397, 397, 493, 'Glass Top', 'lEIHBERR', 'L61.271.332.9', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(881, 397, 397, 494, 'Glass Top', 'lEIHBERR', 'L61.271.343.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(882, 397, 397, 495, 'Glass Top', 'LEIHBERR', 'L61.370.426.8', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(883, 397, 397, 496, 'Glass Top', 'lEIHBERR', 'L61.407.416.9', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(884, 397, 397, 497, 'Glass Top', 'LEIHBERR', 'H2013.0159.45', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(885, 397, 397, 498, 'Glass Top', 'LEIHBERR', 'H2014.018403', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(886, 397, 397, 500, 'Glass Top', 'LEIHBERR', 'L60.224.565.6', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(887, 397, 397, 501, 'Glass Top', 'LEIHBERR', 'L61.106.169.8', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(888, 397, 397, 502, 'Glass Top', 'HIRON', 'H2016-023504', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(889, 397, 397, 503, 'Glass Top', 'lEIHBERR', 'L60.503.673.5', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(890, 397, 397, 504, 'Glass Top', 'lEIHBERR', 'L60.808.556.0', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(891, 397, 397, 505, 'Glass Top', 'lEIHBERR', 'L61.271.339.8', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(892, 397, 397, 506, 'Glass Top', 'LEIHBERR', 'L61.407.345.2', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(893, 397, 397, 508, 'Glass Top', 'LEIHBERR', 'L61.460.863.0', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(894, 397, 397, 510, 'Glass Top', 'LEIHBERR', 'L61.493.370.1', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(895, 397, 397, 511, 'Glass Top', 'LEIHBERR', 'L61.506.230.1', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(896, 397, 397, 512, 'Glass Top', 'LEIHBERR', 'L60.365.724.2', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(897, 397, 397, 514, 'Glass Top', 'LEIHBERR', 'L60.369.600.6', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(898, 397, 397, 517, 'Glass Top', 'LEIHBERR', 'L61.504.948.7', 'Owned', 'no', NULL, '2024-07-05 21:20:27', '2024-07-05 21:20:27'),
+(899, 388, 388, 518, 'Hard Top', 'HIRRON', '2022.046793', 'Owned', 'no', NULL, '2024-07-05 22:37:50', '2024-07-05 22:37:50'),
+(900, 388, 388, 519, 'Hard Top', 'HIRRON', '2022.046797', 'Owned', 'no', NULL, '2024-07-05 22:38:26', '2024-07-05 22:38:26'),
+(901, 388, 388, 520, 'Hard Top', 'LIEBHERR', '2022.046792', 'Owned', 'no', NULL, '2024-07-05 22:39:06', '2024-07-05 22:39:06'),
+(902, 388, 388, 521, 'Hard Top', 'FUJIDENZO', 'f600h0945', 'Owned', 'no', NULL, '2024-07-05 22:39:24', '2024-07-05 22:39:24'),
+(903, 388, 388, 522, 'Hard Top', 'HIRRON', '2022.046790', 'Owned', 'no', NULL, '2024-07-05 22:39:53', '2024-07-05 22:39:53'),
+(904, 388, 388, 523, 'Hard Top', 'HIRRON', '2022.047167', 'Owned', 'no', NULL, '2024-07-05 22:40:14', '2024-07-05 22:40:14'),
+(905, 388, 388, 524, 'Hard Top', 'HIRRON', '2022.046794', 'Owned', 'no', NULL, '2024-07-05 22:40:37', '2024-07-05 22:40:37'),
+(906, 388, 388, 525, 'Hard Top', 'HIRRON', '2022.046791', 'Owned', 'no', NULL, '2024-07-05 22:41:21', '2024-07-05 22:41:21'),
+(907, 388, 388, 525, 'Hard Top', 'HIRRON', '2022.046791', 'Owned', 'no', NULL, '2024-07-05 22:41:25', '2024-07-05 22:41:25'),
+(908, 388, 388, 526, 'Hard Top', 'HIRRON', '2022.046796', 'Owned', 'no', NULL, '2024-07-05 22:41:53', '2024-07-05 22:41:53'),
+(909, 388, 388, 527, 'Hard Top', 'HIRRON', '2022.046803', 'Owned', 'no', NULL, '2024-07-05 22:42:14', '2024-07-05 22:42:14'),
+(910, 368, 368, 531, 'Glass Top', 'LIEBHERR', 'L60.826.997.7', 'Owned', 'no', NULL, '2024-07-06 20:53:14', '2024-07-06 20:53:14'),
+(911, 305, 305, 532, 'Glass Top', 'LIEBHERR', 'n/a', 'Owned', 'no', NULL, '2024-07-06 20:58:04', '2024-07-06 20:58:04'),
+(912, 359, 359, 529, 'Glass Top', 'LIEBHERR', 'L61.316.898.2', 'Owned', 'no', NULL, '2024-07-06 20:59:40', '2024-07-06 20:59:40'),
+(913, 128, 128, 528, 'Glass Top', 'LIEBHERR', 'L61.271.335.0', 'Owned', 'no', NULL, '2024-07-06 21:00:19', '2024-07-06 21:00:19'),
+(914, 367, 367, 533, 'Glass Top', 'LIEBHERR', 'n/a', 'Owned', 'no', NULL, '2024-07-06 21:07:03', '2024-07-06 21:07:03'),
+(915, 302, 302, 534, 'Glass Top', 'LIEBHERR', 'L60.603.336.5', 'Owned', 'no', NULL, '2024-07-06 21:07:54', '2024-07-06 21:07:54'),
+(916, 364, 364, 537, 'Glass Top', 'LIEBHERR', 'L60.514.749.0', 'Owned', 'no', NULL, '2024-07-06 21:08:28', '2024-07-06 21:08:28'),
+(917, 361, 361, 535, 'Glass Top', 'LIEBHERR', 'L60.603.365.5', 'Owned', 'no', NULL, '2024-07-06 21:08:55', '2024-07-06 21:08:55'),
+(918, 354, 354, 536, 'Glass Top', 'LIEBHERR', 'L60.332.123.6', 'Owned', 'no', NULL, '2024-07-06 21:09:18', '2024-07-06 21:09:18'),
+(919, 398, 398, 538, 'Glass Top', 'LIEBHERR', 'L61.000.900.4', 'Owned', 'no', NULL, '2024-07-10 21:10:21', '2024-07-10 21:10:21');
 
 -- --------------------------------------------------------
 
@@ -1897,10 +2206,12 @@ INSERT INTO `equipment_store` (`id`, `customer_id`, `store_id`, `equipment_id`, 
 -- Table structure for table `expenses`
 --
 
-CREATE TABLE `expenses` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `expenses`;
+CREATE TABLE IF NOT EXISTS `expenses` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1909,14 +2220,17 @@ CREATE TABLE `expenses` (
 -- Table structure for table `failed_jobs`
 --
 
-CREATE TABLE `failed_jobs` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `uuid` varchar(191) NOT NULL,
-  `connection` text NOT NULL,
-  `queue` text NOT NULL,
-  `payload` longtext NOT NULL,
-  `exception` longtext NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
+DROP TABLE IF EXISTS `failed_jobs`;
+CREATE TABLE IF NOT EXISTS `failed_jobs` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1925,42 +2239,33 @@ CREATE TABLE `failed_jobs` (
 -- Table structure for table `inbounds`
 --
 
-CREATE TABLE `inbounds` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `inbounds`;
+CREATE TABLE IF NOT EXISTS `inbounds` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `branch_code` varchar(15) NOT NULL,
-  `equipment_id` varchar(191) NOT NULL,
+  `branch_code` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `equipment_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `customer_id` int(10) UNSIGNED NOT NULL,
   `store_id` int(10) UNSIGNED NOT NULL,
-  `driver_id` varchar(191) NOT NULL,
-  `vehicle_id` varchar(191) NOT NULL,
-  `products` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`products`)),
+  `driver_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `vehicle_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `products` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
   `with_invoice` tinyint(4) DEFAULT NULL,
   `bad_order` tinyint(4) DEFAULT NULL,
   `bad_order_id` int(11) DEFAULT NULL,
   `bo_amount` float DEFAULT NULL,
-  `status` varchar(10) NOT NULL,
+  `status` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
   `pricelevel_id` int(10) UNSIGNED NOT NULL,
-  `payment_type` varchar(30) DEFAULT NULL,
-  `ref_no` varchar(30) DEFAULT NULL,
+  `payment_type` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ref_no` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `delivered_amount` float DEFAULT NULL,
+  `grp_print_ticket_no` varchar(99) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ticket_sequence_no` int(11) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `inbounds`
---
-
-INSERT INTO `inbounds` (`id`, `user_id`, `branch_code`, `equipment_id`, `customer_id`, `store_id`, `driver_id`, `vehicle_id`, `products`, `with_invoice`, `bad_order`, `bad_order_id`, `bo_amount`, `status`, `pricelevel_id`, `payment_type`, `ref_no`, `delivered_amount`, `created_at`, `updated_at`) VALUES
-(1, 1, 'EFTO-CAG', '1', 1, 1, '1', '1', NULL, NULL, NULL, NULL, NULL, 'Encoding', 2, NULL, NULL, NULL, '2024-06-04 19:06:32', '2024-06-08 21:35:12'),
-(2, 1, 'EFTO-CAG', '6', 2, 4, '7', '4', '{\"1\":{\"order\":1,\"ptype_code\":\"SC\",\"code\":\"SC_BP\",\"quantity\":\"1\",\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan\",\"created_at\":\"2024-06-20T12:04:45.760299Z\"},\"2\":{\"order\":2,\"ptype_code\":\"MC\",\"code\":\"MC_MRB\",\"quantity\":\"1\",\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Choco Marble\",\"created_at\":\"2024-06-20T12:04:50.952040Z\"},\"3\":{\"order\":2,\"ptype_code\":\"MC\",\"code\":\"MC_SS\",\"quantity\":\"1\",\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Strawberry Strawberry\",\"created_at\":\"2024-06-20T12:04:51.583994Z\"},\"4\":{\"order\":6,\"ptype_code\":\"SPS\",\"code\":\"SPS_CHO\",\"quantity\":\"1\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Chocolate\",\"created_at\":\"2024-06-20T12:04:55.579663Z\"},\"5\":{\"order\":10,\"ptype_code\":\"1.7L\",\"code\":\"1.7L_MRB\",\"quantity\":\"1\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Choco Marble\",\"created_at\":\"2024-06-20T12:04:58.578615Z\"},\"6\":{\"order\":10,\"ptype_code\":\"1.7L\",\"code\":\"1.7L_MOC\",\"quantity\":\"1\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Coffee Mocha Fudge\",\"created_at\":\"2024-06-20T12:04:59.040639Z\"},\"7\":{\"order\":12,\"ptype_code\":\"3.6L\",\"code\":\"3.6L_MOC\",\"quantity\":\"1\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Coffee Mocha Fudge\",\"created_at\":\"2024-06-20T12:05:03.473167Z\"}}', 1, 0, NULL, NULL, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 19:25:45', '2024-06-22 22:24:52'),
-(3, 1, 'EFTO-CAG', '6', 2, 2, '7', '3', NULL, 1, 0, NULL, NULL, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 22:27:22', '2024-06-07 23:23:42'),
-(4, 2, 'EFTO-CAG', '6', 2, 2, '7', '2', NULL, 0, 0, NULL, NULL, 'Completed', 4, NULL, NULL, NULL, '2024-06-07 23:07:13', '2024-06-07 23:21:47'),
-(5, 2, 'EFTO-CAG', '6', 2, 2, '6', '2', '[{\"order\":2,\"ptype_code\":\"MC\",\"code\":\"MC_CS\",\"quantity\":2,\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese\",\"created_at\":\"2024-06-12T04:21:08.705259Z\"},{\"order\":5,\"ptype_code\":\"ICB\",\"code\":\"ICB_BUKO\",\"quantity\":\"1\",\"price\":390,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"ICE BUKO BUKO\",\"created_at\":\"2024-06-12T04:21:11.451044Z\"},{\"order\":6,\"ptype_code\":\"SPS\",\"code\":\"SPS_CHO\",\"quantity\":\"1\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Chocolate\",\"created_at\":\"2024-06-12T04:21:15.627010Z\"}]', 0, 0, NULL, NULL, 'Paid', 4, 'Cash', '5', 2031, '2024-06-12 19:21:03', '2024-06-12 19:22:54'),
-(6, 2, 'EFTO-CAG', '89', 6, 6, '6', '2', NULL, NULL, NULL, NULL, NULL, 'Encoding', 4, NULL, NULL, NULL, '2024-06-15 14:13:44', '2024-06-15 14:13:44'),
-(7, 2, 'EFTO-CAG', '4', 6, 6, '6', '2', '[{\"order\":1,\"ptype_code\":\"SC\",\"code\":\"SC_BM\",\"quantity\":\"1\",\"price\":12.7,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Melon\",\"created_at\":\"2024-06-20T12:04:44.933799Z\"},{\"order\":1,\"ptype_code\":\"SC\",\"code\":\"SC_BP\",\"quantity\":\"1\",\"price\":600,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan\",\"created_at\":\"2024-06-20T12:04:45.760299Z\"},{\"order\":2,\"ptype_code\":\"MC\",\"code\":\"MC_MRB\",\"quantity\":\"1\",\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Choco Marble\",\"created_at\":\"2024-06-20T12:04:50.952040Z\"},{\"order\":2,\"ptype_code\":\"MC\",\"code\":\"MC_SS\",\"quantity\":\"1\",\"price\":508,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"135ml MEDIUM CUP SPECIAL (4.5-oz) Strawberry Strawberry\",\"created_at\":\"2024-06-20T12:04:51.583994Z\"},{\"order\":6,\"ptype_code\":\"SPS\",\"code\":\"SPS_CHO\",\"quantity\":\"1\",\"price\":625,\"unit\":\"Bag\\/s\",\"sppb\":null,\"description\":\"SPECIAL STICKS Chocolate\",\"created_at\":\"2024-06-20T12:04:55.579663Z\"},{\"order\":10,\"ptype_code\":\"1.7L\",\"code\":\"1.7L_MRB\",\"quantity\":\"1\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Choco Marble\",\"created_at\":\"2024-06-20T12:04:58.578615Z\"},{\"order\":10,\"ptype_code\":\"1.7L\",\"code\":\"1.7L_MOC\",\"quantity\":\"1\",\"price\":170,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"1.7 LITER Coffee Mocha Fudge\",\"created_at\":\"2024-06-20T12:04:59.040639Z\"},{\"order\":12,\"ptype_code\":\"3.6L\",\"code\":\"3.6L_MOC\",\"quantity\":\"1\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Coffee Mocha Fudge\",\"created_at\":\"2024-06-20T12:05:03.473167Z\"},{\"order\":12,\"ptype_code\":\"3.6L\",\"code\":\"3.6L_MG\",\"quantity\":\"1\",\"price\":318,\"unit\":\"Pc\\/s\",\"sppb\":null,\"description\":\"3.6 LITER Mango\",\"created_at\":\"2024-06-20T12:05:03.637829Z\"}]', NULL, NULL, NULL, NULL, 'Completed', 4, NULL, NULL, NULL, '2024-06-21 03:05:24', '2024-06-21 03:05:24'),
-(8, 2, 'EFTO-CAG', '5', 3, 3, '6', '2', 'null', NULL, NULL, 3, 61, 'Completed', 4, NULL, NULL, NULL, '2024-06-22 17:13:21', '2024-06-23 14:26:57');
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `inbounds_branch_code_index` (`branch_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1968,10 +2273,12 @@ INSERT INTO `inbounds` (`id`, `user_id`, `branch_code`, `equipment_id`, `custome
 -- Table structure for table `inventories`
 --
 
-CREATE TABLE `inventories` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `inventories`;
+CREATE TABLE IF NOT EXISTS `inventories` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1980,92 +2287,21 @@ CREATE TABLE `inventories` (
 -- Table structure for table `item_master_data`
 --
 
-CREATE TABLE `item_master_data` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `branch_code` varchar(15) NOT NULL,
-  `product_code` varchar(15) NOT NULL,
-  `product_description` varchar(99) NOT NULL,
-  `unit` varchar(25) NOT NULL,
+DROP TABLE IF EXISTS `item_master_data`;
+CREATE TABLE IF NOT EXISTS `item_master_data` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `branch_code` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `product_code` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `product_description` varchar(99) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `unit` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL,
   `stocks` int(11) NOT NULL,
-  `reserved` int(11) NOT NULL DEFAULT 0,
-  `hold_quantity` int(11) NOT NULL DEFAULT 0,
-  `hold_details` longtext DEFAULT NULL,
+  `reserved` int(11) NOT NULL DEFAULT '0',
+  `hold_quantity` int(11) NOT NULL DEFAULT '0',
+  `hold_details` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `item_master_data`
---
-
-INSERT INTO `item_master_data` (`id`, `branch_code`, `product_code`, `product_description`, `unit`, `stocks`, `reserved`, `hold_quantity`, `hold_details`, `created_at`, `updated_at`) VALUES
-(1, 'EFTO-CAG', 'SC_RR', 'Small Cup Rocky Road', 'Bag/s', 50, 0, 0, NULL, '2024-06-04 19:07:48', '2024-06-04 19:07:48'),
-(2, 'EFTO-CAG', 'SC_BM', '90ml SMALL CUP REGULAR (3.0-oz) Buko Melon', 'Bag/s', 30, 3, 0, NULL, '2024-06-06 05:10:24', '2024-06-22 17:13:21'),
-(3, 'EFTO-CAG', 'SC_BP', '90ml SMALL CUP REGULAR (3.0-oz) Buko Pandan', 'Bag/s', 26, 4, 0, NULL, '2024-06-06 05:10:24', '2024-06-21 03:05:24'),
-(4, 'EFTO-CAG', 'SC_BU', '90ml SMALL CUP REGULAR (3.0-oz) Buko Ube', 'Bag/s', 26, 0, 0, NULL, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
-(5, 'EFTO-CAG', 'SC_MG', '90ml SMALL CUP REGULAR (3.0-oz) Mango', 'Bag/s', 86, 0, 0, NULL, '2024-06-06 05:10:24', '2024-06-15 14:15:19'),
-(6, 'EFTO-CAG', 'MC_CS', '135ml MEDIUM CUP SPECIAL (4.5-oz) Cheese', 'Bag/s', 198, 6, 0, NULL, '2024-06-06 05:10:24', '2024-06-28 01:07:06'),
-(7, 'EFTO-CAG', 'BC_CNC', '180ml BIG CUP (6.0-oz) Cookies N\' Cream', 'Bag/s', 108, 3, 0, NULL, '2024-06-06 05:10:24', '2024-06-22 17:13:21'),
-(8, 'EFTO-CAG', 'BC_CS', '180ml BIG CUP (6.0-oz) Cheese', 'Bag/s', 204, 1, 50, NULL, '2024-06-06 05:10:24', '2024-06-12 19:07:23'),
-(9, 'EFTO-CAG', 'BC_HH', '180ml BIG CUP (6.0-oz) Halo halo', 'Bag/s', 30, 0, 0, NULL, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
-(10, 'EFTO-CAG', 'SPS_CHO', 'SPECIAL STICKS Chocolate', 'Bag/s', 158, 4, 0, NULL, '2024-06-06 05:10:24', '2024-06-22 17:13:21'),
-(11, 'EFTO-CAG', 'SPS_MK', 'SPECIAL STICKS Milk', 'Bag/s', 42, 1, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(12, 'EFTO-CAG', 'ICC_RR', 'ICE CREAM CONES Rocky Road', 'Bag/s', 162, 1, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:23:42'),
-(13, 'EFTO-CAG', 'PT_BM', 'PINT Buko Melon', 'Pc/s', 399, 4, 0, NULL, '2024-06-06 05:10:24', '2024-06-12 19:07:23'),
-(14, 'EFTO-CAG', 'PT_CNC', 'PINT Cookies N\' Cream', 'Pc/s', 171, 2, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(15, 'EFTO-CAG', 'PT_CS', 'PINT Cheese', 'Pc/s', 399, 5, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(16, 'EFTO-CAG', 'PT_HH', 'PINT Halo halo', 'Pc/s', 171, 4, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:23:42'),
-(17, 'EFTO-CAG', 'PT_MG', 'PINT Mango', 'Pc/s', 171, 5, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(18, 'EFTO-CAG', 'PT_MOC', 'PINT Coffee Mocha Fudge', 'Pc/s', 171, 2, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(19, 'EFTO-CAG', '1L_CF', '1 LITER Chocofi', 'Pc/s', 72, 2, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(20, 'EFTO-CAG', '1L_CNC', '1 LITER Cookies N\' Cream', 'Pc/s', 72, 2, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(21, 'EFTO-CAG', '1L_CS', '1 LITER Cheese', 'Pc/s', 504, 2, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(22, 'EFTO-CAG', '1L_MG', '1 LITER Mango', 'Bag/s', 72, 2, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(23, 'EFTO-CAG', '1L_MOC', '1 LITER Coffee Mocha Fudge', 'Bag/s', 72, 2, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(24, 'EFTO-CAG', '1.7L_CNC', '1.7 LITER Cookies N\' Cream', 'Pc/s', 420, 5, 0, NULL, '2024-06-06 05:10:24', '2024-06-12 19:07:23'),
-(25, 'EFTO-CAG', '1.7L_CS', '1.7 LITER Cheese', 'Pc/s', 945, 35, 0, NULL, '2024-06-06 05:10:24', '2024-06-22 17:13:21'),
-(26, 'EFTO-CAG', '1.7L_MOC', '1.7 LITER Coffee Mocha Fudge', 'Pc/s', 210, 6, 0, NULL, '2024-06-06 05:10:24', '2024-06-21 03:05:24'),
-(27, 'EFTO-CAG', '1.7L_SS', '1.7 LITER Strawberry Strawberry', 'Pc/s', 210, 5, 0, NULL, '2024-06-06 05:10:24', '2024-06-12 19:07:24'),
-(28, 'EFTO-CAG', 'HG_BM', 'HALF GALLON (1.89L) Buko Melon', 'Pc/s', 360, 11, 0, NULL, '2024-06-06 05:10:24', '2024-06-12 19:07:24'),
-(29, 'EFTO-CAG', 'HG_MG', 'HALF GALLON (1.89L) Mango', 'Pc/s', 270, 10, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(30, 'EFTO-CAG', 'HG_VNL', 'HALF GALLON (1.89L) Vanilla', 'Pc/s', 360, 10, 0, NULL, '2024-06-06 05:10:24', '2024-06-12 19:07:24'),
-(31, 'EFTO-CAG', '3.6L_CNC', '3.6 LITER Cookies N\' Cream', 'Pc/s', 108, 9, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(32, 'EFTO-CAG', '3.6L_CS', '3.6 LITER Cheese', 'Pc/s', 276, 5, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(33, 'EFTO-CAG', '3.6L_HH', '3.6 LITER Halo halo', 'Pc/s', 48, 5, 0, NULL, '2024-06-06 05:10:24', '2024-06-07 23:21:47'),
-(34, 'EFTO-CAG', '3.6L_MG', '3.6 LITER Mango', 'Pc/s', 156, 6, 0, NULL, '2024-06-06 05:10:24', '2024-06-21 03:05:24'),
-(35, 'EFTO-CAG', '3.6L_MOC', '3.6 LITER Coffee Mocha Fudge', 'Pc/s', 60, 6, 0, NULL, '2024-06-06 05:10:24', '2024-06-21 03:05:24'),
-(36, 'EFTO-CAG', '3.6L_SS', '3.6 LITER Strawberry Strawberry', 'Pc/s', 48, 0, 0, NULL, '2024-06-06 05:10:24', '2024-06-06 05:10:24'),
-(37, 'EFTO-CAG', '3.6L_VNL', '3.6 LITER Vanilla', 'Pc/s', 204, 5, 0, NULL, '2024-06-06 05:10:24', '2024-06-12 19:07:24'),
-(38, 'EFTO-CAG', 'PT_VNL', 'PINT Vanilla', 'Pc/s', 223, 2, 0, NULL, '2024-06-06 05:10:24', '2024-06-12 19:07:23'),
-(39, 'EFTO-CAG', 'SC_CHO', '90ml SMALL CUP REGULAR (3.0-oz) Chocolate', 'Bag/s', 56, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
-(40, 'EFTO-CAG', 'MC_SS', '135ml MEDIUM CUP SPECIAL (4.5-oz) Strawberry Strawberry', 'Bag/s', 11, 1, 0, NULL, '2024-06-12 19:07:23', '2024-06-21 03:05:24'),
-(41, 'EFTO-CAG', 'MC_UC', '135ml MEDIUM CUP SPECIAL (4.5-oz) Ube with Cheese', 'Bag/s', 57, 0, 25, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
-(42, 'EFTO-CAG', 'ICB_BUKO', 'ICE BUKO BUKO', 'Bag/s', 60, 1, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:21:18'),
-(43, 'EFTO-CAG', 'ICC_CV', 'ICE CREAM CONES Chocovanilla', 'Bag/s', 132, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
-(44, 'EFTO-CAG', 'PT_BP', 'PINT Buko Pandan', 'Pc/s', 63, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
-(45, 'EFTO-CAG', 'PT_CHO', 'PINT Chocolate', 'Pc/s', 228, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
-(46, 'EFTO-CAG', 'PT_CV', 'PINT Chocovanilla', 'Pc/s', 228, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
-(47, 'EFTO-CAG', 'PT_FS', 'PINT Fruit Salad', 'Pc/s', 228, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
-(48, 'EFTO-CAG', 'PT_MAL', 'PINT Mallows N\' Chocolate', 'Pc/s', 37, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
-(49, 'EFTO-CAG', 'MC_MRB', '135ml MEDIUM CUP SPECIAL (4.5-oz) Choco Marble', 'Bag/s', 25, 1, 0, NULL, '2024-06-12 19:07:23', '2024-06-21 03:05:24'),
-(50, 'EFTO-CAG', 'PT_RR', 'PINT Rocky Road', 'Pc/s', 228, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
-(51, 'EFTO-CAG', 'PT_UBE', 'PINT Ube', 'Pc/s', 228, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
-(52, 'EFTO-CAG', 'PT_UC', 'PINT Ube with Cheese', 'Pc/s', 228, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
-(53, 'EFTO-CAG', '1L_CHO', '1 LITER Chocolate', 'Pc/s', 288, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
-(54, 'EFTO-CAG', '1L_CV', '1 LITER Chocovanilla', 'Pc/s', 432, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
-(55, 'EFTO-CAG', '1L_FS', '1 LITER Fruit Salad', 'Pc/s', 432, 0, 0, NULL, '2024-06-12 19:07:23', '2024-06-12 19:07:23'),
-(56, 'EFTO-CAG', '1.7L_FS', '1.7 LITER Fruit Salad', 'Pc/s', 210, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
-(57, 'EFTO-CAG', '1.7L_MAL', '1.7 LITER Mallows N\' Chocolate', 'Pc/s', 105, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
-(58, 'EFTO-CAG', '1.7L_MRB', '1.7 LITER Choco Marble', 'Pc/s', 31, 1, 0, NULL, '2024-06-12 19:07:24', '2024-06-21 03:05:24'),
-(59, 'EFTO-CAG', '1.7L_RR', '1.7 LITER Rocky Road', 'Pc/s', 211, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
-(60, 'EFTO-CAG', '1.7L_UC', '1.7 LITER Ube with Cheese', 'Pc/s', 210, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
-(61, 'EFTO-CAG', 'HG_CF', 'HALF GALLON (1.89L) Chocofi', 'Pc/s', 90, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
-(62, 'EFTO-CAG', 'HG_CHO', 'HALF GALLON (1.89L) Chocolate', 'Pc/s', 90, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
-(63, 'EFTO-CAG', 'HG_CV', 'HALF GALLON (1.89L) Chocovanilla', 'Pc/s', 180, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
-(64, 'EFTO-CAG', 'HG_UBE', 'HALF GALLON (1.89L) Ube', 'Pc/s', 180, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
-(65, 'EFTO-CAG', '3.6L_FS', '3.6 LITER Fruit Salad', 'Pc/s', 144, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
-(66, 'EFTO-CAG', '3.6L_MAL', '3.6 LITER Mallows N\' Chocolate', 'Pc/s', 96, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24'),
-(67, 'EFTO-CAG', 'N3.6L_CS', 'No Label 3.6L Cheese', 'Pc/s', 87, 0, 0, NULL, '2024-06-12 19:07:24', '2024-06-12 19:07:24');
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -2073,14 +2309,17 @@ INSERT INTO `item_master_data` (`id`, `branch_code`, `product_code`, `product_de
 -- Table structure for table `jobs`
 --
 
-CREATE TABLE `jobs` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `queue` varchar(191) NOT NULL,
-  `payload` longtext NOT NULL,
+DROP TABLE IF EXISTS `jobs`;
+CREATE TABLE IF NOT EXISTS `jobs` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `queue` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `attempts` tinyint(3) UNSIGNED NOT NULL,
   `reserved_at` int(10) UNSIGNED DEFAULT NULL,
   `available_at` int(10) UNSIGNED NOT NULL,
-  `created_at` int(10) UNSIGNED NOT NULL
+  `created_at` int(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `jobs_queue_index` (`queue`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2089,17 +2328,19 @@ CREATE TABLE `jobs` (
 -- Table structure for table `job_batches`
 --
 
-CREATE TABLE `job_batches` (
-  `id` varchar(191) NOT NULL,
-  `name` varchar(191) NOT NULL,
+DROP TABLE IF EXISTS `job_batches`;
+CREATE TABLE IF NOT EXISTS `job_batches` (
+  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `total_jobs` int(11) NOT NULL,
   `pending_jobs` int(11) NOT NULL,
   `failed_jobs` int(11) NOT NULL,
-  `failed_job_ids` longtext NOT NULL,
-  `options` mediumtext DEFAULT NULL,
+  `failed_job_ids` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `options` mediumtext COLLATE utf8mb4_unicode_ci,
   `cancelled_at` int(11) DEFAULT NULL,
   `created_at` int(11) NOT NULL,
-  `finished_at` int(11) DEFAULT NULL
+  `finished_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2108,18 +2349,27 @@ CREATE TABLE `job_batches` (
 -- Table structure for table `materials_inventories`
 --
 
-CREATE TABLE `materials_inventories` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `branch_code` varchar(15) NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `unit` varchar(10) DEFAULT NULL,
+DROP TABLE IF EXISTS `materials_inventories`;
+CREATE TABLE IF NOT EXISTS `materials_inventories` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `branch_code` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `unit` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
-  `location` varchar(191) DEFAULT NULL,
-  `remarks` varchar(191) DEFAULT NULL,
+  `location` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remarks` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `modified_by` varchar(99) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `modified_by` varchar(99) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `materials_inventories`
+--
+
+INSERT INTO `materials_inventories` (`id`, `branch_code`, `name`, `unit`, `quantity`, `location`, `remarks`, `created_at`, `updated_at`, `modified_by`) VALUES
+(1, 'EFTO-CAG', 'Lock & Key - Liebherr', 'pcs', 10, 'Cagayan', NULL, '2024-07-02 03:42:27', '2024-07-02 03:42:27', 'Nalen Comia');
 
 -- --------------------------------------------------------
 
@@ -2127,11 +2377,13 @@ CREATE TABLE `materials_inventories` (
 -- Table structure for table `migrations`
 --
 
-CREATE TABLE `migrations` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `migration` varchar(191) NOT NULL,
-  `batch` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+DROP TABLE IF EXISTS `migrations`;
+CREATE TABLE IF NOT EXISTS `migrations` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=321 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `migrations`
@@ -2172,7 +2424,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (316, '2024_06_13_164819_create_activity_log_table', 3),
 (317, '2024_06_13_164820_add_event_column_to_activity_log_table', 3),
 (318, '2024_06_13_164821_add_batch_uuid_column_to_activity_log_table', 3),
-(319, '2024_06_27_144333_create_materials_inventories_table', 4);
+(319, '2024_06_27_144333_create_materials_inventories_table', 4),
+(320, '2024_07_10_100743_create_delivery_receipts_table', 5);
 
 -- --------------------------------------------------------
 
@@ -2180,10 +2433,13 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 -- Table structure for table `model_has_permissions`
 --
 
-CREATE TABLE `model_has_permissions` (
+DROP TABLE IF EXISTS `model_has_permissions`;
+CREATE TABLE IF NOT EXISTS `model_has_permissions` (
   `permission_id` bigint(20) UNSIGNED NOT NULL,
-  `model_type` varchar(191) NOT NULL,
-  `model_id` bigint(20) UNSIGNED NOT NULL
+  `model_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `model_id` bigint(20) UNSIGNED NOT NULL,
+  PRIMARY KEY (`permission_id`,`model_id`,`model_type`),
+  KEY `model_has_permissions_model_id_model_type_index` (`model_id`,`model_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2192,10 +2448,13 @@ CREATE TABLE `model_has_permissions` (
 -- Table structure for table `model_has_roles`
 --
 
-CREATE TABLE `model_has_roles` (
+DROP TABLE IF EXISTS `model_has_roles`;
+CREATE TABLE IF NOT EXISTS `model_has_roles` (
   `role_id` bigint(20) UNSIGNED NOT NULL,
-  `model_type` varchar(191) NOT NULL,
-  `model_id` bigint(20) UNSIGNED NOT NULL
+  `model_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `model_id` bigint(20) UNSIGNED NOT NULL,
+  PRIMARY KEY (`role_id`,`model_id`,`model_type`),
+  KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2213,10 +2472,12 @@ INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 -- Table structure for table `password_reset_tokens`
 --
 
-CREATE TABLE `password_reset_tokens` (
-  `email` varchar(191) NOT NULL,
-  `token` varchar(191) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL
+DROP TABLE IF EXISTS `password_reset_tokens`;
+CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
+  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2225,13 +2486,16 @@ CREATE TABLE `password_reset_tokens` (
 -- Table structure for table `permissions`
 --
 
-CREATE TABLE `permissions` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `guard_name` varchar(191) NOT NULL,
+DROP TABLE IF EXISTS `permissions`;
+CREATE TABLE IF NOT EXISTS `permissions` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `guard_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `permissions_name_guard_name_unique` (`name`,`guard_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `permissions`
@@ -2246,12 +2510,14 @@ INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at
 -- Table structure for table `ph_addrs`
 --
 
-CREATE TABLE `ph_addrs` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `code` varchar(191) NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `g_level` varchar(191) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+DROP TABLE IF EXISTS `ph_addrs`;
+CREATE TABLE IF NOT EXISTS `ph_addrs` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `g_level` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=43763 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `ph_addrs`
@@ -46062,16 +46328,19 @@ INSERT INTO `ph_addrs` (`id`, `code`, `name`, `g_level`) VALUES
 -- Table structure for table `pricelevels`
 --
 
-CREATE TABLE `pricelevels` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `branch_code` varchar(15) NOT NULL,
-  `pl_name` varchar(191) NOT NULL,
-  `pl_desc` varchar(191) NOT NULL,
-  `pl_status` varchar(191) NOT NULL,
-  `pl_type` varchar(15) NOT NULL,
+DROP TABLE IF EXISTS `pricelevels`;
+CREATE TABLE IF NOT EXISTS `pricelevels` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `branch_code` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pl_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pl_desc` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pl_status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pl_type` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `pricelevels_branch_code_index` (`branch_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `pricelevels`
@@ -46092,16 +46361,19 @@ INSERT INTO `pricelevels` (`id`, `branch_code`, `pl_name`, `pl_desc`, `pl_status
 -- Table structure for table `prices`
 --
 
-CREATE TABLE `prices` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `prices`;
+CREATE TABLE IF NOT EXISTS `prices` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `pricelevel_id` int(10) UNSIGNED NOT NULL,
-  `p_code` varchar(191) NOT NULL,
-  `p_unit` varchar(191) DEFAULT NULL,
-  `p_quant` varchar(191) NOT NULL DEFAULT '0',
+  `p_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `p_unit` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `p_quant` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
   `p_price` float NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `prices_pricelevel_id_p_code_unique` (`pricelevel_id`,`p_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=301 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `prices`
@@ -46405,15 +46677,18 @@ INSERT INTO `prices` (`id`, `pricelevel_id`, `p_code`, `p_unit`, `p_quant`, `p_p
 -- Table structure for table `products`
 --
 
-CREATE TABLE `products` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `code` varchar(191) NOT NULL,
-  `product_type_code` varchar(191) NOT NULL,
-  `product_variant_code` varchar(191) NOT NULL,
-  `is_active` tinyint(4) NOT NULL DEFAULT 1,
+DROP TABLE IF EXISTS `products`;
+CREATE TABLE IF NOT EXISTS `products` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `product_type_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `product_variant_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_active` tinyint(4) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_product_type_variant` (`product_type_code`,`product_variant_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=144 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `products`
@@ -46567,16 +46842,18 @@ INSERT INTO `products` (`id`, `code`, `product_type_code`, `product_variant_code
 -- Table structure for table `product_types`
 --
 
-CREATE TABLE `product_types` (
-  `code` varchar(191) NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `volume` varchar(191) NOT NULL,
-  `spoon_pcs_per_bag` int(11) NOT NULL DEFAULT 0,
-  `bo_pricing` varchar(191) DEFAULT NULL,
-  `is_active` tinyint(4) NOT NULL DEFAULT 1,
+DROP TABLE IF EXISTS `product_types`;
+CREATE TABLE IF NOT EXISTS `product_types` (
+  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `volume` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `spoon_pcs_per_bag` int(11) NOT NULL DEFAULT '0',
+  `bo_pricing` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_active` tinyint(4) NOT NULL DEFAULT '1',
   `sequence_no` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -46604,12 +46881,14 @@ INSERT INTO `product_types` (`code`, `name`, `volume`, `spoon_pcs_per_bag`, `bo_
 -- Table structure for table `product_variants`
 --
 
-CREATE TABLE `product_variants` (
-  `code` varchar(191) NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `is_active` tinyint(4) NOT NULL DEFAULT 1,
+DROP TABLE IF EXISTS `product_variants`;
+CREATE TABLE IF NOT EXISTS `product_variants` (
+  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_active` tinyint(4) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  UNIQUE KEY `product_variants_code_unique` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -46661,10 +46940,12 @@ INSERT INTO `product_variants` (`code`, `name`, `is_active`, `created_at`, `upda
 -- Table structure for table `purchases`
 --
 
-CREATE TABLE `purchases` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `purchases`;
+CREATE TABLE IF NOT EXISTS `purchases` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -46673,13 +46954,16 @@ CREATE TABLE `purchases` (
 -- Table structure for table `roles`
 --
 
-CREATE TABLE `roles` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `guard_name` varchar(191) NOT NULL,
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE IF NOT EXISTS `roles` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `guard_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `roles_name_guard_name_unique` (`name`,`guard_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `roles`
@@ -46696,9 +46980,12 @@ INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VAL
 -- Table structure for table `role_has_permissions`
 --
 
-CREATE TABLE `role_has_permissions` (
+DROP TABLE IF EXISTS `role_has_permissions`;
+CREATE TABLE IF NOT EXISTS `role_has_permissions` (
   `permission_id` bigint(20) UNSIGNED NOT NULL,
-  `role_id` bigint(20) UNSIGNED NOT NULL
+  `role_id` bigint(20) UNSIGNED NOT NULL,
+  PRIMARY KEY (`permission_id`,`role_id`),
+  KEY `role_has_permissions_role_id_foreign` (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -46714,10 +47001,12 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 -- Table structure for table `sales`
 --
 
-CREATE TABLE `sales` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `sales`;
+CREATE TABLE IF NOT EXISTS `sales` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -46726,13 +47015,17 @@ CREATE TABLE `sales` (
 -- Table structure for table `sessions`
 --
 
-CREATE TABLE `sessions` (
-  `id` varchar(191) NOT NULL,
+DROP TABLE IF EXISTS `sessions`;
+CREATE TABLE IF NOT EXISTS `sessions` (
+  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `ip_address` varchar(45) DEFAULT NULL,
-  `user_agent` text DEFAULT NULL,
-  `payload` longtext NOT NULL,
-  `last_activity` int(11) NOT NULL
+  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_agent` text COLLATE utf8mb4_unicode_ci,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_activity` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sessions_user_id_index` (`user_id`),
+  KEY `sessions_last_activity_index` (`last_activity`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -46741,21 +47034,25 @@ CREATE TABLE `sessions` (
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
 ('0t8f2vzcKoGIjsgUUyIS12amQm2xcAbrumaSVPZq', NULL, '1.37.67.134', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiVHdxV2ZyNGxoN2ZPcE9IcFhJVWlGaVl6QzlXQjVhVVNFb2E4U1RQOSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vY3VzdG9tZXJzIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717594174),
-('0VplNqwKCD38SIlkWyAS0QofppOUm9kdaIHKqmfc', 2, '49.150.109.103', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoicnZKVUdGaW5jZHo0dkphRFdIbFNsM0tvb09pRlJoZTB5d21oNnZnVCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTQxOiJodHRwOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9lcXVpcG1lbnQtc3RvcmU/Y3VzdG9tZXJfaWQ9MzA1JmN1c3RvbWVyX25hbWU9VGFibGFjJTJDJTIwQWxkZW4mc3RvcmVfaWQ9MzA1JnN0b3JlX25hbWU9VEFCTEFDJTIwU1RPUkUiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO3M6MTE6ImJyYW5jaF9jb2RlIjtzOjg6IkVGVE8tQ0FHIjt9', 1719478795),
+('0VplNqwKCD38SIlkWyAS0QofppOUm9kdaIHKqmfc', 2, '49.150.96.60', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoicnZKVUdGaW5jZHo0dkphRFdIbFNsM0tvb09pRlJoZTB5d21oNnZnVCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2N1c3RvbWVycyI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO30=', 1720246176),
 ('0wxENsTpcgG73qstxRUABte3fC06wdcDTuUaMlVi', NULL, '65.154.226.167', 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWW5EZDVyNU9oSWRyNFJ5UXpUNVU0cWdDUTFNMTRNV0loWEJpeExlcSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NToiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vb3JkZXJzIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDU6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL29yZGVycyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1717485075),
 ('1asPcJT8ywTouz5okd7hOVM1Ev9CXZCQMmay1WGh', NULL, '173.236.217.113', '', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiaEt1S3VLdUxrU1ZVZTZmclQzTkQ0bHpESGJpVzZqNzBja2xmSTJWcyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1718008024),
+('1eKaeBe3mnKzUaGuVotXWYqillq33RvdkbeQyXeb', NULL, '1.37.67.196', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiSFB2U3M4Zkt3ZWVDZzlqQnUxOVNtZ0h1RXhyOWdPU1M0OVA1ZE9WcyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NzoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vdmVoaWNsZXMiO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czo0NDoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1720613518),
 ('3bW29R7ofQGfGNmyEoPRKwQ8m3EbGMPcWHJ56t15', NULL, '1.37.67.134', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoibDVxZmN5TmpzbHM2RW1UWWpDckY3d3FJWGIzRmVsUUtHblVDdHBDNSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717493163),
 ('4m8mrtQtqIt76IhZ2LyRG92RxA2vmWphi2a9Avte', 1, '119.92.228.19', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiNTdIenQxT0Nva0w5dFlEcWJqamlqVER2WEFkZE1oTG1pc1Z5bndrQSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDY6Imh0dHBzOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9vcmRlcnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6MTE6ImJyYW5jaF9jb2RlIjtzOjg6IkVGVE8tQ0FHIjt9', 1718252718),
+('4t3zDCVKHRlKqaQWWwDlvqMwWF6ZjVDyfiRbAXBY', NULL, '1.37.67.136', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/6.5.3 Chrome/108.0.5359.220 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiRllLOTlLVGU1eG91ckFrMzl6UmU3ODdVQkdKdzg0MW9JazM4Q1F3ZSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1720597582),
 ('59ek5GA5HFeUW3LwSjt5cOyW9lW29ed99ImiY7eo', NULL, '1.37.67.135', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiVm45cW9WZjUzUHQwTTU0d2dXMUJBbjZ1MEhuakxrNzk1dXdFWDk0SSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NToiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vYnJhbmNoIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717473494),
 ('607qeN3dsqh0V0pSoJKrkdavJvystwuXuFza4qFE', NULL, '65.154.226.170', 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiUk1OSVpjZ2VnSVJwck9YUWlBMHZFdnQxSHAwRkNkMmp1NUY2V2NUYiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1718090465),
-('7ZyFPAnLivT3RWJkVFEvC2HD1kcxkBqSKNNfxNU0', 2, '136.158.118.97', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiZjNQVEVaalBRUlA2eUpsSXlIcUk5SE1mRzVINm1mY0FiNTNvdDJibiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZXF1aXBtZW50Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2VxdWlwbWVudCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1UQVIiO30=', 1719390863),
+('7ZyFPAnLivT3RWJkVFEvC2HD1kcxkBqSKNNfxNU0', 2, '136.158.118.219', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiZjNQVEVaalBRUlA2eUpsSXlIcUk5SE1mRzVINm1mY0FiNTNvdDJibiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZXF1aXBtZW50Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2N1c3RvbWVycyI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1UQVIiO30=', 1720170226),
 ('81QI4rFnmWm49mWMgwQ2HdgHOkUvcyAJR1wuCaJz', NULL, '112.198.211.214', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiUjM5QXhib2JVaEQxcDN4M1hFVGprNGtDbEI4Z1dqVzlHWUhwakg2VSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1719149100),
-('8aUaGHEMjd1ZbyPvtMET1d0L8jGogxZXgKrk4r9J', 2, '122.52.233.63', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoic0ZnOEx1Q3pHMHdhcWdoWGRNVU1BY1ZERERuSVlhMmxJdGlJTFdwOSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo1ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vc2V0LWJyYW5jaC9FRlRPLUNBRyI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjE0MzoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZXF1aXBtZW50LXN0b3JlP2N1c3RvbWVyX2lkPTI4MSZjdXN0b21lcl9uYW1lPUFndWlsYXIlMkMlMjBBcnNlbmlhJnN0b3JlX2lkPTI4MSZzdG9yZV9uYW1lPUIuVCUyMEFHVUlMQVIiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO3M6MTE6ImJyYW5jaF9jb2RlIjtzOjg6IkVGVE8tQ0FHIjt9', 1719287827),
 ('9SDxb9xwIAkYftSyqwLhO99VYONNKaX2ijck9TRH', NULL, '112.198.211.214', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZjR3MURscGtwenU2OW5XY0E3V2FibHdDNzFqMXU3VHZwV1RWdzdoVyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo1NzoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vYWRkYmFkb3JkZXIvY3JlYXRlIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTc6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2FkZGJhZG9yZGVyL2NyZWF0ZSI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1719022852),
 ('aA8xGTcSRTakHKt6n4yDFGs0WE4Kem74UAgJZbjr', 1, '210.213.142.165', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo3OntzOjY6Il90b2tlbiI7czo0MDoicHNZck9jemNhVHg3enpEQTRyQXI0VEhnTE1obzVka3FBNjZGeUFSQyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDY6Imh0dHBzOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9vcmRlcnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6MTE6ImJyYW5jaF9jb2RlIjtzOjg6IkVGVE8tQ0FHIjtzOjk6ImluYm91bmRJZCI7czoxOiIxIjtzOjEyOiJwcmljZWxldmVsSWQiO2k6Mjt9', 1719200996),
 ('AOp4lzheXmPPVbOe18Ip1mdH6MabaM5BhtPMDxRp', NULL, '65.154.226.167', 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiRGVPeWFTbkp1SmZCek43V0VRaXRFc094NHlFTlQ0aWRqSFVkbk9ZSyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717485075),
+('bDoBUoZQmPxMwzAKygAk35Wjet0KG016MIY98EoC', 2, '136.158.65.202', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoib0JEVlNjOTh4TUxtTXlORkQ3UWhURDNWS0FOU0VGMEdSVjIyaTFNVyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2dldEJvRGV0YWlscz9ib0lkPTMiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO3M6MTE6ImJyYW5jaF9jb2RlIjtzOjg6IkVGVE8tQ0FHIjt9', 1720354064),
 ('bfJYw24XFPcOZwgy9vvPup7EKhid3llESutesaY4', NULL, '136.158.65.81', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoicFNrR3k4VHdTYjhTSnBvcDNYcnphZ0I0ajN2WWdIY1BSWklDNndxViI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZXF1aXBtZW50Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717747934),
-('BZ320WBpJUQ2AMzIC4rO5fAGUePQirZehsXi1Zq0', 2, '136.158.118.97', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoicGFVaExHcnZiNVZPenBQdE9CM25naFBReDZ0dFBlN0ROeGpKQnZwdyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZXF1aXBtZW50Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2N1c3RvbWVycyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1UQVIiO30=', 1719468530),
+('BSURqCyR4QUN5eX93xoXUI06xErh9aHGWUpv2HGo', NULL, '51.81.46.212', '', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiblpOb3VzNkNxTWpwTTl6QzFiNFJpa2RlN01HOVR5blZ2QWE0RVFiZiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzk6Imh0dHBzOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbSI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1720163748),
+('bVMc8zuzXlFJcZbFVN6UOgpPeBiREvTg797rzTAF', 1, '112.198.211.214', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoibjF5aU1Fc2xWeDcwVU95aGp2RzVZODJ0SXlCSXZCSHBCaVRWTHNiOSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2N1c3RvbWVycyI7fXM6MzoidXJsIjthOjE6e3M6ODoiaW50ZW5kZWQiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2Rhc2hib2FyZCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO30=', 1720525924),
+('BZ320WBpJUQ2AMzIC4rO5fAGUePQirZehsXi1Zq0', 2, '136.158.118.219', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoicGFVaExHcnZiNVZPenBQdE9CM25naFBReDZ0dFBlN0ROeGpKQnZwdyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZXF1aXBtZW50Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2N1c3RvbWVycyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1UQVIiO30=', 1720331101),
 ('CRjZilyU1UnnvFrDYxqCmwL5acBf9lVxcGKMdgHg', NULL, '31.13.127.27', 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiV2Y2ZVhUOUs5WFd6MkVGbEJDZGsxc2haZGNUZFg0TU5mVDhKZHJQViI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1719197055),
 ('csmDjCFbHs91dikci4K5MUkUnvc5d5m5ZTZvcWLl', NULL, '1.37.67.132', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoieEF2QWd4SGJlSHBuOXJiUTA4cDlROFplZEVFUHpuQ2VDbzNkV3JhdiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717740965),
 ('DiLhKL57jpUwOcYofLTmz1biC94dKfWKUmpzvQtf', NULL, '65.154.226.169', 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiQ0dXUjNKdWQzWERkUzRYVHNIZW82dmV4SHgyeVdEWUpEZHBMUkt1OCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo1NToiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZGVsaXZlcnktcGVyc29ucyI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjU1OiJodHRwOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9kZWxpdmVyeS1wZXJzb25zIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717588439),
@@ -46764,9 +47061,7 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 ('fivjlMcQ7VXFSk8DvKfvlk0obLBvpl7eK66Cct7q', NULL, '112.198.211.214', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiaDZtOGlReU1XRmJCbHltMDZFanVyNWVqQkNxZkpudTd5Sm9FVlRYdyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo1MToiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vb3JkZXIvMi9lZGl0Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTE6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL29yZGVyLzIvZWRpdCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1719025253),
 ('GMzn2EciiSsN9lOgwIXx7ZurfQtegsKwc4R69Yi0', 2, '209.35.172.174', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiNTJRdEJxb1ZDbTFiR1VjekQzbWNralRMU24zOFNSY2JlMVlRc3dRVyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZGFzaGJvYXJkIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDU6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL29yZGVycyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO30=', 1717750483),
 ('gNRkKrczLekpfFyfUCJTi0Q6J15givuyavT4pfj5', NULL, '1.37.67.133', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/6.5.3 Chrome/108.0.5359.220 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiNjJqOW9iZVVSSlJxcGZiQndKcGM0NHBrYzJ1czk5Tjl4TUxVSGtYZiI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo1NToiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vaXRlbS1tYXN0ZXItZGF0YSI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQ0OiJodHRwOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9sb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1717510538),
-('go3QbGEh2y8ZbANbqpMmTMmQ6tW22CpJvHG238BQ', 1, '112.198.211.214', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo3OntzOjY6Il90b2tlbiI7czo0MDoiaXJmOVY1QkpkSEJaaGtUV1daUWtzeTJEMnZmbTM4bG1ISEptd2ZrZiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTU6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2l0ZW0tbWFzdGVyLWRhdGEiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6MTE6ImJyYW5jaF9jb2RlIjtzOjg6IkVGVE8tQ0FHIjtzOjk6ImluYm91bmRJZCI7czoxOiIxIjtzOjEyOiJwcmljZWxldmVsSWQiO2k6Mjt9', 1719489850),
 ('HMDnJ0Xfi9LzWARqr3NfKWxqI3I8omSxVANTFKxP', NULL, '31.13.127.2', 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiNFJydDNMMTZZSmpzSjJRSGtYNGR4QW5Yc2tac2t3TDBnV3E3Q0F0YSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZXF1aXBtZW50Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2VxdWlwbWVudCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1719197058),
-('HxB17BgSSxjjpYhlewTvUGElJSBZRuLNyExCLzd0', 2, '136.158.65.202', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiYmRiSmpCS1RoQ2Q2QVc0aUtVYlJ2RVFPQjNmSmx5ZEdBczBrazRXYyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2VxdWlwbWVudCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1UQVIiO30=', 1719482878),
 ('iQiTP7J3WSt9MAJjZV9bmEj1ztUYI8tYTDG7kAuc', 1, '209.35.174.253', 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/125.0.6422.33 Mobile/15E148 Safari/604.1', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoicEZ0TkFTM3A3M1RSTGdOUmFWdm1GN0ZSbUQ5M2sxNVVMZEExc2lqMCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTE6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL29yZGVyLzcvZWRpdCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO3M6OToiaW5ib3VuZElkIjtzOjE6IjciO30=', 1719127755),
 ('ivAWGMJuLIHkZj7rDxQrON8jGrFt2IwvWqSAEauD', NULL, '1.37.67.199', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWGEwN1VGSmpKcXlwM3NhTUJOd1poMmRtY2VvQkdPY1luT1VSVTVMVyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NzoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vdmVoaWNsZXMiO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czo0NDoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1717590088),
 ('jIy0x62e7HTxNXbItKcAfz4PaBGtoUr3zohsJUth', 2, '136.158.65.114', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo4OntzOjY6Il90b2tlbiI7czo0MDoiS0Y5RTBoOGJpd1pGWjY0Rk5sYXVpNEk4c3FrZFdZd1FzT2c0MDFpbCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2N1c3RvbWVycyI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO3M6MTI6InByaWNlbGV2ZWxJZCI7aTo0O3M6OToiaW5ib3VuZElkIjtzOjE6IjYiO3M6MTI6Im9yZGVyRGV0YWlscyI7czoxNjI6InsiYnJhbmNoX2NvZGUiOiJFRlRPLUNBRyIsImVxdWlwbWVudCI6IjQiLCJjdXN0b21lcl9pZCI6IjYiLCJjdXN0b21lciI6IkpvdmVudGEgQWJyYW4iLCJkZWxpdmVyeVBlcnNvbiI6IjYiLCJ2ZWhpY2xlIjoiMiIsInByaWNlbGV2ZWxfaWQiOiI0IiwiYmFkX29yZGVyX2lkIjpudWxsfSI7fQ==', 1718511454),
@@ -46781,18 +47076,22 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 ('oyo0e4Zg6Ez8sZVzqsvzmjvJNUlyGWXZGIk0bty1', NULL, '210.213.142.167', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoieGVxb1M0SURZYmhjYVlnRm5ta2RIbDZRMFd0Z1IwZGFyUnZkaFVlSSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzk6Imh0dHBzOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbSI7fX0=', 1718009620),
 ('P7VguN7VteFSXVW4ytXcNsf6smcKeVHeyFX5GlU2', NULL, '209.35.172.174', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/601.2.4 (KHTML, like Gecko) Version/9.0.1 Safari/601.2.4 facebookexternalhit/1.1 Facebot Twitterbot/1.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZ3NsbkV6SHVkUzMyQzVKdjNkVjlCYjd2NGNlNGE0dzhsOUhZQ3lSNyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZGFzaGJvYXJkIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717750389),
 ('RHsgyRPZYfBnXGEL3vizr0yf58bVrhfE0yJYjaoO', 1, '112.198.211.214', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiTTg0dVJDZlVwZWZMaHBKMkJHN0MyQ1p3ZFhBbEFVdGVWZWdXZlFzNSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo1NDoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vYmFkLW9yZGVycy1saXN0Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2Rhc2hib2FyZCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO30=', 1719149281),
+('rKFhmqBp136ZxWRj1LZwAaMagsgPAZfRzJW2NqDn', NULL, '136.158.65.202', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoieEhrdml2UFduODZIU291MDJma0hMbTQ4SVZjOUhaVkFMMmxDQll5diI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9fQ==', 1720614184),
 ('RlZUHW6hBKutILqIoeTe6UwLjvFfIIG8IndNeeut', 2, '136.158.118.18', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiTnVTR3ZyU0hLOGQ1RDVJTExKaXJWaVlpcjZmRDFVNmdtWGx3RW10cCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZXF1aXBtZW50Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2N1c3RvbWVycyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1UQVIiO30=', 1718786779),
+('Rra1YBDxfrGrPiAdYFLnrDU2k8RLZjQSpPexqGAj', NULL, '135.148.100.196', '', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiUlhVclk5aURsUjNweFo3NW5HS2RZOHJMUEdTRmlVM1NOVEd4aUNNYSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzk6Imh0dHBzOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbSI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1720169151),
 ('Sg5OClPYZFtzNtdxLzIXr6mWu9yaoSQglZBurl77', NULL, '210.213.142.167', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoicHY2Qk1maGNIbmY0QTlFT0JVVlRGVnV5SVlBOXN0Tm5iSjc5MHBvOSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0OToiaHR0cHM6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2N1c3RvbWVycyI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQ5OiJodHRwczovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vY3VzdG9tZXJzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1718008141),
 ('TQz9DkIXbnIrZaKwQRJmkzoaVHmWNOQR43OuU0es', 2, '209.35.172.174', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 [FBAN/FBIOS;FBAV/460.2.0.39.109;FBBV/605114142;FBDV/iPhone15,2;FBMD/iPhone;FBSN/iOS;FBSV/16.0.1;FBSS/3;FBCR/;FBID/phone;FBLC/en_US;FBOP/80]', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoid2k1M1ZTbnJ2UkpONDBnYWVVdkNFY3VRS09tZnFPYXpSbzFzbjhUYSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2Rhc2hib2FyZCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO30=', 1717750381),
 ('tsmYQ5Pk2maaVgiXEMtR3WpUdVeOSA5rr3lSzw20', NULL, '210.213.142.167', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZjd6cENGT2JKZ0F1NnpDWEFwZnlzYzgwb3lRdmRoY0JYTnY5NE14RiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9fQ==', 1718608309),
 ('U8zHVBioqnvpEPZRr6jwaIFL6JQlR1XHiQn9DAs9', NULL, '1.37.67.135', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoibjMxQnNmR25jTnJBQlVqYkhhNGRySEh6TUZBWWl3bGZoZHJoekVoaiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2JhZC1vcmRlcnMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1718276145),
+('uG5hGiWtQjMyFUdm0JfjLH8wL3NLRnRuMqcxnHRC', NULL, '1.37.67.134', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiVjFSeWt3QUVUdzJ2MVpRSVlMR1dJdGozYWtxcFl3c3dqdVNZS3kyQSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0NzoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vcHJvZHVjdHMiO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czo0NDoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1720159459),
 ('uiay95rBclTONxZoZCPcFSjMZ0fwMkMcr8IT8taz', NULL, '52.11.171.106', 'Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZGJFVHA3d0NmVTg2ZTZZdFNweFNKd3Y3aG1QMnBjeEQ3U280MnJUWCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1718541230),
 ('uK9r1UWcXRHhULSW3no1ZH9VMmFSevIhC5hRvgJ0', NULL, '112.198.211.214', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoia1RXdWN5NlMydEhYRmlZelN4Rnl6dzd0cVlIMU5JTk01NTczelZEZCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo1MToiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vb3JkZXIvOC9lZGl0Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTE6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL29yZGVyLzgvZWRpdCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1719025155),
 ('UZfPpK7qA9dRNRdSn17kcS1Hp3i8ZjlQXUvio2Pm', NULL, '31.13.127.12', 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoicVhTMVN3c2NFc3pleEpsbnJKazBjbEI3b1B4R1l0QXVRdHh6RzJKNyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZXF1aXBtZW50Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2VxdWlwbWVudCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1719197054),
 ('vzoR8W97O3qgaZHyNLXkUwnrgRIorDS6GoBj2qlQ', NULL, '210.213.142.167', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiV1RCZXhqS2RBZGlpaHlGUUR6RDhHSk9aV245bER2WUxPVE9hOFJsaCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDU6Imh0dHBzOi8vYXBwcy5lb2xmZm9vZHRyYWRpbmdvcGNhcHBzLmNvbS9sb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1718008141),
-('WmMsc3DNw1VS56DGtR2IoBNftgM08EKO2oRMY3b3', 1, '210.213.142.167', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoibElxWU5nSGM4Y2pXT1dKNEVaMHQ2QUpYV2lwZXdmUXdGRE1ENWNXOCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTtzOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czo0ODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20vZXF1aXBtZW50Ijt9czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO30=', 1719447216),
+('WmMsc3DNw1VS56DGtR2IoBNftgM08EKO2oRMY3b3', 1, '210.213.142.167', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoibElxWU5nSGM4Y2pXT1dKNEVaMHQ2QUpYV2lwZXdmUXdGRE1ENWNXOCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTtzOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czozODoiaHR0cDovL2FwcHMuZW9sZmZvb2R0cmFkaW5nb3BjYXBwcy5jb20iO31zOjExOiJicmFuY2hfY29kZSI7czo4OiJFRlRPLVRBUiI7fQ==', 1720699725),
+('YBs931yfzfBGMRmi6SydKHNJ6iYk0uTzPfDqwtrh', NULL, '1.37.67.132', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiTDJPU0FHWFh2cDhIbVpwQTRFOGNNY3RSQWdDbjBSSFZnZjNKUDAwRiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1720524980),
 ('YCAuXj1x0vIGZAgbkxcNb8UzvMPp1e5ud9CLBhSf', NULL, '65.154.226.169', 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiYmtqVGExd2VpaVN0UlJtZkh3NTkyU3h0YlFXeEZJN0pid29pVGpDOSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717588440),
-('YJDv88Ajrc6ugZ6xexx0600we2X3ZDfsEEdx02NW', 2, '136.158.65.202', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiOU44U2JxTXBQenpxNzZIbFA5U0pKSnlSVnlCa1FFZEFGbXlKQklTMCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2N1c3RvbWVycyI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czoxMToiYnJhbmNoX2NvZGUiO3M6ODoiRUZUTy1DQUciO3M6MTk6InVwZGF0aW5nRGF0YVJlc3VsdHMiO2E6OTp7aTowO2E6Mjp7czo0OiJjb2RlIjtzOjU6IlNDX0JNIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MTthOjI6e3M6NDoiY29kZSI7czo1OiJTQ19CUCI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjI7YToyOntzOjQ6ImNvZGUiO3M6NjoiTUNfTVJCIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6MzthOjI6e3M6NDoiY29kZSI7czo1OiJNQ19TUyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjQ7YToyOntzOjQ6ImNvZGUiO3M6NzoiU1BTX0NITyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjU7YToyOntzOjQ6ImNvZGUiO3M6ODoiMS43TF9NUkIiO3M6NzoibWVzc2FnZSI7czo3OiJTdWNjZXNzIjt9aTo2O2E6Mjp7czo0OiJjb2RlIjtzOjg6IjEuN0xfTU9DIjtzOjc6Im1lc3NhZ2UiO3M6NzoiU3VjY2VzcyI7fWk6NzthOjI6e3M6NDoiY29kZSI7czo4OiIzLjZMX01PQyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO31pOjg7YToyOntzOjQ6ImNvZGUiO3M6NzoiMy42TF9NRyI7czo3OiJtZXNzYWdlIjtzOjc6IlN1Y2Nlc3MiO319fQ==', 1719229298),
+('yZ3l9372Stn6pjzYd5zbA7x9mDI5GFIAZAfbSeTo', 2, '122.52.233.63', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoib2J6SXBzaFJ0UHJOd29lVFZZckZVM043c2xXNnRBTjJTdWJuV3l2dCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL21hdGVyaWFscy1pbnZlbnRvcnkiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO3M6MTE6ImJyYW5jaF9jb2RlIjtzOjg6IkVGVE8tQ0FHIjt9', 1720670473),
 ('zUAxNMkRZvYhKw5moAp5Hotv1JbMEPjIDymXV0hI', NULL, '69.171.231.9', 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiYmV5M3lkUnNKUUt0dFR4U3pxS29aS0RYeEF0bWtTM3hBbHdWcW1CRSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tL2xvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1719197058),
 ('ZwvclEd6wrgDrklNfn2fqgIqa6ANOwLwqhbXNrL0', NULL, '52.11.171.106', 'Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoieW13MzBpcEFyVTZvSE9FTUg3WExhZ05Uak1HOUFJa1Q5TDRiTThjTiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9hcHBzLmVvbGZmb29kdHJhZGluZ29wY2FwcHMuY29tIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1717936439);
 
@@ -46802,24 +47101,27 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 -- Table structure for table `storeinfo`
 --
 
-CREATE TABLE `storeinfo` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `storeinfo`;
+CREATE TABLE IF NOT EXISTS `storeinfo` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `customer_id` bigint(20) UNSIGNED NOT NULL,
-  `storename` varchar(191) NOT NULL,
-  `contactno` varchar(191) DEFAULT NULL,
-  `region` varchar(191) DEFAULT NULL,
-  `province` varchar(191) DEFAULT NULL,
-  `city` varchar(191) DEFAULT NULL,
-  `brgy` varchar(191) DEFAULT NULL,
-  `subdivision` varchar(191) DEFAULT NULL,
-  `latitude` text DEFAULT NULL,
-  `longitude` text DEFAULT NULL,
-  `listype` varchar(191) DEFAULT NULL,
+  `storename` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `contactno` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `region` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `province` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `city` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `brgy` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `subdivision` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `latitude` text COLLATE utf8mb4_unicode_ci,
+  `longitude` text COLLATE utf8mb4_unicode_ci,
+  `listype` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `length_stay` int(11) DEFAULT NULL,
-  `remarks` text DEFAULT NULL,
+  `remarks` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `storeinfo_customer_id_foreign` (`customer_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=399 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `storeinfo`
@@ -46831,7 +47133,7 @@ INSERT INTO `storeinfo` (`id`, `customer_id`, `storename`, `contactno`, `region`
 (3, 3, 'Achilles Liquor Shop', '09356483518', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Cataggaman Nuevo', NULL, '17°36\'14.01\"N', '121°42\'52.27\"E', 'option 1', NULL, NULL, '2024-06-05 00:34:33', '2024-06-05 00:34:33'),
 (4, 4, 'Treshiel Mini-mart', '09178099848', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City', 'Centro 8', NULL, '17°37\'2.38\"N', '121°43\'33.10\"E', 'option 1', NULL, NULL, '2024-06-05 00:37:31', '2024-06-14 14:54:52'),
 (5, 5, 'Richvonnejoyce Store', '0945-263-8222 / 0956-079-3680', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Atulayan Norte', '436 Danao St Cor Tramo Road', NULL, NULL, 'option 1', NULL, NULL, '2024-06-07 22:30:24', '2024-06-07 22:30:24'),
-(6, 6, 'Abran Store', '0917-487-1212', 'Region II', 'Cagayan', 'Sanchez Mira', 'Centro 1', NULL, '18°33\'30.15\"N', '121°14\'10.22\"E', 'option 1', NULL, NULL, '2024-06-07 22:45:45', '2024-06-14 14:39:54'),
+(6, 6, 'Abran Store', '0917-487-1212', 'Region II', 'Cagayan', 'Sanchez Mira', 'Centro 1', NULL, '17.625699453900648', '121.73297882080078', 'option 1', NULL, NULL, '2024-06-07 22:45:45', '2024-07-10 02:52:02'),
 (7, 7, 'Lilian Store', '0927-542-5475', 'Region II (Cagayan Valley)', 'Cagayan', 'Santa Ana', 'Marede', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-07 22:51:14', '2024-06-07 22:51:14'),
 (8, 8, 'Cayle\'s Food Supply Trading', '0917-7907-048', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'San Gabriel', NULL, '17°37\'22.75\"N', '121°42\'39.94\"E', 'option 1', NULL, NULL, '2024-06-07 22:55:34', '2024-06-07 22:55:34'),
 (11, 11, 'Elsie Y Ang Store', '0977-125-5034', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuao', 'Poblacion II', NULL, '17°44\'1.45\"N', '121°27\'21.32\"E', 'option 1', NULL, NULL, '2024-06-09 05:33:24', '2024-06-09 05:33:24'),
@@ -46999,7 +47301,7 @@ INSERT INTO `storeinfo` (`id`, `customer_id`, `storename`, `contactno`, `region`
 (174, 174, 'GEMMA\'S BAKESHOP & GROCERY', '09189395401', 'Region I (Ilocos Region)', 'Ilocos Norte', 'City of Batac', 'Ablan Pob.', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:06:02', '2024-06-18 00:06:02'),
 (175, 175, 'ESC Merchandising', '09565317037', 'Region I (Ilocos Region)', 'Ilocos Norte', 'City of Batac', 'Ablan Pob.', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:08:06', '2024-06-18 00:08:06'),
 (176, 176, 'N/A', '09214772431', 'Region I (Ilocos Region)', 'Ilocos Norte', 'Pasuquin', 'Poblacion 1', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:10:13', '2024-06-18 00:10:13'),
-(177, 177, 'Lorna Flowershop', '09171269885', 'Region I (Ilocos Region)', 'Ilocos Norte', 'San Nicolas', 'San Francisco ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:13:41', '2024-06-18 00:13:41'),
+(177, 177, 'Lorna Flowershop', '09171269885', 'Region I (Ilocos Region)', 'Ilocos Norte', 'San Nicolas', 'San Francisco', NULL, '18°10\'22.18\"N', '120°35\'46.77\"E', 'option 1', NULL, NULL, '2024-06-18 00:13:41', '2024-07-05 23:11:32'),
 (178, 178, 'KC\'s Twenty Four-7even Convenient Store', '09159476772', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuao', 'Poblacion I', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:16:10', '2024-06-18 00:16:10'),
 (179, 179, 'KC\'s Twenty Four-7even Convenient Store', '09159476772', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuao', 'Poblacion I', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:17:55', '2024-06-18 00:17:55'),
 (180, 180, 'M. B. MARIBAY STORE', '09753079166', 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Camasi', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-18 00:19:31', '2024-06-18 00:19:31'),
@@ -47068,7 +47370,7 @@ INSERT INTO `storeinfo` (`id`, `customer_id`, `storename`, `contactno`, `region`
 (242, 242, 'NBC Pharmacy and General Merchandise', '09214159979', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Narvacan', 'Lungog', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:10:34', '2024-06-19 22:10:34'),
 (243, 243, 'Emeritz Bread Corner', '09214159979', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Cabugao', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:12:32', '2024-06-19 22:12:32'),
 (244, 244, 'Tropicon', '09175992134', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Ugac Sur', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:13:27', '2024-06-19 22:13:27'),
-(245, 245, 'Ophir Store', '09657254430/09563360115', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Galimuyod', 'Borobor', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:15:08', '2024-06-19 22:15:08'),
+(245, 245, 'Ophir Store', '09657254430/09563360115', 'Region I (Ilocos Region)', 'Ilocos Sur', 'Galimuyod', 'Borobor', NULL, '17°11\'37.55\"N', '120°30\'11.24\"E', 'option 1', NULL, NULL, '2024-06-19 22:15:08', '2024-07-06 00:00:53'),
 (246, 246, 'Bas Tea', '09361920854', 'Region II (Cagayan Valley)', 'Cagayan', 'Iguig', 'San Esteban', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:15:57', '2024-06-19 22:15:57'),
 (247, 247, 'Kammetek Restaurant', '09169581179/09914956338', 'Region I (Ilocos Region)', 'Ilocos Sur', 'City of Candon', 'San Jose ', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:17:35', '2024-06-19 22:17:35'),
 (248, 248, 'Damac Convenience Store', '09171506898', 'Region II (Cagayan Valley)', 'Cagayan', 'Enrile', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:19:27', '2024-06-19 22:19:27'),
@@ -47092,7 +47394,7 @@ INSERT INTO `storeinfo` (`id`, `customer_id`, `storename`, `contactno`, `region`
 (266, 266, 'YumHop', '09056573558', 'Cordillera Administrative Region (CAR)', 'Abra', 'Lagangilang', 'Tagodtod', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:51:24', '2024-06-19 22:51:24'),
 (267, 267, 'Jeg Consumer Trading', '09500924990', 'Cordillera Administrative Region (CAR)', 'Abra', 'Luba', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:53:08', '2024-06-19 22:53:08'),
 (268, 268, 'Green Valley Bakeshop', '09062395994', 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Zone 2 Pob.', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 22:57:00', '2024-06-19 22:57:00'),
-(269, 269, 'EL-GD Merchandize', '09774863833', 'Cordillera Administrative Region (CAR)', 'Abra', 'Pidigan', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 23:00:59', '2024-06-19 23:00:59'),
+(269, 269, 'EL-GD Merchandize', '09774863833', 'Cordillera Administrative Region (CAR)', 'Abra', 'Pidigan', 'Poblacion', NULL, '17°33\'53.61\"N', '120°35\'44.16\"E', 'option 1', NULL, NULL, '2024-06-19 23:00:59', '2024-07-08 22:47:09'),
 (270, 270, 'Khristma Minmart', '09167803944/09063364596', 'Cordillera Administrative Region (CAR)', 'Abra', 'Pidigan', 'Garreta', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 23:04:06', '2024-06-19 23:04:06'),
 (271, 271, 'Lhiam Sari-Sari Store', '09052769582', 'Cordillera Administrative Region (CAR)', 'Abra', 'Bucay', 'San Miguel', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 23:07:10', '2024-06-19 23:07:10'),
 (272, 272, 'Printing @ xerox services', '09982942877', 'Cordillera Administrative Region (CAR)', 'Abra', 'Lagangilang', 'Tagodtod', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-19 23:09:42', '2024-06-19 23:09:42'),
@@ -47193,7 +47495,7 @@ INSERT INTO `storeinfo` (`id`, `customer_id`, `storename`, `contactno`, `region`
 (372, 372, 'M.A UPANO ENTERPRISES', '09175644105', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-25 22:14:51', '2024-06-27 21:25:52'),
 (373, 373, 'n/a', '09955799716', 'Cordillera Administrative Region (CAR)', 'kalinga', 'Rizal', 'Bulanao', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-25 22:16:06', '2024-06-25 22:16:06'),
 (374, 374, 'Barrakz CyberCafe', '09273651134/09983074272', 'Cordillera Administrative Region (CAR)', 'Abra', 'Dolores', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-26 20:29:49', '2024-06-26 20:29:49'),
-(375, 375, 'E3M3 Gas Station', '09361212960/09278244926', 'Cordillera Administrative Region (CAR)', 'Abra', 'San Isidro', 'Poblacion', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-26 20:49:07', '2024-06-26 20:49:07'),
+(375, 375, 'E3M3 Gas Station', '09361212960/09278244926', 'Cordillera Administrative Region (CAR)', 'Abra', 'San Isidro', 'Poblacion', NULL, '17°28\'2.07\'\'N', '120°36\'4.71\'\'E', 'option 1', NULL, NULL, '2024-06-26 20:49:07', '2024-07-07 20:44:59'),
 (376, 376, 'CRISTY STORE', '09553625278', 'Cordillera Administrative Region (CAR)', 'Abra', 'Bangued ', 'Calaba', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-26 20:51:25', '2024-06-26 20:51:25'),
 (377, 377, 'AA\'s Sari-Sari Store', '09565610769', 'Cordillera Administrative Region (CAR)', 'Abra', 'Luba', 'Sabnangan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-26 20:54:03', '2024-06-26 20:54:03'),
 (378, 378, 'Syree\'s Bakery', '09174154635', 'Cordillera Administrative Region (CAR)', 'Abra', 'Lagangilang', 'Laang', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-26 20:57:05', '2024-06-26 20:57:05'),
@@ -47206,7 +47508,17 @@ INSERT INTO `storeinfo` (`id`, `customer_id`, `storename`, `contactno`, `region`
 (385, 385, 'CLASS 88- ALPHA Store', '09669532431', 'Cordillera Administrative Region (CAR)', 'Abra', 'Bucloc', 'Bangbangcag', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-26 21:18:05', '2024-06-26 21:18:05'),
 (386, 386, 'Park N\' Shop Grocery Store', '09091446637', 'Region I (Ilocos Region)', 'La Union', 'Rosario', 'Udiao', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-27 17:07:50', '2024-06-27 17:07:50'),
 (387, 387, 'GRAXIA\'S STORE', NULL, 'Region II (Cagayan Valley)', 'Cagayan', 'Pamplona', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-27 21:43:05', '2024-06-27 21:43:05'),
-(388, 388, 'EOLF FOOD TRADING OPC', '09171661609', 'Region II (Cagayan Valley)', 'Isabela', 'Mallig', NULL, NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-28 00:43:51', '2024-06-28 00:43:51');
+(388, 388, 'EOLF FOOD TRADING OPC', '09171661609', 'Region II', 'Isabela', 'Mallig', 'San Pedro', NULL, '17°13\'48.70\"N', '121°36\'31.73\"E', 'option 1', NULL, NULL, '2024-06-28 00:43:51', '2024-07-10 21:32:38'),
+(389, 389, '3A-C SARI-SARI STORE', '09605827933', 'Region II (Cagayan Valley)', 'Cagayan', 'Peñablanca', 'Dodan', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-28 21:54:59', '2024-06-28 21:54:59'),
+(390, 390, 'SNACKVILLE FOOD AND BEVERAGE TRADING', '09171198144/09358003573', 'Cordillera Administrative Region (CAR)', 'kalinga', 'Rizal', 'Bulanao', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-28 21:56:52', '2024-06-28 21:56:52'),
+(391, 391, 'JB\'S SARI-SARI STORE', '09563482114', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Libag Norte', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-28 21:58:36', '2024-06-28 21:58:36'),
+(392, 392, 'n/a', '09561267896', 'Cordillera Administrative Region (CAR)', 'kalinga', 'Rizal', 'Bulanao', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-28 22:02:13', '2024-06-28 22:02:13'),
+(393, 393, 'BGR\'S STORE', '09952209708', 'Region II (Cagayan Valley)', 'Cagayan', 'Tuguegarao City ', 'Caggay', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-28 22:05:00', '2024-06-28 22:05:00'),
+(394, 394, 'CATH & XYLA\'S PANCITERIA', '09771339798', 'Region II (Cagayan Valley)', 'Cagayan', 'Piat', 'Maguilling', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-06-28 22:08:02', '2024-06-28 22:08:02'),
+(395, 395, 'POPOY CONVENIENCE STORE', '09685897110', 'Region I (Ilocos Region)', 'La Union', 'City of San Fernando ', 'Sevilla', 'New Era', NULL, NULL, 'option 1', NULL, NULL, '2024-07-03 22:55:40', '2024-07-03 22:55:40'),
+(396, 396, 'ISKOMPYUTER INTERNET CAFE', '09947957183', 'Region III (Central Luzon)', 'Tarlac', 'San Manuel', 'Mangandingay', 'Purok 4', NULL, NULL, 'option 1', NULL, NULL, '2024-07-03 22:58:16', '2024-07-03 22:58:16'),
+(397, 397, 'Depot Tarlac', '09171661609', 'Region III (Central Luzon)', 'Tarlac', 'San Manuel', 'San Miguel', NULL, NULL, NULL, 'option 1', NULL, NULL, '2024-07-05 21:19:34', '2024-07-05 21:19:34'),
+(398, 398, 'FGD VARIETY STORE', '09055600600', 'Cordillera Administrative Region (CAR)', 'Apayao', 'Flora', 'Poblacion East', 'Public Market', NULL, NULL, 'option 1', NULL, NULL, '2024-07-10 21:08:53', '2024-07-10 21:08:53');
 
 -- --------------------------------------------------------
 
@@ -47214,21 +47526,24 @@ INSERT INTO `storeinfo` (`id`, `customer_id`, `storename`, `contactno`, `region`
 -- Table structure for table `temp_bad_orders`
 --
 
-CREATE TABLE `temp_bad_orders` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `session_id` varchar(191) NOT NULL,
+DROP TABLE IF EXISTS `temp_bad_orders`;
+CREATE TABLE IF NOT EXISTS `temp_bad_orders` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `session_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `customer_id` bigint(20) UNSIGNED NOT NULL,
   `store_id` bigint(20) UNSIGNED NOT NULL,
-  `ptype_code` varchar(191) NOT NULL,
-  `code` varchar(191) NOT NULL,
-  `unit` varchar(191) NOT NULL,
-  `description` varchar(191) NOT NULL,
+  `ptype_code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `unit` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `quantity` int(11) NOT NULL,
   `price` decimal(8,2) NOT NULL,
   `amount` decimal(8,2) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `temp_bad_orders_customer_id_foreign` (`customer_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -47236,14 +47551,16 @@ CREATE TABLE `temp_bad_orders` (
 -- Table structure for table `temp_inbounds`
 --
 
-CREATE TABLE `temp_inbounds` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `session` varchar(191) NOT NULL,
-  `product_code` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`product_code`)),
+DROP TABLE IF EXISTS `temp_inbounds`;
+CREATE TABLE IF NOT EXISTS `temp_inbounds` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `session` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `product_code` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `quantity` int(11) NOT NULL,
-  `status` varchar(10) NOT NULL,
+  `status` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -47252,28 +47569,31 @@ CREATE TABLE `temp_inbounds` (
 -- Table structure for table `users`
 --
 
-CREATE TABLE `users` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `last_name` varchar(191) NOT NULL,
-  `first_name` varchar(191) NOT NULL,
-  `contact_no` varchar(191) DEFAULT NULL,
-  `address` varchar(191) DEFAULT NULL,
-  `email` varchar(191) NOT NULL,
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `last_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `first_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `contact_no` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(191) NOT NULL,
-  `remember_token` varchar(100) DEFAULT NULL,
+  `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `last_name`, `first_name`, `contact_no`, `address`, `email`, `email_verified_at`, `password`, `remember_token`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 'Melo', 'Melvin', '09621235214', NULL, 'admin@gmail.com', '2024-06-04 18:57:42', '$2y$12$C8JY/26clD/TI1t2sv/yQuK3/q77yWl7lz45CWtdkhLWWSHYtK/Ya', 'GwgyAREJL0MszljvtRYGFgmWpYOD5rC233sjO67iMwEQfLbTVvqMbleFhObw', NULL, '2024-06-04 18:57:43', '2024-06-04 18:57:43'),
-(2, 'Comia', 'Nalen', '09176208582', NULL, 'danerics.eolffoodtrading@gmail.com', NULL, '$2y$12$NJku3kZB9GLcopt7etbQQeJDVwr8FMGPtlNsyXQq41T.T6zb29SWG', 'W15RJqWmU0wWE57tUJwHNIsx8SdfbBEJZXjnaevomcLiirozAL14mQFiDbFm', NULL, '2024-06-05 00:15:27', '2024-06-05 00:16:16'),
+(1, 'Melo', 'Melvin', '09621235214', NULL, 'admin@gmail.com', '2024-06-04 18:57:42', '$2y$12$C8JY/26clD/TI1t2sv/yQuK3/q77yWl7lz45CWtdkhLWWSHYtK/Ya', '5hx2pPitlQfEuDAptXeNyBrXZrXnFbmBqpKdYYrzQDY9KkVfULRabcVWXveo', NULL, '2024-06-04 18:57:43', '2024-06-04 18:57:43'),
+(2, 'Comia', 'Nalen', '09176208582', NULL, 'danerics.eolffoodtrading@gmail.com', NULL, '$2y$12$NJku3kZB9GLcopt7etbQQeJDVwr8FMGPtlNsyXQq41T.T6zb29SWG', 'rbXjGw78vvxhbGOqQxE3zNeEukfgx3luBUMLENjIbA6kYy4knUFsJauxo8ah', NULL, '2024-06-05 00:15:27', '2024-06-05 00:16:16'),
 (3, 'Comia', 'Jof', '09171661609', NULL, 'jofren_comia@yahoo.com', NULL, '$2y$12$222Kw9Kci03QQ0h06f9gLOibWwhw4BhXYRQqSqfRFRtfPokVEr8ei', NULL, NULL, '2024-06-06 01:02:38', '2024-06-06 01:03:00');
 
 -- --------------------------------------------------------
@@ -47282,19 +47602,21 @@ INSERT INTO `users` (`id`, `last_name`, `first_name`, `contact_no`, `address`, `
 -- Table structure for table `vehicles`
 --
 
-CREATE TABLE `vehicles` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `plateno` varchar(191) NOT NULL,
-  `brand` varchar(191) DEFAULT NULL,
-  `description` varchar(191) DEFAULT NULL,
-  `type` varchar(191) DEFAULT NULL,
-  `size` varchar(191) DEFAULT NULL,
-  `capacity` varchar(191) DEFAULT NULL,
-  `remarks` varchar(191) DEFAULT NULL,
-  `status` varchar(191) DEFAULT NULL,
+DROP TABLE IF EXISTS `vehicles`;
+CREATE TABLE IF NOT EXISTS `vehicles` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `plateno` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `brand` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `size` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `capacity` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remarks` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `vehicles`
@@ -47305,494 +47627,6 @@ INSERT INTO `vehicles` (`id`, `plateno`, `brand`, `description`, `type`, `size`,
 (2, 'NIE-5084', 'HINO', 'Small Truck', 'Van', 'S', '320000', NULL, 'ACTIVE', '2024-06-05 00:21:53', '2024-06-05 00:21:53'),
 (3, 'NIS-9992', 'LIEBHERR', 'Large Truck', 'Van', 'XL', '1100000', NULL, 'ACTIVE', '2024-06-06 01:04:54', '2024-06-06 01:04:54'),
 (4, 'NEQ-8149', 'ISUZU', 'CLOSE VAN', 'Closed', 'S', '300000', NULL, 'ACTIVE', '2024-06-07 19:25:08', '2024-06-07 19:25:08');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `activity_log`
---
-ALTER TABLE `activity_log`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `subject` (`subject_type`,`subject_id`),
-  ADD KEY `causer` (`causer_type`,`causer_id`),
-  ADD KEY `activity_log_log_name_index` (`log_name`);
-
---
--- Indexes for table `bad_orders`
---
-ALTER TABLE `bad_orders`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `branches`
---
-ALTER TABLE `branches`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `cache`
---
-ALTER TABLE `cache`
-  ADD PRIMARY KEY (`key`);
-
---
--- Indexes for table `cache_locks`
---
-ALTER TABLE `cache_locks`
-  ADD PRIMARY KEY (`key`);
-
---
--- Indexes for table `chart_of_accounts`
---
-ALTER TABLE `chart_of_accounts`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `company_details`
---
-ALTER TABLE `company_details`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `customers`
---
-ALTER TABLE `customers`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `customers_branch_code_index` (`branch_code`);
-
---
--- Indexes for table `deliveries`
---
-ALTER TABLE `deliveries`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `delivery_purchase_receipts`
---
-ALTER TABLE `delivery_purchase_receipts`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `delivery_purchase_receipts_dr_no_unique` (`dr_no`),
-  ADD KEY `delivery_purchase_receipts_branch_code_index` (`branch_code`);
-
---
--- Indexes for table `drivers`
---
-ALTER TABLE `drivers`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `employees`
---
-ALTER TABLE `employees`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `equipment`
---
-ALTER TABLE `equipment`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `equipment_store`
---
-ALTER TABLE `equipment_store`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `equipment_store_store_id_foreign` (`store_id`),
-  ADD KEY `equipment_store_equipment_id_foreign` (`equipment_id`),
-  ADD KEY `equipment_store_customer_id_foreign` (`customer_id`);
-
---
--- Indexes for table `expenses`
---
-ALTER TABLE `expenses`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `failed_jobs`
---
-ALTER TABLE `failed_jobs`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
-
---
--- Indexes for table `inbounds`
---
-ALTER TABLE `inbounds`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `inbounds_branch_code_index` (`branch_code`);
-
---
--- Indexes for table `inventories`
---
-ALTER TABLE `inventories`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `item_master_data`
---
-ALTER TABLE `item_master_data`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `jobs`
---
-ALTER TABLE `jobs`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `jobs_queue_index` (`queue`);
-
---
--- Indexes for table `job_batches`
---
-ALTER TABLE `job_batches`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `materials_inventories`
---
-ALTER TABLE `materials_inventories`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `migrations`
---
-ALTER TABLE `migrations`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `model_has_permissions`
---
-ALTER TABLE `model_has_permissions`
-  ADD PRIMARY KEY (`permission_id`,`model_id`,`model_type`),
-  ADD KEY `model_has_permissions_model_id_model_type_index` (`model_id`,`model_type`);
-
---
--- Indexes for table `model_has_roles`
---
-ALTER TABLE `model_has_roles`
-  ADD PRIMARY KEY (`role_id`,`model_id`,`model_type`),
-  ADD KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`);
-
---
--- Indexes for table `password_reset_tokens`
---
-ALTER TABLE `password_reset_tokens`
-  ADD PRIMARY KEY (`email`);
-
---
--- Indexes for table `permissions`
---
-ALTER TABLE `permissions`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `permissions_name_guard_name_unique` (`name`,`guard_name`);
-
---
--- Indexes for table `ph_addrs`
---
-ALTER TABLE `ph_addrs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `pricelevels`
---
-ALTER TABLE `pricelevels`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `pricelevels_branch_code_index` (`branch_code`);
-
---
--- Indexes for table `prices`
---
-ALTER TABLE `prices`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `prices_pricelevel_id_p_code_unique` (`pricelevel_id`,`p_code`);
-
---
--- Indexes for table `products`
---
-ALTER TABLE `products`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unique_product_type_variant` (`product_type_code`,`product_variant_code`);
-
---
--- Indexes for table `product_types`
---
-ALTER TABLE `product_types`
-  ADD PRIMARY KEY (`code`);
-
---
--- Indexes for table `product_variants`
---
-ALTER TABLE `product_variants`
-  ADD UNIQUE KEY `product_variants_code_unique` (`code`);
-
---
--- Indexes for table `purchases`
---
-ALTER TABLE `purchases`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `roles`
---
-ALTER TABLE `roles`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `roles_name_guard_name_unique` (`name`,`guard_name`);
-
---
--- Indexes for table `role_has_permissions`
---
-ALTER TABLE `role_has_permissions`
-  ADD PRIMARY KEY (`permission_id`,`role_id`),
-  ADD KEY `role_has_permissions_role_id_foreign` (`role_id`);
-
---
--- Indexes for table `sales`
---
-ALTER TABLE `sales`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `sessions`
---
-ALTER TABLE `sessions`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `sessions_user_id_index` (`user_id`),
-  ADD KEY `sessions_last_activity_index` (`last_activity`);
-
---
--- Indexes for table `storeinfo`
---
-ALTER TABLE `storeinfo`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `storeinfo_customer_id_foreign` (`customer_id`);
-
---
--- Indexes for table `temp_bad_orders`
---
-ALTER TABLE `temp_bad_orders`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `temp_inbounds`
---
-ALTER TABLE `temp_inbounds`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `users_email_unique` (`email`);
-
---
--- Indexes for table `vehicles`
---
-ALTER TABLE `vehicles`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `activity_log`
---
-ALTER TABLE `activity_log`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=269;
-
---
--- AUTO_INCREMENT for table `bad_orders`
---
-ALTER TABLE `bad_orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `branches`
---
-ALTER TABLE `branches`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `chart_of_accounts`
---
-ALTER TABLE `chart_of_accounts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `company_details`
---
-ALTER TABLE `company_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `customers`
---
-ALTER TABLE `customers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=389;
-
---
--- AUTO_INCREMENT for table `deliveries`
---
-ALTER TABLE `deliveries`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `delivery_purchase_receipts`
---
-ALTER TABLE `delivery_purchase_receipts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `drivers`
---
-ALTER TABLE `drivers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `employees`
---
-ALTER TABLE `employees`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `equipment`
---
-ALTER TABLE `equipment`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=518;
-
---
--- AUTO_INCREMENT for table `equipment_store`
---
-ALTER TABLE `equipment_store`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=723;
-
---
--- AUTO_INCREMENT for table `expenses`
---
-ALTER TABLE `expenses`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `failed_jobs`
---
-ALTER TABLE `failed_jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `inbounds`
---
-ALTER TABLE `inbounds`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT for table `inventories`
---
-ALTER TABLE `inventories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `item_master_data`
---
-ALTER TABLE `item_master_data`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
-
---
--- AUTO_INCREMENT for table `jobs`
---
-ALTER TABLE `jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `materials_inventories`
---
-ALTER TABLE `materials_inventories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `migrations`
---
-ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=320;
-
---
--- AUTO_INCREMENT for table `permissions`
---
-ALTER TABLE `permissions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `ph_addrs`
---
-ALTER TABLE `ph_addrs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43763;
-
---
--- AUTO_INCREMENT for table `pricelevels`
---
-ALTER TABLE `pricelevels`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `prices`
---
-ALTER TABLE `prices`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=301;
-
---
--- AUTO_INCREMENT for table `products`
---
-ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
-
---
--- AUTO_INCREMENT for table `purchases`
---
-ALTER TABLE `purchases`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `roles`
---
-ALTER TABLE `roles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `sales`
---
-ALTER TABLE `sales`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `storeinfo`
---
-ALTER TABLE `storeinfo`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=389;
-
---
--- AUTO_INCREMENT for table `temp_bad_orders`
---
-ALTER TABLE `temp_bad_orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `temp_inbounds`
---
-ALTER TABLE `temp_inbounds`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `vehicles`
---
-ALTER TABLE `vehicles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
