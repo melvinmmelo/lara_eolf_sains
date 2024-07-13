@@ -236,14 +236,17 @@ class InboundController extends Controller
 
     // ajax inbound products
     // per product na ito ha, ito na yung table ng product, yung may details
-    public function ajaxInboundList($code, $qty = 1)
+    public function ajaxInboundList($code, $qty = 1, $pid)
     {
+        if(!session()->has('pricelevelId')){
+            session()->put('pricelevelId', $pid);
+        }
 
         $products = InboundProductsService::getInboundProducts();
         $summary = [];
 
         $product = Product::where('code', $code)->first();
-        $price = prices::where('p_code', $code)->first();
+        $price = prices::where('p_code', $code)->where('pricelevel_id', $pid)->first();
 
         // get the first two characters of the product type code
         $sequence_no = ProductType::code($product->product_type_code)->pluck('sequence_no')->first();

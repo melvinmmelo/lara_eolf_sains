@@ -62,9 +62,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/ticket-inbounds/{grp}', [TicketController::class, 'show'])->name('inbounds-ticket');
 
 
-
-
-
     Route::get('/lastBadOrderOfCustomer/{customerId}/{storeId}', [BadOrderController::class, 'fetchLastBadOrderOfCustomer']);
 
     Route::get('/getBoDetails', [BadOrderController::class, 'getBoDetails']);
@@ -235,7 +232,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/productsin/{code}', [InboundController::class, 'ajaxProductList'])->name('products.ajaxProductList');
 
-    Route::get('/inboundin/{code}/{qty}', [InboundController::class, 'ajaxInboundList'])->name('inbound.inboundList');
+    Route::get('/inboundin/{code}/{qty}/{pid}', [InboundController::class, 'ajaxInboundList'])->name('inbound.inboundList');
 
     Route::get('/delete-inboundin/{pcode}', [InboundController::class, 'deleteAInbound'])->name('inbound.deleteAInbound');
 

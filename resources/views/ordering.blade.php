@@ -538,6 +538,13 @@
 
         function addProduct(code) {
             const qty = document.getElementById("qty_toadd").value;
+            const priceLevelId = document.getElementById("pricelevel_id").value;
+
+            if (priceLevelId == "" || priceLevelId == null || priceLevelId == undefined) {
+                alert("Please select a price level.");
+                return;
+            }
+
             if (code == "") {
                 document.getElementById("inboundList").innerHTML = "";
                 return;
@@ -560,7 +567,7 @@
                     }
 
                 };
-                xmlhttp.open("GET", "/inboundin/" + code + "/" + qty, true);
+                xmlhttp.open("GET", "/inboundin/" + code + "/" + qty + "/" + priceLevelId, true);
                 xmlhttp.send();
             }
         }
@@ -623,5 +630,23 @@
             xmlhttp.open("GET", "/inbound-updateProdQty/" + productCode + "/" + action, true);
             xmlhttp.send();
         }
+
+        // on select pricelevel_id change
+        document.getElementById('pricelevel_id').addEventListener('change', function() {
+            var pricelevel_id = document.getElementById('pricelevel_id').value;
+            $.ajax({
+                type: "GET",
+                url: "/set-priceLevelId/" + pricelevel_id,
+                success: function(response) {
+                    // console.log(response);
+                    if (response.error) {
+                        alert("Error fetching price level.");
+                        return;
+                    }
+                    console.log("Price level set to ");
+                }
+            });
+        });
+
     </script>
 @endsection
