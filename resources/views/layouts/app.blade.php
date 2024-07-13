@@ -129,9 +129,9 @@
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             @yield('contents')
-            <div class="preloader flex-column justify-content-center align-items-center">
+            {{-- <div class="preloader flex-column justify-content-center align-items-center">
                 <img class="animation__shake" src="{{ asset('img/preloader.jpg') }}" alt="AdminLTELogo">
-            </div>
+            </div> --}}
         </div>
         <!-- /.content-wrapper -->
 

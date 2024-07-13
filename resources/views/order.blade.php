@@ -60,12 +60,16 @@
                                 <tr>
                                     <td>{{ $inbound->f_created_at }}</td>
                                     <td>{{ $inbound->id }}</td>
-                                    <td>{{ $inbound->equipment->serial_no }}</td>
+                                    <td>{{ $inbound->equipment->code }}</td>
                                     <td>{{ $inbound->customer->fullName }}</td>
                                     <td><span class="label label-primary">{{ $total }}</span></td>
                                     <td>{{ $total - $inbound->delivered_amount }}</td>
                                     <td>{{ $inbound->status }}</td>
-                                    <td>{{ number_format($inbound->created_at->diffInDays(now()), 0) }}</td>
+                                    <td>
+                                        @if ($inbound->status == 'Completed')
+                                        {{ number_format($inbound->created_at->diffInDays(now()), 0) }}
+                                        @endif
+                                    </td>
                                     <td>
                                         @if ($inbound->status == 'Encoding')
                                             <a href="{{ route('order.processTwo', ['inbound' => $inbound->id]) }}"><button

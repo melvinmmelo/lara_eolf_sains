@@ -9,12 +9,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Loading  Tickets</h1>
+                    <h1>Generate Loading  Ticket</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">Loading Tickets</li>
+                        <li class="breadcrumb-item active">Generate Loading Ticket</li>
                     </ol>
                 </div>
             </div>
@@ -30,34 +30,77 @@
             @csrf
             <div class="card">
                 <div class="card-body">
+                    <div class="pb-2">
+                        <button type="submit" class="btn btn-primary">
+                            Print
+                        </button>
+
+
+                        <a href="{{ route('index-ticket')}}"><button type="button" class="btn btn-default">
+                            Loading Tickets
+                        </button></a>
+                    </div>
                     <div class="tbContainer">
 
                         <table id="example3" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>Group Ticket No</th>
                                     <th></th>
+                                    <th>Date created</th>
+                                    <th>Order No.</th>
+                                    <th>Degic No.</th>
+                                    <th>Customer</th>
+                                    <th>Invoice Amount</th>
+                                    <th>Balance Due</th>
+                                    <th>Status</th>
+                                    <th>Days Overdue</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($inbounds as $inbound)
+                                    @php
+                                        $total = $inbound->totalAmount;
+                                    @endphp
+
                                     <tr>
-                                        <td>{{ $inbound->grp_print_ticket_no }}</td>
                                         <td>
-                                            <a href="{{ route('inbounds-ticket', ['grp' => $inbound->grp_print_ticket_no]) }}" class="btn btn-primary">Show</a>
+                                            <input type="checkbox" name="inboundIds[]" value="{{ $inbound->id }}" id="inboundIds{{ $inbound->id }}">
                                         </td>
+                                        <td>{{ $inbound->f_created_at }}</td>
+                                        <td>{{ $inbound->id }}</td>
+                                        <td>{{ $inbound->equipment->serial_no }}</td>
+                                        <td>{{ $inbound->customer->fullName }}</td>
+                                        <td><span class="label label-primary">{{ $total }}</span></td>
+                                        <td>{{ $total - $inbound->delivered_amount }}</td>
+                                        <td>{{ $inbound->status }}</td>
+                                        <td>{{ number_format($inbound->created_at->diffInDays(now()), 0) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th>Group Ticket No</th>
                                     <th></th>
+                                    <th>Date created</th>
+                                    <th>Order No.</th>
+                                    <th>Degic No.</th>
+                                    <th>Customer</th>
+                                    <th>Invoice Amount</th>
+                                    <th>Balance Due</th>
+                                    <th>Status</th>
+                                    <th>Days Overdue</th>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
                 </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">
+                        Print
+                    </button>
+                </div>
+
+                <!-- /.card-footer-->
             </div>
         </form>
         <!-- /.card -->

@@ -11,6 +11,20 @@ class TicketController extends Controller
 {
     //
 
+    public function index()
+    {
+
+        // get inbound with distinct grp_print_ticket_no
+        $inbounds = Inbound::branch(session('branch_code'))->forLoading()->select('grp_print_ticket_no')->distinct()->get();
+        return view('ticket.index', compact('inbounds'));
+    }
+
+    public function show($grp)
+    {
+        $inbounds = Inbound::where('grp_print_ticket_no', $grp)->get();
+        return view('ticket.show', compact('inbounds', 'grp'));
+    }
+
     public function generate()
     {
         $ticketdetails="";
@@ -20,7 +34,7 @@ class TicketController extends Controller
         if(Session::has('ticketnum')){
             $ticketdetails = Inbound::where('grp_print_ticket_no', session()->get('ticketnum'))->get();
         }
-        return view('ticket.index', compact('inbounds','ticketdetails','sorted_product_codes'));
+        return view('ticket.generate', compact('inbounds','ticketdetails','sorted_product_codes'));
     }
 
 

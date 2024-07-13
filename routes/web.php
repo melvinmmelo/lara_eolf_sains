@@ -58,6 +58,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/generate-ticket', [TicketController::class, 'generate'])->name('generate-ticket');
 
     Route::post('/print-ticket', [TicketController::class, 'print'])->name('print-ticket');
+    Route::get('/tickets', [TicketController::class, 'index'])->name('index-ticket');
+    Route::get('/ticket-inbounds/{grp}', [TicketController::class, 'show'])->name('inbounds-ticket');
+
+
 
 
 
