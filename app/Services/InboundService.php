@@ -4,9 +4,12 @@ namespace App\Services;
 
 use App\Models\BadOrder;
 use App\Models\Inbound;
+use App\Models\ProductType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
+// ! ALL STATIC FUNCTIONS
 class InboundService extends Model
 {
     use HasFactory;

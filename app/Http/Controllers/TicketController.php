@@ -15,7 +15,7 @@ class TicketController extends Controller
     {
 
         // get inbound with distinct grp_print_ticket_no
-        $inbounds = Inbound::branch(session('branch_code'))->forLoading()->select('grp_print_ticket_no')->distinct()->get();
+        $inbounds = Inbound::select('grp_print_ticket_no')->whereNotNull('grp_print_ticket_no')->groupBy('grp_print_ticket_no')->get();
         return view('ticket.index', compact('inbounds'));
     }
 
@@ -30,7 +30,7 @@ class TicketController extends Controller
         $ticketdetails="";
         $sorted_product_codes = DB::table('product_types')->orderBy('sequence_no', 'asc')->select('code','spoon_pcs_per_bag')->get();
         //dd($sorted_product_codes);
-        $inbounds = Inbound::branch(session('branch_code'))->forLoading()->get();
+        $inbounds = Inbound::branch(session('branch_code'))->forLoading()->WithProducts()->get();
         if(Session::has('ticketnum')){
             $ticketdetails = Inbound::where('grp_print_ticket_no', session()->get('ticketnum'))->get();
         }

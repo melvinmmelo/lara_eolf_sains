@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\DeliveryReceipt;
 use App\Models\Inbound;
 use App\Models\ItemMasterData;
+use App\Services\InboundProductsService;
 use App\Services\InboundService;
 
 class DeliveryReceiptController extends Controller
@@ -81,9 +82,13 @@ class DeliveryReceiptController extends Controller
 
     public function show($id)
     {
-        // Fetch delivery receipt by ID
         $deliveryReceipt = DeliveryReceipt::findOrFail($id);
+
         $inbound = Inbound::findOrFail($deliveryReceipt->dr_no);
-        return view('DRprint', compact('deliveryReceipt', 'inbound'));
+
+        $inboundService = new InboundProductsService($inbound->products);
+        $summary = $inboundService->summary();
+        $products = $inboundService->addSppbinSummary();
+        return view('DRprint', compact('deliveryReceipt', 'products'));
     }
 }

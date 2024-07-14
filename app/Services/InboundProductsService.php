@@ -104,7 +104,7 @@ class InboundProductsService extends Model
             if (isset($summary[$ptypeCode])) {
                 $summary[$ptypeCode]['total'] += $product['quantity'];
             } else {
-                $summary[$ptypeCode] = ['ptype_code' => $ptypeCode,'total' => $product['quantity']];
+                $summary[$ptypeCode] = ['ptype_code' => $ptypeCode,'total' => $product['quantity'], 'price' => $product['price'], 'order' => $product['order']];
             }
         }
 
@@ -118,6 +118,7 @@ class InboundProductsService extends Model
 
         if ($this->summary == null) return [];
         $summary = array_values($this->summary);
+
 
         foreach ($summary as $key => $value) {
             $product = ProductType::where('code', $value['ptype_code'])->first();
@@ -143,4 +144,6 @@ class InboundProductsService extends Model
 
         return $products;
     }
+
+
 }

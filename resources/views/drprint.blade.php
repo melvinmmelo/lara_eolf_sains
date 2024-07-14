@@ -76,17 +76,13 @@
                             </thead>
                             <tbody>
 
-                                @php
-                                    if ($inbound->products) {
-                                        $products = json_decode($inbound->products);
-                                    }
-                                @endphp
 
                                 @foreach ($products as $product)
+
                                     <tr>
-                                        <td>{{ $product->ptype_code }}</td>
-                                        <td>{{ $product->quantity }}</td>
-                                        <td>{{ $product->price }}</td>
+                                        <td>{{ $product['ptype_code'] }}</td>
+                                        <td>{{ $product['total'] }}</td>
+                                        <td>{{ $product['price'] }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -124,12 +120,12 @@
                             @php $totalSales = 0; @endphp
 
                             @foreach ($products as $product)
-                                @php   $totalSales += $product->quantity * $product->price;  @endphp
+                                @php   $totalSales += $product['total'] * $product['price'];  @endphp
                                 <tr>
-                                    <td>{{ $product->ptype_code }}</td>
-                                    <td>{{ $product->quantity }}</td>
-                                    <td>{{ $product->price }}</td>
-                                    <td>{{ $product->quantity * $product->price }}</td>
+                                    <td>{{ $product['ptype_code'] }}</td>
+                                    <td>{{ $product['total'] }}</td>
+                                    <td>{{ $product['price'] }}</td>
+                                    <td>{{ $product['total'] * $product['price'] }}</td>
                                 </tr>
                             @endforeach
                             <tr>
@@ -204,7 +200,7 @@
             mywindow.document.write('<tr><td>Qty</td><td>Items</td><td>Price</td><td align="right">Amount</td></tr>');
             @foreach ($products as $product)
                 mywindow.document.write(
-                    '<tr><td>{{ $product->quantity }}</td><td>{{ $product->ptype_code }}</td><td>{{ $product->price }}</td><td align="right">{{ $product->quantity * $product->price }}</td></tr>'
+                    '<tr><td>{{ $product['total'] }}</td><td>{{ $product['ptype_code'] }}</td><td>{{ $product['price'] }}</td><td align="right">{{ $product['total'] * $product['price'] }}</td></tr>'
                 );
             @endforeach
             mywindow.document.write('</table>');
