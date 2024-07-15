@@ -89,26 +89,18 @@
                         </table>
                     </div>
                     <div class="col-md-4">
-                        <table width="100%">
-                            <tr>
-                                <td colspan="4">
-                                    <center>EOLF FOOD TRADING OPC</center>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">
-                                    <center>DELIVERY RECEIPT</center>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">DR No.: {{ $deliveryReceipt->id }}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">Date: {{ $deliveryReceipt->date }}</td>
-                            </tr>
-                            <tr>
-                            </tr>
-                        </table>
+
+                        <div class="text-center">
+                            EOLF FOOD TRADING OPC
+                            <br>
+                            DELIVERY RECEIPT
+
+                        </div>
+
+                        <div class="">
+                            DR No.: {{ $deliveryReceipt->id }} <br>
+                            Date: {{ $deliveryReceipt->date }}
+                        </div>
                         <table width="100%">
                             <tr>
                                 <td>Qty</td>
@@ -128,23 +120,20 @@
                                     <td>{{ $product['total'] * $product['price'] }}</td>
                                 </tr>
                             @endforeach
-                            <tr>
-                                <td align="left">Total Sales:</td>
-                                <td align="right">{{ $totalSales }}</td>
-                            </tr>
-                            <tr>
-                                <td align="left">Less BO:</td>
-                                <td align="right">{{ $deliveryReceipt->bad_orders }}</td>
-                            </tr>
-                            <tr>
-                                <td align="left">Discount (%):</td>
-                                <td align="right">{{ $deliveryReceipt->discount }}</td>
-                            </tr>
-                            <tr>
-                                <td align="left">Total Amount:</td>
-                                <td align="right">{{ $deliveryReceipt->total_amount }}</td>
-                            </tr>
+
                         </table>
+
+
+                        <div class="">
+                                Total Sales:
+                               {{ $totalSales }} <br>
+                                Less BO:
+                                {{ $deliveryReceipt->bad_orders }} <br>
+                                Discount (%):
+                                {{ $deliveryReceipt->discount }} <br>
+                                Total Amount:
+                                {{ $deliveryReceipt->total_amount }} <br>
+                        </div>
                         <br><br><br>
                         ---------------------------------<br>
                         Andal, Froilan<br>
@@ -188,7 +177,7 @@
                 'body{ font-family:"Arial",Helvetica,sans-serif;font-size: 9pt;word-wrap: break-word; }');
             mywindow.document.write('hr { border: 0; border-top: 1px solid #000; margin: 10px 0; }');
             mywindow.document.write(
-                'td { font-family:"Arial",Helvetica,sans-serif;font-size: 9pt;word-wrap: break-word; }');
+                'table { border-collapse: collapse; } td { font-family:"Arial",Helvetica,sans-serif;font-size: 9pt;word-wrap: break-word; }');
             mywindow.document.write('</style>');
             mywindow.document.write('</head><body>');
             mywindow.document.write('<center>EOLF FOOD TRADING OPC</center><br>');
@@ -196,7 +185,7 @@
             mywindow.document.write('<br><br>');
             mywindow.document.write('DR No.: {{ $deliveryReceipt->id }}<br>');
             mywindow.document.write('Date: {{ $deliveryReceipt->date }}<br>');
-            mywindow.document.write('<table width="100%">');
+            mywindow.document.write('<table border="1" width="100%">');
             mywindow.document.write('<tr><td>Qty</td><td>Items</td><td>Price</td><td align="right">Amount</td></tr>');
             @foreach ($products as $product)
                 mywindow.document.write(
@@ -204,18 +193,16 @@
                 );
             @endforeach
             mywindow.document.write('</table>');
-            mywindow.document.write('<hr>');
-            mywindow.document.write('<table width="100%">');
             mywindow.document.write(
-                '<tr><td align="left">Total Sales:</td><td align="right">{{ $totalSales }}</td></tr>'
+                'Total Sales: {{ $totalSales }} <br>'
             );
             mywindow.document.write(
-                '<tr><td align="left">Less BO:</td><td align="right">{{ $deliveryReceipt->bad_orders }}</td></tr>');
+                'Less BO: {{ $deliveryReceipt->bad_orders }} <br>');
             mywindow.document.write(
-                '<tr><td align="left">Discount (%):</td><td align="right">{{ $deliveryReceipt->discount }}</td></tr>'
+                'Discount (%): {{ $deliveryReceipt->discount }} <br>'
             );
             mywindow.document.write(
-                '<tr><td align="left">Total Amount:</td><td align="right">{{ $deliveryReceipt->total_amount }}</td></tr>'
+                'Total Amount: {{ $deliveryReceipt->total_amount }} <br>'
             );
             mywindow.document.write('</table>');
             mywindow.document.write('<br><br><br>');

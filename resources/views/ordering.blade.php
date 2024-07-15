@@ -344,13 +344,8 @@
 @endsection
 
 @section('custom_js')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.9/js/select2.min.js"
-        integrity="sha512-9p/L4acAjbjIaaGXmZf0Q2bV42HetlCLbv8EP0z3rLbQED2TAFUlDvAezy7kumYqg5T8jHtDdlm1fgIsr5QzKg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
     <script>
         document.getElementById("BOContainer").style.display = "none";
-
 
         const total = document.getElementById("total").value ?? 0;
 
@@ -402,8 +397,6 @@
         function setQty(qty) {
             document.getElementById("qty_toadd").value = qty;
         }
-
-
 
         function discardIn() {
             return confirm('Are you sure you want to discard this order?');
@@ -487,20 +480,9 @@
             var quantitiy = 0;
             $('.quantity-right-plus').click(function(e) {
 
-                // Stop acting like a button
                 e.preventDefault();
-
-                // If is not undefined
-
-                // Get the field name
                 var quantity = parseInt($('#quantity').val());
-
-                // If is not undefined
-
                 $('#quantity').val(quantity + 1);
-
-
-                // Increment
 
             });
 
@@ -517,6 +499,16 @@
                     $('#quantity').val(quantity - 1);
                 }
             });
+
+            try {
+                var branch_code = $('#branch_code').val();
+                if (branch_code == 'EFTO-CAG') {
+                    $('#pricelevel_id').val(4);
+                }
+                console.log(branch_code);
+            } catch (error) {
+                console.log(error);
+            }
 
         });
 
@@ -647,6 +639,5 @@
                 }
             });
         });
-
     </script>
 @endsection

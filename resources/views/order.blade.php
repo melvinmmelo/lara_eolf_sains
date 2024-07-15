@@ -71,11 +71,6 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($inbound->status == 'Encoding')
-                                            <a href="{{ route('order.processTwo', ['inbound' => $inbound->id]) }}"><button
-                                                    class="btn btn-primary">Continue</button></a>
-                                        @endif
-
                                         @if ($inbound->status == 'Completed')
                                             <a href="#" data-target="#modalAddAmountDelivered"
                                                 data-toggle="modal"><button class="btn btn-danger"
@@ -86,7 +81,7 @@
                                             <button class="btn btn-xs btn-danger">W/ BO</button>
                                         @endif
 
-                                        @if($inbound->status === 'Completed')
+                                        @if($inbound->status === 'Encoding')
 
                                          <a href="{{ route('order.edit', ['inboundId' => $inbound->id ]) }}" class="btn btn-primary">Edit</button></a>
 

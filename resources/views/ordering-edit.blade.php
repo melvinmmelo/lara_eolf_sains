@@ -563,7 +563,7 @@
                 var total = document.getElementById("total").value;
                 var newTotal = parseInt(total) + parseInt(totalBadOrder);
                 document.getElementById("total").value = newTotal;
-                console.log(newTotal + " added.");
+                document.getElementById("bo_amount").value = 0;
             }
         });
 
