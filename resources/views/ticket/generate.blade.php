@@ -133,7 +133,7 @@
                     mywindow.document.write('<style>');
                     mywindow.document.write('body { font-family: "Arial", Helvetica, sans-serif; font-size: 9pt; word-wrap: break-word; }');
                     mywindow.document.write('hr { border: none; border-top: 1px dotted black; }');
-                    mywindow.document.write('td { font-family: "Arial", Helvetica, sans-serif; font-size: 9pt; word-wrap: break-word; }');
+                    mywindow.document.write('td { font-family: "Arial", Helvetica, sans-serif; font-size: 9pt; word-wrap: break-word; } @media print { body { margin: 0 0 5px 10px; } } @page { margin: 0 0 10px 5px; }');
                     mywindow.document.write('</style>');
                     mywindow.document.write('</head><body>');
                     mywindow.document.write('<center>EOLF FOOD TRADING OPC</center><br>');
@@ -181,7 +181,7 @@
                     mywindow.document.write('Sequence No: {{ $ticketdetail->ticket_sequence_no }}<br>');
                     mywindow.document.write('Customer: {{ $ticketdetail->customer->fullName }} ({{ $ticketdetail->store->storename }})<br>');
                     mywindow.document.write('Total Spoon Count: '+sp_count+'<br>');
-                    mywindow.document.write('Spoon Set: '+sp_set+'<br>');
+                    mywindow.document.write('Spoon Set: '+sp_set.toFixed(0)+'<br><br><br>');
                     mywindow.document.write('<hr>');
                     mywindow.document.write('</body></html>');
                     @endforeach

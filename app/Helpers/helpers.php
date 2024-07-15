@@ -16,3 +16,10 @@ if (! function_exists('statusBadge')) {
         return '<span class="badge ' . $class . '">' . e( ucfirst($statusDesc)) . '</span>';
     }
 }
+
+// format number with comma and decimal
+if (! function_exists('formatNumber')) {
+    function formatNumber($number) {
+        return number_format($number, 2, '.', ',');
+    }
+}

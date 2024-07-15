@@ -117,7 +117,7 @@
                                     <td>{{ $product['ptype_code'] }}</td>
                                     <td>{{ $product['total'] }}</td>
                                     <td>{{ $product['price'] }}</td>
-                                    <td>{{ $product['total'] * $product['price'] }}</td>
+                                    <td>{{ formatNumber($product['total'] * $product['price']) }}</td>
                                 </tr>
                             @endforeach
 
@@ -126,13 +126,13 @@
 
                         <div class="">
                                 Total Sales:
-                               {{ $totalSales }} <br>
+                               {{ formatNumber($totalSales) }} <br>
                                 Less BO:
-                                {{ $deliveryReceipt->bad_orders }} <br>
+                                {{ formatNumber($deliveryReceipt->bad_orders) }} <br>
                                 Discount (%):
-                                {{ $deliveryReceipt->discount }} <br>
+                                {{ formatNumber($deliveryReceipt->discount) }} <br>
                                 Total Amount:
-                                {{ $deliveryReceipt->total_amount }} <br>
+                                {{ formatNumber($deliveryReceipt->total_amount) }} <br>
                         </div>
                         <br><br><br>
                         ---------------------------------<br>
@@ -171,13 +171,13 @@
 
             // Create a new window for printing
             var mywindow = window.open('', 'PRINT', 'height=600,width=600');
-            mywindow.document.write('<html><head><title>DELIVERY RECEIPT</title>');
+            mywindow.document.write('<html><title>DELIVERY RECEIPT</title>');
             mywindow.document.write('<style>');
             mywindow.document.write(
                 'body{ font-family:"Arial",Helvetica,sans-serif;font-size: 9pt;word-wrap: break-word; }');
             mywindow.document.write('hr { border: 0; border-top: 1px solid #000; margin: 10px 0; }');
             mywindow.document.write(
-                'table { border-collapse: collapse; } td { font-family:"Arial",Helvetica,sans-serif;font-size: 9pt;word-wrap: break-word; }');
+                'table { border-collapse: collapse; } td { font-family:"Arial",Helvetica,sans-serif;font-size: 9pt;word-wrap: break-word; padding: 3px; } @media print { body { margin: 0 0 3px 3px; } } @page { margin: 0 0 3px 3px; }');
             mywindow.document.write('</style>');
             mywindow.document.write('</head><body>');
             mywindow.document.write('<center>EOLF FOOD TRADING OPC</center><br>');
@@ -185,24 +185,24 @@
             mywindow.document.write('<br><br>');
             mywindow.document.write('DR No.: {{ $deliveryReceipt->id }}<br>');
             mywindow.document.write('Date: {{ $deliveryReceipt->date }}<br>');
-            mywindow.document.write('<table border="1" width="100%">');
+            mywindow.document.write('<table cellp width="100%">');
             mywindow.document.write('<tr><td>Qty</td><td>Items</td><td>Price</td><td align="right">Amount</td></tr>');
             @foreach ($products as $product)
                 mywindow.document.write(
-                    '<tr><td>{{ $product['total'] }}</td><td>{{ $product['ptype_code'] }}</td><td>{{ $product['price'] }}</td><td align="right">{{ $product['total'] * $product['price'] }}</td></tr>'
+                    '<tr><td>{{ $product['total'] }}</td><td>{{ $product['ptype_code'] }}</td><td>{{ $product['price'] }}</td><td align="right">{{ formatNumber($product['total'] * $product['price']) }}</td></tr>'
                 );
             @endforeach
             mywindow.document.write('</table>');
             mywindow.document.write(
-                'Total Sales: {{ $totalSales }} <br>'
+                '<br>Total Sales: {{ formatNumber($totalSales) }} <br>'
             );
             mywindow.document.write(
-                'Less BO: {{ $deliveryReceipt->bad_orders }} <br>');
+                'Less BO: {{ formatNumber($deliveryReceipt->bad_orders) }} <br>');
             mywindow.document.write(
-                'Discount (%): {{ $deliveryReceipt->discount }} <br>'
+                'Discount (%): {{ formatNumber($deliveryReceipt->discount) }} <br>'
             );
             mywindow.document.write(
-                'Total Amount: {{ $deliveryReceipt->total_amount }} <br>'
+                'Total Amount: {{ formatNumber($deliveryReceipt->total_amount) }} <br>'
             );
             mywindow.document.write('</table>');
             mywindow.document.write('<br><br><br>');

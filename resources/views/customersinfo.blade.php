@@ -142,6 +142,7 @@
                             <th>Store Name</th>
                             <th>Equipments</th>
                             <th>Store Address</th>
+                            <th>Status</th>
                             <th>Created at</th>
                             <th></th>
                         </tr>
