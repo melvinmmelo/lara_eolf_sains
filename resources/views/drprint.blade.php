@@ -97,8 +97,9 @@
 
                         </div>
 
-                        <div class="">
+                        <div class="mb-3">
                             DR No.: {{ $deliveryReceipt->id }} <br>
+                            Customer Name: {{ $deliveryReceipt->customer_name }} <br>
                             Date: {{ $deliveryReceipt->date }}
                         </div>
                         <table width="100%">
@@ -135,7 +136,7 @@
                                 {{ formatNumber($deliveryReceipt->total_amount) }} <br>
                         </div>
                         <br><br><br>
-                        ---------------------------------<br>
+                        --------------------------------- &nbsp;&nbsp;&nbsp; -------------------- <br>
                         Andal, Froilan<br>
                     </div>
                 </div>
@@ -184,7 +185,8 @@
             mywindow.document.write('<center>DELIVERY RECEIPT</center><br>');
             mywindow.document.write('<br><br>');
             mywindow.document.write('DR No.: {{ $deliveryReceipt->id }}<br>');
-            mywindow.document.write('Date: {{ $deliveryReceipt->date }}<br>');
+            mywindow.document.write('Customer Name: {{ $deliveryReceipt->customer_name }}<br>');
+            mywindow.document.write('Date: {{ $deliveryReceipt->date }}<br><br>');
             mywindow.document.write('<table cellp width="100%">');
             mywindow.document.write('<tr><td>Qty</td><td>Items</td><td>Price</td><td align="right">Amount</td></tr>');
             @foreach ($products as $product)
@@ -206,7 +208,7 @@
             );
             mywindow.document.write('</table>');
             mywindow.document.write('<br><br><br>');
-            mywindow.document.write('---------------------------------<br>');
+            mywindow.document.write('--------------------------------- &nbsp;&nbsp;&nbsp; --------------------<br>');
             mywindow.document.write('Andal, Froilan<br>');
             mywindow.document.write('</body></html>');
 

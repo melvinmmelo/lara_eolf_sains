@@ -43,6 +43,8 @@ class DeliveryReceiptController extends Controller
             return redirect()->route('deliveryreceipt.index')->withErrors('No products found.');
         }
 
+        $validatedData['customer_name'] = $inbound->customer->fullName;
+
         $deliveryReceipt = DeliveryReceipt::create($validatedData);
 
         $totalOfOutbound = InboundService::getTotalOfInboundProducts($deliveryReceipt->dr_no);
@@ -58,6 +60,7 @@ class DeliveryReceiptController extends Controller
         $deliveryReceipt->amount_paid = $inbound->delivered_amount;
 
         $deliveryReceipt->balance = $amountDueOrBalance;
+
 
         $deliveryReceipt->save();
 

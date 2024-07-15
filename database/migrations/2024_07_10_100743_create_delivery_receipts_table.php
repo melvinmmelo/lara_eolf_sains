@@ -14,6 +14,7 @@ class CreateDeliveryReceiptsTable extends Migration
             $table->id();
             $table->date('date');
             $table->string('dr_no');
+            $table->string('customer_name');
             $table->string('generated_by')->nullable();
             $table->decimal('total_amount', 10, 2)->nullable();
             $table->decimal('bad_orders', 10, 2)->nullable();
