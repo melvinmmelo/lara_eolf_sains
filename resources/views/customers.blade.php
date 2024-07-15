@@ -22,19 +22,14 @@
     <section class="content">
         @if (session('success'))
             <script>
-                // JavaScript code to trigger SweetAlert pop-up message
                 document.addEventListener('DOMContentLoaded', function() {
-                    // Set default icon
                     let icon = 'success';
-
-                    // Check if success message is "Customer deleted successfully!"
                     @if (session('success') == 'Customer deleted successfully!')
-                        icon = 'error'; // Set icon to 'error' if message is for deletion
+                        icon = 'error';
                     @elseif (session('success') == 'Customer updated successfully!')
-                        icon = 'success'; // Set icon to 'success' if message is for update
+                        icon = 'success';
                     @endif
 
-                    // Show SweetAlert pop-up message with the determined icon
                     Swal.fire({
                         icon: icon,
                         title: '{{ session('success') }}',

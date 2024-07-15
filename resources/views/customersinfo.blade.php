@@ -45,6 +45,7 @@
                             <th>Store Name</th>
                             <th>Equipments</th>
                             <th>Store Address</th>
+                            <th>Status</th>
                             <th>Created at</th>
                             <th></th>
                         </tr>
@@ -82,6 +83,7 @@
                                             No address available
                                         @endif
                                     </td>
+                                    <td>{{ $customer->status }}</td>
                                     <td>{{ $customer->date_created }}</td>
                                     <td>
                                         <div class="btn-group" role="group">
@@ -93,7 +95,7 @@
                                             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                                 <a class="dropdown-item"
                                                     href="/store-info?customer_id={{ $customer->id }}&customer_name={{ urlencode($customer->firstname . ' ' . $customer->lastname) }}"
-                                                    role="button">Store</a>
+                                                    role="button" >Store</a>
                                                 <a class="dropdown-item"
                                                     href="/equipment-store?store_id={{ $store->id }}&store_name={{ $store->storename }}&customer_id={{ $customer->id }}&customer_name={{ $customer->lastname }}, {{ $customer->firstname }} {{ $customer->middlename }}"
                                                     role="button">Equipment</a>
@@ -628,6 +630,14 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <div class="form-group">
+                                                <label for="Status">Status</label>
+                                                <select class="form-control" id="status" name="status">
+                                                    <option value="Active">ACTIVE</option>
+                                                    <option value="STOP SELLING">STOP SELLING</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -671,8 +681,6 @@
                                                         <label class="form-label" for="e_region2">Region</label>
                                                         <input type="text" id="e_region2" name="e_region2"
                                                             class="form-control">
-                                                        <!-- <select class="form-control" id="e_region2" name="e_region2">
-                                                                                                                                        </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -683,8 +691,7 @@
                                                         <label class="form-label" for="e_province2">Province</label>
                                                         <input type="text" id="e_province2" name="e_province2"
                                                             class="form-control">
-                                                        <!-- <select class="form-control" id="e_province2" name="e_province2">
-                                                                                                                                        </select> -->
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -695,8 +702,7 @@
                                                         <label class="form-label" for="e_city2">City</label>
                                                         <input type="text" id="e_city2" name="e_city2"
                                                             class="form-control">
-                                                        <!-- <select class="form-control" id="e_city2" name="e_city2">
-                                                                                                                                        </select> -->
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -707,8 +713,7 @@
                                                         <label class="form-label" for="e_brgy2">Barangay</label>
                                                         <input type="text" id="e_brgy2" name="e_brgy2"
                                                             class="form-control">
-                                                        <!-- <select class="form-control" id="e_brgy2" name="e_brgy2">
-                                                                                                                                        </select> -->
+
                                                     </div>
                                                 </div>
                                             </div>

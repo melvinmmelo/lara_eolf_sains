@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('subdivision')->nullable();
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
+            $table->string('status')->default('active');
             $table->timestamps();
 
             $table->index('branch_code');

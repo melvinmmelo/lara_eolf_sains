@@ -15,40 +15,26 @@ class EquipmentStoreController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
-
-
     public function index(Request $request)
     {
-        // Retrieve customer_id and store_id from the request
         $customer_id = $request->input('customer_id');
         $store_id = $request->input('store_id');
 
-        // Retrieve all equipment store entries for the specified customer and store
         $equipments = EquipmentStore::with('storeinfo')
             ->where('customer_id', $customer_id)
             ->where('store_id', $store_id)
             ->get();
-        //dd($equipments);
 
-        // Retrieve available equipment from the equipment table
         $availableEquipments = Equipment::where('status', 'available')->get();
 
-        // Get the IDs of equipment already added to equipment_store for the specified customer and store
         $selectedEquipmentIds = $equipments->pluck('equipment_id')->toArray();
 
-        // Filter out the selected equipment from the list of available equipment
         $availableEquipments = $availableEquipments->reject(function ($equipment) use ($selectedEquipmentIds) {
             return in_array($equipment->id, $selectedEquipmentIds);
         });
 
-        // Pass the data to the view
         return view('equipment-store', compact('equipments', 'availableEquipments'));
-        // return view('customers', compact('availableEquipments'));
     }
-
-
-
 
 
     /**
@@ -57,11 +43,8 @@ class EquipmentStoreController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
-
     public function store(Request $request)
     {
-        // Validate the incoming request data
         $request->validate([
             'customer_id' => 'required|exists:customers,id',
             'store_id' => 'required|exists:storeinfo,id',
@@ -70,13 +53,11 @@ class EquipmentStoreController extends Controller
             'pull_status.*' => 'required|string',
         ]);
 
-        // Get the data from the request
         $customer_id = $request->customer_id;
         $store_id = $request->store_id;
         $equipment_ids = $request->equipment_id;
         $pull_statuses = $request->pull_status;
 
-        // Iterate over each equipment data
         foreach ($equipment_ids as $key => $equipment_id) {
 
             $equipment = Equipment::findOrFail($equipment_id);
@@ -96,13 +77,11 @@ class EquipmentStoreController extends Controller
             $equipment->save();
         }
 
-
         activity('equipment-store')
             ->withProperties(['customer_id' => $customer_id, 'store_id' => $store_id, 'equipment_ids' => $equipment_ids, 'pull_statuses' => $pull_statuses])
             ->log('equipment added to store');
 
         return redirect()->back()->with('success', 'Equipment added successfully.');
-        // return Redirect::route('customers')->with('success', 'Equipment added successfully.');
     }
 
 
@@ -120,7 +99,6 @@ class EquipmentStoreController extends Controller
         $equipmentId = $request->input('equipment_id');
         $equipment = Equipment::findOrFail($equipmentId);
 
-        // Update the status of the equipment to "available"
         $equipment->status = 'available';
         $equipment->save();
 
@@ -148,16 +126,21 @@ class EquipmentStoreController extends Controller
         ]);
 
         $pullEquipmentId = $request->input('pull_equipment_id');
+
         $remarks = $request->input('remarks');
 
         $equipmentStore = EquipmentStore::with('storeinfo', 'customer')->where('equipment_id', $pullEquipmentId)->firstOrFail();
 
         $esName = $equipmentStore->storeinfo->storename;
+
         $customerName = $equipmentStore->customer->fullName;
 
-        // $equipmentStore->pull_status = 'yes';
-        // $equipmentStore->remarks = $remarks;
-        // $equipmentStore->save();
+        if($request->remarks === 'STOP SELLING')
+        {
+            $customer = Customer::findOrFail($request->customer_id);
+            $customer->status = 'STOP SELLING';
+            $customer->save();
+        }
 
         $equipment = Equipment::findOrFail($pullEquipmentId);
         $equipment->status = 'available';
@@ -188,7 +171,6 @@ class EquipmentStoreController extends Controller
                 $newEquipmentStore->pull_status = 'no';
                 $newEquipmentStore->save();
 
-                // Update the status of the new equipment in the Equipment table
                 $newEquipment->status = 'available';
                 $newEquipment->save();
             }

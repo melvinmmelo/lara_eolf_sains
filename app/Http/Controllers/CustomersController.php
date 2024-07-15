@@ -12,7 +12,7 @@ class CustomersController extends Controller
 {
     public function index()
     {
-        $customers = Customer::with(['stores.equipmentStores'])->branchCode(session('branch_code'))->get();
+        $customers = Customer::with(['stores.equipmentStores'])->branchCode(session('branch_code'))->active()->get();
         return view('customersinfo', compact('customers'));
     }
 
@@ -102,6 +102,7 @@ class CustomersController extends Controller
             'lastname' => 'required',
             'firstname' => 'required',
             'companyname' => 'required',
+            'status' => 'required',
         ]);
 
         $customer->update([
@@ -113,21 +114,22 @@ class CustomersController extends Controller
             'contact_no' => $request->contact_no,
             'email' => $request->email,
             'tin' => $request->tin,
-            'region' => $request->e_region, // Insert region name instead of code
-            'province' => $request->e_province, // Insert province name instead of code
-            'city' => $request->e_city, // Insert city name instead of code
-            'brgy' => $request->e_brgy, // Insert barangay name instead of code
+            'region' => $request->e_region,
+            'province' => $request->e_province,
+            'city' => $request->e_city,
+            'brgy' => $request->e_brgy,
             'subdivision' => $request->subdivision,
             'longitude' => $request->longitude,
             'latitude' => $request->latitude,
+            'status' => $request->status,
         ]);
 
         $storeInfo->storename = $request->storename;
         $storeInfo->contactno = $request->contactno2;
-        $storeInfo->region = $request->e_region2; // Insert region name instead of code
-        $storeInfo->province = $request->e_province2; // Insert province name instead of code
-        $storeInfo->city = $request->e_city2; // Insert city name instead of code
-        $storeInfo->brgy = $request->e_brgy2; // Insert barangay name instead of code
+        $storeInfo->region = $request->e_region2;
+        $storeInfo->province = $request->e_province2;
+        $storeInfo->city = $request->e_city2;
+        $storeInfo->brgy = $request->e_brgy2;
         $storeInfo->subdivision = $request->subdivision2;
         $storeInfo->latitude = $request->latitude2;
         $storeInfo->longitude = $request->longitude2;
@@ -144,7 +146,6 @@ class CustomersController extends Controller
     {
         $store = Storeinfo::findOrFail($storeId);
 
-        // Update the status of all equipment associated with this store
         foreach ($request->input('equipment_ids', []) as $equipmentId) {
             $equipment = Equipment::findOrFail($equipmentId);
             $equipment->status = 'available';

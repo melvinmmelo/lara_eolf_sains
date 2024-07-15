@@ -29,6 +29,7 @@
 
     <!-- Forms label CSS Style -->
     <style>
+
         .form-label {
             font-weight: normal !important;
             color: #5a5a5a;

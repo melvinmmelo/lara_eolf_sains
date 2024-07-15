@@ -98,14 +98,12 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <!-- <th>ID</th> -->
                             <th>Type</th>
                             <th>Brand</th>
                             <th>Serial</th>
                             <th>Code</th>
                             <th>Owned</th>
                             <th>Date Assigned</th>
-                            {{-- <th>Pull Status</th> --}}
                             <th>Remarks</th>
                             <th>Action</th>
                         </tr>
