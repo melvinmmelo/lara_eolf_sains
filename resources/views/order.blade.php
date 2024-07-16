@@ -60,7 +60,7 @@
                                 <tr>
                                     <td>{{ $inbound->f_created_at }}</td>
                                     <td>{{ $inbound->id }}</td>
-                                    <td>{{ $inbound->equipment->code }}</td>
+                                    <td>{{ $inbound->equipment->code ?? ''}}</td>
                                     <td>{{ $inbound->customer->fullName }}</td>
                                     <td><span class="label label-primary">{{ $total }}</span></td>
                                     <td>{{ $total - $inbound->delivered_amount }}</td>
@@ -133,6 +133,9 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label class="form-label" for="branch_code">Branch Code</label>
+
+                                        input
+
                                         <input type="text" class="form-control" name="branch_code" id="branch_code"
                                             value="{{ session('branch_code') }}" required readonly>
 
@@ -212,18 +215,8 @@
                                 </div>
                             </div>
 
-                            {{-- <div class="form-group">
-                                <label class="form-label" for="bad_order_id"><i style="color:red">*</i>Bad Order</label>
-                                <select class="form-control" name="bad_order_id" id="bad_order_id">
-                                    <option value="">--Select--</option>
-                                    @foreach ($badOrders as $badOrder)
-                                        <option value="{{ $badOrder->id }}">{{ $badOrder->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div> --}}
-
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-success">Next</button>
+                                <button type="submit" class="btn btn-success">Save payment</button>
                             </div>
 
                         </form>
@@ -240,3 +233,11 @@
 
     @include('modalAddAmountDelivered')
 @endsection
+
+@section('custom_js')
+    <script>
+        function setObId(obId) {
+            $('#ob_id').val(obId);
+        }
+
+    </script>

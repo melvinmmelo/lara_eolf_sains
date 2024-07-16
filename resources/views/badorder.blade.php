@@ -31,7 +31,6 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>BO Id</th>
                             <th>Customer</th>
                             <th>BO %</th>
                             <th>Total Amount</th>
@@ -43,7 +42,6 @@
                     <tbody>
                         @foreach ($badOrders as $badOrder)
                             <tr>
-                                <td>{{ $badOrder['bo_id'] }}</td>
                                 <td>
                                     {{ optional($badOrder['customer'])->firstname }}
                                     {{ optional($badOrder['customer'])->lastname }}
@@ -70,7 +68,6 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>BO Id</th>
                             <th>Customer</th>
                             <th>BO %</th>
                             <th>Total Amount</th>

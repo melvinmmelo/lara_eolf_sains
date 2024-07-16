@@ -35,6 +35,11 @@ return new class extends Migration
             $table->float('delivered_amount', 2)->nullable();
             $table->string('grp_print_ticket_no',)->nullable();
             $table->integer('ticket_sequence_no',)->default(0);
+            $table->string('degic_no');
+            $table->string('customer_name');
+            $table->string('store_name');
+            $table->string('driver_name');
+            $table->string('vehicle_no');
             $table->timestamps();
 
             $table->index('branch_code');

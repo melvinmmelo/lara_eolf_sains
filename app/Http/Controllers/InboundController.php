@@ -125,6 +125,13 @@ class InboundController extends Controller
         ]);
 
         $equipStore = EquipmentStore::find($request->equipment);
+        $customer = Customers::find($request->customer_id);
+        $driver = Drivers::find($request->deliveryPerson);
+        $vehicles = Vehicles::find($request->vehicle);
+
+        if($equipStore == null || $customer == null || $driver == null || $vehicles == null){
+            return back()->withErrors('All fields are requred.');
+        }
 
         $tempInbound = new Inbound();
         $tempInbound->user_id = auth()->user()->id;
@@ -137,6 +144,11 @@ class InboundController extends Controller
         $tempInbound->pricelevel_id = $request->pricelevel_id;
         $tempInbound->customer_id = $request->customer_id;
         $tempInbound->store_id = $equipStore->store_id;
+        $tempInbound->degic_no = $equipStore->equipment->code;
+        $tempInbound->customer_name = $customer->fullName;
+        $tempInbound->store_name = $equipStore->store->storename;
+        $tempInbound->driver_name = $driver->name;
+        $tempInbound->vehicle_no = $vehicles->plateno;
         $tempInbound->save();
 
         session()->put('pricelevelId', $request->pricelevel_id);
@@ -308,7 +320,16 @@ class InboundController extends Controller
 
         $products = session()->get('products');
 
-        // check if there are products
+        $equipStore = EquipmentStore::find($request->equipment_id);
+        $customer = Customers::find($request->customer_id);
+        $driver = Drivers::find($request->driver_id);
+        $vehicles = Vehicles::find($request->vehicle_id);
+
+        if ($equipStore == null || $customer == null || $driver == null || $vehicles == null) {
+            return back()->withErrors('All fields are requred.');
+        }
+
+
         if ($products == null) {
             return back()->withErrors('Please add products.');
         }
@@ -326,6 +347,12 @@ class InboundController extends Controller
         $inbound->store_id = EquipmentStore::find($request->equipment_id)->store_id;
         $inbound->status = 'Completed';
 
+        $inbound->degic_no = $equipStore->equipment->code;
+        $inbound->customer_name = $customer->fullName;
+        $inbound->store_name = $equipStore->store->storename;
+        $inbound->driver_name = $driver->name;
+        $inbound->vehicle_no = $vehicles->plateno;
+
         $bad_order = $request->bad_order == 'on' ? 1 : 0;
 
         if ($bad_order == 1) {
@@ -336,6 +363,7 @@ class InboundController extends Controller
 
             $inbound->bo_amount = $request->bo_amount;
         }
+
 
         $inbound->save();
 

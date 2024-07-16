@@ -13,10 +13,10 @@
                     @csrf
                     @method('PATCH')
 
-                     <div class="form-group">
+                    <div class="form-group">
                         <label class="form-label" for="payment_type">Payment Type</label>
-                         <input type="hidden" class="form-control" name="ob_id" id="ob_id"
-                            value="" required readonly>
+                        <input type="hidden" class="form-control" name="ob_id" id="ob_id" value="" required
+                            readonly>
                         <select name="payment_type" id="payment_type" class="form-control">
                             <option value="">--Select--</option>
                             <option value="Cash">Cash</option>
@@ -25,16 +25,17 @@
                         </select>
                     </div>
 
-                     <div class="form-group">
+                    <div class="form-group">
                         <label class="form-label" for="ref_no">Reference No.</label>
-                        <input type="text" class="form-control" name="ref_no" id="ref_no"
-                            value="" required >
+                        <input type="text" class="form-control" name="ref_no" id="ref_no" value=""
+                            required>
                     </div>
 
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-12">
-                                <label class="form-label" for="delivered_amount"><i style="color:red">*</i>Amount</label>
+                                <label class="form-label" for="delivered_amount"><i
+                                        style="color:red">*</i>Amount</label>
                                 <input type="number" class="form-control" name="delivered_amount">
                             </div>
                         </div>

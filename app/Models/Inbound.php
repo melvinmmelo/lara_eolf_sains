@@ -28,6 +28,11 @@ class Inbound extends Model
         'delivered_amount',
         'grp_print_ticket_no',
         'ticket_sequence_no',
+        'degic_no',
+        'customer_name',
+        'store_name',
+        'driver_name',
+        'vehicle_no',
     ];
 
     protected $appends = ['f_created_at', 'f_updated_at'];
