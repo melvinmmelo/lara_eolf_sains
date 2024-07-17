@@ -194,6 +194,17 @@
                     "responsive": true,
                     "lengthChange": false,
                     "autoWidth": false,
+                    "columnDefs": [
+                        { "width": "10%", "targets": 0 },
+                        { "width": "10%", "targets": 1 },
+                        { "width": "10%", "targets": 2 },
+                        { "width": "10%", "targets": 3 },
+                        { "width": "10%", "targets": 4 },
+                        { "width": "19%", "targets": 5 },
+                        { "width": "10%", "targets": 6 },
+                        { "width": "10%", "targets": 7 },
+                        { "width": "10%", "targets": 8 },
+                    ],
                     "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
                 }).buttons().container().appendTo('#customer_tb_wrapper .col-md-6:eq(0)');
             }

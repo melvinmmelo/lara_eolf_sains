@@ -14,6 +14,7 @@ class MaterialsInventory extends Model
         'name',
         'unit',
         'quantity',
+        'amount',
         'location',
         'remarks',
         'modified_by'

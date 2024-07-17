@@ -12,7 +12,7 @@ class CustomersController extends Controller
 {
     public function index()
     {
-        $customers = Customer::with(['stores.equipmentStores'])->branchCode(session('branch_code'))->active()->get();
+        $customers = Customer::with(['stores.equipmentStores'])->branchCode(session('branch_code'))->get();
         return view('customersinfo', compact('customers'));
     }
 
@@ -63,7 +63,7 @@ class CustomersController extends Controller
             'latitude' => $request->latitude,
         ]);
 
-        $storeInfo = StoreInfo::create([
+        StoreInfo::create([
             'customer_id' => $customer->id,
             'storename' => $request->storename,
             'contactno' => $request->contactno2,

@@ -26,13 +26,14 @@
 
         @include('layouts.errors')
 
-        <form action="{{ route('print-ticket') }}" method="POST">
+        <form action="{{ route('reprint-ticket') }}" method="POST">
             @csrf
+            <input type="hidden" name="grp" value="{{ $grp }}">
             <div class="card">
                 <div class="card-body">
                     <div class="pb-2">
                         <button type="submit" class="btn btn-primary">
-                            Print
+                            Reprint
                         </button>
                     </div>
                     <div class="tbContainer">
@@ -90,7 +91,7 @@
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary">
-                        Print
+                        Reprint
                     </button>
                 </div>
             </div>

@@ -1,14 +1,11 @@
 @extends('layouts.app')
 
 @section('contents')
-    <!-- Content Header (Page header) -->
-
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>Customers Info</h1>
-
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -20,14 +17,9 @@
         </div>
     </section>
 
-    <!-- Main content -->
     <section class="content">
-
-        <!-- Default box -->
         <div class="card">
-
             <div class="card-body">
-
                 @include('layouts.errors')
                 <div class="pb-2">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-customer">
@@ -37,8 +29,6 @@
                 <table id="customer_tb" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            {{-- <th>ID</th>
-                            <th>Branch</th> --}}
                             <th>Name</th>
                             <th>Contact No.</th>
                             <th>Tin no.</th>
@@ -54,8 +44,6 @@
                         @foreach ($customers as $customer)
                             @foreach ($customer->stores as $store)
                                 <tr>
-                                    {{-- <td>{{ $customer->id }}</td> --}}
-                                    {{-- <td>{{ $customer->branch_code }}</td> --}}
                                     <td>{{ $customer->lastname }}, {{ $customer->firstname }} {{ $customer->middlename }}
                                     </td>
                                     <td>{{ $customer->contact_no }}</td>
@@ -83,7 +71,7 @@
                                             No address available
                                         @endif
                                     </td>
-                                    <td>{{ $customer->status }}</td>
+                                    <td>{!! statusBadge($customer->status) !!}</td>
                                     <td>{{ $customer->date_created }}</td>
                                     <td>
                                         <div class="btn-group" role="group">
@@ -134,8 +122,6 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            {{-- <th>ID</th>
-                            <th>Branch</th> --}}
                             <th>Name</th>
                             <th>Contact No.</th>
                             <th>Tin no.</th>
@@ -176,9 +162,6 @@
                             </button>
                         </div>
                         <div class="modal-body">
-
-
-
                             <div class="row mb-2">
                                 {{-- customer info card --}}
                                 <div class="col-sm-6">
@@ -202,12 +185,12 @@
                                             <div class="form-group">
                                                 <div class="row mb-3">
                                                     <div class="col-sm-4">
-                                                        <label class="form-label" for="cust_lname">Last Name:</label>
+                                                        <label class="form-label" for="cust_lname"><i style="color:red">*</i>Last Name:</label>
                                                         <input type="text" class="form-control" id="cust_lname"
                                                             name="lastname">
                                                     </div>
                                                     <div class="col-sm-4">
-                                                        <label class="form-label" for="cust_fname">First Name:</label>
+                                                        <label class="form-label" for="cust_fname"><i style="color:red">*</i>First Name:</label>
                                                         <input type="text" class="form-control" id="cust_fname"
                                                             name="firstname">
                                                     </div>
@@ -222,7 +205,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="cust_contact">Contact No.:</label>
+                                                        <label class="form-label" for="cust_contact"><i style="color:red">*</i>Contact No.:</label>
                                                         <input type="text" class="form-control" id="cust_contact"
                                                             name="contact_no">
                                                     </div>
@@ -333,7 +316,7 @@
                                             <div class="form-group">
                                                 <div class="row mb-1">
                                                     <div class="col-sm-12">
-                                                        <label class="form-label" for="storename">Store Name</label>
+                                                        <label class="form-label" for="storename"><i style="color:red">*</i>Store Name</label>
                                                         <input type="text" class="form-control" name="storename">
                                                     </div>
                                                 </div>

@@ -82,16 +82,11 @@
 
     <!-- Main content -->
     <section class="content">
-
         @include('layouts.errors')
-
-        <!-- Default box -->
         <div class="card">
             <form action="{{ route('order.updateInbound') }}" method="POST">
                 @csrf
                 @method('PUT')
-
-
                 <input type="hidden" name="inbound_id" id="inboundId" class="label-input" value="{{ $inbound->id }}"
                     required readonly>
 
@@ -305,7 +300,7 @@
                                                                         <input type="text" name="pcodeamt"
                                                                             id="{{ $product['code'] . '_amt' }}"
                                                                             class="label-input"
-                                                                            value="{{ $product['quantity'] * $product['price'] }}"
+                                                                            value="{{ formatNumber($product['quantity'] * $product['price']) }}"
                                                                             readonly>
                                                                     </td>
                                                                 </tr>
@@ -334,10 +329,26 @@
                                                     <tfoot class="desktop-view">
                                                         <tr>
                                                             <td colspan="4"></td>
-                                                            <td>Total:</td>
+                                                            <td><h6 class="font-weight-bold mr-2">Total:</h6></td>
                                                             <td><input type="text" name="total" id="total"
                                                                     class="label-input"
                                                                     value="{{ array_sum($totalAmount) }}" readonly></td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td colspan="4"></td>
+                                                            <td><h6 class="font-weight-bold mr-2">BO Amount:</h6></td>
+                                                            <td>
+                                                                <div id="BOContainer"
+                                                                    class="w-100 d-flex justify-content-end">
+                                                                    <div>
+                                                                        <input type="text" name="bo_amount"
+                                                                            id="bo_amount" class="label-input"
+                                                                            value="{{ $inbound->bo_amount }}" readonly>
+                                                                    </div>
+                                                                </div>
+
+                                                            </td>
                                                         </tr>
                                                     </tfoot>
                                                 </table>
@@ -345,23 +356,7 @@
 
                                             </div>
 
-                                            <div class="w-100 d-flex justify-content-end">
 
-                                                <h6 class="font-weight-bold mr-2">Total:</h6>
-                                                <div>
-                                                    <input type="text" name="total" id="total"
-                                                        class="label-input" value="{{ array_sum($totalAmount) }}"
-                                                        readonly>
-                                                </div>
-                                            </div>
-
-                                            <div id="BOContainer" class="w-100 d-flex justify-content-end">
-                                                <h6 class="font-weight-bold mr-2">BO Amount:</h6>
-                                                <div>
-                                                    <input type="text" name="bo_amount" id="bo_amount"
-                                                        class="label-input" value="0" readonly>
-                                                </div>
-                                            </div>
                                         </div>
 
                                         <div class="col-sm-4">
@@ -409,9 +404,7 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-default" value="save">Save</button>
                     <button type="submit" class="btn btn-success" value="saveAndSubmit">Save and complete</button>
-
                 </div>
                 <!-- /.card-footer-->
             </form>
@@ -436,6 +429,17 @@
         document.getElementById('customer_id').value = "{{ $inbound->customer_id ?? '' }}";
         document.getElementById('customer').value = "{{ $inbound->customer->fullName ?? '' }}";
 
+        // check if bad order is checked
+        @if($inbound->bo_amount > 0)
+            document.getElementById("isBadPricing").checked = true;
+        @endif
+
+         @if($inbound->with_invoice)
+            document.getElementById("withInvoice").checked = true;
+         @endif
+
+
+
 
         document.getElementById("BOContainer").style.display = "none";
 
@@ -456,16 +460,20 @@
             });
         }
 
-        document.getElementById('deliveryPerson').addEventListener('change', function() {
-            var driver = document.getElementById('deliveryPerson').value;
-            $.ajax({
-                type: "GET",
-                url: "/dp-details/" + driver,
-                success: function(response) {
-                    document.getElementById('pricelevel_id').value = response.default_price_level;
-                }
+        @if(session('branch_code') == 'EFTO-TAR')
+
+            document.getElementById('deliveryPerson').addEventListener('change', function() {
+                var driver = document.getElementById('deliveryPerson').value;
+                $.ajax({
+                    type: "GET",
+                    url: "/dp-details/" + driver,
+                    success: function(response) {
+                        document.getElementById('pricelevel_id').value = response.default_price_level;
+                    }
+                });
             });
-        });
+
+        @endif
 
 
         function setObId(str) {
@@ -574,22 +582,9 @@
 
             var quantitiy = 0;
             $('.quantity-right-plus').click(function(e) {
-
-                // Stop acting like a button
                 e.preventDefault();
-
-                // If is not undefined
-
-                // Get the field name
                 var quantity = parseInt($('#quantity').val());
-
-                // If is not undefined
-
                 $('#quantity').val(quantity + 1);
-
-
-                // Increment
-
             });
 
             $('.quantity-left-minus').click(function(e) {

@@ -71,12 +71,12 @@
                                 <td>{{ $receipt->date }}</td>
                                 <td>{{ $receipt->dr_no }}</td>
                                 <td>{{ $receipt->generated_by }}</td>
-                                <td>{{ $receipt->total_amount }}</td>
-                                <td>{{ $receipt->bad_orders }}</td>
-                                <td>{{ $receipt->discount }}</td>
-                                <td>{{ $receipt->amount_due }}</td>
-                                <td>{{ $receipt->amount_paid }}</td>
-                                <td>{{ $receipt->balance }}</td>
+                                <td>{{ formatNumber($receipt->total_amount) }}</td>
+                                <td>{{ formatNumber($receipt->bad_orders) }}</td>
+                                <td>{{ formatNumber($receipt->discount) }}</td>
+                                <td>{{ formatNumber($receipt->amount_due - $receipt->bad_orders) }}</td>
+                                <td>{{ formatNumber($receipt->amount_paid) }}</td>
+                                <td>{{ formatNumber($receipt->balance) }}</td>
                                 <td>
                                     <a href="{{ route('drprint', ['id' => $receipt->id]) }}"><button type="button"
                                             class="btn btn-primary">Print</button></a>
@@ -145,7 +145,7 @@
 
                                             @foreach ($outbounds as $outbound)
                                                 <option value="{{ $outbound->id }}">
-                                                    {{ $outbound->equipment->serial_no . ' - ' . $outbound->customer->fullName . ' - ' . $outbound->id }}
+                                                    {{ $outbound->equipment->serial_no . ' - ' . $outbound->customer->fullName }}
                                                 </option>
                                             @endforeach
 

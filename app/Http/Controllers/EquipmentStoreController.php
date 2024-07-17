@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\EquipmentStore; // Import the EquipmentStore model
 use App\Models\Equipment; // Import the Equipment model
 use App\Models\Customers as Customer;
+use App\Models\EquipmentHistory;
+use App\Services\EquipmentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -58,7 +60,9 @@ class EquipmentStoreController extends Controller
         $equipment_ids = $request->equipment_id;
         $pull_statuses = $request->pull_status;
 
-        foreach ($equipment_ids as $key => $equipment_id) {
+        $customer = Customer::findOrFail($customer_id);
+
+        foreach ($equipment_ids as $equipment_id) {
 
             $equipment = Equipment::findOrFail($equipment_id);
             $equipmentStore = new EquipmentStore();
@@ -72,9 +76,20 @@ class EquipmentStoreController extends Controller
             $equipmentStore->pull_status = 'no';
             $equipmentStore->save();
 
-
             $equipment->status = 'available';
+
+            EquipmentHistory::create([
+                'serial_no' => $equipment->serial_no,
+                'degic_no' => $equipment->code,
+                'customer_id' => $customer_id,
+                'customer_name' => $customer->fullName,
+                'date_assigned' => now(),
+                'user_name_assigned' => auth()->user()->fullName,
+                'current_user_name' => auth()->user()->fullName,
+            ]);
+
             $equipment->save();
+
         }
 
         activity('equipment-store')
@@ -143,8 +158,39 @@ class EquipmentStoreController extends Controller
         }
 
         $equipment = Equipment::findOrFail($pullEquipmentId);
+
         $equipment->status = 'available';
+
         $equipment->save();
+
+        $equipmentHistory = EquipmentHistory::where('serial_no', $equipment->serial_no)->where('customer_id', $request->customer_id)->first();
+
+        if($equipmentHistory)
+        {
+            $equipmentHistory->date_pulled_out = now();
+
+            $equipmentHistory->user_name_pulled_out = auth()->user()->fullName;
+
+            $equipmentHistory->pull_out_reason = $remarks;
+
+            $equipmentHistory->current_user_name = auth()->user()->fullName;
+
+            $equipmentHistory->save();
+
+        }else{
+            EquipmentHistory::create([
+                'serial_no' => $equipment->serial_no,
+                'degic_no' => $equipment->code,
+                'customer_id' => $request->customer_id,
+                'customer_name' => $customerName,
+                'date_assigned' => now(),
+                'user_name_assigned' => "",
+                'date_pulled_out' => now(),
+                'user_name_pulled_out' => auth()->user()->fullName,
+                'pull_out_reason' => $remarks,
+                'current_user_name' => auth()->user()->fullName,
+            ]);
+        }
 
         $replaceEquipmentIds = [];
 
@@ -171,16 +217,40 @@ class EquipmentStoreController extends Controller
                 $newEquipmentStore->pull_status = 'no';
                 $newEquipmentStore->save();
 
-                $newEquipment->status = 'available';
+                $newEquipment->status = 'added';
                 $newEquipment->save();
+
+                $newEquipmentHistory = EquipmentHistory::where('serial_no', $newEquipment->serial_no)->where('customer_id', $customer_id)->first();
+                if($newEquipmentHistory)
+                {
+                    $newEquipmentHistory->date_assigned = now();
+                    $newEquipmentHistory->user_name_assigned = auth()->user()->fullName;
+                    $newEquipmentHistory->current_user_name = auth()->user()->fullName;
+                    $newEquipmentHistory->save();
+                }else{
+                    EquipmentHistory::create([
+                        'serial_no' => $newEquipment->serial_no,
+                        'degic_no' => $newEquipment->code,
+                        'customer_id' => $customer_id,
+                        'customer_name' => $customerName,
+                        'date_assigned' => now(),
+                        'user_name_assigned' => auth()->user()->fullName,
+                        'current_user_name' => auth()->user()->fullName,
+                    ]);
+                }
             }
         }
+
+        $equipmentStore->delete();
 
         activity('manage-equipment-store')
             ->withProperties(['customer' => $customerName, 'store' => $esName, 'equipment' => $equipment->code, 'pull_equipment_id' => $pullEquipmentId, 'replace_equipment_ids' => $replaceEquipmentIds, 'remarks' => $remarks])
             ->log($activityLog);
 
-        $equipmentStore->delete();
+        if($remarks === 'STOP SELLING')
+        {
+            return redirect()->route('customers')->with('success', "Customer status updated to STOP SELLING.");
+        }
 
         return redirect()->back()->with('success', $successMsg);
     }

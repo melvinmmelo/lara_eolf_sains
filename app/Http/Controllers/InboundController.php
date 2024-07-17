@@ -226,7 +226,6 @@ class InboundController extends Controller
 
         $products = [];
 
-        // get the latest price
         foreach ($allProducts as $product) {
 
             $price = prices::getPricePerPriceLevelAndPCode(session('pricelevelId'), $product->code);
@@ -352,6 +351,7 @@ class InboundController extends Controller
         $inbound->store_name = $equipStore->store->storename;
         $inbound->driver_name = $driver->name;
         $inbound->vehicle_no = $vehicles->plateno;
+        $inbound->with_invoice = $request->with_invoice == 'on' ? 1 : 0;
 
         $bad_order = $request->bad_order == 'on' ? 1 : 0;
 
@@ -477,8 +477,6 @@ class InboundController extends Controller
 
         $products = $inbound->products;
 
-        // $products = InboundProductsService::getInboundProducts($inboundId);
-
         $drivers = Drivers::active()->get();
 
         $vehicles = Vehicles::active()->get();
@@ -486,8 +484,6 @@ class InboundController extends Controller
         $equipment = EquipmentStore::all();
 
         $pricing = pricelevels::getPriceLevels(session('branch_code'));
-
-        $productTypes = ProductType::where('is_active', 1)->orderBy('sequence_no', 'asc')->get();
 
         $productTypes = ProductType::where('is_active', 1)->orderBy('sequence_no', 'asc')->get();
 
@@ -531,6 +527,9 @@ class InboundController extends Controller
         $inbound->pricelevel_id = $request->pricelevel_id;
         $inbound->customer_id = $request->customer_id;
         $inbound->store_id = EquipmentStore::find($request->equipment_id)->store_id;
+
+        // dd(session()->get('products'));
+
         $inbound->products = json_encode(session()->get('products'));
 
         if($request->bad_order == 'on'){

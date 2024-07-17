@@ -91,6 +91,10 @@
                                             <button type="button" class="btn btn-primary btn-sm edit-btn"
                                                 data-toggle="modal" data-target="#edit-equipment"
                                                 onclick="setToUpdateEquipment('{{ $equipment->id }}','{{ $equipment->ownership }}','{{ $equipment->type }}','{{ $equipment->brand }}','{{ $equipment->price }}','{{ $equipment->serial_no }}','{{ $equipment->model }}','{{ $equipment->code }}','{{ $equipment->distributor }}','{{ $equipment->date_delivered }}','{{ $equipment->date_purchased }}')">Edit</button>
+
+                                        <a href="{{ route('equipment.history', [ 'eqsno' => $equipment->serial_no ]) }}"><button type="button" class="btn btn-default">
+                                                History
+                                            </button></a>
                                         </td>
                                     </tr>
                                 @endforeach

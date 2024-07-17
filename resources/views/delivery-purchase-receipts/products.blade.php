@@ -1,51 +1,53 @@
 @extends('layouts.app')
-<style>
-    .input-number {
-        text-align: center;
-    }
 
-    @media (max-width: 767px) {
-
-        .table-responsive table td,
-        .table-responsive table th {
-            display: block;
-            width: 100%;
+@section('custom_css')
+    <style>
+        .input-number {
+            text-align: center;
         }
 
-        .table-responsive table th {
-            display: none;
+        @media (max-width: 767px) {
+
+            .table-responsive table td,
+            .table-responsive table th {
+                display: block;
+                width: 100%;
+            }
+
+            .table-responsive table th {
+                display: none;
+            }
+
+            .align-middle {
+                text-align: left;
+                padding: 8px;
+            }
+
+            .d-md-table-header {
+                display: table-header-group !important;
+                border: none !important;
+            }
+
+            .d-md-none {
+                display: none;
+            }
+
+
+            .desktop-view {
+                display: none;
+            }
         }
 
-        .align-middle {
-            text-align: left;
-            padding: 8px;
+        .buttontypes {
+            margin: 5px;
         }
 
-        .d-md-table-header {
-            display: table-header-group !important;
-            border: none !important;
+        .product-list {
+            max-height: 250px;
+            overflow: auto;
         }
-
-        .d-md-none {
-            display: none;
-        }
-
-
-        .desktop-view {
-            display: none;
-        }
-    }
-
-    .buttontypes {
-        margin: 5px;
-    }
-
-    .product-list {
-        max-height: 250px;
-        overflow: auto;
-    }
-</style>
-
+    </style>
+@endsection
 @section('contents')
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -188,7 +190,7 @@
                                                             @endif
                                                         </td>
                                                         <td>{{ $dprProd->price }}</td>
-                                                        <td>{{ $dprProd->quantity * $dprProd->price }}</td>
+                                                        <td>{{ formatNumber($dprProd->quantity * $dprProd->price) }}</td>
                                                         <td>
 
                                                             @if ($deliveryPurchaseReceipt->status == 'Encoding')
@@ -223,7 +225,7 @@
                                             <tr>
                                                 <td colspan="2"></td>
                                                 <td>Total:</td>
-                                                <td>{{ $sum ?? 0 }}</td>
+                                                <td>{{ formatNumber($sum) ?? 0 }}</td>
                                                 <td></td>
                                                 <td></td>
                                             </tr>

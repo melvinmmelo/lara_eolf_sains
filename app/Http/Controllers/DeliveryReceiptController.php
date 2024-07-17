@@ -39,6 +39,7 @@ class DeliveryReceiptController extends Controller
 
         $inbound = Inbound::findOrFail($request->dr_no);
 
+
         if ($inbound->products == null) {
             return redirect()->route('deliveryreceipt.index')->withErrors('No products found.');
         }
@@ -60,7 +61,6 @@ class DeliveryReceiptController extends Controller
         $deliveryReceipt->amount_paid = $inbound->delivered_amount;
 
         $deliveryReceipt->balance = $amountDueOrBalance;
-
 
         $deliveryReceipt->save();
 

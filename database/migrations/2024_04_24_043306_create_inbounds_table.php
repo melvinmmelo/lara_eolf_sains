@@ -41,7 +41,6 @@ return new class extends Migration
             $table->string('driver_name');
             $table->string('vehicle_no');
             $table->timestamps();
-
             $table->index('branch_code');
         });
     }

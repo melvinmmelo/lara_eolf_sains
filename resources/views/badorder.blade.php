@@ -48,7 +48,7 @@
                                     ({{ optional($badOrder['storeinfo'])->storename }})
                                 </td>
                                 <td>{{ $badOrder['bo_percentage'] }}</td>
-                                <td>{{ $badOrder['amount'] }}</td>
+                                <td>{{ formatNumber($badOrder['amount']) }}</td>
                                 <td>{{ $badOrder['remarks'] }}</td>
                                 <td>{{ $badOrder['created_at'] }}</td>
                                 <td> <!-- Add a delete button -->

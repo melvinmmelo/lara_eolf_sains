@@ -3,15 +3,15 @@
 if (! function_exists('statusBadge')) {
     function statusBadge($status) {
         $status = strtolower($status);
-        $class = ($status === 'active' or $status === 'available' or $status == 1) ? 'bg-success' : 'bg-danger';
+        $class = ($status === 'active' or $status === 'available' or $status === 1) ? 'bg-success' : 'bg-danger';
 
-        if($status == 'added'){
+        if($status === 'added'){
             $statusDesc = 'Assigned';
+        }elseif($status == 'stop selling'){
+            $statusDesc = 'Stop Selling';
+        }else{
+            $statusDesc = ($status === 1 or $status === 'active' or $status === 'available') ? 'Active' : 'Inactive';
         }
-        else{
-            $statusDesc = ($status == 1 or $status == 'active' or $status == 'available') ? 'Active' : 'Inactive';
-        }
-
 
         return '<span class="badge ' . $class . '">' . e( ucfirst($statusDesc)) . '</span>';
     }

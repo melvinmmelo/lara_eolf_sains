@@ -146,7 +146,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <label class="form-label" for="cust_contact">Contact No.:</label>
-                                            <input type="text" class="form-control" id="contactno" name="contactno">
+                                            <input type="text" class="form-control" id="contactno" name="contactno" required>
                                         </div>
                                     </div>
                                 </div>

@@ -21,6 +21,8 @@ class Equipment extends Model
         'distributor',
         'date_delivered',
         'date_purchased',
+        'status',
+        'assignment_history',
     ];
 
     public function equipmentStore()

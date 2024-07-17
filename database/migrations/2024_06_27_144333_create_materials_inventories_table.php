@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('branch_code', 15);
             $table->string('name');
-            $table->string('unit', 10)->nullable();
+            $table->string('unit')->nullable();
             $table->integer('quantity')->nullable();
-            $table->string('location')->nullable();
+            $table->float('amount', 2)->nullable();
+            $table->integer('location')->nullable();
             $table->string('remarks')->nullable();
             $table->timestamps();
             $table->string('modified_by', 99);

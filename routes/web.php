@@ -25,6 +25,7 @@ use App\Http\Controllers\TempBadOrderController;
 use App\Http\Controllers\BadOrderController;
 use App\Http\Controllers\MaterialsInventoryController;
 use App\Http\Controllers\DeliveryReceiptController;
+use App\Http\Controllers\EquipmentHistoryController;
 use App\Http\Controllers\TicketController;
 
 Route::get('/', function () {
@@ -58,6 +59,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/generate-ticket', [TicketController::class, 'generate'])->name('generate-ticket');
 
     Route::post('/print-ticket', [TicketController::class, 'print'])->name('print-ticket');
+    Route::post('/reprint-ticket', [TicketController::class, 'reprint'])->name('reprint-ticket');
+
     Route::get('/tickets', [TicketController::class, 'index'])->name('index-ticket');
     Route::get('/ticket-inbounds/{grp}', [TicketController::class, 'show'])->name('inbounds-ticket');
 
@@ -150,6 +153,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/equipment/{id}/edit', [EquipmentController::class, 'edit'])->name('equipment.edit');
     Route::patch('/equipment/', [EquipmentController::class, 'update'])->name('equipment.update');
     Route::delete('/equipment/bulk-delete', [EquipmentController::class, 'bulkDelete'])->name('equipment.bulk-delete');
+
+    Route::get('/equipment-history/{eqsno}', [EquipmentHistoryController::class, 'equipmentHistory'])->name('equipment.history');
+
 
 
     Route::get('/get-regions', [PhAddrController::class, 'getRegions']);
@@ -256,6 +262,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/materials-inventory', [MaterialsInventoryController::class, 'index'])->name('materialsInventory.index');
     Route::post('/materials-inventory', [MaterialsInventoryController::class, 'store'])->name('materialsInventory.store');
     Route::patch('/materials-inventory', [MaterialsInventoryController::class, 'update'])->name('materialsInventory.update');
+    Route::delete('/materials-inventory', [MaterialsInventoryController::class, 'delete'])->name('materialsInventory.delete');
+
 
     Route::get('/materials-inventory/{id}/history', [MaterialsInventoryController::class, 'history'])->name('materialsInventory.history');
 });

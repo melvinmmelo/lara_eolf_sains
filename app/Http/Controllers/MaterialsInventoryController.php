@@ -22,6 +22,7 @@ class MaterialsInventoryController extends Controller
             'name' => 'required',
             'unit' => 'nullable',
             'quantity' => 'required|numeric',
+            'amount' => 'required|numeric',
             'location' => 'required',
             'remarks' => 'nullable',
         ]);
@@ -31,6 +32,7 @@ class MaterialsInventoryController extends Controller
         $material->name = $request->name;
         $material->unit = $request->unit;
         $material->quantity = $request->quantity;
+        $material->amount = $request->amount;
         $material->location = $request->location;
         $material->remarks = $request->remarks;
         $material->modified_by = auth()->user()->fullName;
@@ -50,6 +52,7 @@ class MaterialsInventoryController extends Controller
             'e_name' => 'required',
             'e_unit' => 'nullable',
             'e_quantity' => 'required|numeric',
+            'e_amount' => 'required|numeric',
             'e_location' => 'required',
             'e_remarks' => 'nullable',
         ]);
@@ -66,12 +69,16 @@ class MaterialsInventoryController extends Controller
         $material->name = $request->e_name;
         $material->unit = $request->e_unit;
         $material->quantity = $request->e_quantity;
+        $material->amount = $request->e_amount;
         $material->location = $request->e_location;
         $material->remarks = $request->e_remarks;
         $material->modified_by = auth()->user()->fullName;
         $material->save();
 
-        return back()->with('success', 'Data saved.');
+        activity('general-inventory')
+            ->log("Updated $material->name details");
+
+        return back()->with('success', 'Data has been saved.');
 
 
     }
@@ -84,5 +91,20 @@ class MaterialsInventoryController extends Controller
             ->get();
 
         return view('materials-inventory.history', compact('material','activityLogs'));
+    }
+
+    public function delete(){
+
+        $ids = request('deleteIds');
+        $materials = MaterialsInventory::whereIn('id', $ids)->get();
+
+        foreach ($materials as $material){
+            $material->delete();
+        }
+
+        activity('general-inventory')
+            ->log("Deleted $materials->name from inventory");
+
+        return back()->with('success', 'Data has been deleted.');
     }
 }

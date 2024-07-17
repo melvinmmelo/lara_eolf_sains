@@ -138,6 +138,8 @@ class InboundProductsService extends Model
             $inbound = Inbound::find($inboundId);
             $products = json_decode($inbound->products, true);
             session()->put('products', $products);
+
+            return $inbound->products;
         } else{
             $products = [];
         }

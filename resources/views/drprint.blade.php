@@ -133,7 +133,7 @@
                                 Discount (%):
                                 {{ formatNumber($deliveryReceipt->discount) }} <br>
                                 Total Amount:
-                                {{ formatNumber($deliveryReceipt->total_amount) }} <br>
+                                {{ formatNumber($deliveryReceipt->total_amount - $deliveryReceipt->bad_orders) }} <br>
                         </div>
                         <br><br><br>
                         --------------------------------- &nbsp;&nbsp;&nbsp; -------------------- <br>
@@ -204,7 +204,7 @@
                 'Discount (%): {{ formatNumber($deliveryReceipt->discount) }} <br>'
             );
             mywindow.document.write(
-                'Total Amount: {{ formatNumber($deliveryReceipt->total_amount) }} <br>'
+                'Total Amount: {{ formatNumber($deliveryReceipt->total_amount - $deliveryReceipt->bad_orders) }} <br>'
             );
             mywindow.document.write('</table>');
             mywindow.document.write('<br><br><br>');

@@ -15,3 +15,13 @@ Next
 * inventory module
 * printing ng forms
 * generation ng reports
+
+
+July 17 Updates
+1. Added  - Equipment History
+2. Fixed  - BO not reflected in DR
+3. Fixed  - Edit outbound
+4. Added  - Amount in Inventory
+5. Update - Format numbers in table
+6. Added  - Delete materials inventory
+7. Update - Default price level in outbound

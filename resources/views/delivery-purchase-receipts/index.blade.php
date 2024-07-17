@@ -64,7 +64,7 @@
                             <tr>
                                 <td>{{ $dr->dr_no }}</td>
                                 <td>{{ $dr->issue_date }}</td>
-                                <td>{{ $total }}</td>
+                                <td>{{ formatNumber($total) }}</td>
                                 <td>{{ $dr->status }}</td>
                                 <td>{{ $dr->created_at }}</td>
                                 <td>

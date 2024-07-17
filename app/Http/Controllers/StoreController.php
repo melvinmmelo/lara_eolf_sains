@@ -36,34 +36,29 @@ class StoreController extends Controller
         // dd($request->all());
         $request->validate([
             'storename' => 'required',
-
-
-            // Add more validation rules as needed
+            'contactno' => 'required',
         ]);
+
         $regionName = PhAddr::where('code', $request->region)->value('name');
         $provinceName = PhAddr::where('code', $request->province)->value('name');
         $cityName = PhAddr::where('code', $request->city)->value('name');
         $brgyName = PhAddr::where('code', $request->brgy)->value('name');
         Storeinfo::create([
-
             'customer_id' => $request->customer_id,
             'storename' => $request->storename,
             'contactno' => $request->contactno,
-            'region' => $regionName, // Insert region name instead of code
-            'province' => $provinceName, // Insert province name instead of code
-            'city' => $cityName, // Insert city name instead of code
-            'brgy' => $brgyName, // Insert barangay name instead of code
+            'region' => $regionName,
+            'province' => $provinceName,
+            'city' => $cityName,
+            'brgy' => $brgyName,
             'subdivision' => $request->subdivision,
             'longitude' => $request->longitude,
             'latitude' => $request->latitude,
             'listype' => $request->listype,
             'length_stay' => $request->length_stay,
             'remarks' => $request->remarks,
-            // Add more fields as needed
         ]);
 
-        // return redirect('/store-info/')->with('success', 'Store Info added successfully!');
-        // return redirect()->route('store-info.index')->with('success', 'Store Info added successfully!');
         return redirect()->back()
             ->with('success', 'Store Info added successfully!');
 
@@ -116,5 +111,3 @@ class StoreController extends Controller
 
     }
 }
-
-

@@ -29,70 +29,92 @@
 
         <!-- Default box -->
         <div class="card">
+            <form action="{{ route('materialsInventory.delete') }}" method="POST">
+                @csrf
+                @method('DELETE')
 
-            <div class="card-body table-responsive">
 
-                <div class="pb-2">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-inventory"">
+                <div class="card-body table-responsive">
+
+                    <div class="pb-2">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-inventory">
+                            Add New
+                        </button>
+
+                        <button type="submit" class="btn btn-default" onclick="return askToDelete()">
+                            Delete
+                        </button>
+                    </div>
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Quantity</th>
+                                <th>Unit</th>
+                                <th>Unit Price</th>
+                                <th>Total Amount</th>
+                                <th>Location</th>
+                                <th>Remarks</th>
+                                <th>Date</th>
+                                <th>Modified By</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach ($materials as $material)
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="deleteIds[]" id="deleteId"
+                                            value="{{ $material->id }}">
+                                    </td>
+                                    <td>{{ $material->id }}</td>
+                                    <td>{{ $material->name }}</td>
+                                    <td>{{ $material->unit }}</td>
+                                    <td>{{ $material->quantity }}</td>
+                                    <td>{{ formatNumber($material->amount) }}</td>
+                                    <td>{{ $material->quantiy * $material->amount }}</td>
+                                    <td>{{ $material->location }}</td>
+                                    <td>{{ $material->remarks }}</td>
+                                    <td>{{ $material->created_at }}</td>
+                                    <td>{{ $material->modified_by }}</td>
+                                    <td>
+                                        <a href="#" id="updateInventoryLink">Update</a> | <a
+                                            href="{{ route('materialsInventory.history', ['id' => $material->id]) }}">History</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Quantity</th>
+                                <th>Unit</th>
+                                <th>Unit Price</th>
+                                <th>Amount</th>
+                                <th>Location</th>
+                                <th>Remarks</th>
+                                <th>Date</th>
+                                <th>Modified By</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-inventory">
                         Add New
                     </button>
                 </div>
-                <table id="example1" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Unit</th>
-                            <th>Quantity</th>
-                            <th>Location</th>
-                            <th>Remarks</th>
-                            <th>Date</th>
-                            <th>Modified By</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        @foreach ($materials as $material)
-                            <tr>
-                                <td>{{ $material->id }}</td>
-                                <td>{{ $material->name }}</td>
-                                <td>{{ $material->unit }}</td>
-                                <td>{{ $material->quantity }}</td>
-                                <td>{{ $material->location }}</td>
-                                <td>{{ $material->remarks }}</td>
-                                <td>{{ $material->created_at }}</td>
-                                <td>{{ $material->modified_by }}</td>
-                                <td>
-                                    <a href="#" id="updateInventoryLink">Update</a> | <a href="{{ route('materialsInventory.history', ['id' => $material->id ]) }}">History</a>
-                                </td>
-                            </tr>
-                        @endforeach
-
-                    </tbody>
-
-                    <tfoot>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Unit</th>
-                            <th>Quantity</th>
-                            <th>Location</th>
-                            <th>Remarks</th>
-                            <th>Date</th>
-                            <th>Modified By</th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-            <!-- /.card-body -->
-            <div class="card-footer">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-inventory">
-                    Add New
-                </button>
-            </div>
-            <!-- /.card-footer-->
+                <!-- /.card-footer-->
+            </form>
         </div>
         <!-- /.card -->
         <div class="modal fade" id="modal-inventory">
@@ -151,8 +173,19 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
+                                        <label class="form-label" for="amount">Amount</label>
+                                        <input type="number" class="form-control" name="amount" id="amount"
+                                            value="" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
                                         <label class="form-label" for="location">Location</label>
-                                        <input type="text" class="form-control" name="location" id="location" required>
+                                        <input type="text" class="form-control" name="location" id="location"
+                                            required>
                                     </div>
                                 </div>
                             </div>
@@ -184,7 +217,7 @@
                             @csrf
                             @method('PATCH')
 
-                            <input type="text" class="form-control" name="inv_id" id="inv_id" required readonly>
+                            <input type="hidden" class="form-control" name="inv_id" id="inv_id" required readonly>
 
                             <div class="form-group">
                                 <div class="row">
@@ -210,6 +243,16 @@
                                     <div class="col-sm-12">
                                         <label class="form-label" for="e_quantity">Quantity</label>
                                         <input type="number" class="form-control" name="e_quantity" id="e_quantity"
+                                            value="" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="form-label" for="e_amount">Amount</label>
+                                        <input type="number" class="form-control" name="e_amount" id="e_amount"
                                             value="" required>
                                     </div>
                                 </div>
@@ -253,15 +296,20 @@
                 var table = $('#example1').DataTable();
                 var data = table.row($(this).parents('tr')).data();
                 console.log(data);
-                $('#inv_id').val(data[0]);
-                $('#e_name').val(data[1]);
-                $('#e_unit').val(data[2]);
-                $('#e_quantity').val(data[3]);
-                $('#e_location').val(data[4]);
-                $('#e_remarks').val(data[5]);
+                $('#inv_id').val(data[1]);
+                $('#e_name').val(data[2]);
+                $('#e_unit').val(data[3]);
+                $('#e_quantity').val(data[4]);
+                $('#e_amount').val(data[5]);
+                $('#e_location').val(data[6]);
+                $('#e_remarks').val(data[7]);
 
                 $('#modal-edit').modal('show');
             });
         });
+
+        function askToDelete() {
+            return confirm('Are you sure you want to delete this record(s)?');
+        }
     </script>
 @endsection

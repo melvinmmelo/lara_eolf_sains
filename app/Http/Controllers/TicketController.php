@@ -59,4 +59,10 @@ class TicketController extends Controller
 
         return redirect()->route('generate-ticket');
     }
+
+    public function reprint(Request $request)
+    {
+        session()->put('ticketnum', $request->grp);
+        return redirect()->route('generate-ticket');
+    }
 }

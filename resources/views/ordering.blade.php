@@ -363,16 +363,20 @@
             });
         }
 
-        document.getElementById('deliveryPerson').addEventListener('change', function() {
-            var driver = document.getElementById('deliveryPerson').value;
-            $.ajax({
-                type: "GET",
-                url: "/dp-details/" + driver,
-                success: function(response) {
-                    document.getElementById('pricelevel_id').value = response.default_price_level;
-                }
+        @if(session('branch_code') == 'EFTO-TAR')
+
+            document.getElementById('deliveryPerson').addEventListener('change', function() {
+                var driver = document.getElementById('deliveryPerson').value;
+                $.ajax({
+                    type: "GET",
+                    url: "/dp-details/" + driver,
+                    success: function(response) {
+                        document.getElementById('pricelevel_id').value = response.default_price_level;
+                    }
+                });
             });
-        });
+
+        @endif
 
 
         function setObId(str) {

@@ -47,6 +47,7 @@
                                 <th>Invoice Amount</th>
                                 <th>Balance Due</th>
                                 <th>Status</th>
+                                <th>W/ SI</th>
                                 <th>Days Overdue</th>
                                 <th></th>
                             </tr>
@@ -62,9 +63,10 @@
                                     <td>{{ $inbound->id }}</td>
                                     <td>{{ $inbound->equipment->code ?? ''}}</td>
                                     <td>{{ $inbound->customer->fullName }}</td>
-                                    <td><span class="label label-primary">{{ $total }}</span></td>
-                                    <td>{{ $total - $inbound->delivered_amount }}</td>
+                                    <td><span class="label label-primary">{{ formatNumber($total) }}</span></td>
+                                    <td>{{ formatNumber($total - $inbound->delivered_amount) }}</td>
                                     <td>{{ $inbound->status }}</td>
+                                    <td>{{ $inbound->with_invoice === 1 ? "W/ SI" : "" }}</td>
                                     <td>
                                         @if ($inbound->status == 'Completed')
                                         {{ number_format($inbound->created_at->diffInDays(now()), 0) }}
@@ -81,11 +83,9 @@
                                             <button class="btn btn-xs btn-danger">W/ BO</button>
                                         @endif
 
-                                        @if($inbound->status === 'Encoding')
 
                                          <a href="{{ route('order.edit', ['inboundId' => $inbound->id ]) }}" class="btn btn-primary">Edit</button></a>
 
-                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -99,6 +99,7 @@
                                 <th>Invoice Amount</th>
                                 <th>Balance Due</th>
                                 <th>Status</th>
+                                <th>W/ SI</th>
                                 <th>Days Overdue</th>
                                 <th></th>
                             </tr>
