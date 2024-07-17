@@ -620,7 +620,14 @@
         }
 
         function addProduct(code) {
-            const qty = document.getElementById("qty_toadd").value;
+           const qty = document.getElementById("qty_toadd").value;
+            const priceLevelId = document.getElementById("pricelevel_id").value;
+
+            if (priceLevelId == "" || priceLevelId == null || priceLevelId == undefined) {
+                alert("Please select a price level.");
+                return;
+            }
+
             if (code == "") {
                 document.getElementById("inboundList").innerHTML = "";
                 return;
@@ -643,7 +650,7 @@
                     }
 
                 };
-                xmlhttp.open("GET", "/inboundin/" + code + "/" + qty, true);
+                xmlhttp.open("GET", "/inboundin/" + code + "/" + qty + "/" + priceLevelId, true);
                 xmlhttp.send();
             }
         }

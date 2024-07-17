@@ -504,6 +504,8 @@ class InboundController extends Controller
             $summary = $inboundService->addSppbinSummary(); // ! you need to call summary() first before addSppbinSummary()
         }
 
+        session()->put('products', $inboundList);
+
         return view('ordering-edit', compact('inbound', 'inboundId', 'equipment', 'drivers', 'vehicles', 'pricing', 'productTypes', 'inboundList', 'summary'));
     }
 
@@ -527,6 +529,8 @@ class InboundController extends Controller
         $inbound->pricelevel_id = $request->pricelevel_id;
         $inbound->customer_id = $request->customer_id;
         $inbound->store_id = EquipmentStore::find($request->equipment_id)->store_id;
+        $inbound->with_invoice = $request->with_invoice == 'on' ? 1 : 0;
+
 
         // dd(session()->get('products'));
 
