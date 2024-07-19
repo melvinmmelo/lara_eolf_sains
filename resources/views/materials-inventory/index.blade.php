@@ -31,8 +31,6 @@
         <div class="card">
             <form action="{{ route('materialsInventory.delete') }}" method="POST">
                 @csrf
-                @method('DELETE')
-
 
                 <div class="card-body table-responsive">
 
@@ -41,8 +39,12 @@
                             Add New
                         </button>
 
-                        <button type="submit" class="btn btn-default" onclick="return askToDelete()">
+                        <button type="submit" class="btn btn-default" name="submit_form" value="delete" onclick="return askToDelete()">
                             Delete
+                        </button>
+
+                        <button type="button" class="btn btn-default" value="withdraw" data-target="#modal-withdraw" data-toggle="modal">
+                            Withdraw
                         </button>
                     </div>
                     <table id="example1" class="table table-bordered table-striped">
@@ -67,7 +69,7 @@
                             @foreach ($materials as $material)
                                 <tr>
                                     <td>
-                                        <input type="checkbox" name="deleteIds[]" id="deleteId"
+                                        <input type="checkbox" name="items[]" id="items"
                                             value="{{ $material->id }}">
                                     </td>
                                     <td>{{ $material->id }}</td>
@@ -114,6 +116,41 @@
                     </button>
                 </div>
                 <!-- /.card-footer-->
+
+                <div class="modal fade" id="modal-withdraw">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Withdraw Materials</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="form-group">
+                                    <label class="form-label" for="requested_by">Requested by</label>
+                                    <input type="text" class="form-control" name="requested_by" id="requested_by" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="issued_by">Issued by</label>
+                                    <input type="text" class="form-control" name="issued_by" id="issued_by" value=" {{ auth()->user()->fullName }}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="withdrawal_date">Date</label>
+                                    <input type="date" class="form-control" name="withdrawal_date" id="withdrawal_date" value="{{ date('Y-m-d') }}" required>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success" name="submit_form" value="withdraw">Save changes</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
         <!-- /.card -->
@@ -145,7 +182,8 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label class="form-label" for="name">Name</label>
-                                        <input type="text" class="form-control" name="name" id="name" required>
+                                        <input type="text" class="form-control" name="name" id="name"
+                                            required>
                                     </div>
                                 </div>
                             </div>

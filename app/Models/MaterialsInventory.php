@@ -17,6 +17,10 @@ class MaterialsInventory extends Model
         'amount',
         'location',
         'remarks',
-        'modified_by'
+        'modified_by',
+        'requested_by',
+        'issued_by',
+        'withdrawal_date',
+        'withdrawal_code',
     ];
 }

@@ -18,10 +18,12 @@ Next
 
 
 July 17 Updates
-1. Added  - Equipment History
-2. Fixed  - BO not reflected in DR
-3. Fixed  - Edit outbound
-4. Added  - Amount in Inventory
-5. Update - Format numbers in table
-6. Added  - Delete materials inventory
-7. Update - Default price level in outbound
+1. Added   - Equipment History
+2. Fixed   - BO not reflected in DR
+3. Fixed   - Edit outbound
+4. Added   - Amount in Inventory
+5. Update  - Format numbers in table
+6. Added   - Delete materials inventory
+7. Update  - Default price level in outbound (BRANCH = EFTO_CAG)
+8. Added   - Withdrawal of inventory
+9. Fixed   - DRP Sum Error

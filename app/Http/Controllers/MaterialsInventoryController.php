@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MaterialItemsWithdrawals;
 use App\Models\MaterialsInventory;
 use Illuminate\Http\Request;
 use Spatie\Activitylog\Contracts\Activity;
@@ -16,7 +17,8 @@ class MaterialsInventoryController extends Controller
         return view('materials-inventory.index', compact('materials'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $request->validate([
             'branch_code' => 'required',
             'name' => 'required',
@@ -42,10 +44,10 @@ class MaterialsInventoryController extends Controller
             ->log("Added $material->name to inventory");
 
         return back()->with('success', 'Data saved.');
-
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
 
         $request->validate([
             'inv_id' => 'required|exists:materials_inventories,id',
@@ -79,32 +81,70 @@ class MaterialsInventoryController extends Controller
             ->log("Updated $material->name details");
 
         return back()->with('success', 'Data has been saved.');
-
-
     }
 
-    public function history($id){
+    public function history($id)
+    {
         $material = MaterialsInventory::find($id);
 
         $activityLogs = ModelsActivity::where('subject_id', $id)
             ->where('subject_type', 'App\Models\MaterialsInventory')
             ->get();
 
-        return view('materials-inventory.history', compact('material','activityLogs'));
+        return view('materials-inventory.history', compact('material', 'activityLogs'));
     }
 
-    public function delete(){
+    public function deleteOrWithdraw(Request $request)
+    {
 
-        $ids = request('deleteIds');
+        $request->validate([
+            'items' => 'required|array',
+            'submit_form' => 'required'
+        ]);
+
+        $ids = request('items');
         $materials = MaterialsInventory::whereIn('id', $ids)->get();
 
-        foreach ($materials as $material){
-            $material->delete();
+        if ($request->submit_form === 'delete') {
+
+            foreach ($materials as $material) {
+                $material->delete();
+            }
+
+            activity('general-inventory')
+                ->log("Deleted $materials->name from inventory");
+
+            $returnMessage = 'Data has been deleted.';
+        } else {
+
+            // generate withdrawal code
+            $withdrawal_code = 'W' . now()->format('Ymd'). str_pad(MaterialItemsWithdrawals::max('id'), 5, '0', STR_PAD_LEFT);
+
+            $request->validate([
+                'requested_by' => 'required',
+                'issued_by' => 'required',
+                'withdrawal_date' => 'required',
+            ]);
+
+
+            $materialItemsWithdrawal = new MaterialItemsWithdrawals();
+            $materialItemsWithdrawal->code = $withdrawal_code;
+            $materialItemsWithdrawal->requested_by = $request->requested_by;
+            $materialItemsWithdrawal->issued_by = $request->issued_by;
+            $materialItemsWithdrawal->save();
+
+
+            foreach ($materials as $material) {
+                $material->withdrawal_id = $materialItemsWithdrawal->id;
+                $material->save();
+            }
+
+            activity('general-inventory')
+                ->log("Withdrawn from inventory");
+
+            $returnMessage = 'Data has been withdrawn.';
         }
 
-        activity('general-inventory')
-            ->log("Deleted $materials->name from inventory");
-
-        return back()->with('success', 'Data has been deleted.');
+        return back()->with('success', $returnMessage);
     }
 }

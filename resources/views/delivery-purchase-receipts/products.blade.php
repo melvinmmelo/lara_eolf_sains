@@ -225,7 +225,7 @@
                                             <tr>
                                                 <td colspan="2"></td>
                                                 <td>Total:</td>
-                                                <td>{{ formatNumber($sum) ?? 0 }}</td>
+                                                <td>{{ isset($sum) ? formatNumber($sum) : 0  }}</td>
                                                 <td></td>
                                                 <td></td>
                                             </tr>

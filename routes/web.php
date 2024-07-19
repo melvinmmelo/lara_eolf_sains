@@ -262,8 +262,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/materials-inventory', [MaterialsInventoryController::class, 'index'])->name('materialsInventory.index');
     Route::post('/materials-inventory', [MaterialsInventoryController::class, 'store'])->name('materialsInventory.store');
     Route::patch('/materials-inventory', [MaterialsInventoryController::class, 'update'])->name('materialsInventory.update');
-    Route::delete('/materials-inventory', [MaterialsInventoryController::class, 'delete'])->name('materialsInventory.delete');
-
+    Route::post('/materials-inventory/delete-withdraw', [MaterialsInventoryController::class, 'deleteOrWithdraw'])->name('materialsInventory.delete');
 
     Route::get('/materials-inventory/{id}/history', [MaterialsInventoryController::class, 'history'])->name('materialsInventory.history');
 });
