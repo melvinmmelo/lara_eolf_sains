@@ -74,7 +74,7 @@
                                 @foreach ($equipments as $equipment)
                                     <tr>
                                         <td align='center'>
-                                            @if ($equipment->status == 'available')
+                                            @if ($equipment->status == 'available' or $equipment->status == 'active' or $equipment->status == 'Active')
                                                 <input type="checkbox" class="equipment-checkbox" name="equipment_ids[]"
                                                     value="{{ $equipment->id }}">
                                             @else

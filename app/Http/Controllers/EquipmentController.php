@@ -11,12 +11,22 @@ class EquipmentController extends Controller
     {
         $equipments = Equipment::branchCode(session('branch_code'))->get();
 
-        // ! update status
+        // ! update status if assigned to customer but no data
 
         // foreach ($equipments as $equipment) {
         //     $update = $equipment->equipmentStore->customer->fullName ?? 'update';
         //     if($update != 'update' and $equipment->status === 'available'){
         //         $equipment->status = 'added';
+        //         $equipment->save();
+        //     }
+        // }
+
+        // ! update status if added to customer but no data
+
+        // foreach ($equipments as $equipment) {
+        //     $update = $equipment->equipmentStore->customer->fullName ?? 'update';
+        //     if($update == 'update' and $equipment->status === 'added'){
+        //         $equipment->status = 'available';
         //         $equipment->save();
         //     }
         // }
