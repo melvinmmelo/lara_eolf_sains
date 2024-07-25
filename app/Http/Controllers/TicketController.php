@@ -14,7 +14,6 @@ class TicketController extends Controller
     public function index()
     {
 
-        // get inbound with distinct grp_print_ticket_no
         $inbounds = Inbound::select('grp_print_ticket_no')->whereNotNull('grp_print_ticket_no')->groupBy('grp_print_ticket_no')->get();
         return view('ticket.index', compact('inbounds'));
     }

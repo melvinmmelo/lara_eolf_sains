@@ -33,6 +33,8 @@ class Inbound extends Model
         'store_name',
         'driver_name',
         'vehicle_no',
+        'order_slip_code',
+        'order_slip_sno',
     ];
 
     protected $appends = ['f_created_at', 'f_updated_at'];
@@ -84,6 +86,11 @@ class Inbound extends Model
     public function scopeForLoading($query)
     {
         return $query->where('status', 'Completed')->where('ticket_sequence_no' , 0);
+    }
+
+    public function scopeForOrderSlip($query)
+    {
+        return $query->whereNull('order_slip_code');
     }
 
     public function scopeWithProducts($query)

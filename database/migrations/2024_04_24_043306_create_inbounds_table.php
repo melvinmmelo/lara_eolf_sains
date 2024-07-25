@@ -40,6 +40,8 @@ return new class extends Migration
             $table->string('store_name');
             $table->string('driver_name');
             $table->string('vehicle_no');
+            $table->string('order_slip_code')->nullable();
+            $table->integer('order_slip_sno')->nullable();
             $table->timestamps();
             $table->index('branch_code');
         });

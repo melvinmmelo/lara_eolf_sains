@@ -26,6 +26,8 @@ use App\Http\Controllers\BadOrderController;
 use App\Http\Controllers\MaterialsInventoryController;
 use App\Http\Controllers\DeliveryReceiptController;
 use App\Http\Controllers\EquipmentHistoryController;
+use App\Http\Controllers\OrderSlipController;
+use App\Http\Controllers\ReportGeneratorController;
 use App\Http\Controllers\TicketController;
 
 Route::get('/', function () {
@@ -51,6 +53,14 @@ Route::get('/', function () {
 
 
 Route::middleware('auth')->group(function () {
+
+    Route::get('/order-slips', [OrderSlipController::class, 'index'])->name('order-slips');
+
+    Route::get('/generate-order-slip', [OrderSlipController::class, 'generate'])->name('generate-order-slip');
+
+    Route::post('/print-order-slip', [OrderSlipController::class, 'print'])->name('print-order-slip');
+
+    Route::get('/order-slip/{code}', [ReportGeneratorController::class, 'orderSlip'])->name('report.orderSlip');
 
     Route::get('/loading-ticket', function () {
         return view('loading-ticket');

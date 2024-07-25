@@ -1,0 +1,48 @@
+body {
+  background: rgb(204, 204, 204);
+  font-family: Arial, Helvetica, sans-serif;
+}
+page {
+  padding: 5px;
+  background: white;
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 0.5cm;
+  box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
+}
+page[size="letter"] {
+  width: 8.5in;
+  height: 11in;
+}
+page[size="letter"][layout="landscape"] {
+  width: 11in;
+  height: 8.5in;
+}
+page[size="legal"] {
+  width: 8.5in;
+  height: 14in;
+}
+page[size="legal"][layout="landscape"] {
+  width: 14in;
+  height: 8.5in;
+}
+page[size="onefour"][layout="landscape"] {
+  width: 13.2cm;
+  height: 10cm;
+  background-color: #ff0000;
+}
+page[size="onehalf"] {
+  width: 8.5in;
+  height: 5.5in;
+  background-color: #ff0000;
+}
+@media print {
+  body,
+  page {
+    margin: 0;
+    box-shadow: 0;
+  }
+  .hidePrintBtn {
+        display: none;
+      }
+}
