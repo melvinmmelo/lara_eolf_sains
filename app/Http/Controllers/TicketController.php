@@ -44,7 +44,7 @@ class TicketController extends Controller
             'inboundIds' => 'required',
         ]);
 
-        $grpPrintTicketNo = date('YmdHis') . Inbound::max('id') + 1;
+        $grpPrintTicketNo = "LT" .date('y') . "-" .str_pad(Inbound::max('id') + 1, 5, '0', STR_PAD_LEFT);
 
         $inbounds = Inbound::whereIn('id', $request->inboundIds)->get();
         $cnt = 1;

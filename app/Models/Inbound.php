@@ -37,7 +37,7 @@ class Inbound extends Model
         'order_slip_sno',
     ];
 
-    protected $appends = ['f_created_at', 'f_updated_at'];
+    protected $appends = ['f_created_at', 'f_updated_at', 'code'];
 
     public function priceLevel() : BelongsTo {
         return $this->belongsTo(pricelevels::class, 'pricelevel_id');
@@ -71,6 +71,11 @@ class Inbound extends Model
     public function getfUpdatedAtAttribute()
     {
         return $this->created_at ? $this->created_at->format('Y-m-d h:s A') : null;
+    }
+
+    public function getCodeAttribute()
+    {
+        return $this->created_at->format('y') . "-" . str_pad($this->id, 5, "0", STR_PAD_LEFT);
     }
 
     public function scopeBranch($query, $branch_code)

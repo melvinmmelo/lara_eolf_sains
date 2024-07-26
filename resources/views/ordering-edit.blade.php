@@ -112,8 +112,8 @@
                                         id="equipment" onchange="setCustomerName(this.value)" required>
                                         <option value="">--Select--</option>
                                         @foreach ($equipment as $equip)
-                                            <option value="{{ $equip->id }}">
-                                                {{ $equip->equipment->code . ' ' . $equip->customer->fullName }}
+                                            <option value="{{ $equip->code }}">
+                                                {{ $equip->code . ' ' . $equip->equipmentStore->customer->fullName }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -425,7 +425,7 @@
         document.getElementById('pricelevel_id').value = "{{ $inbound->pricelevel_id ?? '' }}";
         document.getElementById('deliveryPerson').value = "{{ $inbound->driver_id ?? '' }}";
         document.getElementById('vehicle').value = "{{ $inbound->vehicle_id ?? '' }}";
-        document.getElementById('equipment').value = "{{ $inbound->equipment_id ?? '' }}";
+        document.getElementById('equipment').value = "{{ $inbound->degic_no }}";
         document.getElementById('customer_id').value = "{{ $inbound->customer_id ?? '' }}";
         document.getElementById('customer').value = "{{ $inbound->customer->fullName ?? '' }}";
 

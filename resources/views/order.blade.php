@@ -60,8 +60,8 @@
 
                                 <tr>
                                     <td>{{ $inbound->f_created_at }}</td>
-                                    <td>{{ $inbound->id }}</td>
-                                    <td>{{ $inbound->equipment->code ?? ''}}</td>
+                                    <td>{{ $inbound->code }}</td>
+                                    <td>{{ $inbound->degic_no}}</td>
                                     <td>{{ $inbound->customer->fullName }}</td>
                                     <td><span class="label label-primary">{{ formatNumber($total) }}</span></td>
                                     <td>{{ formatNumber($total - $inbound->delivered_amount) }}</td>

@@ -33,22 +33,21 @@ class DeliveryReceiptController extends Controller
     {
         $validatedData = $request->validate([
             'date' => 'required|date',
-            'dr_no' => 'required|string',
+            'inbound_id' => 'required|string',
             'generated_by' => 'required|string',
         ]);
 
-        $inbound = Inbound::findOrFail($request->dr_no);
-
+        $inbound = Inbound::findOrFail($request->inbound_id);
 
         if ($inbound->products == null) {
             return redirect()->route('deliveryreceipt.index')->withErrors('No products found.');
         }
 
-        $validatedData['customer_name'] = $inbound->customer->fullName;
+        $validatedData['customer_name'] = $inbound->customer_name;
 
         $deliveryReceipt = DeliveryReceipt::create($validatedData);
 
-        $totalOfOutbound = InboundService::getTotalOfInboundProducts($deliveryReceipt->dr_no);
+        $totalOfOutbound = InboundService::getTotalOfInboundProducts($deliveryReceipt->inbound_id);
 
         $amountDueOrBalance = $totalOfOutbound - $inbound->delivered_amount;
 
@@ -87,7 +86,7 @@ class DeliveryReceiptController extends Controller
     {
         $deliveryReceipt = DeliveryReceipt::findOrFail($id);
 
-        $inbound = Inbound::findOrFail($deliveryReceipt->dr_no);
+        $inbound = Inbound::findOrFail($deliveryReceipt->inbound_id);
 
         $inboundService = new InboundProductsService($inbound->products);
         $summary = $inboundService->summary();

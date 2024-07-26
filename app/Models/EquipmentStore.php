@@ -39,6 +39,8 @@ class EquipmentStore extends Model
 
     protected $table = 'equipment_store';
 
+    protected $with = ['customer'];
+
     public function equipment(): BelongsTo
     {
         return $this->belongsTo(Equipment::class);
@@ -65,4 +67,11 @@ class EquipmentStore extends Model
     {
         return $this->created_at->format('m-d-Y h:i A');
     }
+
+    // connect to equipment table and get the equipment with specified branch code
+    public function scopeEquipmentByBranch($branch_code)
+    {
+        return $this->belongsTo(Equipment::class)->where('branch_code', $branch_code);
+    }
+
 }

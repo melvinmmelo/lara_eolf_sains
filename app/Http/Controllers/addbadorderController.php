@@ -34,7 +34,8 @@ class addbadorderController extends Controller
 
     public function create()
     {
-        $customers = Customers::with('storeinfo')->get();
+        $customers = Customers::with('storeinfo')->branchCode(session('branch_code'))->get();
+
         $badPricing = PriceLevels::where('pl_name', 'BAD PRICING')->first();
 
         $items = Prices::where('pricelevel_id', $badPricing->id)

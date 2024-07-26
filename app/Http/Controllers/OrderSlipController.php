@@ -42,7 +42,7 @@ class OrderSlipController extends Controller
 
         $validated['total_amount'] = 0;
 
-        $validated['code'] = date('Y') . "-" . substr('0000' . (OrderSlip::count() + 1), -4);
+        $validated['code'] = date('y') . "-" . str_pad(OrderSlip::count() + 1, 5, "0", STR_PAD_LEFT);
 
         $validated['generated_by'] = auth()->user()->fullName;
 

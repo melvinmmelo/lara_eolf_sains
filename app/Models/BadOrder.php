@@ -28,6 +28,8 @@ class BadOrder extends Model
         'amount',
     ];
 
+    protected $appends = ['code'];
+
     public function customer()
     {
         return $this->belongsTo(Customers::class, 'customer_id');
@@ -42,6 +44,11 @@ class BadOrder extends Model
     public function scopeOfInboundId($query, $inboundId)
     {
         return $query->where('inbound_id', $inboundId);
+    }
+
+    public function getCodeAttribute()
+    {
+        return $this->created_at->format('Y') . "-" . str_pad($this->id, 5, "0", STR_PAD_LEFT);
     }
 
 }

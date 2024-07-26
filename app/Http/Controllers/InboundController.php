@@ -336,7 +336,7 @@ class InboundController extends Controller
         $inbound = new Inbound();
         $inbound->user_id = auth()->user()->id;
         $inbound->branch_code = session('branch_code');
-        $inbound->equipment_id = $request->equipment_id;
+        $inbound->equipment_id = $equipStore->equipment->id;
         $inbound->driver_id = $request->driver_id;
         $inbound->vehicle_id = $request->vehicle_id;
         $inbound->products = json_encode($products);
@@ -456,7 +456,7 @@ class InboundController extends Controller
 
         $inbounds = Inbound::with('driver', 'vehicle')->branch(session('branch_code'))->get();
 
-        $equipment = EquipmentStore::all();
+        $equipment = Equipment::has('equipmentStore')->branchCode(session('branch_code'))->get();
 
         $pricing = pricelevels::getPriceLevels(session('branch_code'));
 
@@ -481,7 +481,7 @@ class InboundController extends Controller
 
         $vehicles = Vehicles::active()->get();
 
-        $equipment = EquipmentStore::all();
+        $equipment = Equipment::has('equipmentStore')->branchCode(session('branch_code'))->get();
 
         $pricing = pricelevels::getPriceLevels(session('branch_code'));
 
@@ -522,17 +522,15 @@ class InboundController extends Controller
             'bo_amount' => 'nullable',
         ]);
 
+        $equipStore =  EquipmentStore::find($request->equipment_id)->store_id;
         $inbound = Inbound::find($request->inbound_id);
-        $inbound->equipment_id = $request->equipment_id;
+        $inbound->equipment_id = $equipStore->equipment->id;
         $inbound->driver_id = $request->driver_id;
         $inbound->vehicle_id = $request->vehicle_id;
         $inbound->pricelevel_id = $request->pricelevel_id;
         $inbound->customer_id = $request->customer_id;
-        $inbound->store_id = EquipmentStore::find($request->equipment_id)->store_id;
+        $inbound->store_id = $equipStore->store_id;
         $inbound->with_invoice = $request->with_invoice == 'on' ? 1 : 0;
-
-
-        // dd(session()->get('products'));
 
         $inbound->products = json_encode(session()->get('products'));
 

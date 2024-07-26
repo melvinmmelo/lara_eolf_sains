@@ -13,9 +13,9 @@ class CreateDeliveryReceiptsTable extends Migration
         Schema::create('delivery_receipts', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->string('dr_no');
+            $table->unsignedInteger('inbound_id');
             $table->string('customer_name');
-            $table->string('generated_by')->nullable();
+            $table->string('generated_by');
             $table->decimal('total_amount', 10, 2)->nullable();
             $table->decimal('bad_orders', 10, 2)->nullable();
             $table->decimal('discount', 10, 2)->nullable();
@@ -23,6 +23,9 @@ class CreateDeliveryReceiptsTable extends Migration
             $table->decimal('amount_paid', 10, 2)->nullable();
             $table->decimal('balance', 10, 2)->nullable();
             $table->timestamps();
+
+            $table->index('inbound_id');
+
         });
     }
 

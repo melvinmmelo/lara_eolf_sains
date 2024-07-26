@@ -113,8 +113,8 @@
                                         id="equipment" onchange="setCustomerName(this.value)" required>
                                         <option value="">--Select--</option>
                                         @foreach ($equipment as $equip)
-                                            <option value="{{ $equip->id }}">
-                                                {{ $equip->equipment->code . ' ' . $equip->customer->fullName }}
+                                            <option value="{{ $equip->equipmentStore->id }}">
+                                                {{ $equip->code . ' ' . $equip->equipmentStore->customer->lastname . ' ' . $equip->equipmentStore->customer->firstname }}
                                             </option>
                                         @endforeach
                                     </select>

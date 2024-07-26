@@ -50,69 +50,68 @@
 
             <div class="w-[5%]"></div>
 
-
-
-
-
             {{-- <div class="grid grid-rows-5 grid-flow-col auto-cols-max auto-rows-max"> --}}
-            <div class="flex flex-col flex-wrap h-[75%] justify-start">
+            <div class="flex flex-row flex-wrap h-[75%] justify-start">
                 @foreach ($inbounds as $outbound)
                     @php
                         $orderedProducts = json_decode($outbound->products, true);
                     @endphp
 
-                    <div class="w-32 border-solid border-2 border-black p-1">
-                        <div class="flex">
-                            <p class="w-1/2 text-sm">Total</p>
-                            <div class="text-sm font-bold">
-                                {{ formatNumber(getTotalOfProducts($orderedProducts)) }}</div>
-                        </div>
-
-                        <div class="flex">
-                            <div class="w-1/2 text-sm">Sequence No.</div>
-                            <div class="text-sm font-bold">{{ $outbound->order_slip_sno }}</div>
-                        </div>
-
-                        <div class="flex">
-                            <div class="w-1/2 text-sm">Customer:</div>
-                            <div class="text-sm font-bold">{{ $outbound->customer_name }}</div>
-                        </div>
-
-                        <div class="flex">
-                            <div class="w-1/2 text-sm">Degic No:</div>
-                            <div class="text-sm font-bold">{{ $outbound->degic_no }}</div>
-                        </div>
-
-                        <div class="flex">
-                            <div class="w-1/2 text-sm">Product</div>
-                            <div class="text-sm">Quantity</div>
-                        </div>
-
-
-
-                        @foreach ($orderedProducts as $product)
+                    <div class="w-32">
+                        <div class="w-32 border-solid border-2 border-black p-1">
                             <div class="flex">
-                                <div class="w-1/2 text-sm font-bold">{{ $product['code'] }}</div>
-                                <div class="text-sm font-bold">{{ $product['quantity'] }}</div>
+                                <p class="w-1/2 text-sm">Total</p>
+                                <div class="text-sm font-bold">
+                                    {{ formatNumber(getTotalOfProducts($orderedProducts)) }}</div>
+                            </div>
+
+                            <div class="flex">
+                                <div class="w-1/2 text-sm">Sequence No.</div>
+                                <div class="text-sm font-bold">{{ $outbound->order_slip_sno }}</div>
+                            </div>
+
+                            <div class="flex">
+                                <div class="w-1/2 text-sm">Customer:</div>
+                                <div class="text-sm font-bold">{{ $outbound->customer_name }}</div>
+                            </div>
+
+                            <div class="flex">
+                                <div class="w-1/2 text-sm">Degic No:</div>
+                                <div class="text-sm font-bold">{{ $outbound->degic_no }}</div>
+                            </div>
+
+                            <div class="flex">
+                                <div class="w-1/2 text-sm">Product</div>
+                                <div class="text-sm">Quantity</div>
+                            </div>
+
+
+
+                            @foreach ($orderedProducts as $product)
+                                <div class="flex">
+                                    <div class="w-1/2 text-sm font-bold">{{ $product['code'] }}</div>
+                                    <div class="text-sm font-bold">{{ $product['quantity'] }}</div>
+                                </div>
+                            @endforeach
+                        </div>
+
+
+
+                        <div class="flex">
+                            <div class="text-sm">Total Quantiy for Checking</div>
+                        </div>
+
+                        @php
+                            $summary = getSummaryOfProducts($orderedProducts);
+                        @endphp
+
+                        @foreach ($summary as $key => $value)
+                            <div class="flex">
+                                <div class="w-1/2 text-sm font-bold">{{ $key }}</div>
+                                <div class="text-sm font-bold">{{ $value['total'] }}</div>
                             </div>
                         @endforeach
                     </div>
-
-
-                    <div class="flex">
-                        <div class="text-sm">Total Quantiy for Checking</div>
-                    </div>
-
-                    @php
-                        $summary = getSummaryOfProducts($orderedProducts);
-                    @endphp
-
-                    @foreach ($summary as $key => $value)
-                        <div class="flex">
-                            <div class="w-1/2 text-sm font-bold">{{ $key }}</div>
-                            <div class="text-sm font-bold">{{ $value['total'] }}</div>
-                        </div>
-                    @endforeach
                 @endforeach
             </div>
 

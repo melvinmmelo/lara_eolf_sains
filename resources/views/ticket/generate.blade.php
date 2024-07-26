@@ -67,9 +67,9 @@
                                             <input type="checkbox" name="inboundIds[]" value="{{ $inbound->id }}" id="inboundIds{{ $inbound->id }}">
                                         </td>
                                         <td>{{ $inbound->f_created_at }}</td>
-                                        <td>{{ $inbound->id }}</td>
-                                        <td>{{ $inbound->equipment->code ?? '' }}</td>
-                                        <td>{{ $inbound->customer->fullName }}</td>
+                                        <td>{{ $inbound->code }}</td>
+                                        <td>{{ $inbound->degic_no}}</td>
+                                        <td>{{ $inbound->customer_name }}</td>
                                         <td><span class="label label-primary">{{ formatNumber($total) }}</span></td>
                                         <td>{{ formatNumber($total - $inbound->delivered_amount) }}</td>
                                         <td>{{ $inbound->status }}</td>

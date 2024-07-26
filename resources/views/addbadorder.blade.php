@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
             description: description,
             quantity: quantity,
             price: price,
-            amount: amount,
+            amount: amount.toFixed(2),
             unit: unit,
             session_id: sessionId // Include the session ID
         };
