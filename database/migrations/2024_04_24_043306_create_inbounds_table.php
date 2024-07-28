@@ -42,6 +42,7 @@ return new class extends Migration
             $table->string('vehicle_no');
             $table->string('order_slip_code')->nullable();
             $table->integer('order_slip_sno')->nullable();
+            $table->unsignedInteger('delivery_receipt_id')->nullable();
             $table->timestamps();
             $table->index('branch_code');
         });

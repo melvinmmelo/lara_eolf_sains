@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DeliveryReceipt;
+use Illuminate\Support\Facades\DB;
 use App\Models\Inbound;
 use App\Models\ItemMasterData;
 use App\Services\InboundProductsService;
@@ -12,22 +13,101 @@ use App\Services\InboundService;
 
 class DeliveryReceiptController extends Controller
 {
+
+    public function updateDRPrintedDate($id)
+    {
+        $deliveryReceipt = DeliveryReceipt::findOrFail($id);
+
+        if($deliveryReceipt->printed_date != null){
+
+            activity('delivery-receipt')
+            ->performedOn($deliveryReceipt)
+                ->log('DR printed date already updated.');
+
+            return false;
+
+        }
+
+        $inbound = Inbound::find($deliveryReceipt->inbound_id);
+
+        $products = json_decode($inbound->products);
+
+        foreach($products as $product){
+
+            $item = ItemMasterData::branch(session('branch_code'))->productCode($product->code)->first();
+
+            $item->reserved -= $product->quantity;
+            $item->stocks -= $product->quantity;
+
+            $item->save();
+
+        }
+
+        $inbound->delivery_receipt_id = $id;
+        $inbound->save();
+
+        $deliveryReceipt->printed_date = now();
+
+        $deliveryReceipt->save();
+
+        activity('delivery-receipt')
+        ->performedOn($deliveryReceipt)
+            ->log('DR printed.');
+
+        return response()->json(['message' => 'Printed date updated.']);
+
+    }
+
     public function index(Request $request)
     {
-        $query = DeliveryReceipt::query();
+        $outbounds = Inbound::branch(session('branch_code'))->whereNull('delivery_receipt_id')->withProducts()->get();
 
-        $outbounds = Inbound::branch(session('branch_code'))->withProducts()->get();
+        $query = DeliveryReceipt::query();
 
         if ($request->filled('from_date') && $request->filled('to_date')) {
             $fromDate = $request->from_date;
             $toDate = $request->to_date;
-
-            $query->whereBetween('date', [$fromDate, $toDate]);
+            $query->whereBetween('date', [$fromDate, $toDate])
+                ->whereNull('printed_date')
+                ->whereHas('inbound', function ($query) {
+                    $query->where('branch_code', session('branch_code'));
+                });
+        }else{
+            $query->whereNull('printed_date')->whereHas('inbound', function ($query) {
+                $query->where('branch_code', session('branch_code'));
+            });
         }
 
         $deliveryReceipts = $query->get();
 
+
         return view('deliveryreceipt', compact('deliveryReceipts', 'outbounds'));
+    }
+
+    public function indexDone(Request $request)
+    {
+        $outbounds = Inbound::branch(session('branch_code'))->whereNull('delivery_receipt_id')->withProducts()->get();
+
+        $query = DeliveryReceipt::query();
+
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $fromDate = $request->from_date;
+            $toDate = $request->to_date;
+            $query->whereBetween('date', [$fromDate, $toDate])
+                ->whereNotNull('printed_date')
+                ->whereHas('inbound', function ($query) {
+                    $query->where('branch_code', session('branch_code'));
+                });
+        } else {
+            $query->whereNotNull('printed_date')->whereHas('inbound', function ($query) {
+                $query->where('branch_code', session('branch_code'));
+            });
+        }
+
+        $deliveryReceipts = $query->get();
+
+
+        return view('deliveryreceipt_done', compact('deliveryReceipts', 'outbounds'));
     }
     public function store(Request $request)
     {
@@ -79,6 +159,12 @@ class DeliveryReceiptController extends Controller
             }
         }
 
+        $inbound->delivery_receipt_id = $deliveryReceipt->id;
+
+        activity('delivery-receipt')
+        ->performedOn($deliveryReceipt)
+            ->log('DR created.');
+
         return redirect()->route('drprint', ['id' => $deliveryReceipt->id]);
     }
 
@@ -91,6 +177,6 @@ class DeliveryReceiptController extends Controller
         $inboundService = new InboundProductsService($inbound->products);
         $summary = $inboundService->summary();
         $products = $inboundService->addSppbinSummary();
-        return view('DRprint', compact('deliveryReceipt', 'products'));
+        return view('drprint', compact('deliveryReceipt', 'products', 'inbound'));
     }
 }

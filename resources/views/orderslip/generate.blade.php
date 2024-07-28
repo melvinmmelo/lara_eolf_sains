@@ -99,6 +99,10 @@
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-print">
                         Print
                     </button>
+
+                     <a href="{{ route('order-slips') }}"><button type="button" class="btn btn-default">
+                                Order Slips
+                            </button></a>
                 </div>
 
                 <!-- /.card-footer-->

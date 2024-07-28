@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('serial_no');
             $table->string('degic_no');
-            $table->tinyInteger('customer_id');
+            $table->unsignedInteger('customer_id');
             $table->string('customer_name');
             $table->dateTime('date_assigned');
             $table->string('user_name_assigned');

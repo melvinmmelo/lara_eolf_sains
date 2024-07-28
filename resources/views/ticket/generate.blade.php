@@ -98,6 +98,10 @@
                     <button type="submit" class="btn btn-primary">
                         Print
                     </button>
+
+                    <a href="{{ route('index-ticket')}}"><button type="button" class="btn btn-default">
+                            Loading Tickets
+                        </button></a>
                 </div>
 
                 <!-- /.card-footer-->

@@ -162,10 +162,11 @@ class DeliveryPurchaseReceiptController extends Controller
         $dpr = DeliveryPurchaseReceipt::findOrFail($request->drid);
 
         $dprService = new DPRService($dpr->products);
+        // dd($dpr->products);
 
         $dprService->deleteProduct($request->pcode);
 
-        $dpr->products =  $dprService->getNewProducts();
+        $dpr->products = $dprService->getNewProducts();
 
         $dpr->save();
 
@@ -191,7 +192,11 @@ class DeliveryPurchaseReceiptController extends Controller
 
         $products = $dprService->holdProduct($request->hold_pcode, $request->hold_qty);
 
-        $dpr->products = $products;
+        if(!$products){
+            return redirect()->back()->withErrors('There is no enough quantity to hold.');
+        }
+
+        $dpr->products = $dprService->getNewProducts();
 
         $dpr->save();
 

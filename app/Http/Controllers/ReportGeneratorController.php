@@ -15,6 +15,21 @@ class ReportGeneratorController extends Controller
 
         $orderSlip = OrderSlip::where('code', $code)->first();
         $inbounds = Inbound::where('order_slip_code', $code)->get();
+        $totalInbounds = count($inbounds);
+
+        $j = 0; // counter of the inbounds
+        $deno = 7;
+        $totalPages = 1;
+        $reminder = 0;
+
+        if($totalInbounds > $deno){
+            $totalPages = ceil($totalInbounds / $deno);
+            $reminder = $totalInbounds % $deno;
+        }
+
+        if($totalPages === 1){
+            $deno = $totalInbounds % $deno;
+        }
 
         $grandTotal = 0;
 
@@ -24,6 +39,12 @@ class ReportGeneratorController extends Controller
             $grandTotal += getTotalOfProducts($products);
         }
 
-        return view('report.orderSlip', compact('inbounds', 'code', 'orderSlip', 'grandTotal'));
+        // dd($inbounds[0]);
+        // dd($reminder);
+        // dd($totalPages);
+        // dd($totalInbounds);
+
+
+        return view('report.orderSlip', compact('inbounds', 'code', 'orderSlip', 'grandTotal', 'totalInbounds', 'totalPages', 'deno', 'reminder', 'j'));
     }
 }

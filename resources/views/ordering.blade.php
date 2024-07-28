@@ -611,7 +611,7 @@
                     try {
                         var jsonRes = JSON.parse(this.responseText);
                         if (jsonRes.error) {
-                            alert("Error updating product quantity.");
+                            alert(jsonRes.error);
 
                             if (action == 'add')
                                 document.getElementById(productCode).value = parseInt(document.getElementById(
@@ -623,25 +623,25 @@
                     } catch (error) {}
                 }
             };
-            xmlhttp.open("GET", "/inbound-updateProdQty/" + productCode + "/" + action, true);
+            xmlhttp.open("GET", "/inbound-updateProdQty/" + productCode + "/" + action , true);
             xmlhttp.send();
         }
 
         // on select pricelevel_id change
-        document.getElementById('pricelevel_id').addEventListener('change', function() {
-            var pricelevel_id = document.getElementById('pricelevel_id').value;
-            $.ajax({
-                type: "GET",
-                url: "/set-priceLevelId/" + pricelevel_id,
-                success: function(response) {
-                    // console.log(response);
-                    if (response.error) {
-                        alert("Error fetching price level.");
-                        return;
-                    }
-                    console.log("Price level set to ");
-                }
-            });
-        });
+        // document.getElementById('pricelevel_id').addEventListener('change', function() {
+        //     var pricelevel_id = document.getElementById('pricelevel_id').value;
+        //     $.ajax({
+        //         type: "GET",
+        //         url: "/set-priceLevelId/" + pricelevel_id,
+        //         success: function(response) {
+        //             // console.log(response);
+        //             if (response.error) {
+        //                 alert("Error fetching price level.");
+        //                 return;
+        //             }
+        //             console.log("Price level set to ");
+        //         }
+        //     });
+        // });
     </script>
 @endsection

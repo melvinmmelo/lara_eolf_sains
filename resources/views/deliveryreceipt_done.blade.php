@@ -6,12 +6,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    Delivery Receipt
+                    Done Delivery Receipt
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">Delivery Receipt</li>
+                        <li class="breadcrumb-item active">Done Delivery Receipt</li>
                     </ol>
                 </div>
             </div>
@@ -21,19 +21,17 @@
     <!-- Main content -->
     <section class="content">
 
+        <!-- Default box -->
         @include('layouts.errors')
 
         <div class="card">
+
             <div class="card-body">
+
 
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-branch">
                     Add New
                 </button>
-
-                <a href="{{ route('deliveryreceipt.indexDone') }}"><button type="button" class="btn btn-default">
-                    Done Delivery Receipts
-                </button></a>
-
 
                 <form action="{{ route('deliveryreceipt.index') }}" method="GET">
                     @csrf
@@ -89,8 +87,8 @@
                                 <td>{{ formatNumber($receipt->balance) }}</td>
                                 <td>{{ $receipt->generated_by }}</td>
                                 <td>
-                                    <a href="{{ route('drprint', ['id' => $receipt->id]) }}"><button type="button"
-                                            class="btn btn-primary">Print</button></a>
+                                    {{-- <a href="{{ route('drprint', ['id' => $receipt->id]) }}"><button type="button"
+                                            class="btn btn-primary">Print</button></a> --}}
                                 </td>
                             </tr>
                         @endforeach
@@ -118,10 +116,6 @@
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-branch">
                     Add New
                 </button>
-
-                <a href="{{ route('deliveryreceipt.indexDone') }}"><button type="button" class="btn btn-default">
-                    Done Delivery Receipts
-                </button></a>
 
                 {{-- <button type="button" class="btn btn-success"><i class="fas fa-print"></i>&nbsp;Delivery Receipt</button> --}}
             </div>

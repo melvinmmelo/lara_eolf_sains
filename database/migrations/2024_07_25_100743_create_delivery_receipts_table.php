@@ -22,6 +22,7 @@ class CreateDeliveryReceiptsTable extends Migration
             $table->decimal('amount_due', 10, 2)->nullable();
             $table->decimal('amount_paid', 10, 2)->nullable();
             $table->decimal('balance', 10, 2)->nullable();
+            $table->dateTime('printed_date')->nullable();
             $table->timestamps();
 
             $table->index('inbound_id');

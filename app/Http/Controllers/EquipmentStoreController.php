@@ -47,6 +47,7 @@ class EquipmentStoreController extends Controller
      */
     public function store(Request $request)
     {
+        $errors = [];
         $request->validate([
             'customer_id' => 'required|exists:customers,id',
             'store_id' => 'required|exists:storeinfo,id',
@@ -66,35 +67,45 @@ class EquipmentStoreController extends Controller
 
             $equipment = Equipment::findOrFail($equipment_id);
             $equipmentStore = new EquipmentStore();
-            $equipmentStore->customer_id = $customer_id;
-            $equipmentStore->store_id = $store_id;
-            $equipmentStore->equipment_id = $equipment_id;
-            $equipmentStore->serial = $equipment->serial_no;
-            $equipmentStore->type = $equipment->type;
-            $equipmentStore->brand = $equipment->brand;
-            $equipmentStore->owned = $equipment->ownership;
-            $equipmentStore->pull_status = 'no';
-            $equipmentStore->save();
+            $existingEquipmentStore = EquipmentStore::where('equipment_id', $equipment_id)->where('store_id', $store_id)->first();
+            if (!$existingEquipmentStore) {
 
-            $equipment->status = 'available';
+                $equipmentStore->customer_id = $customer_id;
+                $equipmentStore->store_id = $store_id;
+                $equipmentStore->equipment_id = $equipment_id;
+                $equipmentStore->serial = $equipment->serial_no;
+                $equipmentStore->type = $equipment->type;
+                $equipmentStore->brand = $equipment->brand;
+                $equipmentStore->owned = $equipment->ownership;
+                $equipmentStore->pull_status = 'no';
+                $equipmentStore->save();
 
-            EquipmentHistory::create([
-                'serial_no' => $equipment->serial_no,
-                'degic_no' => $equipment->code,
-                'customer_id' => $customer_id,
-                'customer_name' => $customer->fullName,
-                'date_assigned' => now(),
-                'user_name_assigned' => auth()->user()->fullName,
-                'current_user_name' => auth()->user()->fullName,
-            ]);
+                $equipment->status = 'available';
 
-            $equipment->save();
+                EquipmentHistory::create([
+                    'serial_no' => $equipment->serial_no,
+                    'degic_no' => $equipment->code,
+                    'customer_id' => $customer_id,
+                    'customer_name' => $customer->fullName,
+                    'date_assigned' => now(),
+                    'user_name_assigned' => auth()->user()->fullName,
+                    'current_user_name' => auth()->user()->fullName,
+                ]);
 
+                $equipment->save();
+            }else{
+                $errors[] = "Error: Duplicate entry of equipment.[ $equipment->code ]";
+            }
         }
 
         activity('equipment-store')
             ->withProperties(['customer_id' => $customer_id, 'store_id' => $store_id, 'equipment_ids' => $equipment_ids, 'pull_statuses' => $pull_statuses])
             ->log('equipment added to store');
+
+        // add error message to the session
+        if(count($errors) > 0){
+            return redirect()->back()->withErrors($errors);
+        }
 
         return redirect()->back()->with('success', 'Equipment added successfully.');
     }
@@ -150,8 +161,7 @@ class EquipmentStoreController extends Controller
 
         $customerName = $equipmentStore->customer->fullName;
 
-        if($request->remarks === 'STOP SELLING')
-        {
+        if ($request->remarks === 'STOP SELLING') {
             $customer = Customer::findOrFail($request->customer_id);
             $customer->status = 'STOP SELLING';
             $customer->save();
@@ -165,8 +175,7 @@ class EquipmentStoreController extends Controller
 
         $equipmentHistory = EquipmentHistory::where('serial_no', $equipment->serial_no)->where('customer_id', $request->customer_id)->first();
 
-        if($equipmentHistory)
-        {
+        if ($equipmentHistory) {
             $equipmentHistory->date_pulled_out = now();
 
             $equipmentHistory->user_name_pulled_out = auth()->user()->fullName;
@@ -176,8 +185,7 @@ class EquipmentStoreController extends Controller
             $equipmentHistory->current_user_name = auth()->user()->fullName;
 
             $equipmentHistory->save();
-
-        }else{
+        } else {
             EquipmentHistory::create([
                 'serial_no' => $equipment->serial_no,
                 'degic_no' => $equipment->code,
@@ -221,13 +229,12 @@ class EquipmentStoreController extends Controller
                 $newEquipment->save();
 
                 $newEquipmentHistory = EquipmentHistory::where('serial_no', $newEquipment->serial_no)->where('customer_id', $customer_id)->first();
-                if($newEquipmentHistory)
-                {
+                if ($newEquipmentHistory) {
                     $newEquipmentHistory->date_assigned = now();
                     $newEquipmentHistory->user_name_assigned = auth()->user()->fullName;
                     $newEquipmentHistory->current_user_name = auth()->user()->fullName;
                     $newEquipmentHistory->save();
-                }else{
+                } else {
                     EquipmentHistory::create([
                         'serial_no' => $newEquipment->serial_no,
                         'degic_no' => $newEquipment->code,
@@ -247,8 +254,7 @@ class EquipmentStoreController extends Controller
             ->withProperties(['customer' => $customerName, 'store' => $esName, 'equipment' => $equipment->code, 'pull_equipment_id' => $pullEquipmentId, 'replace_equipment_ids' => $replaceEquipmentIds, 'remarks' => $remarks])
             ->log($activityLog);
 
-        if($remarks === 'STOP SELLING')
-        {
+        if ($remarks === 'STOP SELLING') {
             return redirect()->route('customers')->with('success', "Customer status updated to STOP SELLING.");
         }
 

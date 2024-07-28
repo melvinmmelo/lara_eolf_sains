@@ -22,27 +22,22 @@ class DPRService extends Model
         return json_encode($this->products);
     }
 
-    // delete product from the list
     public function deleteProduct($productCode)
     {
-        // check if product is already in the list
         if ($this->products) {
-            foreach ($this->products as $key => $value) {
-                if ($value['code'] == $productCode) {
-                    unset($this->products[$key]);
-                    $this->isExist = true;
-                }
-            }
-        }
 
-        return $this->products;
+            $filteredProducts = array_filter($this->products, function ($product) use ($productCode) {
+                return $product['code'] !== $productCode;
+            });
+
+            $this->products = array_values($filteredProducts);
+        }
     }
 
     public function addProduct($newProduct)
     {
 
         $exist = false;
-        // check if product is already in the list
         if ($this->products) {
             foreach ($this->products as $key => $value) {
                 if ($value['code'] == $newProduct['code']) {
@@ -69,6 +64,7 @@ class DPRService extends Model
                 if ($value['code'] == $productCode) {
 
                     if ($value['quantity'] < $qty) {
+                        return false;
                     } else {
                         $this->products[$key]['hold'] = $qty;
                         $this->isExist = true;

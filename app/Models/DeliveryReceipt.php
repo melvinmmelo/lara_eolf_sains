@@ -28,4 +28,9 @@ class DeliveryReceipt extends Model
     {
         return $this->created_at->format('y') . "-" . str_pad($this->id, 5, "0", STR_PAD_LEFT);
     }
+
+    public function inbound()
+    {
+        return $this->belongsTo(Inbound::class);
+    }
 }

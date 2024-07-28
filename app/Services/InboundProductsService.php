@@ -147,5 +147,23 @@ class InboundProductsService extends Model
         return $products;
     }
 
+    // create a function that will return the current total quantity of the product code
+    public function getCurrentQty($productCode)
+    {
+        $totalQty = 0;
+
+        if ($this->products) {
+            foreach ($this->products as $product) {
+                if ($product['code'] == $productCode) {
+                    $totalQty = $product['quantity'];
+                }
+            }
+        }
+
+        return $totalQty;
+
+    }
+
+
 
 }

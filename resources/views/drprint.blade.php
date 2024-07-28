@@ -137,7 +137,7 @@
                         </div>
                         <br><br><br>
                         --------------------------------- &nbsp;&nbsp;&nbsp; -------------------- <br>
-                        Andal, Froilan<br>
+                        {{ $inbound->driver_name }}<br>
                     </div>
                 </div>
             </div>
@@ -149,7 +149,7 @@
                         </button>
                     </div>
                     <div class="p-2">
-                        <a href="/" class="btn btn-danger btn-print">
+                        <a href="{{ route('deliveryreceipt.index') }}" class="btn btn-danger btn-print">
                             <i class="fa-solid fa-xmark"></i> Close
                         </a>
                     </div>
@@ -163,14 +163,33 @@
 
 @section('custom_js')
     <script>
+
+        // create a ajax request to get the product details
+        function updateDRDatePrinted() {
+
+            const drId = '{{ $deliveryReceipt->id }}';
+
+            $.ajax({
+                url: '/updateDRPrintedDate/' + drId,
+                type: 'GET',
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+
         function printPage() {
+            updateDRDatePrinted();
             // Hide the print button before printing
             var printButton = document.querySelector('.btn-print');
             if (printButton) {
                 printButton.style.display = 'none';
             }
 
-            // Create a new window for printing
             var mywindow = window.open('', 'PRINT', 'height=600,width=600');
             mywindow.document.write('<html><title>DELIVERY RECEIPT</title>');
             mywindow.document.write('<style>');
@@ -209,7 +228,7 @@
             mywindow.document.write('</table>');
             mywindow.document.write('<br><br><br>');
             mywindow.document.write('--------------------------------- &nbsp;&nbsp;&nbsp; --------------------<br>');
-            mywindow.document.write('Andal, Froilan<br>');
+            mywindow.document.write('{{ $inbound->driver_name }} <br>');
             mywindow.document.write('</body></html>');
 
             mywindow.document.close(); // Necessary for IE >= 10

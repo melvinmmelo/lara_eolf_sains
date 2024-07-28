@@ -148,7 +148,7 @@
                 </li>
 
                 <li
-                    class="nav-item {{ Route::currentRouteNamed('order.index') || Route::currentRouteNamed('order.processTwo') || Route::currentRouteNamed('badOrders.index') || Route::currentRouteNamed('addbadorder.create') || Route::currentRouteNamed('order.create') || Route::currentRouteNamed('order.edit') || Route::currentRouteNamed('deliveryreceipt.index') || Route::currentRouteNamed('drprint') || Route::currentRouteNamed('generate-ticket')|| Route::currentRouteNamed('print-ticket') || Route::currentRouteNamed('index-ticket') || Route::currentRouteNamed('inbounds-ticket') || Route::currentRouteNamed('generate-order-slip') || Route::currentRouteNamed('order-slips') ? 'menu-is-opening menu-open' : '' }}">
+                    class="nav-item {{ Route::currentRouteNamed('order.index') || Route::currentRouteNamed('order.processTwo') || Route::currentRouteNamed('badOrders.index') || Route::currentRouteNamed('addbadorder.create') || Route::currentRouteNamed('order.create') || Route::currentRouteNamed('order.edit') || Route::currentRouteNamed('deliveryreceipt.index') || Route::currentRouteNamed('drprint') || Route::currentRouteNamed('generate-ticket')|| Route::currentRouteNamed('print-ticket') || Route::currentRouteNamed('index-ticket') || Route::currentRouteNamed('inbounds-ticket') || Route::currentRouteNamed('generate-order-slip') || Route::currentRouteNamed('order-slips') || Route::currentRouteNamed('deliveryreceipt.indexDone') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-coins" style="color: #74C0FC;"></i>
                         <p>
@@ -190,7 +190,7 @@
                         </li>
 
                         <li>
-                            <a href="/deliveryreceipt" class="nav-link {{ Route::currentRouteNamed('deliveryreceipt.index') || Route::currentRouteNamed('drprint') ? 'active' : '' }}">
+                            <a href="/deliveryreceipt" class="nav-link {{ Route::currentRouteNamed('deliveryreceipt.index') || Route::currentRouteNamed('drprint') || Route::currentRouteNamed('deliveryreceipt.indexDone') ? 'active' : '' }}">
                                 <i class="fas fa-print nav-icon"></i>
                                 <p>Delivery Receipt</p>
                             </a>

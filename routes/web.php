@@ -84,6 +84,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/drprint/{id}', [DeliveryReceiptController::class, 'show'])->name('drprint');
 
     Route::get('/deliveryreceipt', [DeliveryReceiptController::class, 'index'])->name('deliveryreceipt.index');
+    Route::get('/deliveryreceipt-done', [DeliveryReceiptController::class, 'indexDone'])->name('deliveryreceipt.indexDone');
+
+
+    Route::get('/updateDRPrintedDate/{id}', [DeliveryReceiptController::class, 'updateDRPrintedDate'])->name('deliveryreceipt.updateDRPrintedDate');
+
 
     Route::get('/api/getCustomerItems/{customerId}', [addbadorderController::class, 'getCustomerItems']);
 

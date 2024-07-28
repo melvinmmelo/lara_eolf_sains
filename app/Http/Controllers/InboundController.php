@@ -129,7 +129,7 @@ class InboundController extends Controller
         $driver = Drivers::find($request->deliveryPerson);
         $vehicles = Vehicles::find($request->vehicle);
 
-        if($equipStore == null || $customer == null || $driver == null || $vehicles == null){
+        if ($equipStore == null || $customer == null || $driver == null || $vehicles == null) {
             return back()->withErrors('All fields are requred.');
         }
 
@@ -232,13 +232,14 @@ class InboundController extends Controller
 
             $item = ItemMasterData::branch(session('branch_code'))->productCode($product->code)->first();
 
-            $stocks = $item->stocks ?? 0;
+            if ($item) {
 
-            if ($stocks != 0) {
+                if ($item->availableStocks != 0) {
 
-                $t = ['code' => $product->code, 'price' => $product->price, 'unit' => "0", 'qty' => $stocks];
+                    $t = ['code' => $product->code, 'price' => $product->price, 'unit' => "0", 'qty' => $item->availableStocks];
 
-                array_push($products, $t);
+                    array_push($products, $t);
+                }
             }
         }
 
@@ -247,19 +248,25 @@ class InboundController extends Controller
 
     // ajax inbound products
     // per product na ito ha, ito na yung table ng product, yung may details
+    // adding, editing tayo ng order dito
     public function ajaxInboundList($code, $qty = 1, $pid)
     {
-        if(!session()->has('pricelevelId')){
+        if (!session()->has('pricelevelId')) {
             session()->put('pricelevelId', $pid);
         }
+
 
         $products = InboundProductsService::getInboundProducts();
         $summary = [];
 
         $product = Product::where('code', $code)->first();
         $price = prices::where('p_code', $code)->where('pricelevel_id', $pid)->first();
+        if ($price == null) {
+            return response()->json(['error' => 'Price not found.']);
+        }
 
-        // get the first two characters of the product type code
+        $item = ItemMasterData::branch(session('branch_code'))->productCode($code)->first();
+
         $sequence_no = ProductType::code($product->product_type_code)->pluck('sequence_no')->first();
 
 
@@ -269,6 +276,12 @@ class InboundController extends Controller
         $isExist = false;
 
         $inProdService = new InboundProductsService($products);
+        $currentProduct = $inProdService->getCurrentQty($code);
+
+        if (($currentProduct + $qty) > $item->availableStocks) {
+            return response()->json(['error' => 'Insufficient stocks.']);
+        }
+
 
         try {
             $products = $inProdService->addQty($code, $qty);
@@ -337,13 +350,13 @@ class InboundController extends Controller
         $inbound->user_id = auth()->user()->id;
         $inbound->branch_code = session('branch_code');
         $inbound->equipment_id = $equipStore->equipment->id;
+        $inbound->store_id = $equipStore->store_id;
         $inbound->driver_id = $request->driver_id;
         $inbound->vehicle_id = $request->vehicle_id;
         $inbound->products = json_encode($products);
         $inbound->status = 'Completed';
         $inbound->pricelevel_id = $request->pricelevel_id;
         $inbound->customer_id = $request->customer_id;
-        $inbound->store_id = EquipmentStore::find($request->equipment_id)->store_id;
         $inbound->status = 'Completed';
 
         $inbound->degic_no = $equipStore->equipment->code;
@@ -405,6 +418,13 @@ class InboundController extends Controller
         }
 
         $inboundService = new InboundProductsService($products);
+        $currentProduct = $inboundService->getCurrentQty($code);
+
+        $item = ItemMasterData::branch(session('branch_code'))->productCode($code)->first();
+        if($action == 'add' && ($currentProduct + 1) > $item->availableStocks){
+            return response()->json(['error' => 'Insufficient stocks.']);
+        }
+
 
         if ($action == 'add') {
             try {
@@ -487,13 +507,12 @@ class InboundController extends Controller
 
         $productTypes = ProductType::where('is_active', 1)->orderBy('sequence_no', 'asc')->get();
 
-        // check if inbound has products
         $inboundList = [];
         $summary = [];
 
         if ($products) {
             $inboundList = json_decode($products, true);
-            if($inboundList == null){
+            if ($inboundList == null) {
                 $inboundList = [];
             }
 
@@ -509,7 +528,8 @@ class InboundController extends Controller
         return view('ordering-edit', compact('inbound', 'inboundId', 'equipment', 'drivers', 'vehicles', 'pricing', 'productTypes', 'inboundList', 'summary'));
     }
 
-    public function updateInbound(Request $request){
+    public function updateInbound(Request $request)
+    {
 
         $request->validate([
             'inbound_id' => 'required|exists:inbounds,id',
@@ -522,9 +542,13 @@ class InboundController extends Controller
             'bo_amount' => 'nullable',
         ]);
 
-        $equipStore =  EquipmentStore::find($request->equipment_id)->store_id;
+        $equipStore =  EquipmentStore::where('equipment_id', $request->equipment_id)->where('customer_id', $request->customer_id)->first();
+        if ($equipStore == null) {
+            return back()->withErrors('Equipment not found.');
+        }
+
         $inbound = Inbound::find($request->inbound_id);
-        $inbound->equipment_id = $equipStore->equipment->id;
+        $inbound->equipment_id = $request->equipment_id;
         $inbound->driver_id = $request->driver_id;
         $inbound->vehicle_id = $request->vehicle_id;
         $inbound->pricelevel_id = $request->pricelevel_id;
@@ -534,7 +558,7 @@ class InboundController extends Controller
 
         $inbound->products = json_encode(session()->get('products'));
 
-        if($request->bad_order == 'on'){
+        if ($request->bad_order == 'on') {
             $inbound->bad_order_id = $request->bad_order_id;
             $inbound->bo_amount = $request->bo_amount;
         }
@@ -545,6 +569,5 @@ class InboundController extends Controller
         session()->forget('products');
 
         return redirect()->route('order.index')->with('success', 'Inbound has been updated.');
-
     }
 }

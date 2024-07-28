@@ -8,3 +8,9 @@ July 26 Updates
 1. Fixed   - See messenger July 25
 2. Update  - Auto generated numbers
 3. Fixed   - Show per branch equipment
+
+
+July 28 Notes
+1. Cheese has no pricing
+2. Equipment assigned to EFTO-CAG - although customer is EFTO-TAR (will add validation)
+3.

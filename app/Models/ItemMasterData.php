@@ -34,4 +34,11 @@ class ItemMasterData extends Model
         return $this->product->productType->name . ' ' . $this->product->productVariant->name;
     }
 
+    // create a function that returns the available stocks
+    // the available stocks is the difference between the stocks and the reserved stocks
+    public function getAvailableStocksAttribute()
+    {
+        return $this->stocks - $this->reserved;
+    }
+
 }
