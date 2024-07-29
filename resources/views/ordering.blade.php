@@ -344,6 +344,9 @@
 @endsection
 
 @section('custom_js')
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
     <script>
         document.getElementById("BOContainer").style.display = "none";
 
@@ -363,7 +366,7 @@
             });
         }
 
-        @if(session('branch_code') == 'EFTO-TAR')
+        @if (session('branch_code') == 'EFTO-TAR')
 
             document.getElementById('deliveryPerson').addEventListener('change', function() {
                 var driver = document.getElementById('deliveryPerson').value;
@@ -375,7 +378,6 @@
                     }
                 });
             });
-
         @endif
 
 
@@ -545,26 +547,21 @@
                 document.getElementById("inboundList").innerHTML = "";
                 return;
             } else {
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange = function() {
-                    try {
-                        var jsonRes = JSON.parse(this.responseText);
-                        if (jsonRes.error) {
-                            alert("Error adding product to order.");
-                            return;
+                axios.get(`/inboundin/${code}/${qty}/${priceLevelId}`)
+                    .then(response => {
+
+                        if (response.data.error) {
+                            throw new Error(response.data.error)
                         }
 
+                        document.getElementById("inboundList").innerHTML = response.data;
+                        return true;
 
-                    } catch (error) {
-                        if (this.readyState == 4 && this.status == 200) {
-                            document.getElementById("inboundList").innerHTML = this.responseText;
-                            return true;
-                        }
-                    }
 
-                };
-                xmlhttp.open("GET", "/inboundin/" + code + "/" + qty + "/" + priceLevelId, true);
-                xmlhttp.send();
+                    })
+                    .catch(error => {
+                        alert(error);
+                    });
             }
         }
 
@@ -602,29 +599,32 @@
         }
 
         function updateQty(productCode, action) {
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("orderProductSum").innerHTML = this.responseText;
-                    return true;
-                } else {
-                    try {
-                        var jsonRes = JSON.parse(this.responseText);
-                        if (jsonRes.error) {
-                            alert(jsonRes.error);
+            axios.get(`/inbound-updateProdQty/${productCode}/${action}`)
+                .then(response => {
 
-                            if (action == 'add')
-                                document.getElementById(productCode).value = parseInt(document.getElementById(
-                                    productCode).value) - 1;
-                            else if (action == 'min')
-                                document.getElementById(productCode).value = parseInt(document.getElementById(
-                                    productCode).value) + 1;
+                    if (response.data.error) {
+
+                        alert(response.data.error);
+
+                        if (action == 'add') {
+                            document.getElementById(productCode).value = parseInt(document.getElementById(
+                                productCode).value) - 1;
+                        } else if (action == 'min') {
+                            document.getElementById(productCode).value = parseInt(document.getElementById(
+                                productCode).value) + 1;
                         }
-                    } catch (error) {}
-                }
-            };
-            xmlhttp.open("GET", "/inbound-updateProdQty/" + productCode + "/" + action , true);
-            xmlhttp.send();
+
+                        return false;
+
+                    }
+
+
+                    document.getElementById("orderProductSum").innerHTML = response.data;
+                    return true;
+                })
+                .catch(error => {
+                    alert(error)
+                });
         }
 
         // on select pricelevel_id change
