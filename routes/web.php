@@ -169,7 +169,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/equipment/', [EquipmentController::class, 'update'])->name('equipment.update');
     Route::delete('/equipment/bulk-delete', [EquipmentController::class, 'bulkDelete'])->name('equipment.bulk-delete');
 
-    Route::get('/equipment-history/{eqsno}', [EquipmentHistoryController::class, 'equipmentHistory'])->name('equipment.history');
+    Route::get('/equipment-history/{dno}', [EquipmentHistoryController::class, 'equipmentHistory'])->name('equipment.history');
 
 
 

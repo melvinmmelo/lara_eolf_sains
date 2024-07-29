@@ -9,9 +9,9 @@ class EquipmentHistoryController extends Controller
 {
 
 
-    public function equipmentHistory(Request $request, $eqsnos)
+    public function equipmentHistory(Request $request, $dno)
     {
-        $equipments = EquipmentHistory::where('serial_no', $eqsnos)->get();
-        return view('equipment-history', compact('eqsnos','equipments'));
+        $equipments = EquipmentHistory::where('degic_no', $dno)->get();
+        return view('equipment-history', compact('dno','equipments'));
     }
 }
