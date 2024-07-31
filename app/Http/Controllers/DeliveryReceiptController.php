@@ -18,44 +18,38 @@ class DeliveryReceiptController extends Controller
     {
         $deliveryReceipt = DeliveryReceipt::findOrFail($id);
 
-        if($deliveryReceipt->printed_date != null){
-
-            activity('delivery-receipt')
-            ->performedOn($deliveryReceipt)
-                ->log('DR printed date already updated.');
-
-            return false;
-
-        }
-
         $inbound = Inbound::find($deliveryReceipt->inbound_id);
 
-        $products = json_decode($inbound->products);
 
-        foreach($products as $product){
+        if ($inbound->delivery_receipt_id == null or $inbound->delivery_receipt_id == 0) {
 
-            $item = ItemMasterData::branch(session('branch_code'))->productCode($product->code)->first();
+            $products = json_decode($inbound->products);
 
-            $item->reserved -= $product->quantity;
-            $item->stocks -= $product->quantity;
+            foreach ($products as $product) {
 
-            $item->save();
+                $item = ItemMasterData::branch(session('branch_code'))->productCode($product->code)->first();
 
+                $item->reserved = max(0, $item->reserved - $product->quantity);
+                $item->stocks = max(0, $item->stocks - $product->quantity);
+
+                $item->save();
+            }
+
+            $inbound->delivery_receipt_id = $id;
+            $inbound->save();
+
+            $deliveryReceipt->printed_date = now();
+
+            $deliveryReceipt->save();
+
+            activity('delivery-receipt')
+                ->performedOn($deliveryReceipt)
+                ->log('DR printed.');
+
+            return response()->json(['message' => 'Printed date updated.']);
+        } else {
+            return response()->json(['message' => 'Printed date already updated.']);
         }
-
-        $inbound->delivery_receipt_id = $id;
-        $inbound->save();
-
-        $deliveryReceipt->printed_date = now();
-
-        $deliveryReceipt->save();
-
-        activity('delivery-receipt')
-        ->performedOn($deliveryReceipt)
-            ->log('DR printed.');
-
-        return response()->json(['message' => 'Printed date updated.']);
-
     }
 
     public function index(Request $request)
@@ -72,7 +66,7 @@ class DeliveryReceiptController extends Controller
                 ->whereHas('inbound', function ($query) {
                     $query->where('branch_code', session('branch_code'));
                 });
-        }else{
+        } else {
             $query->whereNull('printed_date')->whereHas('inbound', function ($query) {
                 $query->where('branch_code', session('branch_code'));
             });
@@ -147,7 +141,6 @@ class DeliveryReceiptController extends Controller
 
         if ($products == null) {
             $products = [];
-
         } else {
 
             foreach ($products as $product) {
@@ -162,7 +155,7 @@ class DeliveryReceiptController extends Controller
         $inbound->delivery_receipt_id = $deliveryReceipt->id;
 
         activity('delivery-receipt')
-        ->performedOn($deliveryReceipt)
+            ->performedOn($deliveryReceipt)
             ->log('DR created.');
 
         return redirect()->route('drprint', ['id' => $deliveryReceipt->id]);

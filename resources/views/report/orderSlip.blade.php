@@ -57,6 +57,7 @@
 
 
                         @php
+                            // var_dump($inbounds[$j]);
                             $orderedProducts = json_decode($inbounds[$j]->products, true);
                         @endphp
 
@@ -101,7 +102,7 @@
                                 $summary = getSummaryOfProducts($orderedProducts);
                             @endphp
 
-                            @if ($totalProducts <= 20)
+                            @if ($totalProducts <= 22)
                                 <div class="text-sm">Total Quantiy for Checking </div>
 
                                 @foreach ($summary as $key => $value)
@@ -113,7 +114,7 @@
                             @endif
                         </div>
 
-                        @if ($totalProducts > 20)
+                        @if ($totalProducts > 22)
                             <div class="w-32">
                                 <div class="text-sm">Total Quantiy for Checking </div>
                                 @foreach ($summary as $key => $value)
@@ -202,7 +203,13 @@
         </page>
 
         @php
-            $deno = $deno + $deno - 3;
+            $newDeno = $deno + $deno;
+
+            if($newDeno >= $totalInbounds) {
+                $deno = $totalInbounds - $remainder;
+            } else {
+                $deno = $newDeno;
+            }
         @endphp
 
     @endfor

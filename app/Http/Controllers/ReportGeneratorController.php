@@ -20,11 +20,12 @@ class ReportGeneratorController extends Controller
         $j = 0; // counter of the inbounds
         $deno = 7;
         $totalPages = 1;
-        $reminder = 0;
+        $remainder = 0;
 
         if($totalInbounds > $deno){
             $totalPages = ceil($totalInbounds / $deno);
-            $reminder = $totalInbounds % $deno;
+            $remainder = $totalInbounds % $deno;
+            // dd("total pages: " . $totalPages);
         }
 
         if($totalPages === 1){
@@ -40,11 +41,11 @@ class ReportGeneratorController extends Controller
         }
 
         // dd($inbounds[0]);
-        // dd($reminder);
+        // dd($remainder);
         // dd($totalPages);
         // dd($totalInbounds);
 
 
-        return view('report.orderSlip', compact('inbounds', 'code', 'orderSlip', 'grandTotal', 'totalInbounds', 'totalPages', 'deno', 'reminder', 'j'));
+        return view('report.orderSlip', compact('inbounds', 'code', 'orderSlip', 'grandTotal', 'totalInbounds', 'totalPages', 'deno', 'remainder', 'j'));
     }
 }
