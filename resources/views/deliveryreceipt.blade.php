@@ -170,6 +170,19 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="form-label" for="discount">Discount</label>
+                                        <input type="number" class="form-control" name="discount" value="0" required>
+                                        {{-- Add check if fixed amount --}}
+                                        <input type="checkbox" name="is_fixed_amount" value="1"> Fixed Amount
+                                    </div>
+                                </div>
+                            </div>
+
+
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">

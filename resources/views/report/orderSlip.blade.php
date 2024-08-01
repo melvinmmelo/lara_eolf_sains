@@ -30,6 +30,12 @@
 <body>
 
     @for ($i = 1; $i <= $totalPages; $i++)
+
+        @php
+            if ($i == $totalPages) {
+                $deno = $totalInbounds;
+            }
+        @endphp
         <page class="text-md" size="legal" layout="landscape">
 
             <div class="flex mt-5">
@@ -54,10 +60,9 @@
                 <div class="flex flex-row flex-wrap h-[75%] justify-start">
 
                     @for ($y = $j; $y < $deno; $y++)
-
-
                         @php
-                            // var_dump($inbounds[$j]);
+
+                            $continuePrnProducts = false;
                             $orderedProducts = json_decode($inbounds[$j]->products, true);
                         @endphp
 
@@ -66,11 +71,11 @@
                                 <div class="flex">
                                     <p class="w-1/2 text-sm">Total</p>
                                     <div class="text-sm font-bold">
-                                        {{ formatNumber(getTotalOfProducts($orderedProducts)) }}</div>
+                                        {{ formatNumber($inbounds[$j]->totalAmount) }}</div>
                                 </div>
 
                                 <div class="flex">
-                                    <div class="w-1/2 text-sm">Sequence No.</div>
+                                    <div class="w-1/2 text-sm">Seq. No.</div>
                                     <div class="text-sm font-bold">{{ $inbounds[$j]->order_slip_sno }}</div>
                                 </div>
 
@@ -89,16 +94,35 @@
                                     <div class="text-sm">Quantity</div>
                                 </div>
 
-                                @foreach ($orderedProducts as $product)
-                                    <div class="flex">
-                                        <div class="w-1/2 text-sm font-bold">{{ $product['code'] }}</div>
-                                        <div class="text-sm font-bold">{{ $product['quantity'] }}</div>
-                                    </div>
-                                @endforeach
+                                @php
+                                    $totalProducts = count($orderedProducts);
+                                    $totalProductsThatCanBeDivided = $totalProducts / 22;
+                                @endphp
+
+                                @if ($totalProducts > 22)
+                                    @php
+                                        $continuePrnProducts = true;
+                                        $slicedOrderedProducts = array_slice($orderedProducts, 0, 22);
+
+                                    @endphp
+
+                                    @foreach ($slicedOrderedProducts as $product)
+                                        <div class="flex">
+                                            <div class="w-1/2 text-sm font-bold">{{ $product['code'] }}</div>
+                                            <div class="text-sm font-bold">{{ $product['quantity'] }}</div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    @foreach ($orderedProducts as $product)
+                                        <div class="flex">
+                                            <div class="w-1/2 text-sm font-bold">{{ $product['code'] }}</div>
+                                            <div class="text-sm font-bold">{{ $product['quantity'] }}</div>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
 
                             @php
-                                $totalProducts = count($orderedProducts);
                                 $summary = getSummaryOfProducts($orderedProducts);
                             @endphp
 
@@ -114,16 +138,80 @@
                             @endif
                         </div>
 
-                        @if ($totalProducts > 22)
-                            <div class="w-32">
-                                <div class="text-sm">Total Quantiy for Checking </div>
-                                @foreach ($summary as $key => $value)
-                                    <div class="flex">
-                                        <div class="w-1/2 text-sm font-bold">{{ $key }}</div>
-                                        <div class="text-sm font-bold">{{ $value['total'] }}</div>
+                        @if ($continuePrnProducts)
+                            @php
+                                // get orderedProducts starting from 22 to end
+                                $slicedOrderedProducts = array_slice($orderedProducts, 22);
+                                if (count($slicedOrderedProducts) > 22) {
+                                    // echo "totalsliced" . count($slicedOrderedProducts);
+
+                                    $slicedOrderedProducts = array_slice($orderedProducts, 22, 44);
+                                    $continuePrnProducts = true;
+                                } else {
+                                    $continuePrnProducts = false;
+                                }
+                            @endphp'
+
+
+                            @if ($continuePrnProducts === false)
+                                <div class="w-32">
+
+                                    <div class="border-r-2 border-l-2 border-b-2 border-black">
+                                        @foreach ($slicedOrderedProducts as $product)
+                                            <div class="flex">
+                                                <div class="w-1/2 text-sm font-bold">{{ $product['code'] }}</div>
+                                                <div class="text-sm font-bold">{{ $product['quantity'] }}</div>
+                                            </div>
+                                        @endforeach
                                     </div>
-                                @endforeach
-                            </div>
+
+                                    <div class="text-sm">Total Quantiy for Checking </div>
+
+
+                                    @foreach ($summary as $key => $value)
+                                        <div class="flex">
+                                            <div class="w-1/2 text-sm font-bold">{{ $key }}</div>
+                                            <div class="text-sm font-bold">{{ $value['total'] }}</div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <div class="w-32 border-r-2 border-l-2 border-b-2 border-black">
+
+                                    @foreach ($slicedOrderedProducts as $product)
+                                        <div class="flex">
+                                            <div class="w-1/2 text-sm font-bold">{{ $product['code'] }}</div>
+                                            <div class="text-sm font-bold">{{ $product['quantity'] }}</div>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                @php $slicedOrderedProducts = array_slice($orderedProducts, 44); @endphp
+                            @endif
+
+                            @if ($totalProducts > 44)
+                                <div class="w-32">
+
+                                    <div class="border-r-2 border-l-2 border-b-2 border-black">
+                                        @foreach ($slicedOrderedProducts as $product)
+                                            <div class="flex">
+                                                <div class="w-1/2 text-sm font-bold">{{ $product['code'] }}</div>
+                                                <div class="text-sm font-bold">{{ $product['quantity'] }}</div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                    <div class="text-sm">Total Quantiy for Checking </div>
+
+
+                                    @foreach ($summary as $key => $value)
+                                        <div class="flex">
+                                            <div class="w-1/2 text-sm font-bold">{{ $key }}</div>
+                                            <div class="text-sm font-bold">{{ $value['total'] }}</div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
                         @endif
 
                         @php $j++; @endphp
@@ -205,8 +293,8 @@
         @php
             $newDeno = $deno + $deno;
 
-            if($newDeno >= $totalInbounds) {
-                $deno = $totalInbounds - $remainder;
+            if ($newDeno >= $totalInbounds) {
+                $deno = $totalInbounds - 1;
             } else {
                 $deno = $newDeno;
             }

@@ -116,7 +116,7 @@ class Inbound extends Model
         foreach ($products as $product) {
             $total += $product['quantity'] * $product['price'];
         }
-        return $total - $this->bo_amount;
+        return $total - ($this->bo_amount+$this->discount);
     }
 
 }

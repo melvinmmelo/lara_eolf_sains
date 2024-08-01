@@ -109,7 +109,10 @@ class DeliveryReceiptController extends Controller
             'date' => 'required|date',
             'inbound_id' => 'required|string',
             'generated_by' => 'required|string',
+            'discount' => 'required|numeric',
+            'is_fixed_amount' => 'nullable'
         ]);
+
 
         $inbound = Inbound::findOrFail($request->inbound_id);
 
@@ -153,6 +156,21 @@ class DeliveryReceiptController extends Controller
         }
 
         $inbound->delivery_receipt_id = $deliveryReceipt->id;
+
+        if($request->is_fixed_amount && $request->is_fixed_amount == "1"){
+            $discount_type = 'Php ' . $request->discount;
+            $totalDiscount = $request->discount;
+        }else{
+            $discount_type = $request->discount . '%';
+            $totalDiscount = $totalOfOutbound * ($request->discount / 100);
+        }
+
+        if($request->discount != 0){
+            $inbound->discount_details = $discount_type;
+            $inbound->discount = $totalDiscount;
+        }
+
+        $inbound->save();
 
         activity('delivery-receipt')
             ->performedOn($deliveryReceipt)

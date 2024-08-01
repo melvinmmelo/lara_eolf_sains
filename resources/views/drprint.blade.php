@@ -131,9 +131,9 @@
                                 Less BO:
                                 {{ formatNumber($deliveryReceipt->bad_orders) }} <br>
                                 Discount (%):
-                                {{ formatNumber($deliveryReceipt->discount) }} <br>
+                                {{ formatNumber($inbound->discount) }} <br>
                                 Total Amount:
-                                {{ formatNumber($deliveryReceipt->total_amount - $deliveryReceipt->bad_orders) }} <br>
+                                {{ formatNumber($inbound->totalAmount) }} <br>
                         </div>
                         <br><br><br>
                         --------------------------------- &nbsp;&nbsp;&nbsp; -------------------- <br>
@@ -220,10 +220,10 @@
             mywindow.document.write(
                 'Less BO: {{ formatNumber($deliveryReceipt->bad_orders) }} <br>');
             mywindow.document.write(
-                'Discount (%): {{ formatNumber($deliveryReceipt->discount) }} <br>'
+                'Discount (%): {{ formatNumber($inbound->discount) }} <br>'
             );
             mywindow.document.write(
-                'Total Amount: {{ formatNumber($deliveryReceipt->total_amount - $deliveryReceipt->bad_orders) }} <br>'
+                'Total Amount: {{ formatNumber($inbound->totalAmount) }} <br>'
             );
             mywindow.document.write('</table>');
             mywindow.document.write('<br><br><br>');

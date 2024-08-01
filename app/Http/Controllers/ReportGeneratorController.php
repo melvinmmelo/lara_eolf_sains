@@ -16,6 +16,7 @@ class ReportGeneratorController extends Controller
         $orderSlip = OrderSlip::where('code', $code)->first();
         $inbounds = Inbound::where('order_slip_code', $code)->get();
         $totalInbounds = count($inbounds);
+        $totalFitProducts = 22;
 
         $j = 0; // counter of the inbounds
         $deno = 7;
@@ -37,8 +38,9 @@ class ReportGeneratorController extends Controller
         // iterate through the products and get the total quantity and price
         foreach ($inbounds as $inbound) {
             $products = json_decode($inbound->products, true);
-            $grandTotal += getTotalOfProducts($products);
+            $grandTotal += $inbound->totalAmount;
         }
+
 
         // dd($inbounds[0]);
         // dd($remainder);
@@ -46,6 +48,6 @@ class ReportGeneratorController extends Controller
         // dd($totalInbounds);
 
 
-        return view('report.orderSlip', compact('inbounds', 'code', 'orderSlip', 'grandTotal', 'totalInbounds', 'totalPages', 'deno', 'remainder', 'j'));
+        return view('report.orderSlip', compact('inbounds', 'code', 'orderSlip', 'grandTotal', 'totalInbounds', 'totalPages', 'deno', 'remainder', 'j', 'totalFitProducts'));
     }
 }

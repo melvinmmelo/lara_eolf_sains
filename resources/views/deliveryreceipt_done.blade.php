@@ -87,8 +87,8 @@
                                 <td>{{ formatNumber($receipt->balance) }}</td>
                                 <td>{{ $receipt->generated_by }}</td>
                                 <td>
-                                    {{-- <a href="{{ route('drprint', ['id' => $receipt->id]) }}"><button type="button"
-                                            class="btn btn-primary">Print</button></a> --}}
+                                    <a href="{{ route('drprint', ['id' => $receipt->id]) }}"><button type="button"
+                                            class="btn btn-primary">Print</button></a>
                                 </td>
                             </tr>
                         @endforeach
