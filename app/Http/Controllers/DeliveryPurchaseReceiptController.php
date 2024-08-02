@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DeliveryPurchaseReceipt;
 use App\Http\Requests\StoreDeliveryPurchaseReceiptRequest;
 use App\Http\Requests\UpdateDeliveryPurchaseReceiptRequest;
+use App\Models\ItemMasterData;
 use App\Models\prices;
 use App\Models\Product;
 use App\Models\ProductType;
@@ -14,12 +15,13 @@ use Illuminate\Http\Request;
 class DeliveryPurchaseReceiptController extends Controller
 {
 
-    public function saveAndInventoryProduct(int $dprId){
+    public function saveAndInventoryProduct(int $dprId)
+    {
         $dpr = DeliveryPurchaseReceipt::findOrFail($dprId);
 
         $dpr->status = 'Completed';
 
-        if($dpr->save()){
+        if ($dpr->save()) {
             $dprService = new DPRService($dpr->products);
             $dprService->saveAndInventoryProducts();
         }
@@ -33,7 +35,6 @@ class DeliveryPurchaseReceiptController extends Controller
 
 
         return redirect()->route('delivery-purchase-receipts.index')->with('success', 'Delivery Receipt saved successfully.');
-
     }
 
     public function storeProduct(Request $request)
@@ -51,7 +52,7 @@ class DeliveryPurchaseReceiptController extends Controller
 
         $productPrice = prices::getFactoryPrice($request->product_code);
 
-        if(!$productPrice){
+        if (!$productPrice) {
             return redirect()->back()->withErrors('Price not found.');
         }
 
@@ -60,8 +61,7 @@ class DeliveryPurchaseReceiptController extends Controller
         $sequence_no = ProductType::code($product->product_type_code)->pluck('sequence_no')->first();
 
 
-        $newProduct = ['order' => $sequence_no, 'code' => $request->product_code, 'description' => $product->productName ,'quantity' => $request->qty, 'unit' => $productPrice->p_unit, 'price' => $productPrice->p_price, 'hold' => '0', 'created_at' => now()];
-
+        $newProduct = ['order' => $sequence_no, 'code' => $request->product_code, 'description' => $product->productName, 'quantity' => $request->qty, 'unit' => $productPrice->p_unit, 'price' => $productPrice->p_price, 'hold' => '0', 'created_at' => now(), 'updated_at' => ''];
 
         $dprService = new DPRService($dpr->products);
 
@@ -86,16 +86,33 @@ class DeliveryPurchaseReceiptController extends Controller
         $deliveryPurchaseReceipt = DeliveryPurchaseReceipt::findOrFail($dprId);
         // dd($deliveryPurchaseReceipt);
 
-        if( strtolower($deliveryPurchaseReceipt->status) == 'completed'){
+        if (strtolower($deliveryPurchaseReceipt->status) == 'completed') {
             // return redirect()->back()->with('error', 'Delivery receipt already saved.');
         }
 
         $originalProducts = Product::all();
-        $originalProducts = $originalProducts->sortBy(function($product){
+        $originalProducts = $originalProducts->sortBy(function ($product) {
             return ProductType::code($product->product_type_code)->pluck('sequence_no')->first();
         });
 
         return view('delivery-purchase-receipts.products', compact('deliveryPurchaseReceipt', 'originalProducts'));
+    }
+
+    public function productsEdit(int $dprId)
+    {
+        $deliveryPurchaseReceipt = DeliveryPurchaseReceipt::findOrFail($dprId);
+        // dd($deliveryPurchaseReceipt);
+
+        if (strtolower($deliveryPurchaseReceipt->status) == 'completed') {
+            // return redirect()->back()->with('error', 'Delivery receipt already saved.');
+        }
+
+        $originalProducts = Product::all();
+        $originalProducts = $originalProducts->sortBy(function ($product) {
+            return ProductType::code($product->product_type_code)->pluck('sequence_no')->first();
+        });
+
+        return view('delivery-purchase-receipts.products-edit', compact('deliveryPurchaseReceipt', 'originalProducts'));
     }
 
 
@@ -127,7 +144,7 @@ class DeliveryPurchaseReceiptController extends Controller
             ->performedOn($dpr)
             ->log('Inbound created.');
 
-        return redirect()->route('drp.products', [ 'dprId' => $dpr->id  ])->with('success', 'Delivery Receipt created successfully.');
+        return redirect()->route('drp.products', ['dprId' => $dpr->id])->with('success', 'Delivery Receipt created successfully.');
     }
 
     /**
@@ -148,10 +165,81 @@ class DeliveryPurchaseReceiptController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * Realtime update in item master data
      */
-    public function update(UpdateDeliveryPurchaseReceiptRequest $request, DeliveryPurchaseReceipt $deliveryPurchaseReceipt)
+    public function update(Request $request)
     {
-        //
+
+        $dpr = DeliveryPurchaseReceipt::findOrFail($request->dprId);
+
+        if (!$dpr) {
+            return redirect()->back()->withErrors('Item not found.');
+        }
+
+        $dprService = new DPRService($dpr->products);
+
+        $product = $dprService->getProduct($request->code);
+
+        $item = ItemMasterData::branch(session('branch_code'))->productCode($request->code)->first();
+
+        if (!$item) {
+            return back()->withErrors('Error processing your request: No item found in master data.');
+        }
+
+        if ($request->action == 'delete') {
+            $newQuantity = $item->stocks - $product['quantity'];
+            if ($newQuantity < 0) {
+                return back()->withErrors('Error processing your request.');
+            }
+
+            $dprService->deleteProduct($request->code);
+            $dpr->products = $dprService->getNewProducts();
+        }
+
+        if ($request->action == 'add') {
+
+            $newQuantity = $item->stocks + ($request->quantity);
+
+            if (!$product) { // if not existing in products
+
+                $productPrice = prices::getFactoryPrice($request->code);
+
+                if (!$productPrice) {
+                    return redirect()->back()->withErrors('Price not found.');
+                }
+
+                $product = Product::productCode($request->code)->first();
+
+                $sequence_no = ProductType::code($product->product_type_code)->pluck('sequence_no')->first();
+
+                $newProduct = ['order' => $sequence_no, 'code' => $request->code, 'description' => $product->productName, 'quantity' => $request->quantity, 'unit' => $productPrice->p_unit, 'price' => $productPrice->p_price, 'hold' => '0', 'created_at' => now(), 'updated_at' => ''];
+
+                $dprService->addProduct($newProduct);
+
+
+            }else{ // update only the quantity and updated at
+
+                $dprService->addProduct($product);
+
+            }
+
+            $dpr->products = $dprService->getNewProducts();
+
+
+        }
+
+        $dpr->save();
+
+
+        $item->stocks = $newQuantity;
+
+        $item->save();
+
+        if (!$item) {
+            return redirect()->back()->withErrors('Item not found.');
+        }
+
+        return redirect()->back()->with('success', 'Item updated successfully.');
     }
 
     /**
@@ -192,7 +280,7 @@ class DeliveryPurchaseReceiptController extends Controller
 
         $products = $dprService->holdProduct($request->hold_pcode, $request->hold_qty);
 
-        if(!$products){
+        if (!$products) {
             return redirect()->back()->withErrors('There is no enough quantity to hold.');
         }
 

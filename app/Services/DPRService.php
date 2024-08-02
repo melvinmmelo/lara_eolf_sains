@@ -42,6 +42,7 @@ class DPRService extends Model
             foreach ($this->products as $key => $value) {
                 if ($value['code'] == $newProduct['code']) {
                     $this->products[$key]['quantity'] += $newProduct['quantity'];
+                    $this->products[$key]['updated_at'] = now();
                     $exist = true;
                 }
             }
@@ -124,6 +125,18 @@ class DPRService extends Model
 
                 // update the product hold to 0
                 $this->holdProduct($value['code'], 0);
+            }
+        }
+    }
+
+    // return specific product
+    public function getProduct($productCode)
+    {
+        if ($this->products) {
+            foreach ($this->products as $key => $value) {
+                if ($value['code'] == $productCode) {
+                    return $value;
+                }
             }
         }
     }

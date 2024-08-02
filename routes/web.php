@@ -112,6 +112,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dpr-products/{dprId}', [DeliveryPurchaseReceiptController::class, 'products'])->name('drp.products');
 
+    Route::get('/dpr-products-edit-live/{dprId}', [DeliveryPurchaseReceiptController::class, 'productsEdit'])->name('drp.products-edit');
+
+    Route::get('/dpr-submit-live-edit', [DeliveryPurchaseReceiptController::class, 'update'])->name('drp.products-update');
+
+
+
     Route::post('/dpr-product/store', [DeliveryPurchaseReceiptController::class, 'storeProduct'])->name('dpr-product.store');
 
     Route::get('/dpr-save/{id}', [DeliveryPurchaseReceiptController::class, 'saveAndInventoryProduct'])->name('dpr.save');
