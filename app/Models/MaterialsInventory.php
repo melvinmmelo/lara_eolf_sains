@@ -23,4 +23,9 @@ class MaterialsInventory extends Model
         'withdrawal_date',
         'withdrawal_code',
     ];
+
+    public function scopeBranchCode($query, $branch_code)
+    {
+        return $query->where('branch_code', $branch_code);
+    }
 }

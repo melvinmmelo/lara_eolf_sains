@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('materials_inventories', function (Blueprint $table) {
             $table->id();
-            $table->string('branch_code', 15);
+            $table->string('branch_code');
             $table->string('name');
             $table->string('unit')->nullable();
             $table->integer('quantity')->nullable();

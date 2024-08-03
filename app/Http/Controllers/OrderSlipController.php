@@ -12,7 +12,7 @@ class OrderSlipController extends Controller
 {
     public function index()
     {
-        $orderSlips = OrderSlip::all();
+        $orderSlips = OrderSlip::branchCode(session('branch_code'))->get();
         return view('orderslip.index', compact('orderSlips'));
     }
 

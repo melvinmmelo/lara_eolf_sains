@@ -53,9 +53,11 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php $grandTotal = []; @endphp
                             @foreach ($inbounds as $inbound)
                                 @php
                                     $total = $inbound->totalAmount;
+                                    $grandTotal[] = $total;
                                 @endphp
 
                                 <tr>
@@ -92,15 +94,15 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>Date created</th>
-                                <th>Order No.</th>
-                                <th>Degic No.</th>
-                                <th>Customer</th>
-                                <th>Invoice Amount</th>
-                                <th>Balance Due</th>
-                                <th>Status</th>
-                                <th>W/ SI</th>
-                                <th>Days Overdue</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>Total:</th>
+                                <th>@php echo formatNumber(array_sum($grandTotal)) @endphp</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                                 <th></th>
                             </tr>
                         </tfoot>

@@ -12,6 +12,7 @@ class CreateDeliveryReceiptsTable extends Migration
     {
         Schema::create('delivery_receipts', function (Blueprint $table) {
             $table->id();
+            $table->string('branch_code');
             $table->date('date');
             $table->unsignedInteger('inbound_id');
             $table->string('customer_name');
@@ -26,6 +27,7 @@ class CreateDeliveryReceiptsTable extends Migration
             $table->timestamps();
 
             $table->index('inbound_id');
+            $table->index('branch_code');
 
         });
     }

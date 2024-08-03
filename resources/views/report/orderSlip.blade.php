@@ -35,6 +35,7 @@
             if ($i == $totalPages) {
                 $deno = $totalInbounds;
             }
+
         @endphp
         <page class="text-md" size="legal" layout="landscape">
 
@@ -99,10 +100,10 @@
                                     $totalProductsThatCanBeDivided = $totalProducts / 22;
                                 @endphp
 
-                                @if ($totalProducts > 22)
+                                @if ($totalProducts > 23)
                                     @php
                                         $continuePrnProducts = true;
-                                        $slicedOrderedProducts = array_slice($orderedProducts, 0, 22);
+                                        $slicedOrderedProducts = array_slice($orderedProducts, 0, 23);
 
                                     @endphp
 
@@ -126,7 +127,7 @@
                                 $summary = getSummaryOfProducts($orderedProducts);
                             @endphp
 
-                            @if ($totalProducts <= 22)
+                            @if ($totalProducts <= 23)
                                 <div class="text-sm">Total Quantiy for Checking </div>
 
                                 @foreach ($summary as $key => $value)
@@ -145,7 +146,7 @@
                                 if (count($slicedOrderedProducts) > 22) {
                                     // echo "totalsliced" . count($slicedOrderedProducts);
 
-                                    $slicedOrderedProducts = array_slice($orderedProducts, 22, 44);
+                                    $slicedOrderedProducts = array_slice($orderedProducts, 23, 44);
                                     $continuePrnProducts = true;
                                 } else {
                                     $continuePrnProducts = false;

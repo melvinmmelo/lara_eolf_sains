@@ -116,6 +116,12 @@ class DeliveryReceiptController extends Controller
 
         $inbound = Inbound::findOrFail($request->inbound_id);
 
+        $validatedData['branch_code'] = session('branch_code');
+
+        if(empty(session('branch_code'))){
+            return redirect()->route('deliveryreceipt.index')->withErrors('Branch code not found.');
+        }
+
         if ($inbound->products == null) {
             return redirect()->route('deliveryreceipt.index')->withErrors('No products found.');
         }

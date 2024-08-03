@@ -29,3 +29,9 @@ Jul 29 to Aug. 2 Updates
 * Tested multiple entry of products in outbound
 * Tested inbound and item master data
 * All updates will be reflected in all branches.
+
+
+Aug 3 Updates.
+1. Added    - Total in orders and dr table
+2. Update   - Filter materials and order slips per branch
+3. Update   - Enhancement in order slip report

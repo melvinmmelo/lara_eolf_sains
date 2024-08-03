@@ -13,7 +13,7 @@ class MaterialsInventoryController extends Controller
     //
     public function index()
     {
-        $materials = MaterialsInventory::all();
+        $materials = MaterialsInventory::branchCode(session('branch_code'))->get();
         return view('materials-inventory.index', compact('materials'));
     }
 
