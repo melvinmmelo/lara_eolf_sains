@@ -50,7 +50,9 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                        @php
+                            $grandTotal = [];
+                        @endphp
                         @foreach ($deliveryPurchaseReceipts as $dr)
                             @php
                                 $total = 0;
@@ -60,6 +62,8 @@
                                         $total += $product['quantity'] * $product['price'];
                                     }
                                 }
+
+                                $grandTotal[] = $total;
                             @endphp
                             <tr>
                                 <td>{{ $dr->dr_no }}</td>
@@ -92,11 +96,11 @@
 
                     <tfoot>
                         <tr>
-                            <th>DR No.</th>
-                            <th>Issue Date</th>
-                            <th>Status</th>
-                            <th>Total</th>
-                            <th>Date</th>
+                            <th></th>
+                            <th>Total:</th>
+                            <th>@php echo formatNumber(array_sum($grandTotal)) @endphp</th>
+                            <th></th>
+                            <th></th>
                             <th></th>
                         </tr>
                     </tfoot>

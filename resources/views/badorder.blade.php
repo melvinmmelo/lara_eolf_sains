@@ -40,6 +40,8 @@
                         </tr>
                     </thead>
                     <tbody>
+
+                        @php $grandTotal = []; @endphp
                         @foreach ($badOrders as $badOrder)
                             <tr>
                                 <td>
@@ -68,12 +70,12 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>Customer</th>
-                            <th>BO %</th>
-                            <th>Total Amount</th>
-                            <th>Remarks</th>
-                            <th>Created Date</th>
-                            <th>Action</th>
+                            <th></th>
+                            <th>Total:</th>
+                            <th>{{  formatNumber(array_sum($grandTotal)) }}</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </tfoot>
                 </table>

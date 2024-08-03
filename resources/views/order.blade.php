@@ -53,11 +53,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $grandTotal = []; @endphp
+                            @php $grandTotal = []; $grandTotalBDue = []; @endphp
                             @foreach ($inbounds as $inbound)
                                 @php
                                     $total = $inbound->totalAmount;
                                     $grandTotal[] = $total;
+                                    $grandTotalBDue[] = $total - $inbound->delivered_amount;
                                 @endphp
 
                                 <tr>
@@ -97,9 +98,9 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
-                                <th></th>
                                 <th>Total:</th>
                                 <th>@php echo formatNumber(array_sum($grandTotal)) @endphp</th>
+                                <th>@php echo formatNumber(array_sum($grandTotalBDue)) @endphp</th>
                                 <th></th>
                                 <th></th>
                                 <th></th>

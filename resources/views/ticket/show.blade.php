@@ -53,9 +53,15 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $grandTotal = [];
+                                    $grandTotalBDue = [];
+                                @endphp
                                 @foreach ($inbounds as $inbound)
                                     @php
                                         $total = $inbound->totalAmount;
+                                        $grandTotal[] = $total;
+                                        $grandTotalBDue[] = $total - $inbound->delivered_amount;
                                     @endphp
 
                                     <tr>
@@ -74,17 +80,17 @@
                                 @endforeach
                             </tbody>
                             <tfoot>
-                                <tr>
+                               <tr>
                                     <th></th>
-                                    <th>Date created</th>
-                                    <th>Order No.</th>
-                                    <th>Degic No.</th>
-                                    <th>Customer</th>
-                                    <th>Invoice Amount</th>
-                                    <th>Balance Due</th>
-                                    <th>Status</th>
-                                    <th>Days Overdue</th>
-                                </tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Total:</th>
+                                    <th>{{ formatNumber(array_sum($grandTotal)) }}</th>
+                                    <th>{{ formatNumber(array_sum($grandTotalBDue)) }}</th>
+                                    <th></th>
+                                    <th></th>
+                               </tr>
                             </tfoot>
                         </table>
                     </div>

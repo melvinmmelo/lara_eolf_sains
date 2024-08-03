@@ -68,9 +68,15 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $grandTotal = [];
+                                    $grandTotalBDue = [];
+                                @endphp
                                 @foreach ($inbounds as $inbound)
                                     @php
                                         $total = $inbound->totalAmount;
+                                        $grandTotal[] = $total;
+                                        $grandTotalBDue[] = $total - $inbound->delivered_amount;
                                     @endphp
 
                                     <tr>
@@ -91,6 +97,22 @@
                                     </tr>
                                 @endforeach
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Total:</th>
+                                    <th><span class="label label-primary">{{ formatNumber(array_sum($grandTotal)) }}</span></th>
+                                    <th>{{ formatNumber(array_sum($grandTotalBDue)) }}</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -100,9 +122,9 @@
                         Print
                     </button>
 
-                     <a href="{{ route('order-slips') }}"><button type="button" class="btn btn-default">
-                                Order Slips
-                            </button></a>
+                    <a href="{{ route('order-slips') }}"><button type="button" class="btn btn-default">
+                            Order Slips
+                        </button></a>
                 </div>
 
                 <!-- /.card-footer-->
@@ -121,7 +143,8 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label class="form-label" for="delivery_person">Delivery Person</label>
-                                <input type="text" class="form-control" name="delivery_person" id="delivery_person" value="" required readonly>
+                                <input type="text" class="form-control" name="delivery_person" id="delivery_person"
+                                    value="" required readonly>
                             </div>
 
                             <div class="form-group">
@@ -148,7 +171,8 @@
                             </div>
 
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-success" name="submit_form" value="print">Print</button>
+                                <button type="submit" class="btn btn-success" name="submit_form"
+                                    value="print">Print</button>
                             </div>
 
                         </div>
@@ -164,7 +188,7 @@
 @section('custom_js')
     <script>
         $(document).ready(function() {
-           $('#deliveryPerson').on('change', function() {
+            $('#deliveryPerson').on('change', function() {
                 var value = $(this).val();
                 $('#example3_filter input').val(value).trigger('keyup');
                 document.getElementById('delivery_person').value = value;

@@ -74,7 +74,11 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @php $grandTotal = array(); $grandTotalDiscount = array(); @endphp
                         @foreach ($deliveryReceipts as $receipt)
+
+                        @php $grandTotal[] = $receipt->amount_due - $receipt->bad_orders;
+                        $grandTotalDiscount[] = $receipt->discount; @endphp
                             <tr>
                                 <td>{{ $receipt->date }}</td>
                                 <td>{{ $receipt->code }}</td>
@@ -95,16 +99,17 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>Date</th>
-                            <th>DR No.</th>
-                            <th>Customer</th>
-                            <th>Total Amount</th>
-                            <th>Bad Orders</th>
-                            <th>Discount</th>
-                            <th>Amount Due</th>
-                            <th>Amount Paid</th>
-                            <th>Balance</th>
-                            <th>Generate By</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>Total:</th>
+                            <th>@php echo formatNumber(array_sum($grandTotalDiscount)) @endphp</th>
+                            <th>@php echo formatNumber(array_sum($grandTotal)) @endphp</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                             <th></th>
                         </tr>
                     </tfoot>
