@@ -38,6 +38,10 @@ class InboundController extends Controller
             return redirect()->route('order.index')->withErrors('Delivered amount is greater than the total amount.');
         }
 
+        if($request->filled('status') != ''){
+            $inbound->status = $request->status;
+        }
+
         // if($inbound->status == 'Completed'){
         //     return redirect()->route('order.index')->withErrors('Your order has been completed.');
         // }
@@ -45,7 +49,6 @@ class InboundController extends Controller
         $inbound->payment_type = $request->payment_type;
         $inbound->ref_no = $request->ref_no;
         $inbound->delivered_amount = $request->delivered_amount;
-        $inbound->status = $request->status;
 
         $inbound->save();
 
@@ -325,9 +328,11 @@ class InboundController extends Controller
             'customer_id' => 'required',
             'equipment_id' => 'required',
             'driver_id' => 'required',
+            'delivery_person_id' => 'required',
             'vehicle_id' => 'required',
             'bad_order_id' => 'nullable',
             'bo_amount' => 'nullable',
+            'order_date' => 'required|date',
         ]);
 
         $products = session()->get('products');
@@ -335,6 +340,8 @@ class InboundController extends Controller
         $equipStore = EquipmentStore::find($request->equipment_id);
         $customer = Customers::find($request->customer_id);
         $driver = Drivers::find($request->driver_id);
+        $deliveryPerson = Drivers::find($request->delivery_person_id);
+
         $vehicles = Vehicles::find($request->vehicle_id);
 
         if ($equipStore == null || $customer == null || $driver == null || $vehicles == null) {
@@ -352,6 +359,7 @@ class InboundController extends Controller
         $inbound->equipment_id = $equipStore->equipment->id;
         $inbound->store_id = $equipStore->store_id;
         $inbound->driver_id = $request->driver_id;
+        $inbound->delivery_person_id = $request->delivery_person_id;
         $inbound->vehicle_id = $request->vehicle_id;
         $inbound->products = json_encode($products);
         $inbound->status = 'Completed';
@@ -363,6 +371,7 @@ class InboundController extends Controller
         $inbound->customer_name = $customer->fullName;
         $inbound->store_name = $equipStore->store->storename;
         $inbound->driver_name = $driver->name;
+        $inbound->delivery_person = $deliveryPerson->name;
         $inbound->vehicle_no = $vehicles->plateno;
         $inbound->with_invoice = $request->with_invoice == 'on' ? 1 : 0;
 
@@ -376,6 +385,8 @@ class InboundController extends Controller
 
             $inbound->bo_amount = $request->bo_amount;
         }
+
+        $inbound->order_date = $request->order_date;
 
 
         $inbound->save();
@@ -466,11 +477,14 @@ class InboundController extends Controller
 
         session()->forget('products');
         session()->forget('inboundId');
+        $nextDay = date('Y-m-d', strtotime('+1 day'));
 
 
         $productTypes = ProductType::where('is_active', 1)->orderBy('sequence_no', 'asc')->get();
 
-        $drivers = Drivers::active()->get();
+        $drivers = Drivers::active()->perDesignation('Driver')->get();
+
+        $deliveryPersons = Drivers::active()->perDesignation('Salesman')->get();
 
         $vehicles = Vehicles::active()->get();
 
@@ -485,7 +499,7 @@ class InboundController extends Controller
             return $inbound;
         });
 
-        return view('ordering', compact('equipment', 'drivers', 'vehicles', 'inbounds', 'pricing', 'productTypes'));
+        return view('ordering', compact('equipment', 'drivers', 'vehicles', 'inbounds', 'pricing', 'productTypes', 'nextDay', 'deliveryPersons'));
     }
 
     public function edit($inboundId)

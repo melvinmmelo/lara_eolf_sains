@@ -19,11 +19,12 @@ class OrderSlipController extends Controller
     public function generate()
     {
 
-        $drivers = Drivers::active()->get();
+        $drivers = Drivers::active()->perDesignation('Driver')->get();
+        $deliveryPersons = Drivers::active()->perDesignation('Salesman')->get();
 
         $inbounds = Inbound::branch(session('branch_code'))->forOrderSlip()->WithProducts()->get();
 
-        return view('orderslip.generate', compact('inbounds', 'drivers'));
+        return view('orderslip.generate', compact('inbounds', 'drivers', 'deliveryPersons'));
     }
 
     public function print(Request $request)
@@ -34,6 +35,7 @@ class OrderSlipController extends Controller
 
         $validated = $request->validate([
             'delivery_person' => 'required',
+            'driver_name' => 'required',
             'checked_by' => 'nullable',
             'remarks' => 'nullable',
         ]);

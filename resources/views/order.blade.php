@@ -40,7 +40,7 @@
                     <table id="example3" class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>Date created</th>
+                                <th>Date</th>
                                 <th>Order No.</th>
                                 <th>Degic No.</th>
                                 <th>Customer</th>

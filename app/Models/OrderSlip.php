@@ -16,6 +16,7 @@ class OrderSlip extends Model
         'branch_code',
         'code',
         'delivery_person',
+        'driver_name',
         'total_amount',
         'checked_by',
         'generated_by',

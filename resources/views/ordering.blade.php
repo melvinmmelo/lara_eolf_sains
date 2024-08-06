@@ -137,7 +137,20 @@
                                 <div class="form-group">
                                     <label class="form-label" for="deliveryPerson"><i style="color:red">*</i>Delivery
                                         Person</label>
-                                    <select class="form-control" name="driver_id" id="deliveryPerson" required>
+                                    <select class="form-control" name="delivery_person_id" id="delivery_person_id" required>
+                                        <option value="">--Select--</option>
+                                        @foreach ($deliveryPersons as $dperson)
+                                            <option value="{{ $dperson->id }}">{{ $dperson->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+
+                                <div class="form-group">
+                                    <label class="form-label" for="driver_id"><i style="color:red">*</i>Driver</label>
+                                    <select class="form-control" name="driver_id" id="driver_id" required>
                                         <option value="">--Select--</option>
                                         @foreach ($drivers as $driver)
                                             <option value="{{ $driver->id }}">{{ $driver->name }}</option>
@@ -145,6 +158,7 @@
                                     </select>
                                 </div>
                             </div>
+
 
                             <div class="col-sm-3">
                                 <div class="form-group">
@@ -169,6 +183,14 @@
                                             <option value="{{ $vehicle->id }}">{{ $vehicle->plateno }}</option>
                                         @endforeach
                                     </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+
+                                <div class="form-group">
+                                    <label class="form-label" for="order_date"><i style="color:red">*</i>Date</label>
+                                    <input type="date" class="form-control" name="order_date" id="order_date" value="{{ $nextDay }}" required>
                                 </div>
                             </div>
                         </div>

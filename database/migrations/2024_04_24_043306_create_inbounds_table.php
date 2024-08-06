@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedInteger('customer_id');
             $table->unsignedInteger('store_id');
             $table->unsignedInteger('driver_id');
+            $table->unsignedInteger('delivery_person_id');
             $table->unsignedInteger('vehicle_id');
             $table->tinyInteger('bad_order')->nullable();
             $table->unsignedInteger('bad_order_id')->nullable();
@@ -41,11 +42,13 @@ return new class extends Migration
             $table->string('customer_name');
             $table->string('store_name');
             $table->string('driver_name');
+            $table->string('delivery_person');
             $table->string('vehicle_no');
             $table->string('order_slip_code')->nullable();
             $table->integer('order_slip_sno')->nullable();
             $table->unsignedInteger('delivery_receipt_id')->nullable();
             $table->timestamps();
+            $table->date('order_date');
             $table->index('branch_code');
         });
     }

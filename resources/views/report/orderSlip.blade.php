@@ -44,7 +44,7 @@
                 <div class="w-[20%]">TRUCK NO.</div>
                 <div class="w-[50%]">
                     Date: <span class="font-bold">{{ $orderSlip->rCreatedAt }}</span><br>
-                    Delivery Person: <span class="font-bold">{{ $orderSlip->delivery_person }}</span> <br>
+                    Delivery Person/Driver Name: <span class="font-bold">{{ $orderSlip->delivery_person }} / {{ $orderSlip->driver_name }}</span> <br>
                 </div>
                 <div class="w-[20%]  text-lg">
                     TOTAL: <span class="font-bold">{{ formatNumber($grandTotal) }}</span>
@@ -142,8 +142,8 @@
                         @if ($continuePrnProducts)
                             @php
                                 // get orderedProducts starting from 22 to end
-                                $slicedOrderedProducts = array_slice($orderedProducts, 22);
-                                if (count($slicedOrderedProducts) > 22) {
+                                $slicedOrderedProducts = array_slice($orderedProducts, 23);
+                                if (count($slicedOrderedProducts) > 23) {
                                     // echo "totalsliced" . count($slicedOrderedProducts);
 
                                     $slicedOrderedProducts = array_slice($orderedProducts, 23, 44);

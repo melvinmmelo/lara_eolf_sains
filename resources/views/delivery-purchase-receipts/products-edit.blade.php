@@ -221,9 +221,9 @@
                                         <tfoot class="desktop-view">
                                             <tr>
                                                 <td colspan="2"></td>
+                                                <td></td>
                                                 <td>Total:</td>
                                                 <td>{{ isset($sum) ? formatNumber($sum) : 0 }}</td>
-                                                <td></td>
                                                 <td></td>
                                             </tr>
                                         </tfoot>

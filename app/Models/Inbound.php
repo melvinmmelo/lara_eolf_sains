@@ -17,6 +17,7 @@ class Inbound extends Model
         'customer_id',
         'store_id',
         'driver_id',
+        'delivery_person_id',
         'vehicle_id',
         'products',
         'with_invoice',
@@ -35,9 +36,16 @@ class Inbound extends Model
         'vehicle_no',
         'order_slip_code',
         'order_slip_sno',
+        'order_date'
     ];
 
+    protected $grandTotal = 0, $netAmount = 0, $balance = 0;
+
     protected $appends = ['f_created_at', 'f_updated_at', 'code'];
+
+    protected $casts = [
+        'order_date' => 'datetime'
+    ];
 
     public function priceLevel() : BelongsTo {
         return $this->belongsTo(pricelevels::class, 'pricelevel_id');
@@ -65,7 +73,7 @@ class Inbound extends Model
 
     public function getfCreatedAtAttribute()
     {
-        return $this->created_at ? $this->created_at->format('Y-m-d h:s A') : null;
+        return $this->order_date ? $this->order_date->format('Y-m-d') : null;
     }
 
     public function getfUpdatedAtAttribute()
@@ -116,7 +124,22 @@ class Inbound extends Model
         foreach ($products as $product) {
             $total += $product['quantity'] * $product['price'];
         }
-        return $total - ($this->bo_amount+$this->discount);
+
+        $this->grandTotal = $total;
+        return $this->netAmount = $total - ($this->bo_amount + $this->discount);
+        // return $total - ($this->bo_amount+$this->discount);
     }
 
+    public function getGrandTotalAttribute()
+    {
+        if($this->grandTotal === 0) {
+            $this->getTotalAmountAttribute();
+        }
+        return $this->grandTotal;
+    }
+
+    public function getTotalBalanceAttribute()
+    {
+        return $this->balance =  $this->getTotalAmountAttribute() - $this->delivered_amount;
+    }
 }

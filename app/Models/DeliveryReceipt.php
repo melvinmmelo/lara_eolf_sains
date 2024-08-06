@@ -9,6 +9,7 @@ class DeliveryReceipt extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'branch_code',
         'code',
         'inbound_id',
         'address',
@@ -17,7 +18,11 @@ class DeliveryReceipt extends Model
         'generated_by',
     ];
 
-    protected $appends = ['code'];
+    protected $appends = ['f_created_at', 'code'];
+
+    protected $casts = [
+        'date' => 'datetime'
+    ];
 
     public static function countPerYear($year)
     {
@@ -32,5 +37,10 @@ class DeliveryReceipt extends Model
     public function inbound()
     {
         return $this->belongsTo(Inbound::class);
+    }
+
+    public function getfCreatedAtAttribute()
+    {
+        return $this->date ? $this->date->format('Y-m-d') : null;
     }
 }

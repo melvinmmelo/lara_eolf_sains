@@ -74,21 +74,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @php $grandTotal = array(); $grandTotalDiscount = array(); @endphp
+                        @php $grandTotal = []; $grandTotalDiscount = []; $grandTotalAmtPaid = []; $grandTotalBalance = []; @endphp
                         @foreach ($deliveryReceipts as $receipt)
 
-                        @php $grandTotal[] = $receipt->amount_due - $receipt->bad_orders;
-                        $grandTotalDiscount[] = $receipt->discount; @endphp
+                            @php $grandTotal[] = $receipt->inbound->grandTotal;
+                                $grandTotalDiscount[] = $receipt->inbound->discount;
+                                $grandTotalAmtPaid[] = $receipt->inbound->delivered_amount;
+                                $grandTotalBalance[] = $receipt->inbound->totalBalance;
+                            @endphp
                             <tr>
-                                <td>{{ $receipt->date }}</td>
+                                <td>{{ $receipt->fCreatedAt }}</td>
                                 <td>{{ $receipt->code }}</td>
                                 <td>{{ $receipt->customer_name }}</td>
-                                <td>{{ formatNumber($receipt->total_amount) }}</td>
-                                <td>{{ formatNumber($receipt->bad_orders) }}</td>
-                                <td>{{ formatNumber($receipt->discount) }}</td>
-                                <td>{{ formatNumber($receipt->amount_due - $receipt->bad_orders) }}</td>
-                                <td>{{ formatNumber($receipt->amount_paid) }}</td>
-                                <td>{{ formatNumber($receipt->balance) }}</td>
+                                <td>{{ formatNumber($receipt->inbound->grandTotal) }}</td>
+                                <td>{{ formatNumber($receipt->inbound->bo_amount) }}</td>
+                                <td>{{ formatNumber($receipt->inbound->discount) }}</td>
+                                <td>{{ formatNumber($receipt->inbound->totalAmount) }}</td>
+                                <td>{{ formatNumber($receipt->inbound->delivered_amount) }}</td>
+                                <td>{{ formatNumber($receipt->inbound->totalBalance) }}</td>
                                 <td>{{ $receipt->generated_by }}</td>
                                 <td>
                                     <a href="{{ route('drprint', ['id' => $receipt->id]) }}"><button type="button"
@@ -103,12 +106,11 @@
                             <th></th>
                             <th></th>
                             <th></th>
-                            <th></th>
                             <th>Total:</th>
                             <th>@php echo formatNumber(array_sum($grandTotalDiscount)) @endphp</th>
                             <th>@php echo formatNumber(array_sum($grandTotal)) @endphp</th>
-                            <th></th>
-                            <th></th>
+                            <th>{{ formatNumber(array_sum($grandTotalAmtPaid))  }}</th>
+                            <th>{{ formatNumber(array_sum($grandTotalBalance))  }}</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -126,119 +128,6 @@
             </div>
             <!-- /.card-footer-->
         </div>
-
-
-
-        <!-- /.card -->
-        <div class="modal fade" id="modal-branch">
-            <div class="modal-dialog">
-                <form method="POST" action="{{ route('delivery-receipt.store') }}">
-                    @csrf
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Create Delivery Receipt</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="date"><i style="color:red">*</i>Date</label>
-                                        <input type="date" class="form-control" name="date"
-                                            value="{{ date('Y-m-d') }}" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="inbound_id"><i
-                                                style="color:red">*</i>Customer</label>
-
-                                        <select name="inbound_id" id="inbound_id" class="form-control select2bs4" required>
-
-                                            @foreach ($outbounds as $outbound)
-                                                <option value="{{ $outbound->id }}">
-                                                    {{ $outbound->degic_no . ' - ' . $outbound->customer_name }}
-                                                </option>
-                                            @endforeach
-
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="generated_by">Generated By</label>
-                                        <input type="text" class="form-control" name="generated_by"
-                                            value=" {{ auth()->user()->fullName }}" required readonly>
-                                    </div>
-                                </div>
-                            </div>
-                            {{-- <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="total_amount">Total Amount</label>
-                                        <input type="text" class="form-control" name="total_amount">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="bad_orders">Bad Orders</label>
-                                        <input type="text" class="form-control" name="bad_orders">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="discount">Discount</label>
-                                        <input type="text" class="form-control" name="discount">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="amount_due">Amount Due</label>
-                                        <input type="text" class="form-control" name="amount_due">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="amount_paid">Amount Paid</label>
-                                        <input type="text" class="form-control" name="amount_paid">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="balance">Balance</label>
-                                        <input type="text" class="form-control" name="balance">
-                                    </div>
-                                </div>
-                            </div> --}}
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-success">Save changes</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal -->
-
-
-
         </div>
     </section>
     <!-- /.content -->

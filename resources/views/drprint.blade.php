@@ -129,7 +129,7 @@
                                 Total Sales:
                                {{ formatNumber($totalSales) }} <br>
                                 Less BO:
-                                {{ formatNumber($deliveryReceipt->bad_orders) }} <br>
+                                {{ formatNumber($inbound->bo_amount) }} <br>
                                 Discount (%):
                                 {{ formatNumber($inbound->discount) }} <br>
                                 Total Amount:
@@ -218,7 +218,7 @@
                 '<br>Total Sales: {{ formatNumber($totalSales) }} <br>'
             );
             mywindow.document.write(
-                'Less BO: {{ formatNumber($deliveryReceipt->bad_orders) }} <br>');
+                'Less BO: {{ formatNumber($inbound->bo_amount) }} <br>');
             mywindow.document.write(
                 'Discount (%): {{ formatNumber($inbound->discount) }} <br>'
             );

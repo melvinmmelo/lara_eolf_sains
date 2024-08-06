@@ -122,7 +122,8 @@ class DeliveryPurchaseReceiptController extends Controller
     public function index()
     {
         $deliveryPurchaseReceipts = DeliveryPurchaseReceipt::branch(session('branch_code'))->get();
-        return view('delivery-purchase-receipts.index', compact('deliveryPurchaseReceipts'));
+        $dateToday = date('Y-m-d');
+        return view('delivery-purchase-receipts.index', compact('deliveryPurchaseReceipts', 'dateToday'));
     }
 
     /**
@@ -173,7 +174,7 @@ class DeliveryPurchaseReceiptController extends Controller
         $dpr = DeliveryPurchaseReceipt::findOrFail($request->dprId);
 
         if (!$dpr) {
-            return redirect()->back()->withErrors('Item not found.');
+            return redirect()->back()->withErrors('Error processing your request: DPR not found.');
         }
 
         $dprService = new DPRService($dpr->products);
@@ -183,8 +184,10 @@ class DeliveryPurchaseReceiptController extends Controller
         $item = ItemMasterData::branch(session('branch_code'))->productCode($request->code)->first();
 
         if (!$item) {
-            return back()->withErrors('Error processing your request: No item found in master data.');
+            return redirect()->back()->withErrors('Error processing your request: Item not found.');
         }
+
+        $currentStocks = $item->stocks ?? 0;
 
         if ($request->action == 'delete') {
             $newQuantity = $item->stocks - $product['quantity'];
@@ -198,7 +201,6 @@ class DeliveryPurchaseReceiptController extends Controller
 
         if ($request->action == 'add') {
 
-            $newQuantity = $item->stocks + ($request->quantity);
 
             if (!$product) { // if not existing in products
 
@@ -219,7 +221,9 @@ class DeliveryPurchaseReceiptController extends Controller
 
             }else{ // update only the quantity and updated at
 
-                $dprService->addProduct($product);
+                $newQuantity = $currentStocks + $request->quantity;
+
+                $dprService->addProduct($product, $request->quantity);
 
             }
 
@@ -234,10 +238,6 @@ class DeliveryPurchaseReceiptController extends Controller
         $item->stocks = $newQuantity;
 
         $item->save();
-
-        if (!$item) {
-            return redirect()->back()->withErrors('Item not found.');
-        }
 
         return redirect()->back()->with('success', 'Item updated successfully.');
     }

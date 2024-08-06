@@ -15,8 +15,8 @@
 
                         <select class="form-control" name="driver_id" id="deliveryPerson" required>
                             <option value="">--Select Delivery Person--</option>
-                            @foreach ($drivers as $driver)
-                                <option value="{{ $driver->name }}">{{ $driver->name }}</option>
+                            @foreach ($deliveryPersons as $dperson)
+                                <option value="{{ $dperson->name }}">{{ $dperson->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -88,7 +88,7 @@
                                         <td>{{ $inbound->id }}</td>
                                         <td>{{ $inbound->equipment->code ?? '' }}</td>
                                         <td>{{ $inbound->customer->fullName }}</td>
-                                        <td>{{ $inbound->driver_name }}</td>
+                                        <td>{{ $inbound->delivery_person }}</td>
                                         <td><span class="label label-primary">{{ formatNumber($total) }}</span></td>
                                         <td>{{ formatNumber($total - $inbound->delivered_amount) }}</td>
                                         <td>{{ $inbound->status }}</td>
@@ -105,7 +105,8 @@
                                     <th></th>
                                     <th></th>
                                     <th>Total:</th>
-                                    <th><span class="label label-primary">{{ formatNumber(array_sum($grandTotal)) }}</span></th>
+                                    <th><span class="label label-primary">{{ formatNumber(array_sum($grandTotal)) }}</span>
+                                    </th>
                                     <th>{{ formatNumber(array_sum($grandTotalBDue)) }}</th>
                                     <th></th>
                                     <th></th>
@@ -145,6 +146,16 @@
                                 <label class="form-label" for="delivery_person">Delivery Person</label>
                                 <input type="text" class="form-control" name="delivery_person" id="delivery_person"
                                     value="" required readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="driver_name">Driver name</label>
+                                <select class="form-control" name="driver_name" id="driver_name" required>
+                                    <option value="">--Select--</option>
+                                    @foreach ($drivers as $driver)
+                                        <option value="{{ $driver->name }}">{{ $driver->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="form-group">

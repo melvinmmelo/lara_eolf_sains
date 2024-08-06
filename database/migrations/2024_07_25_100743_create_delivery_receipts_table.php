@@ -17,15 +17,8 @@ class CreateDeliveryReceiptsTable extends Migration
             $table->unsignedInteger('inbound_id');
             $table->string('customer_name');
             $table->string('generated_by');
-            $table->decimal('total_amount', 10, 2)->nullable();
-            $table->decimal('bad_orders', 10, 2)->nullable();
-            $table->decimal('discount', 10, 2)->nullable();
-            $table->decimal('amount_due', 10, 2)->nullable();
-            $table->decimal('amount_paid', 10, 2)->nullable();
-            $table->decimal('balance', 10, 2)->nullable();
             $table->dateTime('printed_date')->nullable();
             $table->timestamps();
-
             $table->index('inbound_id');
             $table->index('branch_code');
 

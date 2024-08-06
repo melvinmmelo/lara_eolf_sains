@@ -159,10 +159,7 @@
                                     <div class="col-sm-12">
                                         <label class="form-label" for="issue_date">Issue Date</label>
                                         <input type="date" class="form-control" name="issue_date" id="issue_date"
-                                            value="" required>
-
-
-
+                                            value="{{ $dateToday }}" required>
                                     </div>
                                 </div>
                             </div>

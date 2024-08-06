@@ -76,22 +76,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @php $grandTotal = []; $grandTotalDiscount = []; @endphp
+                        @php $grandTotal = []; $grandTotalDiscount = []; $grandTotalAmtPaid = []; $grandTotalBalance = []; @endphp
                         @foreach ($deliveryReceipts as $receipt)
 
-                            @php $grandTotal[] = $receipt->amount_due - $receipt->bad_orders;
-                                $grandTotalDiscount[] = $receipt->discount;
+                            @php $grandTotal[] = $receipt->inbound->grandTotal;
+                                $grandTotalDiscount[] = $receipt->inbound->discount;
+                                $grandTotalAmtPaid[] = $receipt->inbound->delivered_amount;
+                                $grandTotalBalance[] = $receipt->inbound->totalBalance;
                             @endphp
                             <tr>
-                                <td>{{ $receipt->date }}</td>
+                                <td>{{ $receipt->fCreatedAt }}</td>
                                 <td>{{ $receipt->code }}</td>
                                 <td>{{ $receipt->customer_name }}</td>
-                                <td>{{ formatNumber($receipt->total_amount) }}</td>
-                                <td>{{ formatNumber($receipt->bad_orders) }}</td>
-                                <td>{{ formatNumber($receipt->discount) }}</td>
-                                <td>{{ formatNumber($receipt->amount_due - $receipt->bad_orders) }}</td>
-                                <td>{{ formatNumber($receipt->amount_paid) }}</td>
-                                <td>{{ formatNumber($receipt->balance) }}</td>
+                                <td>{{ formatNumber($receipt->inbound->grandTotal) }}</td>
+                                <td>{{ formatNumber($receipt->inbound->bo_amount) }}</td>
+                                <td>{{ formatNumber($receipt->inbound->discount) }}</td>
+                                <td>{{ formatNumber($receipt->inbound->totalAmount) }}</td>
+                                <td>{{ formatNumber($receipt->inbound->delivered_amount) }}</td>
+                                <td>{{ formatNumber($receipt->inbound->totalBalance) }}</td>
                                 <td>{{ $receipt->generated_by }}</td>
                                 <td>
                                     <a href="{{ route('drprint', ['id' => $receipt->id]) }}"><button type="button"
@@ -109,8 +111,8 @@
                             <th>Total:</th>
                             <th>@php echo formatNumber(array_sum($grandTotalDiscount)) @endphp</th>
                             <th>@php echo formatNumber(array_sum($grandTotal)) @endphp</th>
-                            <th></th>
-                            <th></th>
+                            <th>{{ formatNumber(array_sum($grandTotalAmtPaid))  }}</th>
+                            <th>{{ formatNumber(array_sum($grandTotalBalance))  }}</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -153,7 +155,7 @@
                                     <div class="col-sm-12">
                                         <label class="form-label" for="date"><i style="color:red">*</i>Date</label>
                                         <input type="date" class="form-control" name="date"
-                                            value="{{ date('Y-m-d') }}" required>
+                                            value="{{ $nextDay }}" required>
                                     </div>
                                 </div>
                             </div>

@@ -34,14 +34,14 @@ class DPRService extends Model
         }
     }
 
-    public function addProduct($newProduct)
+    public function addProduct($newProduct, $addQty = 0)
     {
 
         $exist = false;
         if ($this->products) {
             foreach ($this->products as $key => $value) {
                 if ($value['code'] == $newProduct['code']) {
-                    $this->products[$key]['quantity'] += $newProduct['quantity'];
+                    $this->products[$key]['quantity'] += $addQty === 0 ? $newProduct['quantity'] : $addQty;
                     $this->products[$key]['updated_at'] = now();
                     $exist = true;
                 }

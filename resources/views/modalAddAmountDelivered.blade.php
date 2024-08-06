@@ -14,10 +14,10 @@
                     @method('PATCH')
 
                     <div class="form-group">
-                        <label class="form-label" for="payment_type">Payment Type</label>
+                        <label class="form-label" for="payment_type"><i style="color:red">*</i>Payment Type</label>
                         <input type="hidden" class="form-control" name="ob_id" id="ob_id" value="" required
                             readonly>
-                        <select name="payment_type" id="payment_type" class="form-control">
+                        <select name="payment_type" id="payment_type" class="form-control" required>
                             <option value="">--Select--</option>
                             <option value="Cash">Cash</option>
                             <option value="Cheque">Cheque</option>
@@ -26,17 +26,15 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="ref_no">Reference No.</label>
-                        <input type="text" class="form-control" name="ref_no" id="ref_no" value=""
-                            required>
+                        <label class="form-label" for="ref_no"><i style="color:red">*</i>Reference No.</label>
+                        <input type="text" class="form-control" name="ref_no" id="ref_no" value="" required>
                     </div>
 
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-12">
-                                <label class="form-label" for="delivered_amount"><i
-                                        style="color:red">*</i>Amount</label>
-                                <input type="number" class="form-control" name="delivered_amount">
+                                <label class="form-label" for="delivered_amount"><i style="color:red">*</i>Amount</label>
+                                <input type="number" class="form-control" name="delivered_amount" required>
                             </div>
                         </div>
                     </div>
@@ -44,7 +42,7 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-12">
-                                <label class="form-label" for="status"><i style="color:red">*</i>Status</label>
+                                <label class="form-label" for="status">Status</label>
                                 <select name="status" id="status" class="form-control">
                                     <option value="">--Select--</option>
                                     <option value="Paid">Paid</option>

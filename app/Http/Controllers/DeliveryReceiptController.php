@@ -23,17 +23,17 @@ class DeliveryReceiptController extends Controller
 
         if ($inbound->delivery_receipt_id == null or $inbound->delivery_receipt_id == 0) {
 
-            $products = json_decode($inbound->products);
+            // $products = json_decode($inbound->products);
 
-            foreach ($products as $product) {
+            // foreach ($products as $product) {
 
-                $item = ItemMasterData::branch(session('branch_code'))->productCode($product->code)->first();
+            //     $item = ItemMasterData::branch(session('branch_code'))->productCode($product->code)->first();
 
-                $item->reserved = max(0, $item->reserved - $product->quantity);
-                $item->stocks = max(0, $item->stocks - $product->quantity);
+            //     $item->reserved = max(0, $item->reserved - $product->quantity);
+            //     $item->stocks = max(0, $item->stocks - $product->quantity);
 
-                $item->save();
-            }
+            //     $item->save();
+            // }
 
             $inbound->delivery_receipt_id = $id;
             $inbound->save();
@@ -54,6 +54,8 @@ class DeliveryReceiptController extends Controller
 
     public function index(Request $request)
     {
+
+        $nextDay = date('Y-m-d', strtotime('+1 day', strtotime(date('Y-m-d'))));
         $outbounds = Inbound::branch(session('branch_code'))->whereNull('delivery_receipt_id')->withProducts()->get();
 
         $query = DeliveryReceipt::query();
@@ -75,7 +77,7 @@ class DeliveryReceiptController extends Controller
         $deliveryReceipts = $query->get();
 
 
-        return view('deliveryreceipt', compact('deliveryReceipts', 'outbounds'));
+        return view('deliveryreceipt', compact('deliveryReceipts', 'outbounds', 'nextDay'));
     }
 
     public function indexDone(Request $request)
@@ -132,17 +134,17 @@ class DeliveryReceiptController extends Controller
 
         $totalOfOutbound = InboundService::getTotalOfInboundProducts($deliveryReceipt->inbound_id);
 
-        $amountDueOrBalance = $totalOfOutbound - $inbound->delivered_amount;
+        // $amountDueOrBalance = $totalOfOutbound - $inbound->delivered_amount;
 
-        $deliveryReceipt->total_amount = $totalOfOutbound;
+        // $deliveryReceipt->total_amount = $totalOfOutbound;
 
-        $deliveryReceipt->bad_orders = $inbound->bo_amount;
+        // $deliveryReceipt->bad_orders = $inbound->bo_amount;
 
-        $deliveryReceipt->amount_due = $amountDueOrBalance;
+        // $deliveryReceipt->amount_due = $amountDueOrBalance;
 
-        $deliveryReceipt->amount_paid = $inbound->delivered_amount;
+        // $deliveryReceipt->amount_paid = $inbound->delivered_amount;
 
-        $deliveryReceipt->balance = $amountDueOrBalance;
+        // $deliveryReceipt->balance = $amountDueOrBalance;
 
         $deliveryReceipt->save();
 
@@ -154,9 +156,9 @@ class DeliveryReceiptController extends Controller
 
             foreach ($products as $product) {
 
-                $mainItem = ItemMasterData::productCode($product['code'])->first();
-                $mainItem->stocks = $mainItem->stocks - $product['quantity'];
-                $mainItem->reserved = $mainItem->reserved - $product['quantity'];
+                $mainItem = ItemMasterData::branch(session('branch_code'))->productCode($product['code'])->first();
+                $mainItem->stocks = max(0, $mainItem->stocks - $product['quantity']);
+                $mainItem->reserved = max(0, $mainItem->reserved - $product['quantity']);
                 $mainItem->save();
             }
         }

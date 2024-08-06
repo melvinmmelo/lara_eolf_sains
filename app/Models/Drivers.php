@@ -23,6 +23,12 @@ class Drivers extends Model
         return $query->where('status', 'Active');
     }
 
+    // scope for designation is salesman
+    public function scopePerDesignation($query, $designation)
+    {
+        return $query->where('designation', $designation);
+    }
+
     public function priceLevel()
     {
         return $this->belongsTo(pricelevels::class, 'default_price_level');
