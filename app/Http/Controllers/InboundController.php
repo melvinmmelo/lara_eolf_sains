@@ -19,6 +19,7 @@ use App\Services\InboundService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+// this is actually the outboundcontroller, nagkamali lang ng naming
 class InboundController extends Controller
 {
 
@@ -43,10 +44,6 @@ class InboundController extends Controller
             $inbound->status = $request->status;
         }
 
-        // if($inbound->status == 'Completed'){
-        //     return redirect()->route('order.index')->withErrors('Your order has been completed.');
-        // }
-
         $inbound->payment_type = $request->payment_type;
         $inbound->ref_no = $request->ref_no;
         $inbound->delivered_amount = $request->delivered_amount;
@@ -58,12 +55,11 @@ class InboundController extends Controller
         activity('outbound')
             ->performedOn($inbound)
             ->withProperties($changes)
-            ->log('Payment added.');
+            ->log("Payment added to outbound $inbound->id amounting $request->delivered_amount by " . auth()->user()->fullName);
 
         return redirect()->route('order.index')->with('success', 'Payment has been added.');
     }
 
-    // delete product from the list
     public function deleteAInbound($pcode)
     {
 
@@ -90,6 +86,9 @@ class InboundController extends Controller
 
         session()->put('products', $products);
 
+        activity('outbound')
+            ->log("Product $pcode deleted by " . auth()->user()->fullName);
+
         return view('inboundList', compact('uiProducts', 'summary'));
     }
 
@@ -114,109 +113,6 @@ class InboundController extends Controller
         });
 
         return view('order', compact('equipment', 'drivers', 'vehicles', 'inbounds', 'pricing'));
-    }
-
-    public function submitProcessOne(Request $request)
-    {
-
-        $request->validate([
-            'branch_code' => 'required',
-            'equipment' => 'required',
-            'deliveryPerson' => 'required',
-            'vehicle' => 'required',
-            'pricelevel_id' => 'required',
-            'customer_id' => 'required',
-        ]);
-
-        $equipStore = EquipmentStore::find($request->equipment);
-        $customer = Customers::find($request->customer_id);
-        $driver = Drivers::find($request->deliveryPerson);
-        $vehicles = Vehicles::find($request->vehicle);
-
-        if ($equipStore == null || $customer == null || $driver == null || $vehicles == null) {
-            return back()->withErrors('All fields are requred.');
-        }
-
-        $tempInbound = new Inbound();
-        $tempInbound->user_id = auth()->user()->id;
-        $tempInbound->branch_code = $request->branch_code;
-        $tempInbound->equipment_id = $equipStore->equipment->id;
-        $tempInbound->driver_id = $request->deliveryPerson;
-        $tempInbound->vehicle_id = $request->vehicle;
-        $tempInbound->products = null;
-        $tempInbound->status = 'Encoding';
-        $tempInbound->pricelevel_id = $request->pricelevel_id;
-        $tempInbound->customer_id = $request->customer_id;
-        $tempInbound->store_id = $equipStore->store_id;
-        $tempInbound->degic_no = $equipStore->equipment->code;
-        $tempInbound->customer_name = $customer->fullName;
-        $tempInbound->store_name = $equipStore->store->storename;
-        $tempInbound->driver_name = $driver->name;
-        $tempInbound->vehicle_no = $vehicles->plateno;
-        $tempInbound->save();
-
-        session()->put('pricelevelId', $request->pricelevel_id);
-
-        $inboundId = $tempInbound->id;
-
-        session()->put('inboundId', $inboundId);
-
-        $data = json_encode($request->except('_token'));
-
-        session()->put('orderDetails', $data);
-
-        activity('outbound')
-            ->performedOn($tempInbound)
-            ->log('Order created.');
-
-
-        return redirect()->route('order.processTwo', ['inbound' => $inboundId]);
-    }
-
-    public function orderProcessTwoUI($inbound) // adding products in order
-    {
-
-        $inboundId = $inbound;
-
-        session()->put('inboundId', $inboundId);
-
-        $inbound = Inbound::find($inboundId);
-
-        if ($inbound->status == 'Completed') {
-            session()->forget('inboundId');
-            return redirect()->route('order.index')->withErrors('Your order has been completed.');
-        }
-
-        $equipment = Equipment::find($inbound->equipment_id);
-        $customerName = Customers::find($inbound->customer_id)->fullName;
-        $branchCode = session('branch_code');
-
-        $equipmentSerial = $equipment->serial_no;
-        $deliveryPerson = Drivers::select('name')->find($inbound->driver_id);
-
-        $vehicle = Vehicles::select('plateno')->find($inbound->vehicle_id);
-
-        $defaultPriceLevel = pricelevels::find($inbound->pricelevel_id);
-        session()->put('pricelevelId', $inbound->pricelevel_id);
-
-        $productTypes = ProductType::where('is_active', 1)->orderBy('sequence_no', 'asc')->get();
-
-        // check if inbound has products
-        $inboundList = [];
-        $summary = [];
-
-        if ($inbound->products) {
-            $inboundList = json_decode($inbound->products, true);
-
-            $inboundService = new InboundProductsService($inbound->products);
-
-            $summary = $inboundService->summary();
-
-            $summary = $inboundService->addSppbinSummary(); // ! you need to call summary() first before addSppbinSummary()
-        }
-
-
-        return view('ordering', compact('inboundId', 'productTypes', 'deliveryPerson', 'vehicle', 'defaultPriceLevel', 'inboundList', 'summary', 'customerName', 'equipmentSerial', 'inbound'));
     }
 
     // ajax products list
@@ -417,7 +313,7 @@ class InboundController extends Controller
 
         activity('outbound')
             ->performedOn($inbound)
-            ->log('Order completed.');
+            ->log("Outbound $inbound->id created by " . auth()->user()->fullName);
 
 
         return redirect()->route('order.index')->with('success', 'Your order has been completed.');
@@ -471,7 +367,7 @@ class InboundController extends Controller
 
         activity('outbound')
             ->performedOn($inbound)
-            ->log('Inbound deleted.');
+            ->log("Inbound $inbound deleted by " . auth()->user()->fullName);
 
         return redirect()->route('order.index')->with('success', 'An inbound has been deleted.');
     }
@@ -626,6 +522,10 @@ class InboundController extends Controller
 
         session()->forget('inboundId');
         session()->forget('products');
+
+        activity('outbound')
+            ->performedOn($inbound)
+            ->log("Outbound $inbound->id updated by " . auth()->user()->fullName);
 
         return redirect()->route('order.index')->with('success', 'Inbound has been updated.');
     }

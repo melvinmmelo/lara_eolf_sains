@@ -43,8 +43,8 @@ class DeliveryReceiptController extends Controller
             $deliveryReceipt->save();
 
             activity('delivery-receipt')
-                ->performedOn($deliveryReceipt)
-                ->log('DR printed.');
+            ->performedOn($deliveryReceipt)
+            ->log("DR $deliveryReceipt->id printed by " . auth()->user()->fullName);
 
             return response()->json(['message' => 'Printed date updated.']);
         } else {
@@ -134,17 +134,6 @@ class DeliveryReceiptController extends Controller
 
         $totalOfOutbound = InboundService::getTotalOfInboundProducts($deliveryReceipt->inbound_id);
 
-        // $amountDueOrBalance = $totalOfOutbound - $inbound->delivered_amount;
-
-        // $deliveryReceipt->total_amount = $totalOfOutbound;
-
-        // $deliveryReceipt->bad_orders = $inbound->bo_amount;
-
-        // $deliveryReceipt->amount_due = $amountDueOrBalance;
-
-        // $deliveryReceipt->amount_paid = $inbound->delivered_amount;
-
-        // $deliveryReceipt->balance = $amountDueOrBalance;
 
         $deliveryReceipt->save();
 
@@ -182,7 +171,7 @@ class DeliveryReceiptController extends Controller
 
         activity('delivery-receipt')
             ->performedOn($deliveryReceipt)
-            ->log('DR created.');
+            ->log("DR $deliveryReceipt->id created by $deliveryReceipt->generated_by.");
 
         return redirect()->route('drprint', ['id' => $deliveryReceipt->id]);
     }

@@ -247,9 +247,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/orders', [InboundController::class, 'index'])->name('order.index');
 
-    Route::post('/submit/process-one', [InboundController::class, 'submitProcessOne'])->name('order.submitProcessOne');
+    // Route::post('/submit/process-one', [InboundController::class, 'submitProcessOne'])->name('order.submitProcessOne');
 
-    Route::get('/ordering/{inbound}', [InboundController::class, 'orderProcessTwoUI'])->name('order.processTwo');
+    // Route::get('/ordering/{inbound}', [InboundController::class, 'orderProcessTwoUI'])->name('order.processTwo');
 
     Route::get('/order/create', [InboundController::class, 'create'])->name('order.create');
 

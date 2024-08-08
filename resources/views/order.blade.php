@@ -137,9 +137,7 @@
                     </div>
                     <div class="modal-body">
 
-                        <form action="{{ route('order.submitProcessOne') }}" method="post">
-                            @csrf
-
+                        <form>
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">

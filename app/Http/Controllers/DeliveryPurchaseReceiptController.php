@@ -31,7 +31,7 @@ class DeliveryPurchaseReceiptController extends Controller
 
         activity()
             ->performedOn($dpr)
-            ->log('Inbound completed.');
+            ->log("$dpr->dr_no completed by " . auth()->user()->fullName . " and inventory has been replenished.");
 
 
         return redirect()->route('delivery-purchase-receipts.index')->with('success', 'Delivery Receipt saved successfully.');
@@ -45,8 +45,6 @@ class DeliveryPurchaseReceiptController extends Controller
             'product_code' => 'required',
             'qty' => 'required',
         ]);
-
-        // dd($request->product_code);
 
         $dpr = DeliveryPurchaseReceipt::findOrFail($request->dpr_id);
 
@@ -73,7 +71,7 @@ class DeliveryPurchaseReceiptController extends Controller
 
         activity()
             ->performedOn($dpr)
-            ->log('Product added to inbound.');
+            ->log("$request->product_code [$request->qty] added to dpr $dpr->dr_no.");
 
         return redirect()->back()->with('success', 'Product added to Delivery Receipt successfully.');
     }
@@ -84,11 +82,6 @@ class DeliveryPurchaseReceiptController extends Controller
     public function products(int $dprId)
     {
         $deliveryPurchaseReceipt = DeliveryPurchaseReceipt::findOrFail($dprId);
-        // dd($deliveryPurchaseReceipt);
-
-        if (strtolower($deliveryPurchaseReceipt->status) == 'completed') {
-            // return redirect()->back()->with('error', 'Delivery receipt already saved.');
-        }
 
         $originalProducts = Product::all();
         $originalProducts = $originalProducts->sortBy(function ($product) {
@@ -143,7 +136,7 @@ class DeliveryPurchaseReceiptController extends Controller
 
         activity()
             ->performedOn($dpr)
-            ->log('Inbound created.');
+            ->log("DPR $dpr->dr_no created by " . auth()->user()->fullName);
 
         return redirect()->route('drp.products', ['dprId' => $dpr->id])->with('success', 'Delivery Receipt created successfully.');
     }
@@ -239,6 +232,10 @@ class DeliveryPurchaseReceiptController extends Controller
 
         $item->save();
 
+        activity()
+            ->performedOn($dpr)
+            ->log("$request->code updated in dpr $dpr->dr_no by " . auth()->user()->fullName);
+
         return redirect()->back()->with('success', 'Item updated successfully.');
     }
 
@@ -260,7 +257,7 @@ class DeliveryPurchaseReceiptController extends Controller
 
         activity()
             ->performedOn($dpr)
-            ->log('Product deleted from inbound.');
+            ->log("$dpr->dr_no deleted by " . auth()->user()->fullName);
 
         return redirect()->back()->with('success', 'Item deleted successfully.');
     }
@@ -290,7 +287,7 @@ class DeliveryPurchaseReceiptController extends Controller
 
         activity()
             ->performedOn($dpr)
-            ->log('Product hold from inbound.');
+            ->log("$request->hold_pcode [qty: $request->hold_qty] hold in dpr $dpr->dr_no by " . auth()->user()->fullName);
 
         return redirect()->back()->with('success', 'Item hold successfully.');
     }
