@@ -53,7 +53,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $grandTotal = []; $grandTotalBDue = []; @endphp
+                            @php
+                                $grandTotal = [];
+                                $grandTotalBDue = [];
+                            @endphp
                             @foreach ($inbounds as $inbound)
                                 @php
                                     $total = $inbound->totalAmount;
@@ -64,31 +67,35 @@
                                 <tr>
                                     <td>{{ $inbound->f_created_at }}</td>
                                     <td>{{ $inbound->code }}</td>
-                                    <td>{{ $inbound->degic_no}}</td>
+                                    <td>{{ $inbound->degic_no }}</td>
                                     <td>{{ $inbound->customer->fullName }}</td>
                                     <td><span class="label label-primary">{{ formatNumber($total) }}</span></td>
                                     <td>{{ formatNumber($total - $inbound->delivered_amount) }}</td>
                                     <td>{{ $inbound->status }}</td>
-                                    <td>{{ $inbound->with_invoice === 1 ? "W/ SI" : "" }}</td>
+                                    <td>{{ $inbound->with_invoice === 1 ? 'W/ SI' : '' }}</td>
                                     <td>
                                         @if ($inbound->status == 'Completed')
-                                        {{ number_format($inbound->created_at->diffInDays(now()), 0) }}
+                                            {{ number_format($inbound->created_at->diffInDays(now()), 0) }}
                                         @endif
                                     </td>
                                     <td>
                                         @if ($inbound->status == 'Completed')
                                             <a href="#" data-target="#modalAddAmountDelivered"
                                                 data-toggle="modal"><button class="btn btn-danger"
-                                                    onclick="setObId(`{{ $inbound->id }}`)">Update</button></a>
+                                                    onclick="setObId(`{{ $inbound->id }}`)"><i class="fas fa-plus"></i> Payment</button></a>
                                         @endif
 
                                         @if ($inbound->is_with_badOrder)
                                             <button class="btn btn-xs btn-danger">W/ BO</button>
                                         @endif
 
-
-                                         <a href="{{ route('order.edit', ['inboundId' => $inbound->id ]) }}" class="btn btn-primary">Edit</button></a>
-
+                                        @if ($inbound->status === 'Paid' or $inbound->totalBalance === 0)
+                                            <a href="{{ route('order.view', ['inboundId' => $inbound->id]) }}"
+                                                class="btn btn-primary">View</button></a>
+                                        @else
+                                            <a href="{{ route('order.edit', ['inboundId' => $inbound->id]) }}"
+                                                class="btn btn-primary">Edit</button></a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -243,5 +250,4 @@
         function setObId(obId) {
             $('#ob_id').val(obId);
         }
-
     </script>

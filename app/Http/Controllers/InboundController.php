@@ -17,6 +17,7 @@ use App\Models\Vehicles;
 use App\Services\InboundProductsService;
 use App\Services\InboundService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class InboundController extends Controller
 {
@@ -38,7 +39,7 @@ class InboundController extends Controller
             return redirect()->route('order.index')->withErrors('Delivered amount is greater than the total amount.');
         }
 
-        if($request->filled('status') != ''){
+        if ($request->filled('status') != '') {
             $inbound->status = $request->status;
         }
 
@@ -221,32 +222,35 @@ class InboundController extends Controller
     // ajax products list
     public function ajaxProductList($code)
     {
-
         $pricelevelId = session('pricelevelId');
         $branchCode = session('branch_code');
 
-        $allProducts = Product::where('product_type_code', $code)->get();
+        $products = Product::where('product_type_code', $code)
+            ->join('item_master_data', function ($join) use ($branchCode) {
+                $join->on('products.code', '=', 'item_master_data.product_code')
+                    ->where('item_master_data.branch_code', '=', $branchCode);
+            })
+            ->whereRaw('item_master_data.stocks - item_master_data.reserved > 0')
+            ->select(
+                'products.code',
+                DB::raw('item_master_data.stocks - item_master_data.reserved as available_stocks')
+            )
+            ->orderByDesc(DB::raw('item_master_data.stocks - item_master_data.reserved'))
+            ->get()
+            ->map(function ($item) use ($pricelevelId) {
+                $price = prices::getPricePerPriceLevelAndPCode($pricelevelId, $item->code);
+                return [
+                    'code' => $item->code,
+                    'price' => $price ?? $item->price,
+                    'unit' => "0",
+                    'qty' => $item->available_stocks
+                ];
+            });
 
-        $products = [];
-
-        foreach ($allProducts as $product) {
-
-            $price = prices::getPricePerPriceLevelAndPCode(session('pricelevelId'), $product->code);
-
-            $item = ItemMasterData::branch(session('branch_code'))->productCode($product->code)->first();
-
-            if ($item) {
-
-                if ($item->availableStocks != 0) {
-
-                    $t = ['code' => $product->code, 'price' => $product->price, 'unit' => "0", 'qty' => $item->availableStocks];
-
-                    array_push($products, $t);
-                }
-            }
-        }
-
-        return view('productsList', compact('products', 'pricelevelId', 'branchCode'));
+        return view(
+            'productsList',
+            compact('products', 'pricelevelId', 'branchCode')
+        );
     }
 
     // ajax inbound products
@@ -432,7 +436,7 @@ class InboundController extends Controller
         $currentProduct = $inboundService->getCurrentQty($code);
 
         $item = ItemMasterData::branch(session('branch_code'))->productCode($code)->first();
-        if($action == 'add' && ($currentProduct + 1) > $item->availableStocks){
+        if ($action == 'add' && ($currentProduct + 1) > $item->availableStocks) {
             return response()->json(['error' => 'Insufficient stocks.']);
         }
 
@@ -511,7 +515,9 @@ class InboundController extends Controller
 
         $products = $inbound->products;
 
-        $drivers = Drivers::active()->get();
+        $deliveryPersons = Drivers::active()->perDesignation('Salesman')->get();
+
+        $drivers = Drivers::active()->perDesignation('Driver')->get();
 
         $vehicles = Vehicles::active()->get();
 
@@ -539,7 +545,41 @@ class InboundController extends Controller
 
         session()->put('products', $inboundList);
 
-        return view('ordering-edit', compact('inbound', 'inboundId', 'equipment', 'drivers', 'vehicles', 'pricing', 'productTypes', 'inboundList', 'summary'));
+        return view('ordering-edit', compact('inbound', 'inboundId', 'equipment', 'drivers', 'vehicles', 'pricing', 'productTypes', 'inboundList', 'summary', 'deliveryPersons'));
+    }
+
+    public function view($inboundId)
+    {
+
+        session()->put('inboundId', $inboundId);
+
+        $inbound = Inbound::find($inboundId);
+
+        $priceLevel = pricelevels::find($inbound->pricelevel_id);
+
+        $products = $inbound->products;
+
+        $drivers = Drivers::active()->get();
+
+        $productTypes = ProductType::where('is_active', 1)->orderBy('sequence_no', 'asc')->get();
+
+        $inboundList = [];
+        $summary = [];
+
+        if ($products) {
+            $inboundList = json_decode($products, true);
+            if ($inboundList == null) {
+                $inboundList = [];
+            }
+
+            $inboundService = new InboundProductsService($products);
+
+            $summary = $inboundService->summary();
+
+            $summary = $inboundService->addSppbinSummary(); // ! you need to call summary() first before addSppbinSummary()
+        }
+
+        return view('ordering-view', compact('inbound', 'inboundId', 'drivers', 'inboundList', 'summary', 'priceLevel'));
     }
 
     public function updateInbound(Request $request)
@@ -550,6 +590,7 @@ class InboundController extends Controller
             'pricelevel_id' => 'required',
             'customer_id' => 'required',
             'equipment_id' => 'required',
+            'delivery_person_id' => 'required',
             'driver_id' => 'required',
             'vehicle_id' => 'required',
             'bad_order_id' => 'nullable',
@@ -564,11 +605,15 @@ class InboundController extends Controller
         $inbound = Inbound::find($request->inbound_id);
         $inbound->equipment_id = $request->equipment_id;
         $inbound->driver_id = $request->driver_id;
+        $inbound->delivery_person_id = $request->delivery_person_id;
         $inbound->vehicle_id = $request->vehicle_id;
         $inbound->pricelevel_id = $request->pricelevel_id;
         $inbound->customer_id = $request->customer_id;
         $inbound->store_id = $equipStore->store_id;
         $inbound->with_invoice = $request->with_invoice == 'on' ? 1 : 0;
+
+        $inbound->driver_name = Drivers::find($request->driver_id)->name;
+        $inbound->delivery_person = Drivers::find($request->delivery_person_id)->name;
 
         $inbound->products = json_encode(session()->get('products'));
 

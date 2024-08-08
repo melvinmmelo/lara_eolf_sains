@@ -253,7 +253,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/order/create', [InboundController::class, 'create'])->name('order.create');
 
-    Route::get('/order/{inboundId}/edit', [InboundController::class, 'edit'])->name('order.edit');
+    Route::get('/order/{inboundId}/edit/{vm?}', [InboundController::class, 'edit'])->name('order.edit');
+
+    Route::get('/order/{inboundId}/view', [InboundController::class, 'view'])->name('order.view');
+
 
     Route::put('/order/update', [InboundController::class, 'updateInbound'])->name('order.updateInbound');
 

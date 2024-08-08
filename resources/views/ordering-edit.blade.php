@@ -136,7 +136,20 @@
                                 <div class="form-group">
                                     <label class="form-label" for="deliveryPerson"><i style="color:red">*</i>Delivery
                                         Person</label>
-                                    <select class="form-control" name="driver_id" id="deliveryPerson" required>
+                                    <select class="form-control" name="delivery_person_id" id="deliveryPerson" required>
+                                        <option value="">--Select--</option>
+                                        @foreach ($deliveryPersons as $dperson)
+                                            <option value="{{ $dperson->id }}">{{ $dperson->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+
+                                <div class="form-group">
+                                    <label class="form-label" for="driver_id"><i style="color:red">*</i>Driver</label>
+                                    <select class="form-control" name="driver_id" id="driver_id" required>
                                         <option value="">--Select--</option>
                                         @foreach ($drivers as $driver)
                                             <option value="{{ $driver->id }}">{{ $driver->name }}</option>
@@ -423,7 +436,8 @@
     <script>
         // set value on document load
         document.getElementById('pricelevel_id').value = "{{ $inbound->pricelevel_id ?? '' }}";
-        document.getElementById('deliveryPerson').value = "{{ $inbound->driver_id ?? '' }}";
+        document.getElementById('deliveryPerson').value = "{{ $inbound->delivery_person_id ?? '' }}";
+        document.getElementById('driver_id').value = "{{ $inbound->driver_id ?? '' }}";
         document.getElementById('vehicle').value = "{{ $inbound->vehicle_id ?? '' }}";
         document.getElementById('equipment').value = "{{ $inbound->equipment_id }}";
         document.getElementById('customer_id').value = "{{ $inbound->customer_id ?? '' }}";

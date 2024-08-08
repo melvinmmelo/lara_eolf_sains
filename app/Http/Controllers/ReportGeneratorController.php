@@ -8,46 +8,50 @@ use Illuminate\Http\Request;
 
 class ReportGeneratorController extends Controller
 {
-    //
-
     public function orderSlip($code)
     {
-
         $orderSlip = OrderSlip::where('code', $code)->first();
         $inbounds = Inbound::where('order_slip_code', $code)->get();
-        $totalInbounds = count($inbounds);
-        $totalFitProducts = 22;
+        $totalInbounds = $inbounds->count();
 
-        $j = 0; // counter of the inbounds
-        $deno = 7;
-        $totalPages = 1;
-        $remainder = 0;
+        $pagesData = $this->distributeInboundsToPages($inbounds);
+        $totalPages = count($pagesData);
+        $grandTotal = $inbounds->sum('totalAmount');
 
-        if($totalInbounds > $deno){
-            $totalPages = ceil($totalInbounds / $deno);
-            $remainder = $totalInbounds % $deno;
-            // dd("total pages: " . $totalPages);
-        }
 
-        if($totalPages === 1){
-            $deno = $totalInbounds % $deno;
-        }
+        return view('report.orderSlip', compact('inbounds', 'code', 'orderSlip', 'grandTotal', 'totalInbounds', 'totalPages', 'pagesData'));
+    }
 
-        $grandTotal = 0;
+    private function distributeInboundsToPages($inbounds)
+    {
+        $pagesData = [];
+        $currentPage = 1;
+        $currentPageRows = 0;
 
-        // iterate through the products and get the total quantity and price
         foreach ($inbounds as $inbound) {
-            $products = json_decode($inbound->products, true);
-            $grandTotal += $inbound->totalAmount;
+            $productsCount = count(json_decode($inbound->products, true));
+            $rowsNeeded = $this->calculateRowsNeeded($productsCount);
+
+            if ($currentPageRows + $rowsNeeded > 9) {
+                $currentPage++;
+                $currentPageRows = 0;
+            }
+
+            $pagesData[$currentPage][] = $inbound;
+            $currentPageRows += $rowsNeeded;
         }
 
+        return $pagesData;
+    }
 
-        // dd($inbounds[0]);
-        // dd($remainder);
-        // dd($totalPages);
-        // dd($totalInbounds);
-
-
-        return view('report.orderSlip', compact('inbounds', 'code', 'orderSlip', 'grandTotal', 'totalInbounds', 'totalPages', 'deno', 'remainder', 'j', 'totalFitProducts'));
+    private function calculateRowsNeeded($productsCount)
+    {
+        if ($productsCount <= 23) {
+            return 1;
+        } elseif ($productsCount <= 45) {
+            return 2;
+        } else {
+            return 3;
+        }
     }
 }
