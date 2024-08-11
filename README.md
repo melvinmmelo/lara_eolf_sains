@@ -10,3 +10,16 @@ Aug. 5-6 Updates
 7. Testing of editing of inventory (should be reflected in item master data) - Ok
 8. Order slip duplicate product - Ok
 9. Negative reserved - Ok
+
+
+Aug 6-8 Updates
+1. Audit trail description
+2. Inbound summary per products total quantity
+3. Reset inventory tar and cag branch
+4. Double checking of inventory
+5. Order slip enhancement
+6. Product order summary
+
+
+Aug. 11 Updates
+1. Check notes in iphone8

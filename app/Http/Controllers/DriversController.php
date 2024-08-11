@@ -93,6 +93,7 @@ class DriversController extends Controller
     {
         $request->validate([
             'e_id' => 'required',
+            'e_name' => 'required',
             'e_address' => 'required',
             'e_contact' => 'required',
             'e_status' => 'nullable',
@@ -101,6 +102,7 @@ class DriversController extends Controller
         ]);
 
         $dp = Drivers::find($request->e_id);
+        $dp->name = $request->e_name;
         $dp->address = $request->e_address;
         $dp->contact = $request->e_contact;
         $dp->status = $request->e_status ? 'Active' : 'Inactive';

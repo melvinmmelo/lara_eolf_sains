@@ -147,7 +147,6 @@
                             </div>
 
                             <div class="col-sm-3">
-
                                 <div class="form-group">
                                     <label class="form-label" for="driver_id"><i style="color:red">*</i>Driver</label>
                                     <select class="form-control" name="driver_id" id="driver_id" required>
@@ -187,7 +186,6 @@
                             </div>
 
                             <div class="col-sm-3">
-
                                 <div class="form-group">
                                     <label class="form-label" for="order_date"><i style="color:red">*</i>Date</label>
                                     <input type="date" class="form-control" name="order_date" id="order_date" value="{{ $nextDay }}" required>
@@ -346,6 +344,11 @@
                             <div class="form-checkbox">
                                 <input type="checkbox" id="isBadPricing" name="bad_order" value="on">
                                 <label for="isBadPricing">Bad order</label>
+                            </div>
+
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="isFOC" name="foc" value="on">
+                                <label for="isFOC">FOC</label>
                             </div>
                         </div>
                     </div>
@@ -648,6 +651,8 @@
                     alert(error)
                 });
         }
+
+
 
         // on select pricelevel_id change
         // document.getElementById('pricelevel_id').addEventListener('change', function() {

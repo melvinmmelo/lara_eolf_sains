@@ -32,8 +32,8 @@
                     <thead>
                         <tr>
                             <th>Customer</th>
-                            <th>BO %</th>
                             <th>Total Amount</th>
+                            <th>BO %</th>
                             <th>Remarks</th>
                             <th>Created Date</th>
                             <th>Action</th>
@@ -49,8 +49,8 @@
                                     {{ optional($badOrder['customer'])->lastname }}
                                     ({{ optional($badOrder['storeinfo'])->storename }})
                                 </td>
-                                <td>{{ $badOrder['bo_percentage'] }}</td>
                                 <td>{{ formatNumber($badOrder['amount']) }}</td>
+                                <td>{{ $badOrder['bo_percentage'] }}</td>
                                 <td>{{ $badOrder['remarks'] }}</td>
                                 <td>{{ $badOrder['created_at'] }}</td>
                                 <td> <!-- Add a delete button -->

@@ -28,7 +28,7 @@ class BadOrder extends Model
         'amount',
     ];
 
-    protected $appends = ['code'];
+    protected $appends = ['bocode'];
 
     public function customer()
     {
@@ -46,7 +46,7 @@ class BadOrder extends Model
         return $query->where('inbound_id', $inboundId);
     }
 
-    public function getCodeAttribute()
+    public function getBOCodeAttribute()
     {
         return $this->created_at->format('Y') . "-" . str_pad($this->id, 5, "0", STR_PAD_LEFT);
     }

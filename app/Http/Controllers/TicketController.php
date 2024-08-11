@@ -29,7 +29,7 @@ class TicketController extends Controller
         $ticketdetails="";
         $sorted_product_codes = DB::table('product_types')->orderBy('sequence_no', 'asc')->select('code','spoon_pcs_per_bag')->get();
         //dd($sorted_product_codes);
-        $inbounds = Inbound::branch(session('branch_code'))->forLoading()->WithProducts()->get();
+        $inbounds = Inbound::branch(session('branch_code'))->forLoading()->WithProducts()->activeOrders()->get();
         if(Session::has('ticketnum')){
             $ticketdetails = Inbound::where('grp_print_ticket_no', session()->get('ticketnum'))->get();
         }

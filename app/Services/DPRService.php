@@ -140,4 +140,17 @@ class DPRService extends Model
             }
         }
     }
+
+    public function updateProduct($updatedProduct)
+    {
+        if ($this->products) {
+            foreach ($this->products as $key => $product) {
+                if ($product['code'] === $updatedProduct['code']) {
+                    $this->products[$key] = array_merge($product, $updatedProduct);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

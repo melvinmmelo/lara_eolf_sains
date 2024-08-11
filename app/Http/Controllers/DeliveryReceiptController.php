@@ -56,7 +56,7 @@ class DeliveryReceiptController extends Controller
     {
 
         $nextDay = date('Y-m-d', strtotime('+1 day', strtotime(date('Y-m-d'))));
-        $outbounds = Inbound::branch(session('branch_code'))->whereNull('delivery_receipt_id')->withProducts()->get();
+        $outbounds = Inbound::branch(session('branch_code'))->whereNull('delivery_receipt_id')->withProducts()->activeOrders()->get();
 
         $query = DeliveryReceipt::query();
 

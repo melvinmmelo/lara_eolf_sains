@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BadOrder;
 use App\Models\Customers;
+use App\Models\DeliveryPurchaseReceipt;
 use App\Models\Inbound;
 use App\Models\Drivers;
 use App\Models\Equipment;
@@ -14,6 +15,7 @@ use App\Models\prices;
 use App\Models\Product;
 use App\Models\ProductType;
 use App\Models\Vehicles;
+use App\Services\DPRService;
 use App\Services\InboundProductsService;
 use App\Services\InboundService;
 use Illuminate\Http\Request;
@@ -22,6 +24,53 @@ use Illuminate\Support\Facades\DB;
 // this is actually the outboundcontroller, nagkamali lang ng naming
 class InboundController extends Controller
 {
+
+    public function resetInventory()
+    {
+        $branchCode = session('branch_code');
+
+        // delete first and reset the data
+        ItemMasterData::branch($branchCode)->delete();
+
+        $dPurchaseReceipts = DeliveryPurchaseReceipt::branch($branchCode)->where('status', 'Completed')->first();
+
+        foreach ($dPurchaseReceipts as $dpr) {
+            $dprService = new DPRService($dpr->products);
+            $dprService->saveAndInventoryProducts();
+        }
+
+        // ? update item_master_data to reset reserved
+        // ? uncomment this if you want to reset the reserved stocks
+        $products = InboundService::getTotalOfAllInboundProducts($branchCode);
+        foreach ($products as $product) {
+            $itemData = ItemMasterData::branch($branchCode)->productCode($product['code'])->first();
+            if ($itemData) {
+                $itemData->reserved += $product['quantity'];
+                $itemData->save();
+            }
+        }
+
+        $inbounds = InboundService::getInboundsWithDeliveryReceipt($branchCode);
+
+        // inventory products of all inbounds with delivery receipt
+        if ($inbounds) {
+            foreach ($inbounds as $inbound) {
+                $products = json_decode($inbound->products, true);
+                if ($products) {
+                    foreach ($products as $product) {
+                        $itemData = ItemMasterData::branch($branchCode)->productCode($product['code'])->first();
+                        if ($itemData) {
+                            $itemData->reserved -= $product['quantity'];
+                            $itemData->stocks -= $product['quantity'];
+                            $itemData->save();
+                        }
+                    }
+                }
+            }
+        }
+
+        dd("Inventory has been reset.");
+    }
 
     public function addPayment(Request $request)
     {
@@ -101,7 +150,7 @@ class InboundController extends Controller
 
         $vehicles = Vehicles::active()->get();
 
-        $inbounds = Inbound::with('driver', 'vehicle')->branch(session('branch_code'))->get();
+        $inbounds = Inbound::with('driver', 'vehicle')->branch(session('branch_code'))->activeOrders()->get();
 
         $equipment = EquipmentStore::all();
 
@@ -223,6 +272,9 @@ class InboundController extends Controller
     public function store(Request $request)
     {
 
+        $branchCode = session('branch_code');
+        $errors = [];
+
         $request->validate([
             'pricelevel_id' => 'required',
             'customer_id' => 'required',
@@ -275,7 +327,10 @@ class InboundController extends Controller
         $inbound->vehicle_no = $vehicles->plateno;
         $inbound->with_invoice = $request->with_invoice == 'on' ? 1 : 0;
 
-        $bad_order = $request->bad_order == 'on' ? 1 : 0;
+        $bad_order = $request->bad_order === 'on' ? 1 : 0;
+        $is_foc = $request->is_foc === 'on' ? 1 : 0;
+        $inbound->is_foc = $is_foc;
+
 
         if ($bad_order == 1) {
 
@@ -288,7 +343,6 @@ class InboundController extends Controller
 
         $inbound->order_date = $request->order_date;
 
-
         $inbound->save();
 
         $updatingData = [];
@@ -297,14 +351,21 @@ class InboundController extends Controller
 
             $message = 'Failed';
 
-            $itemData = ItemMasterData::branch(session('branch_code'))->productCode($product['code'])->first();
+            $itemData = ItemMasterData::branch($branchCode)->productCode($product['code'])->first();
+            if (!$itemData) {
+                $errMsg = "Product $product[code] not found in ItemMasterData. Order $inbound->id failed.";
+                activity('outbound')
+                    ->log($errMsg);
+                $errors[] = $errMsg;
+                continue;
+            } else {
+                $itemData->reserved += $product['quantity'];
+                $itemData->save();
 
-            $itemData->reserved += $product['quantity'];
-            $itemData->save();
+                $message = 'Success';
 
-            $message = 'Success';
-
-            $updatingData[] = ['code' => $product['code'], 'message' => $message];
+                $updatingData[] = ['code' => $product['code'], 'message' => $message];
+            }
         }
 
         session()->put('updatingDataResults', $updatingData);
@@ -315,6 +376,7 @@ class InboundController extends Controller
             ->performedOn($inbound)
             ->log("Outbound $inbound->id created by " . auth()->user()->fullName);
 
+        session('errors', $errors);
 
         return redirect()->route('order.index')->with('success', 'Your order has been completed.');
     }
@@ -361,15 +423,39 @@ class InboundController extends Controller
     }
 
     // create delete inbound function
-    public function destroy($inbound)
+    public function destroy(Request $request)
     {
-        Inbound::destroy($inbound);
+
+        $request->validate([
+            'inbound_id' => 'required|exists:inbounds,id',
+            'confirm_delete' => 'required',
+            'remarks' => 'nullable',
+        ]);
+
+        if ($request->confirm_delete !== 'Delete') {
+            return back()->withErrors('Please confirm deletion.');
+        }
+
+        $inbound = Inbound::findOrFail($request->inbound_id);
+
+        $products = json_decode($inbound->products, true);
+        foreach ($products as $product) {
+            $itemData = ItemMasterData::branch(session('branch_code'))->productCode($product['code'])->first();
+            if ($itemData) {
+                $itemData->reserved -= $product['quantity'];
+                $itemData->stocks += $product['quantity'];
+                $itemData->save();
+            }
+        }
+        $inbound->status = 'Deleted';
+        $inbound->remarks = $request->remarks;
+        $inbound->save();
 
         activity('outbound')
             ->performedOn($inbound)
             ->log("Inbound $inbound deleted by " . auth()->user()->fullName);
 
-        return redirect()->route('order.index')->with('success', 'An inbound has been deleted.');
+        return redirect()->route('order.index')->with('success', 'The order has been deleted.');
     }
 
     public function create()
@@ -491,6 +577,7 @@ class InboundController extends Controller
             'vehicle_id' => 'required',
             'bad_order_id' => 'nullable',
             'bo_amount' => 'nullable',
+            'is_foc' => 'nullable',
         ]);
 
         $equipStore =  EquipmentStore::where('equipment_id', $request->equipment_id)->where('customer_id', $request->customer_id)->first();
@@ -507,6 +594,7 @@ class InboundController extends Controller
         $inbound->customer_id = $request->customer_id;
         $inbound->store_id = $equipStore->store_id;
         $inbound->with_invoice = $request->with_invoice == 'on' ? 1 : 0;
+        $inbound->is_foc = $request->is_foc == 'on' ? 1 : 0;
 
         $inbound->driver_name = Drivers::find($request->driver_id)->name;
         $inbound->delivery_person = Drivers::find($request->delivery_person_id)->name;

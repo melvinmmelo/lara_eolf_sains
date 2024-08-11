@@ -22,6 +22,7 @@ class Inbound extends Model
         'products',
         'with_invoice',
         'bad_order',
+        'is_foc',
         'status',
         'pricelevel_id',
         'payment_type',
@@ -71,6 +72,10 @@ class Inbound extends Model
         return $this->belongsTo(Vehicles::class);
     }
 
+    public function deliveryReceipt() : BelongsTo {
+        return $this->belongsTo(DeliveryReceipt::class);
+    }
+
     public function getfCreatedAtAttribute()
     {
         return $this->order_date ? $this->order_date->format('Y-m-d') : null;
@@ -111,7 +116,13 @@ class Inbound extends Model
         return $query->whereNotNull('products');
     }
 
-    // get the total amount of the products
+    // scope that is not free and status is not deleted
+    public function scopeActiveOrders($query)
+    {
+        return $query->whereNull('is_foc')->where('status', '!=', 'Deleted');
+    }
+
+
     public function getTotalAmountAttribute()
     {
         $total = 0;
@@ -127,7 +138,6 @@ class Inbound extends Model
 
         $this->grandTotal = $total;
         return $this->netAmount = $total - ($this->bo_amount + $this->discount);
-        // return $total - ($this->bo_amount+$this->discount);
     }
 
     public function getGrandTotalAttribute()

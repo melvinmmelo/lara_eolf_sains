@@ -49,11 +49,14 @@
             @include('layouts.errors')
             <div class="card">
                 <div class="card-body">
-                    <!-- <div class="pb-2">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
-                                Add New
-                            </button>
-                        </div> -->
+                    <div class="mb-2">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
+                            Add New
+                        </button>
+                        <button type="submit" class="btn btn-danger ml-2">
+                            Delete Selected
+                        </button>
+                    </div>
                     <form id="bulk-delete-form" action="{{ route('equipment.bulk-delete') }}" method="POST">
                         @csrf
                         @method('DELETE')
@@ -92,9 +95,10 @@
                                                 data-toggle="modal" data-target="#edit-equipment"
                                                 onclick="setToUpdateEquipment('{{ $equipment->id }}','{{ $equipment->ownership }}','{{ $equipment->type }}','{{ $equipment->brand }}','{{ $equipment->price }}','{{ $equipment->serial_no }}','{{ $equipment->model }}','{{ $equipment->code }}','{{ $equipment->distributor }}','{{ $equipment->date_delivered }}','{{ $equipment->date_purchased }}')">Edit</button>
 
-                                        <a href="{{ route('equipment.history', [ 'dno' => $equipment->code ]) }}"><button type="button" class="btn btn-default">
-                                                History
-                                            </button></a>
+                                            <a href="{{ route('equipment.history', ['dno' => $equipment->code]) }}"><button
+                                                    type="button" class="btn btn-default">
+                                                    History
+                                                </button></a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -123,22 +127,22 @@
                 </div>
                 <!-- /.card-body -->
                 <!-- <div class="card-footer">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
-                            Add New
-                        </button>
-                    </div> -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
+                                Add New
+                            </button>
+                        </div> -->
                 <!-- /.card-footer-->
             </div>
 
             <!-- /.card-body -->
             <!-- <div class="card-footer">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
-                            Add New
-                        </button>
-                        <button type="button" class="btn btn-danger ml-2" id="delete-selected">
-                            Delete Selected
-                        </button>
-                    </div> -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-equipment">
+                                Add New
+                            </button>
+                            <button type="button" class="btn btn-danger ml-2" id="delete-selected">
+                                Delete Selected
+                            </button>
+                        </div> -->
             <!-- /.card-footer-->
         </div>
 
@@ -182,7 +186,8 @@
                                 <div class="row mb-2">
                                     <div class="col-sm-6">
                                         <label class="form-label" for="brand">Brand</label>
-                                        <input type="text" class="form-control" id="brand" name="brand" required>
+                                        <input type="text" class="form-control" id="brand" name="brand"
+                                            required>
                                     </div>
 
                                     <div class="col-sm-6">

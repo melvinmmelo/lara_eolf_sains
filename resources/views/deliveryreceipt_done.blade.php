@@ -28,11 +28,6 @@
 
             <div class="card-body">
 
-
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-branch">
-                    Add New
-                </button>
-
                 <form action="{{ route('deliveryreceipt.index') }}" method="GET">
                     @csrf
                     <div class="form-group">

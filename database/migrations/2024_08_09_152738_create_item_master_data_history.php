@@ -11,21 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('item_master_data', function (Blueprint $table) {
+        Schema::create('item_master_data_history', function (Blueprint $table) {
             $table->id();
             $table->string('branch_code');
             $table->string('product_code');
             $table->string('product_description');
             $table->string('unit');
-            $table->unsignedInteger('stocks');
-            $table->unsignedInteger('reserved')->default(0);
-            $table->unsignedInteger('hold_quantity')->default(0);
+            $table->integer('stocks');
+            $table->integer('reserved')->default(0);
+            $table->integer('hold_quantity')->default(0);
             $table->json('hold_details')->nullable(); // save the DR ID, PCODE, AND QUANTITY, DATE;
             $table->timestamps();
-
-            $table->unique(['branch_code', 'product_code']);
-            $table->index('branch_code');
-
         });
     }
 
@@ -34,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('item_master_data');
+        Schema::dropIfExists('item_master_data_history');
     }
 };

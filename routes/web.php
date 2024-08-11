@@ -44,14 +44,6 @@ Route::get('/', function () {
 });
 
 
-// Route::get('/delivery-receipt', function () {
-//     return view('delivery-receipt');
-// });
-
-
-
-
-
 Route::middleware('auth')->group(function () {
 
     Route::get('/order-slips', [OrderSlipController::class, 'index'])->name('order-slips');
@@ -61,6 +53,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/print-order-slip', [OrderSlipController::class, 'print'])->name('print-order-slip');
 
     Route::get('/order-slip/{code}', [ReportGeneratorController::class, 'orderSlip'])->name('report.orderSlip');
+
+    Route::get('/products-summary', [ReportGeneratorController::class, 'productsSummary'])->name('report.productsSummary');
+
 
     Route::get('/loading-ticket', function () {
         return view('loading-ticket');
@@ -114,9 +109,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dpr-products-edit-live/{dprId}', [DeliveryPurchaseReceiptController::class, 'productsEdit'])->name('drp.products-edit');
 
-    Route::get('/dpr-submit-live-edit', [DeliveryPurchaseReceiptController::class, 'update'])->name('drp.products-update');
-
-
+    Route::post('/dpr-submit-live-edit', [DeliveryPurchaseReceiptController::class, 'update'])->name('drp.products-update');
 
     Route::post('/dpr-product/store', [DeliveryPurchaseReceiptController::class, 'storeProduct'])->name('dpr-product.store');
 
@@ -272,7 +265,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/inbound-updateProdQty/{code}/{action}', [InboundController::class, 'update'])->name('inbound.update');
 
-    Route::get('/inbound-destroy/{inbound}', [InboundController::class, 'destroy'])->name('inbound.destroy');
+    Route::delete('/inbound-destroy', [InboundController::class, 'destroy'])->name('inbound.destroy');
 
     Route::get('/set-branch/{code}', [BranchesController::class, 'setBranchSession'])->name('branch.setBranchSession');
 

@@ -4,10 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Inbound;
 use App\Models\OrderSlip;
+use App\Services\InboundService;
 use Illuminate\Http\Request;
+
+use function Ramsey\Uuid\v1;
 
 class ReportGeneratorController extends Controller
 {
+
+    public function productsSummary()
+    {
+        $branchCode = session('branch_code');
+
+        $products = InboundService::getTotalOfAllInboundProducts($branchCode); // ! you can add 2nd parameter for date sample "2024-08-08"
+
+        return view('report.productsSummary', compact('products'));
+    }
     public function orderSlip($code)
     {
         $orderSlip = OrderSlip::where('code', $code)->first();

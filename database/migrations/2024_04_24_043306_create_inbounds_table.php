@@ -29,6 +29,7 @@ return new class extends Migration
             $table->tinyInteger('bad_order')->nullable();
             $table->unsignedInteger('bad_order_id')->nullable();
             $table->float('bo_amount', 2)->nullable();
+            $table->tinyInteger('is_foc')->nullable();
             $table->string('status', 10);
             $table->unsignedInteger('pricelevel_id');
             $table->string('payment_type', 30)->nullable();
@@ -47,6 +48,7 @@ return new class extends Migration
             $table->string('order_slip_code')->nullable();
             $table->integer('order_slip_sno')->nullable();
             $table->unsignedInteger('delivery_receipt_id')->nullable();
+            $table->text('remarks')->nullable();
             $table->timestamps();
             $table->date('order_date');
             $table->index('branch_code');

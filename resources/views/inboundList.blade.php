@@ -41,7 +41,7 @@
                                     </div>
                                     <input type="text" id="{{ $product['code'] }}" name="quantity"
                                         class="form-control input-number" value="{{ $product['quantity'] }}"
-                                        min="1" max="99999">
+                                        min="1" max="99999" readonly>
                                     <div class="input-group-append">
                                         <button type="button"
                                             class="quantity-right-plus btn btn-success btn-number btn-xs"

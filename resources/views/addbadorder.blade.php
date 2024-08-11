@@ -5,12 +5,12 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Bad Order Details</h1>
+                <h1>Create Bad Order</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Bad Orders</li>
+                    <li class="breadcrumb-item active">Create Bad Order</li>
                 </ol>
             </div>
         </div>
@@ -44,13 +44,13 @@
                         </div>
 
                         <div class="col-sm-12">
-                            <label class="form-label" for="re_dr">Red. DR:</label>
-                            <input type="text" class="form-control" id="re_dr" name="re_dr">
+                            <label class="form-label" for="re_dr"><i style="color:red">*</i>Ref. DR:</label>
+                            <input type="text" class="form-control" id="re_dr" name="re_dr" required>
                         </div>
 
                         <div class="col-sm-12">
-                            <label class="form-label" for="bo_percentage">BO Percentage</label>
-                            <input type="number" class="form-control" id="bo_percentage" name="bo_percentage" max="100">
+                            <label class="form-label" for="bo_percentage"><i style="color:red">*</i>BO Percentage</label>
+                            <input type="number" class="form-control" id="bo_percentage" name="bo_percentage" max="100" required>
                         </div>
 
                         <div class="col-sm-12">
@@ -75,7 +75,7 @@
 
                     <div class="col-sm-2">
                         <label class="form-label" for="price">Unit Price</label>
-                        <input type="text" class="form-control" id="price" name="price">
+                        <input type="text" class="form-control" id="price" name="price" readonly>
                     </div>
 
                     <div class="col-sm-2">

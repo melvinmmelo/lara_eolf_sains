@@ -163,80 +163,128 @@ class DeliveryPurchaseReceiptController extends Controller
      */
     public function update(Request $request)
     {
+        $request->validate([
+            'dprId' => 'required|exists:delivery_purchase_receipts,id',
+            'code' => 'required',
+            'action' => 'required',
+            'quantity' => 'required_if:action,add',
+            'new_quantity' => 'required_if:action,edit',
+            'hold_qty' => 'required_if:action,edit',
+        ]);
 
         $dpr = DeliveryPurchaseReceipt::findOrFail($request->dprId);
-
-        if (!$dpr) {
-            return redirect()->back()->withErrors('Error processing your request: DPR not found.');
-        }
-
         $dprService = new DPRService($dpr->products);
-
+        $item = ItemMasterData::branch(session('branch_code'))->productCode($request->code)->firstOrFail();
         $product = $dprService->getProduct($request->code);
 
-        $item = ItemMasterData::branch(session('branch_code'))->productCode($request->code)->first();
+        try {
 
-        if (!$item) {
-            return redirect()->back()->withErrors('Error processing your request: Item not found.');
-        }
-
-        $currentStocks = $item->stocks ?? 0;
-
-        if ($request->action == 'delete') {
-            $newQuantity = $item->stocks - $product['quantity'];
-            if ($newQuantity < 0) {
-                return back()->withErrors('Error processing your request.');
-            }
-
-            $dprService->deleteProduct($request->code);
-            $dpr->products = $dprService->getNewProducts();
-        }
-
-        if ($request->action == 'add') {
-
-
-            if (!$product) { // if not existing in products
-
-                $productPrice = prices::getFactoryPrice($request->code);
-
-                if (!$productPrice) {
-                    return redirect()->back()->withErrors('Price not found.');
-                }
-
-                $product = Product::productCode($request->code)->first();
-
-                $sequence_no = ProductType::code($product->product_type_code)->pluck('sequence_no')->first();
-
-                $newProduct = ['order' => $sequence_no, 'code' => $request->code, 'description' => $product->productName, 'quantity' => $request->quantity, 'unit' => $productPrice->p_unit, 'price' => $productPrice->p_price, 'hold' => '0', 'created_at' => now(), 'updated_at' => ''];
-
-                $dprService->addProduct($newProduct);
-
-
-            }else{ // update only the quantity and updated at
-
-                $newQuantity = $currentStocks + $request->quantity;
-
-                $dprService->addProduct($product, $request->quantity);
-
+            switch ($request->action) {
+                case 'delete':
+                    $this->handleDelete($item, $product, $dprService);
+                    break;
+                case 'add':
+                    $this->handleAdd($item, $product, $dprService, $request);
+                    break;
+                case 'edit':
+                    $this->handleEdit($item, $product, $dprService, $request);
+                    break;
+                default:
+                    throw new \InvalidArgumentException('Invalid action specified.');
             }
 
             $dpr->products = $dprService->getNewProducts();
+            $dpr->save();
+            $item->save();
 
+            $this->logActivity($dpr, $request->code);
 
+            return redirect()->back()->with('success', 'Item updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors('Error processing your request: ' . $e->getMessage());
+        }
+    }
+
+    private function handleDelete(ItemMasterData $item, $product, DPRService $dprService)
+    {
+        $newQuantity = $item->stocks - $product['quantity'];
+
+        if ($newQuantity < $item->reserved) {
+            throw new \Exception('New quantity should not be less than to reserved.');
         }
 
-        $dpr->save();
-
-
+        if ($newQuantity < 0) {
+            throw new \Exception('Insufficient stock.');
+        }
+        $dprService->deleteProduct($product['code']);
         $item->stocks = $newQuantity;
+    }
 
-        $item->save();
+    private function handleAdd(ItemMasterData $item, $product, DPRService $dprService, Request $request)
+    {
+        if (!$product) {
+            $this->addNewProduct($dprService, $request);
+        } else {
+            $dprService->addProduct($product, $request->quantity);
+        }
+        $item->stocks += $request->quantity;
+    }
 
+    private function addNewProduct(DPRService $dprService, Request $request)
+    {
+        $productPrice = prices::getFactoryPrice($request->code) ?? throw new \Exception('Price not found.');
+        $product = Product::productCode($request->code)->firstOrFail();
+        $sequenceNo = ProductType::code($product->product_type_code)->pluck('sequence_no')->first();
+
+        $newProduct = [
+            'order' => $sequenceNo,
+            'code' => $request->code,
+            'description' => $product->productName,
+            'quantity' => $request->quantity,
+            'unit' => $productPrice->p_unit,
+            'price' => $productPrice->p_price,
+            'hold' => '0',
+            'created_at' => now(),
+            'updated_at' => ''
+        ];
+
+        $dprService->addProduct($newProduct);
+    }
+
+    private function logActivity(DeliveryPurchaseReceipt $dpr, string $code)
+    {
         activity()
             ->performedOn($dpr)
-            ->log("$request->code updated in dpr $dpr->dr_no by " . auth()->user()->fullName);
+            ->log("$code updated in dpr $dpr->dr_no by " . auth()->user()->fullName);
+    }
 
-        return redirect()->back()->with('success', 'Item updated successfully.');
+    private function handleEdit(ItemMasterData $item, $product, DPRService $dprService, Request $request)
+    {
+        if (!$product) {
+            throw new \Exception('Product not found in DPR.');
+        }
+
+
+        $oldQuantity = $product['quantity'];
+        $newQuantity = $request->new_quantity;
+
+        // new quantity should not be equal and greater than the item reserved quantity
+        if ($newQuantity < $item->reserved) {
+            throw new \Exception('New quantity should not be less than to reserved.');
+        }
+
+        $holdQuantity = $request->hold_qty;
+
+        $quantityDifference = $newQuantity - $oldQuantity;
+        $item->stocks += $quantityDifference;
+
+        $updatedProduct = array_merge($product, [
+            'quantity' => $newQuantity,
+            'hold' => $holdQuantity,
+            'updated_at' => now()
+        ]);
+
+        $dprService->updateProduct($updatedProduct);
     }
 
     /**

@@ -289,7 +289,7 @@
                                                                                 name="quantity"
                                                                                 class="form-control input-number"
                                                                                 value="{{ $product['quantity'] }}"
-                                                                                min="1" max="99999">
+                                                                                min="1" max="99999" readonly>
                                                                             <div class="input-group-append">
                                                                                 <button type="button"
                                                                                     class="quantity-right-plus btn btn-success btn-number btn-xs"
@@ -411,6 +411,11 @@
                                 <input type="checkbox" id="isBadPricing" name="bad_order" value="on">
                                 <label for="isBadPricing">Bad order</label>
                             </div>
+
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="isFOC" name="foc" value="on">
+                                <label for="isFOC">FOC</label>
+                            </div>
                         </div>
                     </div>
 
@@ -442,6 +447,10 @@
         document.getElementById('equipment').value = "{{ $inbound->equipment_id }}";
         document.getElementById('customer_id').value = "{{ $inbound->customer_id ?? '' }}";
         document.getElementById('customer').value = "{{ $inbound->customer->fullName ?? '' }}";
+        // checked is_foc
+        @if($inbound->is_foc)
+            document.getElementById("isFOC").checked = true;
+        @endif
 
         // check if bad order is checked
         @if($inbound->bo_amount > 0)

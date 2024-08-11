@@ -30,13 +30,16 @@
 
     @foreach ($pagesData as $pageNumber => $pageInbounds)
         <page class="text-md" size="legal" layout="landscape">
-            <div class="flex mt-5">
+            <div class="flex mt-5 mb-2">
                 <div class="w-[5%]"></div>
-                <div class="w-[20%]">TRUCK NO.</div>
                 <div class="w-[50%]">
                     Date: <span class="font-bold">{{ $orderSlip->rCreatedAt }}</span><br>
                     Delivery Person/Driver Name: <span class="font-bold">{{ $orderSlip->delivery_person }} /
                         {{ $orderSlip->driver_name }}</span> <br>
+
+                </div>
+                <div class="w-250%]">
+
                 </div>
                 <div class="w-[20%]  text-lg">
                     TOTAL: <span class="font-bold">{{ formatNumber($grandTotal) }}</span>
@@ -113,6 +116,15 @@
                                         </div>
                                     @endforeach
                                 </div>
+
+                                @php $summary = getSummaryOfProducts($orderedProducts); @endphp
+                                <div class="text-sm">Total Quantity for Checking </div>
+                                @foreach ($summary as $key => $value)
+                                    <div class="flex">
+                                        <div class="w-1/2 text-sm font-bold">{{ $key }}</div>
+                                        <div class="text-sm font-bold">{{ $value['total'] }}</div>
+                                    </div>
+                                @endforeach
                             </div>
                         @endif
 

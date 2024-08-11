@@ -81,8 +81,12 @@
                                     <td>
                                         @if ($inbound->status == 'Completed')
                                             <a href="#" data-target="#modalAddAmountDelivered"
+                                                data-toggle="modal"><button class="btn btn-success"
+                                                    onclick="setObId(`{{ $inbound->id }}`)"><i class="fas fa-plus"></i></button></a>
+
+                                            <a href="#" data-target="#modalDeleteOrder"
                                                 data-toggle="modal"><button class="btn btn-danger"
-                                                    onclick="setObId(`{{ $inbound->id }}`)"><i class="fas fa-plus"></i> Payment</button></a>
+                                                    onclick="setObIdToDelete(`{{ $inbound->id }}`, `{{ $inbound->degic_no }}`, `{{ $inbound->customer_name }}`)"><i class="fas fa-trash"></i></button></a>
                                         @endif
 
                                         @if ($inbound->is_with_badOrder)
@@ -91,10 +95,10 @@
 
                                         @if ($inbound->status === 'Paid' or $inbound->totalBalance === 0)
                                             <a href="{{ route('order.view', ['inboundId' => $inbound->id]) }}"
-                                                class="btn btn-primary">View</button></a>
+                                                class="btn btn-default"><i class="fas fa-eye"></i></button></a>
                                         @else
                                             <a href="{{ route('order.edit', ['inboundId' => $inbound->id]) }}"
-                                                class="btn btn-primary">Edit</button></a>
+                                                class="btn btn-primary"><i class="fas fa-edit"></i></button></a>
                                         @endif
                                     </td>
                                 </tr>
@@ -125,107 +129,44 @@
             </div>
             <!-- /.card-footer-->
         </div>
+
         <!-- /.card -->
-        <div class="modal fade" id="modal-orders">
-            <div class="modal-dialog">
+        <div class="modal fade" id="modal-delete">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Create order</h4>
+                        <h4 class="modal-title" id="deleteHeaderTitle">Delete order</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-
-                        <form>
+                        <form action="{{ route("inbound.destroy") }}" method="POST">
+                            @csrf
+                            @method('DELETE')
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="branch_code">Branch Code</label>
+                                        <label class="form-label" for="inbound_id"><i style="color:red">*</i>Remarks</label>
 
-                                        input
-
-                                        <input type="text" class="form-control" name="branch_code" id="branch_code"
-                                            value="{{ session('branch_code') }}" required readonly>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="equipment">Equipment</label>
-                                        <select class="form-control equipment w-100 select2bs4" name="equipment"
-                                            id="equipment" onchange="setCustomerName(this.value)" required>
-                                            <option value="">--Select--</option>
-                                            @foreach ($equipment as $equip)
-                                                <option value="{{ $equip->id }}">
-                                                    {{ $equip->equipment->code . ' ' . $equip->customer->fullName }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="customer"><i style="color:red">*</i>Customer</label>
-                                        <input type="hidden" class="form-control" name="customer_id" id="customer_id"
+                                        <input type="hidden" class="form-control" name="inbound_id" id="inbound_id"
                                             required readonly>
-                                        <textarea class="form-control" rows="3" name="customer" id="customer" required readonly></textarea>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="deliveryPerson"><i style="color:red">*</i>Delivery
-                                            Person</label>
-                                        <select class="form-control" name="deliveryPerson" id="deliveryPerson" required>
-                                            <option value="">--Select--</option>
-                                            @foreach ($drivers as $driver)
-                                                <option value="{{ $driver->id }}">{{ $driver->name }}</option>
-                                            @endforeach
+                                        <select class="form-control" name="remarks" id="remarks" required>
+                                            <option value="Cancelled">Cancel</option>
+                                            <option value="Wrong entry">Wrong entry</option>
                                         </select>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="vehicle"><i style="color:red">*</i>Vehicle</label>
-                                        <select class="form-control" name="vehicle" id="vehicle" required>
-                                            <option value="">--Select--</option>
-                                            @foreach ($vehicles as $vehicle)
-                                                <option value="{{ $vehicle->id }}">{{ $vehicle->plateno }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="pricelevel_id"><i style="color:red">*</i>Price
-                                            Level</label>
-                                        <select class="form-control" name="pricelevel_id" id="pricelevel_id" required>
-                                            <option value="">--Select--</option>
-                                            @foreach ($pricing as $plevel)
-                                                <option value="{{ $plevel->id }}">{{ $plevel->pl_name }}</option>
-                                            @endforeach
-                                        </select>
+                                        <div>
+                                            Type "Delete" to confirm.
+                                            <input type="text" name="confirm_delete" id="confirm_delete" class="form-control" required>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-success">Save payment</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
                             </div>
 
                         </form>
@@ -248,4 +189,13 @@
         function setObId(obId) {
             $('#ob_id').val(obId);
         }
+
+        function setObIdToDelete(obId, orderId, customerName) {
+
+            $('#deleteHeaderTitle').text('Delete order ' + orderId +  ' for ' + customerName + '?');
+
+            $('#inbound_id').val(obId);
+            $('#modal-delete').modal('show');
+        }
     </script>
+@endsection
