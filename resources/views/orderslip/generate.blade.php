@@ -12,7 +12,6 @@
                     <h1>Generate Order Slip</h1>
 
                     <div>
-
                         <select class="form-control" name="driver_id" id="deliveryPerson" required>
                             <option value="">--Select Delivery Person--</option>
                             @foreach ($deliveryPersons as $dperson)
@@ -81,7 +80,7 @@
 
                                     <tr>
                                         <td>
-                                            <input type="checkbox" name="inboundIds[]" value="{{ $inbound->id }}"
+                                            <input class="checkbox" type="checkbox" name="inboundIds[]" value="{{ $inbound->id }}"
                                                 id="inboundIds{{ $inbound->id }}">
                                         </td>
                                         <td>{{ $inbound->f_created_at }}</td>

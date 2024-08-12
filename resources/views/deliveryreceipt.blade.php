@@ -155,7 +155,7 @@
                                     <div class="col-sm-12">
                                         <label class="form-label" for="date"><i style="color:red">*</i>Date</label>
                                         <input type="date" class="form-control" name="date"
-                                            value="{{ $nextDay }}" required>
+                                            value="{{ date('Y-m-d') }}" required>
                                     </div>
                                 </div>
                             </div>

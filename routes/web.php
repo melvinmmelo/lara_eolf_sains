@@ -46,6 +46,10 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
 
+    Route::get('/organize', [OrderSlipController::class, 'organize'])->name('orderSlip.organize');
+
+    Route::get('/organize-update', [OrderSlipController::class, 'organizeUpdate'])->name('orderSlip.organizeUpdate');
+
     Route::get('/order-slips', [OrderSlipController::class, 'index'])->name('order-slips');
 
     Route::get('/generate-order-slip', [OrderSlipController::class, 'generate'])->name('generate-order-slip');

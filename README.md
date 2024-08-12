@@ -23,3 +23,7 @@ Aug 6-8 Updates
 
 Aug. 11 Updates
 1. Check notes in iphone8
+
+Aug. 12 Updates
+1. Checkbox bigger
+2. Order slip ordering

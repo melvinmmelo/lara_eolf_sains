@@ -160,7 +160,7 @@ class InboundProductsService extends Model
             }
         }
 
-        return $totalQty;
+        return (int)$totalQty;
 
     }
 

@@ -10,10 +10,36 @@ use Illuminate\Http\Request;
 
 class OrderSlipController extends Controller
 {
+
+    public function organizeUpdate(Request $request)
+    {
+        $request->validate([
+            'item' => 'required|array',
+        ]);
+
+        $cnt = 1;
+        foreach ($request->item as $inboundId) {
+            $inbound = Inbound::find($inboundId);
+            $inbound->order_slip_sno = $cnt++;
+            $inbound->save();
+        }
+
+        return response()->json(['success' => 'success']);
+    }
+
     public function index()
     {
         $orderSlips = OrderSlip::branchCode(session('branch_code'))->get();
         return view('orderslip.index', compact('orderSlips'));
+    }
+
+    public function organize(Request $request)
+    {
+
+        $orderSlip = OrderSlip::where('code', $request->code)->first();
+        $inbounds = Inbound::where('order_slip_code', $request->code)->orderBy('order_slip_sno')->get();
+
+        return view('orderslip.organize', compact('orderSlip', 'inbounds'));
     }
 
     public function generate()
@@ -72,6 +98,12 @@ class OrderSlipController extends Controller
 
         OrderSlip::create($validated);
 
-        return redirect()->route('report.orderSlip', ['code' => $validated['code']])->with('success', 'Order Slip created successfully.');
+        return redirect()->route('orderSlip.organize', ['code' => $validated['code']])->with('success', 'Order Slip created successfully.');
+
+        // return redirect()->route('report.orderSlip', ['code' => $validated['code']])->with('success', 'Order Slip created successfully.');
+    }
+    public function show($code)
+    {
+        return redirect()->route('report.orderSlip', ['code' => $code])->with('success', 'Order Slip created successfully.');
     }
 }

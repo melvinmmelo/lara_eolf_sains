@@ -23,7 +23,7 @@ class ReportGeneratorController extends Controller
     public function orderSlip($code)
     {
         $orderSlip = OrderSlip::where('code', $code)->first();
-        $inbounds = Inbound::where('order_slip_code', $code)->get();
+        $inbounds = Inbound::where('order_slip_code', $code)->orderBy('order_slip_sno')->get();
         $totalInbounds = $inbounds->count();
 
         $pagesData = $this->distributeInboundsToPages($inbounds);

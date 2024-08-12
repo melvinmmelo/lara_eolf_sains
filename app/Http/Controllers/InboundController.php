@@ -229,9 +229,10 @@ class InboundController extends Controller
 
         $inProdService = new InboundProductsService($products);
         $currentProduct = $inProdService->getCurrentQty($code);
+        $newQty = $currentProduct + $qty;
 
-        if (($currentProduct + $qty) > $item->availableStocks) {
-            return response()->json(['error' => 'Insufficient stocks.']);
+        if ($newQty > $item->availableStocks) {
+            return response()->json(['error' => 'Insufficient stocks.', 'current' => $currentProduct, 'available' => $item->availableStocks]);
         }
 
 
@@ -328,7 +329,7 @@ class InboundController extends Controller
         $inbound->with_invoice = $request->with_invoice == 'on' ? 1 : 0;
 
         $bad_order = $request->bad_order === 'on' ? 1 : 0;
-        $is_foc = $request->is_foc === 'on' ? 1 : 0;
+        $is_foc = $request->is_foc === 'on' ? 1 : NULL;
         $inbound->is_foc = $is_foc;
 
 
@@ -413,6 +414,10 @@ class InboundController extends Controller
             }
         }
 
+        usort($products, function ($a, $b) {
+            return $a['order'] <=> $b['order'];
+        });
+
         session()->forget('products');
         session()->put('products', $products);
 
@@ -425,6 +430,7 @@ class InboundController extends Controller
     // create delete inbound function
     public function destroy(Request $request)
     {
+        $errors = [];
 
         $request->validate([
             'inbound_id' => 'required|exists:inbounds,id',
@@ -442,8 +448,19 @@ class InboundController extends Controller
         foreach ($products as $product) {
             $itemData = ItemMasterData::branch(session('branch_code'))->productCode($product['code'])->first();
             if ($itemData) {
-                $itemData->reserved -= $product['quantity'];
-                $itemData->stocks += $product['quantity'];
+                $newReserved = $itemData->reserved - $product['quantity'];
+                if ($newReserved < 0) {
+                    $errors[] = "Product $product[code] has negative reserved stocks.";
+                    $newReserved = 0;
+                }
+
+                $newStocks = $itemData->stocks + $product['quantity'];
+                if ($newStocks < 0) {
+                    $errors[] = "Product $product[code] has negative stocks.";
+                    $newStocks = 0;
+                }
+                $itemData->reserved = $newReserved;
+                $itemData->stocks = $newStocks;
                 $itemData->save();
             }
         }
@@ -594,7 +611,7 @@ class InboundController extends Controller
         $inbound->customer_id = $request->customer_id;
         $inbound->store_id = $equipStore->store_id;
         $inbound->with_invoice = $request->with_invoice == 'on' ? 1 : 0;
-        $inbound->is_foc = $request->is_foc == 'on' ? 1 : 0;
+        $inbound->is_foc = $request->is_foc == 'on' ? 1 : NULL;
 
         $inbound->driver_name = Drivers::find($request->driver_id)->name;
         $inbound->delivery_person = Drivers::find($request->delivery_person_id)->name;

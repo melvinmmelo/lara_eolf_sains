@@ -67,7 +67,7 @@
 
                                     <tr>
                                         <td>
-                                            <input type="checkbox" name="inboundIds[]" value="{{ $inbound->id }}"
+                                            <input class="checkbox" type="checkbox" name="inboundIds[]" value="{{ $inbound->id }}"
                                                 id="inboundIds{{ $inbound->id }}">
                                         </td>
                                         <td>{{ $inbound->f_created_at }}</td>

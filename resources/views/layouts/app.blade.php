@@ -29,7 +29,6 @@
 
     <!-- Forms label CSS Style -->
     <style>
-
         .form-label {
             font-weight: normal !important;
             color: #5a5a5a;
@@ -110,6 +109,12 @@
             height: 600px;
             overflow: auto;
         }
+
+        .checkbox {
+
+            width: 25px !important;
+            height: 25px !important;
+        }
     </style>
 
     @yield('custom_css')
@@ -168,6 +173,7 @@
     <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
 
+
     <script>
         $(function() {
 
@@ -194,16 +200,42 @@
                     "responsive": true,
                     "lengthChange": false,
                     "autoWidth": false,
-                    "columnDefs": [
-                        { "width": "10%", "targets": 0 },
-                        { "width": "10%", "targets": 1 },
-                        { "width": "10%", "targets": 2 },
-                        { "width": "10%", "targets": 3 },
-                        { "width": "10%", "targets": 4 },
-                        { "width": "19%", "targets": 5 },
-                        { "width": "10%", "targets": 6 },
-                        { "width": "10%", "targets": 7 },
-                        { "width": "10%", "targets": 8 },
+                    "columnDefs": [{
+                            "width": "10%",
+                            "targets": 0
+                        },
+                        {
+                            "width": "10%",
+                            "targets": 1
+                        },
+                        {
+                            "width": "10%",
+                            "targets": 2
+                        },
+                        {
+                            "width": "10%",
+                            "targets": 3
+                        },
+                        {
+                            "width": "10%",
+                            "targets": 4
+                        },
+                        {
+                            "width": "19%",
+                            "targets": 5
+                        },
+                        {
+                            "width": "10%",
+                            "targets": 6
+                        },
+                        {
+                            "width": "10%",
+                            "targets": 7
+                        },
+                        {
+                            "width": "10%",
+                            "targets": 8
+                        },
                     ],
                     "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
                 }).buttons().container().appendTo('#customer_tb_wrapper .col-md-6:eq(0)');
@@ -265,9 +297,8 @@
                 })
             });
 
-            $("[data-bootstrap-switch]").bootstrapSwitch();
-
-            $('.duallistbox').bootstrapDualListbox()
+            // $("[data-bootstrap-switch]").bootstrapSwitch();
+            // $('.duallistbox').bootstrapDualListbox()
 
             $('.select2').select2()
 
