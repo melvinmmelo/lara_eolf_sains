@@ -23,19 +23,8 @@ class DeliveryReceiptController extends Controller
 
         if ($inbound->delivery_receipt_id == null or $inbound->delivery_receipt_id == 0) {
 
-            // $products = json_decode($inbound->products);
-
-            // foreach ($products as $product) {
-
-            //     $item = ItemMasterData::branch(session('branch_code'))->productCode($product->code)->first();
-
-            //     $item->reserved = max(0, $item->reserved - $product->quantity);
-            //     $item->stocks = max(0, $item->stocks - $product->quantity);
-
-            //     $item->save();
-            // }
-
             $inbound->delivery_receipt_id = $id;
+
             $inbound->save();
 
             $deliveryReceipt->printed_date = now();

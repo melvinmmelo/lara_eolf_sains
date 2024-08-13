@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BadOrder;
 use App\Models\Customers;
 use App\Models\DeliveryPurchaseReceipt;
+use App\Models\DeliveryReceipt;
 use App\Models\Inbound;
 use App\Models\Drivers;
 use App\Models\Equipment;
@@ -468,6 +469,13 @@ class InboundController extends Controller
         $inbound->remarks = $request->remarks;
         $inbound->save();
 
+        // get all delivery receipts of this inbound
+        $deliveryReceipt = DeliveryReceipt::where('inbound_id', $inbound->id)->first();
+        if ($deliveryReceipt) {
+            $deliveryReceipt->status = 'Deleted';
+            $deliveryReceipt->save();
+        }
+
         activity('outbound')
             ->performedOn($inbound)
             ->log("Inbound $inbound deleted by " . auth()->user()->fullName);
@@ -597,7 +605,7 @@ class InboundController extends Controller
             'is_foc' => 'nullable',
         ]);
 
-        $equipStore =  EquipmentStore::where('equipment_id', $request->equipment_id)->where('customer_id', $request->customer_id)->first();
+        $equipStore =  EquipmentStore::where('equipment_id', $request->equipment_id)->first();
         if ($equipStore == null) {
             return back()->withErrors('Equipment not found.');
         }

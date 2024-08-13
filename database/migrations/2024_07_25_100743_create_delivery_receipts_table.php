@@ -14,12 +14,12 @@ class CreateDeliveryReceiptsTable extends Migration
             $table->id();
             $table->string('branch_code');
             $table->date('date');
-            $table->unsignedInteger('inbound_id');
+            $table->unsignedInteger('inbound_id')->unique();
             $table->string('customer_name');
             $table->string('generated_by');
             $table->dateTime('printed_date')->nullable();
             $table->timestamps();
-            $table->index('inbound_id');
+
             $table->index('branch_code');
 
         });

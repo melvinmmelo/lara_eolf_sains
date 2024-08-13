@@ -297,8 +297,8 @@
                 })
             });
 
-            // $("[data-bootstrap-switch]").bootstrapSwitch();
-            // $('.duallistbox').bootstrapDualListbox()
+            $("[data-bootstrap-switch]").bootstrapSwitch();
+            $('.duallistbox').bootstrapDualListbox()
 
             $('.select2').select2()
 
