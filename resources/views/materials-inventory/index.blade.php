@@ -69,7 +69,7 @@
                             @foreach ($materials as $material)
                                 <tr>
                                     <td>
-                                        <input type="checkbox" name="items[]" id="items"
+                                        <input class="checkbox" type="checkbox" name="items[]" id="items"
                                             value="{{ $material->id }}">
                                     </td>
                                     <td>{{ $material->id }}</td>

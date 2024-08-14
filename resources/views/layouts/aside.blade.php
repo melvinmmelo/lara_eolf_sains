@@ -1,8 +1,4 @@
-<style>
-    .sidebar-light-primary {
-        background-color: #f3f7fd;
-    }
-</style>
+
 
 
 <aside class="main-sidebar sidebar-light-primary elevation-1">
@@ -176,7 +172,7 @@
 
                         <li>
                             <a href="{{ route('generate-order-slip') }}"
-                                class="nav-link {{ Route::currentRouteNamed('generate-order-slip') || Route::currentRouteNamed('report.orderSlip') || Route::currentRouteNamed('order-slips') || Route::currentRouteNamed('report.orderSlip') || Route::currentRouteNamed('orderSlip.organize') ? 'active' : '' }}">
+                                class="nav-link {{ Route::currentRouteNamed('generate-order-slip') || Route::currentRouteNamed('report.orderSlip') || Route::currentRouteNamed('order-slips') || Route::currentRouteNamed('report.orderSlip') || Route::currentRouteNamed('orderSlip.organize')? 'active' : '' }}">
                                 <i class="fas fa-circle-left nav-icon"></i>
                                 <p>Order Slip</p>
                             </a>

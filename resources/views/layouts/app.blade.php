@@ -31,7 +31,7 @@
     <style>
         .form-label {
             font-weight: normal !important;
-            color: #5a5a5a;
+            color: #000000;
             transition: color 0.3s;
             /* Adding transition for smooth color change */
         }
@@ -115,6 +115,38 @@
             width: 25px !important;
             height: 25px !important;
         }
+
+
+        @if (session('branch_code') == 'EFTO-CAG')
+
+
+            .sidebar-light-primary {
+                background-color: #f3f7fd;
+            }
+        @else
+            .sidebar-light-primary {
+                background-color: #b3ecec;
+            }
+
+            .btn-primary {
+                background-color: #b3ecec;
+                border-color: #b3ecec;
+                color: #000;
+            }
+
+            .btn-primary:hover {
+                background-color: #e7e7e7;
+                border-color: #555454;
+                color: #000;
+            }
+
+            .btn-primary:focus {
+                background-color: #e7e7e7;
+                border-color: #555454;
+                color: #000;
+            }
+
+        @endif
     </style>
 
     @yield('custom_css')

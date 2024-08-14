@@ -28,4 +28,9 @@ class MaterialsInventory extends Model
     {
         return $query->where('branch_code', $branch_code);
     }
+
+    public function scopeActiveItems($query)
+    {
+        return $query->whereNull('withdrawal_id');
+    }
 }
