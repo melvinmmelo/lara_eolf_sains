@@ -97,8 +97,11 @@
                                             <a href="{{ route('order.view', ['inboundId' => $inbound->id]) }}"
                                                 class="btn btn-default"><i class="fas fa-eye"></i></button></a>
                                         @else
+
+                                            @if($inbound->delivery_receipt_id === NULL)
                                             <a href="{{ route('order.edit', ['inboundId' => $inbound->id]) }}"
                                                 class="btn btn-primary"><i class="fas fa-edit"></i></button></a>
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>

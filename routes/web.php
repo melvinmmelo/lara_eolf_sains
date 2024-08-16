@@ -99,6 +99,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/bad-orders-list', [BadOrderController::class, 'index'])->name('badOrders.index');
 
+    Route::get('/bad-orders-deducted', [BadOrderController::class, 'badOrdersDeducted'])->name('badOrders.deducted');
+
+
     Route::delete('/bad-orders/{id}', [BadOrderController::class, 'destroy'])->name('badOrders.destroy');
 
     Route::post('/save-temp-bad-order', [TempBadOrderController::class, 'store']);

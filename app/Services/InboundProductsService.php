@@ -34,22 +34,27 @@ class InboundProductsService extends Model
     // delete product from the list
     public function deleteProduct($productCode)
     {
-        // check if product is already in the list
+
+        $deletedProducts = session()->get('deleted_products');
+
         if ($this->products) {
             foreach ($this->products as $key => $value) {
                 if ($value['code'] == $productCode) {
+
+                    $deletedProducts[] = [ "code" => $productCode, "quantity" => $value['quantity'] ];
+
                     unset($this->products[$key]);
                     $this->isExist = true;
                 }
             }
         }
 
+        session()->put('deleted_products', $deletedProducts);
+
         return $this->products;
     }
 
     public function addQty($newProductCode, $plusQty){
-
-        // check if product is already in the list
         if ($this->products) {
             foreach ($this->products as $key => $value) {
                 if ($value['code'] == $newProductCode) {

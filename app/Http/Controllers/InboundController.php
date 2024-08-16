@@ -113,6 +113,7 @@ class InboundController extends Controller
     public function deleteAInbound($pcode)
     {
 
+
         $products = json_encode(session()->get('products'));
 
         $summary = [];
@@ -131,8 +132,6 @@ class InboundController extends Controller
 
             $summary = $inboundService->addSppbinSummary(); // ! you need to call summary() first before addSppbinSummary()
         }
-
-        session()->forget('products');
 
         session()->put('products', $products);
 
@@ -327,7 +326,7 @@ class InboundController extends Controller
         $inbound->driver_name = $driver->name;
         $inbound->delivery_person = $deliveryPerson->name;
         $inbound->vehicle_no = $vehicles->plateno;
-        $inbound->with_invoice = $request->with_invoice == 'on' ? 1 : 0;
+        $inbound->with_invoice = $request->with_invoice == 'on' ? 1 : NULL;
 
         $bad_order = $request->bad_order === 'on' ? 1 : 0;
         $is_foc = $request->is_foc === 'on' ? 1 : NULL;
@@ -469,7 +468,6 @@ class InboundController extends Controller
         $inbound->remarks = $request->remarks;
         $inbound->save();
 
-        // get all delivery receipts of this inbound
         $deliveryReceipt = DeliveryReceipt::where('inbound_id', $inbound->id)->first();
         if ($deliveryReceipt) {
             $deliveryReceipt->status = 'Deleted';
@@ -520,6 +518,14 @@ class InboundController extends Controller
 
         $inbound = Inbound::find($inboundId);
 
+        if ($inbound->delivery_receipt_id !== NULL) {
+            return back()->withErrors('This order is already delivered.');
+        }
+
+        if ($inbound->balance === 0) {
+            return back()->withErrors('This order is already paid.');
+        }
+
         $products = $inbound->products;
 
         $deliveryPersons = Drivers::active()->perDesignation('Salesman')->get();
@@ -550,9 +556,18 @@ class InboundController extends Controller
             $summary = $inboundService->addSppbinSummary(); // ! you need to call summary() first before addSppbinSummary()
         }
 
-        session()->put('products', $inboundList);
 
-        return view('ordering-edit', compact('inbound', 'inboundId', 'equipment', 'drivers', 'vehicles', 'pricing', 'productTypes', 'inboundList', 'summary', 'deliveryPersons'));
+        usort($inboundList, function ($a, $b) {
+            return $a['order'] <=> $b['order'];
+        });
+
+        session()->put('products', $inboundList);
+        session()->put('old_products', $inboundList);
+
+
+        $equipmentStore = EquipmentStore::where('customer_id', $inbound->customer_id)->where('equipment_id', $inbound->equipment_id)->where('store_id', $inbound->store_id)->first();
+
+        return view('ordering-edit', compact('inbound', 'inboundId', 'equipment', 'drivers', 'vehicles', 'pricing', 'productTypes', 'inboundList', 'summary', 'deliveryPersons', 'equipmentStore'));
     }
 
     public function view($inboundId)
@@ -591,6 +606,9 @@ class InboundController extends Controller
 
     public function updateInbound(Request $request)
     {
+        $branchCode = session('branch_code');
+        $products = session('products');
+        $oldProducts = session('old_products');
 
         $request->validate([
             'inbound_id' => 'required|exists:inbounds,id',
@@ -605,41 +623,96 @@ class InboundController extends Controller
             'is_foc' => 'nullable',
         ]);
 
-        $equipStore =  EquipmentStore::where('equipment_id', $request->equipment_id)->first();
-        if ($equipStore == null) {
-            return back()->withErrors('Equipment not found.');
-        }
+        $equipStore = EquipmentStore::findOrFail($request->equipment_id);
+        $inbound = Inbound::findOrFail($request->inbound_id);
 
-        $inbound = Inbound::find($request->inbound_id);
-        $inbound->equipment_id = $request->equipment_id;
-        $inbound->driver_id = $request->driver_id;
-        $inbound->delivery_person_id = $request->delivery_person_id;
-        $inbound->vehicle_id = $request->vehicle_id;
-        $inbound->pricelevel_id = $request->pricelevel_id;
-        $inbound->customer_id = $request->customer_id;
-        $inbound->store_id = $equipStore->store_id;
-        $inbound->with_invoice = $request->with_invoice == 'on' ? 1 : 0;
-        $inbound->is_foc = $request->is_foc == 'on' ? 1 : NULL;
+        $inbound->fill([
+            'equipment_id' => $equipStore->equipment->id,
+            'driver_id' => $request->driver_id,
+            'delivery_person_id' => $request->delivery_person_id,
+            'vehicle_id' => $request->vehicle_id,
+            'pricelevel_id' => $request->pricelevel_id,
+            'customer_id' => $request->customer_id,
+            'store_id' => $equipStore->store_id,
+            'with_invoice' => $request->with_invoice == 'on' ? 1 : NULL,
+            'is_foc' => $request->is_foc == 'on' ? 1 : NULL,
+            'driver_name' => Drivers::find($request->driver_id)->name,
+            'delivery_person' => Drivers::find($request->delivery_person_id)->name,
+            'products' => json_encode($products),
+        ]);
 
-        $inbound->driver_name = Drivers::find($request->driver_id)->name;
-        $inbound->delivery_person = Drivers::find($request->delivery_person_id)->name;
-
-        $inbound->products = json_encode(session()->get('products'));
-
-        if ($request->bad_order == 'on') {
+        if ($request->boolean('bad_order')) {
             $inbound->bad_order_id = $request->bad_order_id;
             $inbound->bo_amount = $request->bo_amount;
         }
 
+        $differentProducts = $this->getDifferentProducts($products, $oldProducts);
+        $errors = $this->updateItemMasterData($differentProducts, $branchCode, $inbound->id);
+
         $inbound->save();
 
-        session()->forget('inboundId');
-        session()->forget('products');
+        session()->forget(['inboundId', 'products']);
 
         activity('outbound')
             ->performedOn($inbound)
             ->log("Outbound $inbound->id updated by " . auth()->user()->fullName);
 
+        if (!empty($errors)) {
+            return back()->withErrors($errors);
+        }
+
         return redirect()->route('order.index')->with('success', 'Inbound has been updated.');
+    }
+
+    private function getDifferentProducts($products, $oldProducts)
+    {
+        $newProducts =  array_udiff($products, $oldProducts, function ($a, $b) {
+            $codeComparison = $a['code'] <=> $b['code'];
+            return $codeComparison === 0 ? ($a['quantity'] <=> $b['quantity']) : $codeComparison;
+        });
+
+
+        foreach ($newProducts as $key => $product) {
+            $oldProduct = array_values(array_filter($oldProducts, function ($oldProduct) use ($product) {
+                return $oldProduct['code'] === $product['code'];
+            }))[0] ?? null;
+
+            if ($oldProduct) {
+                $newProducts[$key]['old_quantity'] = $oldProduct['quantity'];
+            }
+        }
+
+        return $newProducts;
+    }
+
+    private function updateItemMasterData($differentProducts, $branchCode, $inboundId)
+    {
+        $errors = [];
+        foreach ($differentProducts as $product) {
+            $itemData = ItemMasterData::branch($branchCode)->productCode($product['code'])->first();
+            if (!$itemData) {
+                $errMsg = "Product {$product['code']} not found in ItemMasterData. Order $inboundId failed.";
+                activity('outbound-update')->log($errMsg);
+                $errors[] = $errMsg;
+            } else {
+                if(isset($product['old_quantity'])){
+                    $itemData->reserved -= $product['old_quantity'];
+                }
+                $itemData->reserved += $product['quantity'];
+                $itemData->save();
+            }
+        }
+
+        $deletedProducts = session()->get('deleted_products');
+        if ($deletedProducts) {
+            foreach ($deletedProducts as $product) {
+                $itemData = ItemMasterData::branch($branchCode)->productCode($product["code"])->first();
+                if ($itemData) {
+                    $itemData->reserved -= $product['quantity'];
+                    $itemData->save();
+                }
+            }
+        }
+        return $errors;
     }
 }

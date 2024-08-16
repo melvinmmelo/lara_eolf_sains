@@ -267,7 +267,7 @@
                                                                 <tr>
                                                                     <td class="align-middle"><button type="button"
                                                                             class="btn btn-xs btn-danger"
-                                                                            onclick="deleteProduct('{{ $inboundId }}', `{{ $product['code'] }}`)"><i
+                                                                            onclick="deleteProduct(`{{ $product['code'] }}`)"><i
                                                                                 class="fas fa-trash"></i></button></td>
                                                                     <td class="align-middle">
                                                                         {{ $product['code'] . ' ' . $product['description'] }}
@@ -444,7 +444,7 @@
         document.getElementById('deliveryPerson').value = "{{ $inbound->delivery_person_id ?? '' }}";
         document.getElementById('driver_id').value = "{{ $inbound->driver_id ?? '' }}";
         document.getElementById('vehicle').value = "{{ $inbound->vehicle_id ?? '' }}";
-        document.getElementById('equipment').value = "{{ $inbound->equipment_id }}";
+        document.getElementById('equipment').value = "{{ $equipmentStore->id ?? '' }}";
         document.getElementById('customer_id').value = "{{ $inbound->customer_id ?? '' }}";
         document.getElementById('customer').value = "{{ $inbound->customer->fullName ?? '' }}";
         // checked is_foc

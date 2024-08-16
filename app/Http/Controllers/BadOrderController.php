@@ -9,24 +9,34 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BadOrderController extends Controller
 {
-    // public function index()
-    // {
-    //     $badOrders = BadOrder::all(); // Retrieve all bad orders from the database
-
-    //     return view('badorder', compact('badOrders'));
-
-    // }
+    public function badOrdersDeducted()
+    {
+        $summarizedBadOrders = $this->summarizeBOs(0);
+        return view('badorder.deducted', ['badOrders' => $summarizedBadOrders]);
+    }
 
     public function index()
     {
-        $badOrders = BadOrder::with('customer')->where('is_active', 1)->get();
 
-        // Group by bo_id and summarize the total amount
+        $summarizedBadOrders = $this->summarizeBOs();
+        return view('badorder', ['badOrders' => $summarizedBadOrders]);
+    }
+
+    public function summarizeBOs($active = 1)
+    {
+        $branchCode = session('branch_code');
+
+        $badOrders = BadOrder::with(['customer' => function ($query) use ($branchCode) {
+            $query->where('branch_code', $branchCode);
+        }])
+            ->where('is_active', $active)
+            ->get();
+
         $summarizedBadOrders = $badOrders->groupBy('bo_id')->map(function ($group) {
             return [
                 'bo_id' => $group->first()->bo_id,
                 'customer' => $group->first()->customer,
-                'storeinfo' => $group->first()->customer->storeinfo,
+                'storeinfo' => $group->first()->customer->storeinfo ?? "No store.",
                 'bo_percentage' => $group->first()->bo_percentage,
                 'created_at' => $group->first()->created_at,
                 'amount' => $group->sum('amount'),
@@ -34,7 +44,7 @@ class BadOrderController extends Controller
             ];
         });
 
-        return view('badorder', ['badOrders' => $summarizedBadOrders]);
+        return $summarizedBadOrders;
     }
 
 
@@ -60,12 +70,12 @@ class BadOrderController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
 
-        if(!$badOrder) {
+        if (!$badOrder) {
             return response()->json(['id' => null, 'amount' => 0]);
         }
 
         $lastBadOrderTotal = BadOrder::where('bo_id', $badOrder->bo_id)->sum('amount');
-        $amount = $lastBadOrderTotal * ($badOrder->bo_percentage/100);
+        $amount = $lastBadOrderTotal * ($badOrder->bo_percentage / 100);
 
         return response()->json(['id' => $badOrder->bo_id, 'amount' => $amount]);
     }
@@ -74,7 +84,7 @@ class BadOrderController extends Controller
     {
         $boId = $request->query('boId');
         $details = BadOrder::with('customer')
-        ->where('bo_id', $boId)
+            ->where('bo_id', $boId)
             ->get();
 
         return response()->json($details);

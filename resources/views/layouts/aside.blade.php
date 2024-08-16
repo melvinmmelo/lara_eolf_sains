@@ -144,7 +144,7 @@
                 </li>
 
                 <li
-                    class="nav-item {{ Route::currentRouteNamed('order.index') || Route::currentRouteNamed('order.processTwo') || Route::currentRouteNamed('badOrders.index') || Route::currentRouteNamed('addbadorder.create') || Route::currentRouteNamed('order.create') || Route::currentRouteNamed('order.edit') || Route::currentRouteNamed('deliveryreceipt.index') || Route::currentRouteNamed('drprint') || Route::currentRouteNamed('generate-ticket') || Route::currentRouteNamed('print-ticket') || Route::currentRouteNamed('index-ticket') || Route::currentRouteNamed('inbounds-ticket') || Route::currentRouteNamed('generate-order-slip') || Route::currentRouteNamed('order-slips') || Route::currentRouteNamed('deliveryreceipt.indexDone') || Route::currentRouteNamed('report.orderSlip') || Route::currentRouteNamed('orderSlip.organize') ? 'menu-is-opening menu-open' : '' }}">
+                    class="nav-item {{ Route::currentRouteNamed('order.index') || Route::currentRouteNamed('order.processTwo') || Route::currentRouteNamed('badOrders.index') || Route::currentRouteNamed('addbadorder.create') || Route::currentRouteNamed('order.create') || Route::currentRouteNamed('order.edit') || Route::currentRouteNamed('deliveryreceipt.index') || Route::currentRouteNamed('drprint') || Route::currentRouteNamed('generate-ticket') || Route::currentRouteNamed('print-ticket') || Route::currentRouteNamed('index-ticket') || Route::currentRouteNamed('inbounds-ticket') || Route::currentRouteNamed('generate-order-slip') || Route::currentRouteNamed('order-slips') || Route::currentRouteNamed('deliveryreceipt.indexDone') || Route::currentRouteNamed('report.orderSlip') || Route::currentRouteNamed('orderSlip.organize') || Route::currentRouteNamed('badOrders.deducted') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-coins" style="color: #74C0FC;"></i>
                         <p>
@@ -180,7 +180,7 @@
 
                         <li>
                             <a href="/bad-orders-list"
-                                class="nav-link {{ Route::currentRouteNamed('badOrders.index') || Route::currentRouteNamed('addbadorder.create') ? 'active' : '' }}">
+                                class="nav-link {{ Route::currentRouteNamed('badOrders.index') || Route::currentRouteNamed('addbadorder.create') || Route::currentRouteNamed('badOrders.deducted') ? 'active' : '' }}">
                                 <i class="fas fa-circle-left nav-icon"></i>
                                 <p>Bad Order</p>
                             </a>

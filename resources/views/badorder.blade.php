@@ -28,6 +28,12 @@
 
                 @include('layouts.errors')
 
+                <div class="pb-2">
+                    <a href="{{ route('badOrders.deducted') }}"><button type="button" class="btn btn-primary">
+                            Deducted BOs
+                        </button></a>
+                </div>
+
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -43,6 +49,7 @@
 
                         @php $grandTotal = []; @endphp
                         @foreach ($badOrders as $badOrder)
+                            @php $grandTotal[] = $badOrder['amount']; @endphp
                             <tr>
                                 <td>
                                     {{ optional($badOrder['customer'])->firstname }}
@@ -70,9 +77,9 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th></th>
                             <th>Total:</th>
-                            <th>{{  formatNumber(array_sum($grandTotal)) }}</th>
+                            <th>{{ formatNumber(array_sum($grandTotal)) }}</th>
+                            <th></th>
                             <th></th>
                             <th></th>
                             <th></th>
