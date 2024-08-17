@@ -72,6 +72,10 @@ class OrderSlipController extends Controller
 
         $validated['code'] = date('y') . "-" . str_pad(OrderSlip::count() + 1, 5, "0", STR_PAD_LEFT);
 
+        if(OrderSlip::where('code', $validated['code'])->exists()){
+            $validated['code'] = date('y') . "-" . str_pad(OrderSlip::count() + 2, 5, "0", STR_PAD_LEFT);
+        }
+
         $validated['generated_by'] = auth()->user()->fullName;
 
         // $check = OrderSlip::where('delivery_person', $validated['delivery_person'])->whereDate('created_at', now()->toDateString())->first();

@@ -185,9 +185,9 @@
                                                         <td>{{ $dprProd->code . ' ' . $dprProd->description }}</td>
                                                         <td>{{ $dprProd->unit }}</td>
                                                         <td>{{ $dprProd->quantity }}
-                                                            @if ($dprProd->hold)
-                                                                <input type="text" class="form-control w-25" name="newHold"
-                                                                    id="newHold" value="{{ $dprProd->hold }}" required>
+                                                            @if ($dprProd->hold > 0)
+                                                                <a href="#"
+                                                                    class="btn btn-danger btn-sm">{{ $dprProd->hold }}</a>
                                                             @endif
                                                         </td>
                                                         <td>{{ $dprProd->price }}</td>
@@ -195,14 +195,16 @@
                                                         <td>
 
                                                             {{-- @if ($deliveryPurchaseReceipt->status == 'Encoding') --}}
-                                                            <a href="{{ route('drp.products-update', ['dprId' => $deliveryPurchaseReceipt->id, 'code' => $dprProd->code, 'action' => 'delete']) }}"
-                                                                onclick="return confirmDeleteProduct()"
-                                                                class="btn btn-sm btn-danger"><i
-                                                                    class="fas fa-trash"></i></a>
+                                                            <a href="#"
+                                                                onclick="confirmDeleteProduct('{{ $dprProd->code }}', '{{ $dprProd->quantity }}', '{{ $dprProd->hold }}')"
+                                                                class="btn btn-sm btn-danger" data-toggle="modal"
+                                                                data-target="#edit-modal"><i class="fas fa-trash"></i></a>
                                                             {{-- @endif --}}
 
-                                                            <a href="#" onclick="editProduct('{{ $dprProd->code }}', '{{ $dprProd->quantity }}', '{{ $dprProd->hold }}')"
-                                                                class="btn btn-sm btn-warning" data-toggle="modal" data-target="#edit-modal"><i class="fas fa-edit"></i></a>
+                                                            <a href="#"
+                                                                onclick="editProduct('{{ $dprProd->code }}', '{{ $dprProd->quantity }}', '{{ $dprProd->hold }}')"
+                                                                class="btn btn-sm btn-warning" data-toggle="modal"
+                                                                data-target="#edit-modal"><i class="fas fa-edit"></i></a>
 
                                                         </td>
                                                     </tr>
@@ -242,13 +244,10 @@
 
     <div class="modal fade" id="edit-modal">
         <div class="modal-dialog modal-dialog-centered">
-
-
-
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h4 class="modal-title">Edit product</h4>
+                    <h4 class="modal-title" id="modal-title">Edit product</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -257,29 +256,57 @@
                 <form action="{{ route('drp.products-update') }}" method="POST">
                     @csrf
                     <div class="modal-body">
-                        <input type="hidden" class="form-control" name="dprId" id="dpr_id" value="{{ $deliveryPurchaseReceipt->id }}" required readonly>
+                        <input type="hidden" class="form-control" name="dprId" id="dpr_id"
+                            value="{{ $deliveryPurchaseReceipt->id }}" required readonly>
 
                         <div class="form-group">
                             <label class="form-label" for="product_code"><i style="color:red">*</i>Product code</label>
-                            <input type="text" class="form-control" name="code" id="product_code" value="" required readonly>
+                            <input type="text" class="form-control" name="code" id="product_code" value=""
+                                required readonly>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label" for="new_quantity"><i style="color:red">*</i>Quantity</label>
-                            <input type="number" class="form-control" name="new_quantity" id="new_quantity" value=""
-                                required>
-                        </div>
+                        <div id="hideIfActionIsDelete">
 
-                        <div class="form-group">
-                            <label class="form-label" for="hold_qty"><i style="color:red">*</i>Hold</label>
-                            <input type="number" class="form-control" name="hold_qty" id="hold_qty" value=""
-                                required>
-                        </div>
 
+                            {{-- <div class="form-group">
+                                <label class="form-label" for="qty_to_add"><i style="color:red">*</i>Update type</label>
+                                <select name="update_type" id="update_type" class="form-control" required>
+                                    <option value="plus">Add</option>
+                                    <option value="minus">Remove</option>
+                                </select>
+                            </div> --}}
+
+                            <div class="form-group">
+                                <label class="form-label" for="new_quantity"><i style="color:red">*</i>Quantity</label>
+                                <input type="number" class="form-control" name="new_quantity" id="new_quantity"
+                                    value="0" required>
+                            </div>
+
+                            {{-- <div class="form-group">
+                                <label class="form-label" for="qty_to_add"><i style="color:red">*</i>Hold Update
+                                    type</label>
+                                <select name="hold_update_type" id="hold_update_type" class="form-control">
+                                    <option value="">--Select--</option>
+                                    <option value="plus">Add</option>
+                                    <option value="minus">Remove</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="hold_new_quantity"><i style="color:red">*</i>Quantity
+                                </label>
+                                <p id="currentHoldQuantity"> </p>
+
+                                <input type="number" class="form-control" name="hold_new_quantity"
+                                    id="hold_new_quantity" value="0" required>
+                            </div> --}}
+                        </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button type="submit" name="action" value="edit" class="btn btn-success">Save changes</button>
+                        <button type="submit" name="action" id="action" value="edit"
+                            class="btn btn-success">Save
+                            changes</button>
                     </div>
 
                 </form>
@@ -290,6 +317,8 @@
         <!-- /.modal -->
     </div>
     <!-- /.content -->
+
+
 @endsection
 
 @section('custom_js')
@@ -298,14 +327,37 @@
             return confirm('Are you sure you want to save this DR?');
         }
 
-        function confirmDeleteProduct() {
-            return confirm('Are you sure you want to delete this product?');
+        function confirmDeleteProduct(product_code, quantity, hold_qty, action = "delete") {
+
+            $('#hideIfActionIsDelete').hide();
+
+            $('#modal-title').text('Delete product');
+            $('#product_code').val(product_code);
+
+            // $('#new_quantity').val(quantity);
+            // $('#hold_qty').val(hold_qty);
+            $('#action').val(action);
+
+            // document.getElementById('new_quantity').readOnly = true;
+            // document.getElementById('hold_qty').readOnly = true;
+            document.getElementById('action').innerHTML = "Confirm";
+
         }
 
-        function editProduct(product_code, quantity , hold_qty) {
+
+        function editProduct(product_code, quantity, hold_qty, action = "edit") {
+
+            $('#hideIfActionIsDelete').show();
+
+            $('#modal-title').text('Edit product');
             $('#product_code').val(product_code);
             $('#new_quantity').val(quantity);
-            $('#hold_qty').val(hold_qty);
+            // $('#hold_qty').val(hold_qty);
+            $('#action').val(action);
+
+            // document.getElementById('new_quantity').readOnly = false;
+            // document.getElementById('hold_qty').readOnly = false;
+            document.getElementById('action').innerHTML = "Save changes";
         }
     </script>
 @endsection

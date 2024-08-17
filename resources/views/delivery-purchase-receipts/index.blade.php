@@ -82,11 +82,13 @@
                                         <a href="{{ route('drp.products', ['dprId' => $dr->id]) }}"><button type="button"
                                                 class="btn btn-primary">
                                                 <i class="fas fa-eye"></i></button></a>
-                                    @endif
 
-                                    <a href="{{ route('drp.products-edit', ['dprId' => $dr->id]) }}"><button type="button"
+                                        <a href="{{ route('drp.products-edit', ['dprId' => $dr->id]) }}"><button type="button"
                                             class="btn btn-default">
                                             <i class="fas fa-edit"></i></button></a>
+                                    @endif
+
+
                                 </td>
 
                             </tr>

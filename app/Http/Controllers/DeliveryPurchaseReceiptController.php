@@ -169,7 +169,6 @@ class DeliveryPurchaseReceiptController extends Controller
             'action' => 'required',
             'quantity' => 'required_if:action,add',
             'new_quantity' => 'required_if:action,edit',
-            'hold_qty' => 'required_if:action,edit',
         ]);
 
         $dpr = DeliveryPurchaseReceipt::findOrFail($request->dprId);
@@ -194,6 +193,7 @@ class DeliveryPurchaseReceiptController extends Controller
             }
 
             $dpr->products = $dprService->getNewProducts();
+
             $dpr->save();
             $item->save();
 
@@ -268,19 +268,20 @@ class DeliveryPurchaseReceiptController extends Controller
         $oldQuantity = $product['quantity'];
         $newQuantity = $request->new_quantity;
 
-        // new quantity should not be equal and greater than the item reserved quantity
         if ($newQuantity < $item->reserved) {
             throw new \Exception('New quantity should not be less than to reserved.');
         }
 
-        $holdQuantity = $request->hold_qty;
-
         $quantityDifference = $newQuantity - $oldQuantity;
-        $item->stocks += $quantityDifference;
+        $newStocks = $item->stocks + $quantityDifference;
+        if ($newStocks < 0) {
+            throw new \Exception('Insufficient stock.');
+        }
+
+        $item->stocks = $newStocks;
 
         $updatedProduct = array_merge($product, [
             'quantity' => $newQuantity,
-            'hold' => $holdQuantity,
             'updated_at' => now()
         ]);
 

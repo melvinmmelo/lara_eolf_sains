@@ -171,16 +171,16 @@ class InboundController extends Controller
         $branchCode = session('branch_code');
 
         $products = Product::where('product_type_code', $code)
-            ->join('item_master_data', function ($join) use ($branchCode) {
-                $join->on('products.code', '=', 'item_master_data.product_code')
-                    ->where('item_master_data.branch_code', '=', $branchCode);
-            })
-            ->whereRaw('item_master_data.stocks - item_master_data.reserved > 0')
+        ->join('item_master_data', function ($join) use ($branchCode) {
+            $join->on('products.code', '=', 'item_master_data.product_code')
+            ->where('item_master_data.branch_code', '=', $branchCode);
+        })
+            ->whereRaw('GREATEST(CAST(item_master_data.stocks AS SIGNED) - CAST(item_master_data.reserved AS SIGNED), 0) > 0')
             ->select(
                 'products.code',
-                DB::raw('item_master_data.stocks - item_master_data.reserved as available_stocks')
+                DB::raw('GREATEST(CAST(item_master_data.stocks AS SIGNED) - CAST(item_master_data.reserved AS SIGNED), 0) as available_stocks')
             )
-            ->orderByDesc(DB::raw('item_master_data.stocks - item_master_data.reserved'))
+            ->orderByDesc(DB::raw('GREATEST(CAST(item_master_data.stocks AS SIGNED) - CAST(item_master_data.reserved AS SIGNED), 0)'))
             ->get()
             ->map(function ($item) use ($pricelevelId) {
                 $price = prices::getPricePerPriceLevelAndPCode($pricelevelId, $item->code);
@@ -661,7 +661,7 @@ class InboundController extends Controller
             return back()->withErrors($errors);
         }
 
-        return redirect()->route('order.index')->with('success', 'Inbound has been updated.');
+        return redirect()->route('order.index')->with('success', 'The order has been updated.');
     }
 
     private function getDifferentProducts($products, $oldProducts)

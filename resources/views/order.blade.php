@@ -79,7 +79,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($inbound->status == 'Completed')
+                                        @if ($inbound->status == 'Completed' or $inbound->status == 'Unpaid')
                                             <a href="#" data-target="#modalAddAmountDelivered"
                                                 data-toggle="modal"><button class="btn btn-success"
                                                     onclick="setObId(`{{ $inbound->id }}`)"><i class="fas fa-plus"></i></button></a>
