@@ -87,10 +87,6 @@
                                                     onclick="setObIdToDelete(`{{ $inbound->id }}`, `{{ $inbound->degic_no }}`, `{{ $inbound->customer_name }}`)"><i class="fas fa-trash"></i></button></a>
                                         @endif
 
-                                        @if ($inbound->is_with_badOrder)
-                                            <button class="btn btn-xs btn-danger">W/ BO</button>
-                                        @endif
-
                                         @if ($inbound->status === 'Paid' or $inbound->totalBalance === 0)
                                             <a href="{{ route('order.view', ['inboundId' => $inbound->id]) }}"
                                                 class="btn btn-default"><i class="fas fa-eye"></i></button></a>

@@ -14,16 +14,6 @@ class InboundService extends Model
 {
     use HasFactory;
 
-    // check if inbound is existing in bad order table
-    public static function isWithBadOrder($inboundId)
-    {
-        // $badOrder = BadOrder::where('inbound_id', $inboundId)->first();
-        // if($badOrder){
-        //     return true;
-        // }
-        return false;
-    }
-
     public static function getTotalOfInboundProducts($inboundId){
         $inbound = Inbound::find($inboundId);
         $products = json_decode($inbound->products, true);
@@ -92,7 +82,7 @@ class InboundService extends Model
         return $products;
     }
 
-    public static function getTotalOfAllInboundProductsv2($branchCode)
+    public static function getTotalOfAllInboundProductsv2($branchCode) // ! PANG OVERALL
     {
 
         $inbounds = Inbound::where('branch_code', $branchCode)->get();

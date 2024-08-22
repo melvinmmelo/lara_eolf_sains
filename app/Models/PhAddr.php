@@ -11,13 +11,4 @@ class PhAddr extends Model
     protected $fillable = [
         'code', 'name', 'g_level'
     ];
-
-    // Optionally, define any relationships with other models
-    // For example, if you have relationships with cities, provinces, or regions, define them here
-
-    // Example of a relationship with cities
-    // public function cities()
-    // {
-    //     return $this->hasMany(City::class);
-    // }
 }

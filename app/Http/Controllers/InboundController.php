@@ -158,11 +158,6 @@ class InboundController extends Controller
 
         $pricing = pricelevels::getPriceLevels(session('branch_code'));
 
-        $inbounds->map(function ($inbound) {
-            $inbound->is_with_badOrder = InboundService::isWithBadOrder($inbound->id);
-            return $inbound;
-        });
-
         return view('order', compact('equipment', 'drivers', 'vehicles', 'inbounds', 'pricing'));
     }
 
@@ -505,11 +500,6 @@ class InboundController extends Controller
         $equipment = Equipment::has('equipmentStore')->branchCode(session('branch_code'))->get();
 
         $pricing = pricelevels::getPriceLevels(session('branch_code'));
-
-        $inbounds->map(function ($inbound) {
-            $inbound->is_with_badOrder = InboundService::isWithBadOrder($inbound->id);
-            return $inbound;
-        });
 
         return view('ordering', compact('equipment', 'drivers', 'vehicles', 'inbounds', 'pricing', 'productTypes', 'nextDay', 'deliveryPersons'));
     }
