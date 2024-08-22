@@ -80,9 +80,7 @@
                                     </td>
                                     <td>
                                         @if ($inbound->status == 'Completed' or $inbound->status == 'Unpaid')
-                                            <a href="#" data-target="#modalAddAmountDelivered"
-                                                data-toggle="modal"><button class="btn btn-success"
-                                                    onclick="setObId(`{{ $inbound->id }}`)"><i class="fas fa-plus"></i></button></a>
+                                            <a href="#" onclick="setObId(`{{ $inbound->id }}`, `{{ $inbound->totalBalance }}`)"><button class="btn btn-success"><i class="fas fa-plus"></i></button></a>
 
                                             <a href="#" data-target="#modalDeleteOrder"
                                                 data-toggle="modal"><button class="btn btn-danger"
@@ -150,15 +148,24 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="inbound_id"><i style="color:red">*</i>Remarks</label>
 
-                                        <input type="hidden" class="form-control" name="inbound_id" id="inbound_id"
+                                        <div class="form-group">
+
+                                            <label class="form-label" for="inbound_id"><i style="color:red">*</i>Remarks</label>
+
+                                            <input type="hidden" class="form-control" name="inbound_id" id="inbound_id"
                                             required readonly>
 
-                                        <select class="form-control" name="remarks" id="remarks" required>
-                                            <option value="Cancelled">Cancel</option>
-                                            <option value="Wrong entry">Wrong entry</option>
-                                        </select>
+                                            <select class="form-control" name="remarks" id="remarks" required>
+                                                <option value="Cancelled">Cancel</option>
+                                                <option value="Wrong entry">Wrong entry</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="form-label" for="remarks_details">Remarks</label>
+                                            <textarea class="form-control" name="remarks_details" id="remarks_details" rows="3" required></textarea>
+                                        </div>
 
                                         <div>
                                             Type "Delete" to confirm.
@@ -189,8 +196,10 @@
 
 @section('custom_js')
     <script>
-        function setObId(obId) {
+        function setObId(obId, totalAmount) {
             $('#ob_id').val(obId);
+            $('#delivered_amount').val(totalAmount);
+            $('#modalAddAmountDelivered').modal('show');
         }
 
         function setObIdToDelete(obId, orderId, customerName) {

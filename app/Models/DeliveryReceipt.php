@@ -15,6 +15,7 @@ class DeliveryReceipt extends Model
         'address',
         'customer_name',
         'date',
+        'status',
         'generated_by',
     ];
 

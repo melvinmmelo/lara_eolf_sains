@@ -12,6 +12,17 @@ use function Ramsey\Uuid\v1;
 class ReportGeneratorController extends Controller
 {
 
+
+    public function productsSummaryv2()
+    {
+        $branchCode = session('branch_code');
+
+        $products = InboundService::getTotalOfAllInboundProductsv2($branchCode); // ! for all outbound naman ito
+
+        return view('report.productsSummaryv2', compact('products'));
+    }
+
+
     public function productsSummary()
     {
         $branchCode = session('branch_code');

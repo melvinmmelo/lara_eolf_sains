@@ -80,19 +80,21 @@ class InboundController extends Controller
             'payment_type' => 'required',
             'ref_no' => 'required|max:30',
             'delivered_amount' => 'numeric|required',
+            'status' => 'nullable',
         ]);
 
         $inbound = Inbound::findOrFail($request->ob_id);
 
         $total = InboundService::getTotalOfInboundProducts($inbound->id);
 
+        if ($request->delivered_amount == $inbound->totalAmount) {
+            $inbound->status = "Paid";
+        }
+
         if ($request->delivered_amount > $total) {
             return redirect()->route('order.index')->withErrors('Delivered amount is greater than the total amount.');
         }
 
-        if ($request->filled('status') != '') {
-            $inbound->status = $request->status;
-        }
 
         $inbound->payment_type = $request->payment_type;
         $inbound->ref_no = $request->ref_no;
@@ -435,7 +437,8 @@ class InboundController extends Controller
         $request->validate([
             'inbound_id' => 'required|exists:inbounds,id',
             'confirm_delete' => 'required',
-            'remarks' => 'nullable',
+            'remarks' => 'required',
+            'remarks_details' => 'nullable',
         ]);
 
         if ($request->confirm_delete !== 'Delete') {
@@ -464,13 +467,13 @@ class InboundController extends Controller
                 $itemData->save();
             }
         }
-        $inbound->status = 'Deleted';
-        $inbound->remarks = $request->remarks;
+        $inbound->status = $request->remarks;
+        $inbound->remarks = $request->remarks . " - " . $request->remarks_details;
         $inbound->save();
 
         $deliveryReceipt = DeliveryReceipt::where('inbound_id', $inbound->id)->first();
         if ($deliveryReceipt) {
-            $deliveryReceipt->status = 'Deleted';
+            $deliveryReceipt->status = $request->remarks;
             $deliveryReceipt->save();
         }
 

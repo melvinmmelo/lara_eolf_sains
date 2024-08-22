@@ -17,6 +17,7 @@ class CreateDeliveryReceiptsTable extends Migration
             $table->unsignedInteger('inbound_id')->unique();
             $table->string('customer_name');
             $table->string('generated_by');
+            $table->string('status')->nullable();
             $table->dateTime('printed_date')->nullable();
             $table->timestamps();
 

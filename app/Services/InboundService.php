@@ -92,6 +92,38 @@ class InboundService extends Model
         return $products;
     }
 
+    public static function getTotalOfAllInboundProductsv2($branchCode)
+    {
+
+        $inbounds = Inbound::where('branch_code', $branchCode)->get();
+        // $inbounds = Inbound::where('branch_code', $branchCode)->whereBetween('order_date', ['2024-08-19', '2024-08-21'])->get(); // ! uncomment if you want to filter by range of dates
+        $products = $inbounds->flatMap(function ($inbound) {
+            $inboundProducts = json_decode($inbound->products, true);
+            return collect($inboundProducts)
+                ->map(function ($product) use ($inbound) {
+                    $productType = ProductType::code($product['ptype_code'])->first();
+                    return [
+                        'code' => $product['code'],
+                        'quantity' => $product['quantity'],
+                        'sequence_no' => $productType->sequence_no,
+                    ];
+                });
+        })
+            ->groupBy('code')
+            ->map(function ($group) {
+                return [
+                    'code' => $group->first()['code'],
+                    'quantity' => $group->sum('quantity'),
+                    'sequence_no' => $group->first()['sequence_no'],
+                ];
+            })
+            ->sortBy('sequence_no')
+            ->values()
+            ->toArray();
+
+        return $products;
+    }
+
     // create a function that gets all the inbounds that has delivery receipt
     public static function getInboundsWithDeliveryReceipt($branchCode)
     {

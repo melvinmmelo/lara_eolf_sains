@@ -251,6 +251,14 @@
                                 <p>Products Summary</p>
                             </a>
                         </li>
+
+                        <li>
+                            <a href="{{ route('report.productsSummaryv2') }}"
+                                class="nav-link {{ Route::currentRouteNamed('report.productsSummaryv2')  ? 'active' : '' }}">
+                                <i class="fas fa-list nav-icon"></i>
+                                <p>Products Summary2</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

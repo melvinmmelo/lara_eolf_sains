@@ -84,7 +84,7 @@
                                                 id="inboundIds{{ $inbound->id }}">
                                         </td>
                                         <td>{{ $inbound->f_created_at }}</td>
-                                        <td>{{ $inbound->id }}</td>
+                                        <td>{{ $inbound->code }}</td>
                                         <td>{{ $inbound->equipment->code ?? '' }}</td>
                                         <td>{{ $inbound->customer->fullName }}</td>
                                         <td>{{ $inbound->delivery_person }}</td>

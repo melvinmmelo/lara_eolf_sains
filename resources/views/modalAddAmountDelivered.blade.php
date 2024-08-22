@@ -34,12 +34,12 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <label class="form-label" for="delivered_amount"><i style="color:red">*</i>Amount</label>
-                                <input type="number" class="form-control" name="delivered_amount" required>
+                                <input type="text" class="form-control" name="delivered_amount" id="delivered_amount" required>
                             </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <div class="row">
                             <div class="col-sm-12">
                                 <label class="form-label" for="status">Status</label>
@@ -50,7 +50,7 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success">Save changes</button>
