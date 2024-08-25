@@ -157,6 +157,7 @@
 
                                             <select class="form-control" name="remarks" id="remarks" required>
                                                 <option value="Cancelled">Cancel</option>
+                                                <option value="Deleted">Delete</option>
                                                 <option value="Wrong entry">Wrong entry</option>
                                             </select>
                                         </div>

@@ -119,7 +119,8 @@ class Inbound extends Model
     // scope that is not free and status is not deleted
     public function scopeActiveOrders($query)
     {
-        return $query->whereNull('is_foc')->where('status', '!=', 'Deleted');
+        return $query->whereNull('is_foc')
+            ->whereNotIn('status', ['Deleted', 'Cancelled', 'Wrong entry']);
     }
 
 
