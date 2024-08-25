@@ -12,7 +12,7 @@ class CustomersController extends Controller
 {
     public function index()
     {
-        $customers = Customer::with(['stores.equipmentStores'])->branchCode(session('branch_code'))->get();
+        $customers = Customer::with(['stores.equipmentStores'])->branch(session('branch_code'))->get();
         return view('customersinfo', compact('customers'));
     }
 

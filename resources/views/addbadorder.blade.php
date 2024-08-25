@@ -44,7 +44,7 @@
                         </div>
 
                         <div class="col-sm-12">
-                            <label class="form-label" for="re_dr"><i style="color:red">*</i>Ref. DR:</label>
+                            <label class="form-label" for="re_dr">Ref. DR:</label>
                             <input type="text" class="form-control" id="re_dr" name="re_dr" required>
                         </div>
 

@@ -188,7 +188,8 @@
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label class="form-label" for="order_date"><i style="color:red">*</i>Date</label>
-                                    <input type="date" class="form-control" name="order_date" id="order_date" value="{{ $nextDay }}" required>
+                                    <input type="date" class="form-control" name="order_date" id="order_date"
+                                        value="{{ $nextDay }}" required>
                                 </div>
                             </div>
                         </div>
@@ -366,6 +367,9 @@
 
     </section>
     <!-- /.content -->
+
+
+    @include('modal_order_reminder')
 @endsection
 
 @section('custom_js')
@@ -373,6 +377,11 @@
 
 
     <script>
+        // page on load show modalReminder
+        $(document).ready(function() {
+            $('#modalReminder').modal('show');
+        });
+
         document.getElementById("BOContainer").style.display = "none";
 
         const total = document.getElementById("total").value ?? 0;

@@ -9,7 +9,7 @@ class EquipmentController extends Controller
 {
     public function index()
     {
-        $equipments = Equipment::branchCode(session('branch_code'))->get();
+        $equipments = Equipment::branch(session('branch_code'))->get();
 
         // ! update status if assigned to customer but no data
 

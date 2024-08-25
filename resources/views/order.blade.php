@@ -79,22 +79,24 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($inbound->status == 'Completed' or $inbound->status == 'Unpaid')
-                                            <a href="#" onclick="setObId(`{{ $inbound->id }}`, `{{ $inbound->totalBalance }}`)"><button class="btn btn-success"><i class="fas fa-plus"></i></button></a>
 
-                                            <a href="#" data-target="#modalDeleteOrder"
-                                                data-toggle="modal"><button class="btn btn-danger"
-                                                    onclick="setObIdToDelete(`{{ $inbound->id }}`, `{{ $inbound->degic_no }}`, `{{ $inbound->customer_name }}`)"><i class="fas fa-trash"></i></button></a>
+                                        @if ($inbound->order_slip_code !== null)
+                                            <a href="{{ route('order.view', ['inboundId' => $inbound->id]) }}"
+                                                class="btn btn-default"><i class="fas fa-eye"></i></button></a>
+                                        @endif
+
+                                        @if ($inbound->status == 'Completed' or $inbound->status == 'Unpaid')
+                                            <a href="#" data-target="#modalDeleteOrder" data-toggle="modal"><button
+                                                    class="btn btn-danger"
+                                                    onclick="setObIdToDelete(`{{ $inbound->id }}`, `{{ $inbound->degic_no }}`, `{{ $inbound->customer_name }}`)"><i
+                                                        class="fas fa-trash"></i></button></a>
                                         @endif
 
                                         @if ($inbound->status === 'Paid' or $inbound->totalBalance === 0)
-                                            <a href="{{ route('order.view', ['inboundId' => $inbound->id]) }}"
-                                                class="btn btn-default"><i class="fas fa-eye"></i></button></a>
                                         @else
-
-                                            @if($inbound->delivery_receipt_id === NULL)
-                                            <a href="{{ route('order.edit', ['inboundId' => $inbound->id]) }}"
-                                                class="btn btn-primary"><i class="fas fa-edit"></i></button></a>
+                                            @if ($inbound->delivery_receipt_id === null)
+                                                <a href="{{ route('order.edit', ['inboundId' => $inbound->id]) }}"
+                                                    class="btn btn-primary"><i class="fas fa-edit"></i></button></a>
                                             @endif
                                         @endif
                                     </td>
@@ -138,7 +140,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route("inbound.destroy") }}" method="POST">
+                        <form action="{{ route('inbound.destroy') }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <div class="form-group">
@@ -147,10 +149,11 @@
 
                                         <div class="form-group">
 
-                                            <label class="form-label" for="inbound_id"><i style="color:red">*</i>Remarks</label>
+                                            <label class="form-label" for="inbound_id"><i
+                                                    style="color:red">*</i>Remarks</label>
 
                                             <input type="hidden" class="form-control" name="inbound_id" id="inbound_id"
-                                            required readonly>
+                                                required readonly>
 
                                             <select class="form-control" name="remarks" id="remarks" required>
                                                 <option value="Cancelled">Cancel</option>
@@ -165,7 +168,8 @@
 
                                         <div>
                                             Type "Delete" to confirm.
-                                            <input type="text" name="confirm_delete" id="confirm_delete" class="form-control" required>
+                                            <input type="text" name="confirm_delete" id="confirm_delete"
+                                                class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
@@ -188,10 +192,14 @@
 
 
     @include('modalAddAmountDelivered')
+
+
 @endsection
 
 @section('custom_js')
     <script>
+
+
         function setObId(obId, totalAmount) {
             $('#ob_id').val(obId);
             $('#delivered_amount').val(totalAmount);
@@ -200,7 +208,7 @@
 
         function setObIdToDelete(obId, orderId, customerName) {
 
-            $('#deleteHeaderTitle').text('Delete order ' + orderId +  ' for ' + customerName + '?');
+            $('#deleteHeaderTitle').text('Delete order ' + orderId + ' for ' + customerName + '?');
 
             $('#inbound_id').val(obId);
             $('#modal-delete').modal('show');

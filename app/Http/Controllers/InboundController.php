@@ -497,7 +497,7 @@ class InboundController extends Controller
 
         $inbounds = Inbound::with('driver', 'vehicle')->branch(session('branch_code'))->get();
 
-        $equipment = Equipment::has('equipmentStore')->branchCode(session('branch_code'))->get();
+        $equipment = Equipment::has('equipmentStore')->branch(session('branch_code'))->get();
 
         $pricing = pricelevels::getPriceLevels(session('branch_code'));
 
@@ -527,7 +527,7 @@ class InboundController extends Controller
 
         $vehicles = Vehicles::active()->get();
 
-        $equipment = Equipment::has('equipmentStore')->branchCode(session('branch_code'))->get();
+        $equipment = Equipment::has('equipmentStore')->branch(session('branch_code'))->get();
 
         $pricing = pricelevels::getPriceLevels(session('branch_code'));
 

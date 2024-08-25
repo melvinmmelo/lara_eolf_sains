@@ -431,6 +431,9 @@
 
     </section>
     <!-- /.content -->
+
+    @include('modal_order_reminder')
+
 @endsection
 
 @section('custom_js')
@@ -439,6 +442,12 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
+
+        // page on load show modalReminder
+        $(document).ready(function() {
+            $('#modalReminder').modal('show');
+        });
+
         // set value on document load
         document.getElementById('pricelevel_id').value = "{{ $inbound->pricelevel_id ?? '' }}";
         document.getElementById('deliveryPerson').value = "{{ $inbound->delivery_person_id ?? '' }}";

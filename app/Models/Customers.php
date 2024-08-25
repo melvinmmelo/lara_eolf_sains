@@ -77,7 +77,7 @@ class Customers extends Model
         return $this->hasMany(Inbound::class, 'customer_id');
     }
 
-    public function scopeBranchCode($query, $branchCode)
+    public function scopeBranch($query, $branchCode)
     {
         return $query->where('branch_code', $branchCode);
     }
