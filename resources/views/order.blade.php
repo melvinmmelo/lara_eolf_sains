@@ -80,10 +80,8 @@
                                     </td>
                                     <td>
 
-                                        @if ($inbound->order_slip_code !== null)
-                                            <a href="{{ route('order.view', ['inboundId' => $inbound->id]) }}"
-                                                class="btn btn-default"><i class="fas fa-eye"></i></button></a>
-                                        @endif
+                                        <a href="{{ route('order.view', ['inboundId' => $inbound->id]) }}"
+                                            class="btn btn-default"><i class="fas fa-eye"></i></button></a>
 
                                         @if ($inbound->status == 'Completed' or $inbound->status == 'Unpaid')
                                             <a href="#" data-target="#modalDeleteOrder" data-toggle="modal"><button
@@ -93,7 +91,12 @@
                                         @endif
 
                                         @if ($inbound->status === 'Paid' or $inbound->totalBalance === 0)
+
                                         @else
+                                            <a href="#"
+                                                onclick="setObId(`{{ $inbound->id }}`, `{{ $inbound->totalBalance }}`)"><button
+                                                    class="btn btn-success"><i class="fas fa-plus"></i></button></a>
+
                                             @if ($inbound->delivery_receipt_id === null)
                                                 <a href="{{ route('order.edit', ['inboundId' => $inbound->id]) }}"
                                                     class="btn btn-primary"><i class="fas fa-edit"></i></button></a>
@@ -193,14 +196,10 @@
 
 
     @include('modalAddAmountDelivered')
-
-
 @endsection
 
 @section('custom_js')
     <script>
-
-
         function setObId(obId, totalAmount) {
             $('#ob_id').val(obId);
             $('#delivered_amount').val(totalAmount);
