@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ItemMasterData;
 use App\Http\Requests\StoreItemMasterDataRequest;
 use App\Http\Requests\UpdateItemMasterDataRequest;
+use App\Models\ProductType;
 use Illuminate\Http\Request;
 
 class ItemMasterDataController extends Controller
@@ -15,6 +16,7 @@ class ItemMasterDataController extends Controller
     public function index()
     {
         $products = ItemMasterData::branch(session('branch_code'))->get();
+
         return view('item-master-data', compact('products'));
     }
 

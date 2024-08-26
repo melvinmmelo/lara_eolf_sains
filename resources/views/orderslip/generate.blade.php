@@ -53,7 +53,9 @@
                         <table id="example3" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th></th>
+                                    <th>
+                                        <input class="checkbox" type="checkbox" id="checkAll">
+                                    </th>
                                     <th>Date created</th>
                                     <th>Order No.</th>
                                     <th>Degic No.</th>

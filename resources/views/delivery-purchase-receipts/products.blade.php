@@ -94,9 +94,10 @@
                                         value="{{ $deliveryPurchaseReceipt->issue_date }}" readonly>
                                 </div>
                             </div>
-
-
                         </div>
+
+
+
 
                         @if ($deliveryPurchaseReceipt->status == 'Encoding')
                             <form action="{{ route('dpr-product.store') }}" method="POST">
@@ -140,10 +141,19 @@
                                 </div>
                             </form>
                         @endif
+
+                        @if($deliveryPurchaseReceipt->status == 'Completed')
+                            <p>Summary</p>
+                        <div class="d-flex flex-row mb-2">
+                            @foreach($productsSumm as $productSummary)
+                                <div class="btn btn-default mr-2">{{ $productSummary['code'] . ': ' . $productSummary['quantity'] }}</div>
+                            @endforeach
+                        </div>
+                        @endif
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped">
+                                    <table id="dprProductsTb" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>Item</th>
@@ -155,9 +165,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-
-
-
                                             @if ($deliveryPurchaseReceipt->products)
                                                 @php
                                                     $sum = 0;
@@ -206,19 +213,7 @@
                                                     </tr>
                                                 @endforeach
                                             @else
-                                                <tr>
-                                                    <td colspan="5" class="d-md-none"><strong>Items</strong></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="align-middle text-center" colspan="5">No data
-                                                        available.
-                                                    </td>
-                                                </tr>
 
-                                                <!-- Additional rows here -->
-                                                <tr>
-                                                    <td colspan="5" class="d-md-none"><strong>Total</strong></td>
-                                                </tr>
                                             @endif
                                         </tbody>
                                         <tfoot class="desktop-view">

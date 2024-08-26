@@ -23,13 +23,21 @@ class ReportGeneratorController extends Controller
     }
 
 
-    public function productsSummary()
+    public function productsSummary(Request $request)
     {
         $branchCode = session('branch_code');
 
-        $products = InboundService::getTotalOfAllInboundProducts($branchCode); // ! you can add 2nd parameter for date sample "2024-08-08"
+        if($request->filled('from_date') && $request->filled('to_date')) {
+            $products = InboundService::getTotalOfAllInboundProducts($branchCode, $request->from_date, $request->to_date); // ! you can add 2nd parameter for date sample "2024-08-08"
+            $title= "From: ".$request->from_date." To: ".$request->to_date;
+        } else {
+            $products = InboundService::getTotalOfAllInboundProducts($branchCode); // ! you can add 2nd parameter for date sample "2024-08-08"
+            $title= "Today";
+        }
 
-        return view('report.productsSummary', compact('products'));
+
+        return view('report.productsSummary', compact('products', 'title'));
+
     }
     public function orderSlip($code)
     {

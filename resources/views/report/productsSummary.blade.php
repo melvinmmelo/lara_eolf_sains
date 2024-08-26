@@ -9,7 +9,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>{{ date('M-d-Y') }} Products Summary</h1>
+                    <h1>{{ $title }} Products Summary</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -29,6 +29,30 @@
         <!-- Default box -->
         <div class="card">
             <div class="card-body table-responsive">
+
+                <form action="{{ route('report.productsSummaryFiltered') }}" method="GET">
+                    @csrf
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="form-label" for="from_date">From</label>
+                                <input type="date" class="form-control" name="from_date" required
+                                    value="{{ request('from_date') }}">
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label" for="to_date">To</label>
+                                <input type="date" class="form-control" name="to_date" required
+                                    value="{{ request('to_date') }}">
+                            </div>
+
+                            <div class="col-md-2 mt-4">
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>

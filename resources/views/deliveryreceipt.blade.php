@@ -76,7 +76,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @php $grandTotal = []; $grandTotalDiscount = []; $grandTotalAmtPaid = []; $grandTotalBalance = []; $grandBOTotal = []; @endphp
+                        @php $grandTotal = []; $grandTotalDiscount = []; $grandTotalAmtPaid = []; $grandTotalBalance = []; $grandBOTotal = []; $grandTotalAmtDue = []; @endphp
                         @foreach ($deliveryReceipts as $receipt)
 
                             @php $grandTotal[] = $receipt->inbound->grandTotal;
@@ -84,6 +84,7 @@
                                 $grandTotalAmtPaid[] = $receipt->inbound->delivered_amount;
                                 $grandTotalBalance[] = $receipt->inbound->totalBalance;
                                 $grandBOTotal[] = $receipt->inbound->bo_amount;
+                                $grandTotalAmtDue[] = $receipt->inbound->totalAmount;
                             @endphp
                             <tr>
                                 <td>{{ $receipt->fCreatedAt }}</td>
@@ -109,7 +110,7 @@
                             <th></th>
                             <th></th>
                             <th></th>
-                            <th rowspan="2" class="text-center">Total Amount</th>
+                            <th>Total Amount</th>
                             <th>Bad Orders</th>
                             <th>Discount</th>
                             <th>Amount Due</th>
@@ -122,11 +123,12 @@
                             <th></th>
                             <th></th>
                             <th></th>
+                            <th>{{ formatNumber(array_sum($grandTotal)) }}</th>
                             <th>{{ formatNumber(array_sum($grandBOTotal)) }}</th>
-                            <th>@php echo formatNumber(array_sum($grandTotalDiscount)) @endphp</th>
-                            <th>@php echo formatNumber(array_sum($grandTotal)) @endphp</th>
-                            <th>{{ formatNumber(array_sum($grandTotalAmtPaid))  }}</th>
-                            <th>{{ formatNumber(array_sum($grandTotalBalance))  }}</th>
+                            <th>{{ formatNumber(array_sum($grandTotalDiscount)) }}</th>
+                            <th>{{ formatNumber(array_sum($grandTotalAmtDue)) }}</th>
+                            <th>{{ formatNumber(array_sum($grandTotalAmtPaid)) }}</th>
+                            <th>{{ formatNumber(array_sum($grandTotalBalance)) }}</th>
                             <th></th>
                             <th></th>
                         </tr>

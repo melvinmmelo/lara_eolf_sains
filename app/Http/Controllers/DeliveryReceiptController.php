@@ -37,6 +37,12 @@ class DeliveryReceiptController extends Controller
 
             return response()->json(['message' => 'Printed date updated.']);
         } else {
+
+           if($inbound->delivery_receipt_id !== null && $deliveryReceipt->printed_date === null){
+                $deliveryReceipt->printed_date = now();
+                $deliveryReceipt->save();
+           }
+
             return response()->json(['message' => 'Printed date already updated.']);
         }
     }
@@ -58,6 +64,7 @@ class DeliveryReceiptController extends Controller
                     $query->where('branch_code', session('branch_code'));
                 });
         } else {
+
             $query->whereNull('printed_date')->whereHas('inbound', function ($query) {
                 $query->where('branch_code', session('branch_code'));
             });

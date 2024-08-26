@@ -59,6 +59,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/order-slip/{code}', [ReportGeneratorController::class, 'orderSlip'])->name('report.orderSlip');
 
     Route::get('/products-summary', [ReportGeneratorController::class, 'productsSummary'])->name('report.productsSummary');
+    Route::get('/products-summary-filtered', [ReportGeneratorController::class, 'productsSummary'])->name('report.productsSummaryFiltered');
+
     Route::get('/products-summary-v2', [ReportGeneratorController::class, 'productsSummaryv2'])->name('report.productsSummaryv2');
 
 

@@ -45,7 +45,9 @@
                         <table id="example3" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th></th>
+                                    <th>
+                                        <input class="checkbox" type="checkbox" id="checkAll">
+                                    </th>
                                     <th>Date created</th>
                                     <th>Order No.</th>
                                     <th>Degic No.</th>
@@ -120,6 +122,9 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
         $(document).ready(function() {
+
+
+
             try {
                 var curr_total = 0;
                 var last = 0;

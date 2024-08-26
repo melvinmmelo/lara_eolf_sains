@@ -43,17 +43,30 @@ class InboundService extends Model
         return 0;
     }
 
-    public static function getTotalOfAllInboundProducts($branchCode, $dateToExtract = null){
+    // per date
+    // default is today
+    public static function getTotalOfAllInboundProducts($branchCode, $fromDate = null, $toDate = null){
 
-        if($dateToExtract){
-            $dateToExtract = date('Y-m-d', strtotime($dateToExtract));
+        if($fromDate && $toDate){
+            $fromDate = date('Y-m-d', strtotime($fromDate));
+            $toDate = date('Y-m-d', strtotime($toDate));
+
+            $inbounds = Inbound::where('branch_code', $branchCode)
+            ->whereBetween('order_date', [$fromDate, $toDate])
+            ->get();
+
         }else{
-            $dateToExtract = date('Y-m-d');
-        }
 
-        $inbounds = Inbound::where('branch_code', $branchCode)
+            $dateToExtract = date('Y-m-d');
+
+
+            $inbounds = Inbound::where('branch_code', $branchCode)
             ->whereDate('order_date', $dateToExtract)
             ->get();
+
+        }
+
+
 
         $products = $inbounds->flatMap(function ($inbound) {
             $inboundProducts = json_decode($inbound->products, true);

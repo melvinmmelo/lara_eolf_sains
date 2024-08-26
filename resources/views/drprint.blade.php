@@ -78,7 +78,6 @@
 
 
                                 @foreach ($products as $product)
-
                                     <tr>
                                         <td>{{ $product['ptype_code'] }}</td>
                                         <td>{{ $product['total'] }}</td>
@@ -99,7 +98,7 @@
 
                         <div class="mb-3">
                             DR No.: {{ $deliveryReceipt->code }} <br>
-                            Customer Name: {{ $deliveryReceipt->customer_name }} <br>
+                            Delivery Person: {{ $inbound->delivery_person }} <br>
                             Date: {{ $deliveryReceipt->date }}
                         </div>
                         <table width="100%">
@@ -118,26 +117,36 @@
                                     <td>{{ $product['ptype_code'] }}</td>
                                     <td>{{ $product['total'] }}</td>
                                     <td>{{ $product['price'] }}</td>
-                                    <td>{{ formatNumber($product['total'] * $product['price']) }}</td>
+                                    <td class="text-right">{{ formatNumber($product['total'] * $product['price']) }}</td>
                                 </tr>
                             @endforeach
 
                         </table>
 
 
-                        <div class="">
-                                Total Sales:
-                               {{ formatNumber($totalSales) }} <br>
-                                Less BO:
-                                {{ formatNumber($inbound->bo_amount) }} <br>
-                                Discount (%):
-                                {{ formatNumber($inbound->discount) }} <br>
-                                Total Amount:
-                                {{ formatNumber($inbound->totalAmount) }} <br>
-                        </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <div>Total Sales:</div>
+                                    <div>{{ formatNumber($totalSales) }} </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <div>Less BO:</div>
+                                    <div>{{ formatNumber($inbound->bo_amount) }} </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <div>Discount (%):</div>
+                                    <div>{{ formatNumber($inbound->discount) }} </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <div>Total Amount:</div>
+                                    <div>{{ formatNumber($inbound->totalAmount) }} </div>
+                                </div>
                         <br><br><br>
                         --------------------------------- &nbsp;&nbsp;&nbsp; -------------------- <br>
-                        {{ $inbound->driver_name }}<br>
+                        {{ $inbound->customer_name }}<br>
                     </div>
                 </div>
             </div>
@@ -163,7 +172,6 @@
 
 @section('custom_js')
     <script>
-
         // create a ajax request to get the product details
         function updateDRDatePrinted() {
 
@@ -197,16 +205,17 @@
                 'body{ font-family:"Arial",Helvetica,sans-serif;font-size: 9pt;word-wrap: break-word; }');
             mywindow.document.write('hr { border: 0; border-top: 1px solid #000; margin: 10px 0; }');
             mywindow.document.write(
-                'table { border-collapse: collapse; } td { font-family:"Arial",Helvetica,sans-serif;font-size: 9pt;word-wrap: break-word; padding: 3px; } @media print { body { margin: 0 0 3px 3px; } } @page { margin: 0 0 3px 3px; }');
+                'table { border-collapse: collapse; } td { font-family:"Arial",Helvetica,sans-serif;font-size: 9pt;word-wrap: break-word; padding: 3px; } @media print { body { margin: 0 0 3px 3px; } } @page { margin: 0 0 3px 3px; }'
+                );
             mywindow.document.write('</style>');
             mywindow.document.write('</head><body>');
             mywindow.document.write('<center>EOLF FOOD TRADING OPC</center><br>');
             mywindow.document.write('<center>DELIVERY RECEIPT</center><br>');
             mywindow.document.write('<br><br>');
             mywindow.document.write('DR No.: {{ $deliveryReceipt->code }}<br>');
-            mywindow.document.write('Customer Name: {{ $deliveryReceipt->customer_name }}<br>');
-            mywindow.document.write('Date: {{ $deliveryReceipt->date }}<br><br>');
-            mywindow.document.write('<table cellp width="100%">');
+            mywindow.document.write('Delivery Person: {{ $inbound->delivery_person }}<br>');
+            mywindow.document.write('Date: {{ $deliveryReceipt->fCreatedAt }}<br><br>');
+            mywindow.document.write('<table width="100%">');
             mywindow.document.write('<tr><td>Qty</td><td>Items</td><td>Price</td><td align="right">Amount</td></tr>');
             @foreach ($products as $product)
                 mywindow.document.write(
@@ -215,20 +224,21 @@
             @endforeach
             mywindow.document.write('</table>');
             mywindow.document.write(
-                '<br>Total Sales: {{ formatNumber($totalSales) }} <br>'
+                '<table width="100%"><tr> <td width="50%">Total Sales:</td>  <td style="text-align:right"> {{ formatNumber($totalSales) }}</td></tr>'
             );
             mywindow.document.write(
-                'Less BO: {{ formatNumber($inbound->bo_amount) }} <br>');
+                '<tr> <td>Less BO:  </td> <td style="text-align:right">{{ formatNumber($inbound->bo_amount) }} </td> </tr>'
+                );
             mywindow.document.write(
-                'Discount (%): {{ formatNumber($inbound->discount) }} <br>'
+                '<tr> <td>Discount (%): </td> <td style="text-align:right"> {{ formatNumber($inbound->discount) }} </td> </tr>'
             );
             mywindow.document.write(
-                'Total Amount: {{ formatNumber($inbound->totalAmount) }} <br>'
+                '<tr> <td> Total Amount</td> <td style="text-align:right"> {{ formatNumber($inbound->totalAmount) }} </td> </tr></table>'
             );
             mywindow.document.write('</table>');
             mywindow.document.write('<br><br><br>');
             mywindow.document.write('--------------------------------- &nbsp;&nbsp;&nbsp; --------------------<br>');
-            mywindow.document.write('{{ $inbound->driver_name }} <br>');
+            mywindow.document.write('{{ $inbound->customer_name }} <br>');
             mywindow.document.write('</body></html>');
 
             mywindow.document.close(); // Necessary for IE >= 10

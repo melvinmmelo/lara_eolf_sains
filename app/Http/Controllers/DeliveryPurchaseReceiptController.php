@@ -56,10 +56,12 @@ class DeliveryPurchaseReceiptController extends Controller
 
         $product = Product::productCode($request->product_code)->first();
 
-        $sequence_no = ProductType::code($product->product_type_code)->pluck('sequence_no')->first();
+        $productTypeData = ProductType::code($product->product_type_code)
+            ->select('sequence_no', 'code')
+            ->first();
 
 
-        $newProduct = ['order' => $sequence_no, 'code' => $request->product_code, 'description' => $product->productName, 'quantity' => $request->qty, 'unit' => $productPrice->p_unit, 'price' => $productPrice->p_price, 'hold' => '0', 'created_at' => now(), 'updated_at' => ''];
+        $newProduct = ['order' => $productTypeData->sequence_no, 'ptype_code' => $productTypeData->code, 'code' => $request->product_code, 'description' => $product->productName, 'quantity' => $request->qty, 'unit' => $productPrice->p_unit, 'price' => $productPrice->p_price, 'hold' => '0', 'created_at' => now(), 'updated_at' => ''];
 
         $dprService = new DPRService($dpr->products);
 
@@ -88,7 +90,40 @@ class DeliveryPurchaseReceiptController extends Controller
             return ProductType::code($product->product_type_code)->pluck('sequence_no')->first();
         });
 
-        return view('delivery-purchase-receipts.products', compact('deliveryPurchaseReceipt', 'originalProducts'));
+        $productsSumm = collect(json_decode($deliveryPurchaseReceipt->products, true))
+            ->map(function ($product) {
+
+                if (isset($product['ptype_code'])) {
+                    $ptypeCode = $product['ptype_code'];
+                } else {
+                    $ptypeCode = substr($product['code'], 0, 2);
+                    if ($ptypeCode == 'IC') {
+                        $ptypeCode = substr($product['code'], 0, 3);
+                    }
+                }
+
+                $productType = ProductType::where("code", "LIKE", "$ptypeCode%")->first();
+
+                return [
+                    'code' => $ptypeCode,
+                    'quantity' => $product['quantity'],
+                    'order' => $productType->sequence_no ?? '',
+                ];
+            })
+            ->groupBy('code')
+            ->map(function ($group) {
+                return [
+                    'code' => $group->first()['code'],
+                    'quantity' => $group->sum('quantity'),
+                    'order' => $group->first()['order'],
+                ];
+            })
+            ->sortBy('order')
+            ->values()
+            ->toArray();
+
+
+        return view('delivery-purchase-receipts.products', compact('deliveryPurchaseReceipt', 'originalProducts', 'productsSumm'));
     }
 
     public function productsEdit(int $dprId)

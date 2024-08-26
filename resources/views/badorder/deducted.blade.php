@@ -59,17 +59,11 @@
                                         <td>{{ $badOrder['remarks'] }}</td>
                                         <td>{{ $badOrder['created_at'] }}</td>
                                         <td> <!-- Add a delete button -->
-                                            <form method="POST"
-                                                action="{{ route('badOrders.destroy', $badOrder['bo_id']) }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger"
-                                                    onclick="return confirm('Are you sure you want to delete this item?')">Delete</button>
+
                                                 <button type="button" class="btn btn-success btn-print"
                                                     data-bo-id="{{ $badOrder['bo_id'] }}" onclick="printPage(this)">
                                                     <i class="fa-solid fa-print"></i> Print
                                                 </button>
-                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach

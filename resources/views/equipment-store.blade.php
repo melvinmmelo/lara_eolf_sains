@@ -235,6 +235,7 @@
                                             <label class="form-label" for="status">Remarks</label>
                                             <!-- <input type="text" name="remarks" class="form-control"> -->
                                             <select class="form-control" name="remarks" required>
+                                                <option value="UPGRADE">UPGRADE</option>
                                                 <option value="DEFFECTIVE COMPRESSOR">DEFFECTIVE COMPRESSOR</option>
                                                 <option value="NOT COOLING">NOT COOLING</option>
                                                 <option value="STOP SELLING">STOP SELLING</option>

@@ -207,7 +207,19 @@
 
 
     <script>
+        $(document).ready(function() {
+            $('#checkAll').click(function() {
+                if ($(this).is(':checked')) {
+                    $('input:checkbox').prop('checked', true);
+                } else {
+                    $('input:checkbox').prop('checked', false);
+                }
+            });
+        });
+
         $(function() {
+
+            $('#dprProductsTb').DataTable();
 
             if (document.getElementById('example1')) {
                 $("#example1").DataTable({
