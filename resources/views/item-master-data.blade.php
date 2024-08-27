@@ -29,7 +29,6 @@
                     <thead>
                         <tr>
                             <th>Product</th>
-                            <th>Unit</th>
                             <th>Reserved</th>
                             <th>Hold</th>
                             <th>Stocks</th>
@@ -40,7 +39,6 @@
                         @foreach ($products as $product)
                             <tr>
                                 <td>{{ $product->product_code . ' ' . $product->product_description }}</td>
-                                <td>{{ $product->unit }}</td>
                                 <td>{{ $product->reserved }}</td>
                                 <td>
                                     @if ($product->hold_quantity > 0)
@@ -57,7 +55,6 @@
                     <tfoot>
                         <tr>
                             <th>Product</th>
-                            <th>Unit</th>
                             <th>Reserved</th>
                             <th>Hold</th>
                             <th>Quantity</th>

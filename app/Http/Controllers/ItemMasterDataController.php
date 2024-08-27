@@ -15,7 +15,30 @@ class ItemMasterDataController extends Controller
      */
     public function index()
     {
-        $products = ItemMasterData::branch(session('branch_code'))->get();
+        // Get unique product type codes first
+        $ptypeCodes = ItemMasterData::branch(session('branch_code'))
+            ->select('product_code')
+            ->get()
+            ->map(function ($product) {
+                return explode('_', $product->product_code)[0];
+            })
+            ->unique();
+
+        // Fetch all required ProductType data in one query
+        $productTypes = ProductType::whereIn('code', $ptypeCodes)
+            ->select('code', 'sequence_no')
+            ->get()
+            ->keyBy('code');
+
+        $products = ItemMasterData::branch(session('branch_code'))
+            ->select('id', 'product_code', 'reserved', 'hold_quantity', 'stocks', 'updated_at') // Select only necessary columns
+            ->get()
+            ->map(function ($product) use ($productTypes) {
+                $ptypeCode = explode('_', $product->product_code)[0];
+                $product->sequence_no = $productTypes[$ptypeCode]->sequence_no ?? PHP_INT_MAX;
+                return $product;
+            })
+            ->sortBy('sequence_no');
 
         return view('item-master-data', compact('products'));
     }
@@ -79,7 +102,7 @@ class ItemMasterDataController extends Controller
 
         $product = ItemMasterData::find($request->imd_id);
 
-        if($request->quantity > $product->hold_quantity) {
+        if ($request->quantity > $product->hold_quantity) {
             return redirect()->back()->withErrors('Failed to add quantity.');
         }
 
@@ -93,6 +116,5 @@ class ItemMasterDataController extends Controller
             ->log('Quantity added from hold.');
 
         return redirect()->back()->with('success', 'Quantity added successfully.');
-
     }
 }
