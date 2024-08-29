@@ -57,7 +57,6 @@
                                 <th>Unit</th>
                                 <th>Unit Price</th>
                                 <th>Total Amount</th>
-                                <th>Location</th>
                                 <th>Remarks</th>
                                 <th>Date</th>
                                 <th>Modified By</th>
@@ -67,6 +66,9 @@
                         <tbody>
 
                             @foreach ($materials as $material)
+                            @php
+                                $totalAmount = $material->quantity * $material->amount;
+                            @endphp
                                 <tr>
                                     <td>
                                         <input class="checkbox" type="checkbox" name="items[]" id="items"
@@ -77,8 +79,7 @@
                                     <td>{{ $material->unit }}</td>
                                     <td>{{ $material->quantity }}</td>
                                     <td>{{ formatNumber($material->amount) }}</td>
-                                    <td>{{ $material->quantiy * $material->amount }}</td>
-                                    <td>{{ $material->location }}</td>
+                                    <td>{{ formatNumber($totalAmount) }}</td>
                                     <td>{{ $material->remarks }}</td>
                                     <td>{{ $material->created_at }}</td>
                                     <td>{{ $material->modified_by }}</td>
@@ -100,7 +101,6 @@
                                 <th>Unit</th>
                                 <th>Unit Price</th>
                                 <th>Amount</th>
-                                <th>Location</th>
                                 <th>Remarks</th>
                                 <th>Date</th>
                                 <th>Modified By</th>
@@ -211,19 +211,9 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="amount">Amount</label>
+                                        <label class="form-label" for="amount">Unit price</label>
                                         <input type="number" class="form-control" name="amount" id="amount"
                                             value="" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="location">Location</label>
-                                        <input type="text" class="form-control" name="location" id="location"
-                                            required>
                                     </div>
                                 </div>
                             </div>

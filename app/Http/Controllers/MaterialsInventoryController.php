@@ -25,7 +25,6 @@ class MaterialsInventoryController extends Controller
             'unit' => 'nullable',
             'quantity' => 'required|numeric',
             'amount' => 'required|numeric',
-            'location' => 'required',
             'remarks' => 'nullable',
         ]);
 
@@ -35,7 +34,6 @@ class MaterialsInventoryController extends Controller
         $material->unit = $request->unit;
         $material->quantity = $request->quantity;
         $material->amount = $request->amount;
-        $material->location = $request->location;
         $material->remarks = $request->remarks;
         $material->modified_by = auth()->user()->fullName;
         $material->save();

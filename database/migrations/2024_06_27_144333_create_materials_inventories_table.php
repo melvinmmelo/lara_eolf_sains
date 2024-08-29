@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('unit')->nullable();
             $table->integer('quantity')->nullable();
             $table->float('amount', 2)->nullable();
-            $table->string('location')->nullable();
             $table->string('remarks')->nullable();
             $table->unsignedInteger('withdrawal_id')->nullable();
             $table->timestamps();
