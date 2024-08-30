@@ -44,7 +44,7 @@ class addbadorderController extends Controller
             ->orderBy('product_types.sequence_no')
             ->get();
 
-        return view('addbadorder', compact('customers', 'badPricing', 'items'));
+        return view('newaddbadorder', compact('customers', 'badPricing', 'items'));
     }
 
 

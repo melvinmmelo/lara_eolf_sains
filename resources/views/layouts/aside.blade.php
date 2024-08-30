@@ -179,8 +179,8 @@
                         </li>
 
                         <li>
-                            <a href="/bad-orders-list"
-                                class="nav-link {{ Route::currentRouteNamed('badOrders.index') || Route::currentRouteNamed('addbadorder.create') || Route::currentRouteNamed('badOrders.deducted') ? 'active' : '' }}">
+                            <a href="/bad-orders"
+                                class="nav-link {{ Route::currentRouteNamed('bo.index') || Route::currentRouteNamed('addbadorder.create') || Route::currentRouteNamed('badOrders.deducted') ? 'active' : '' }}">
                                 <i class="fas fa-circle-left nav-icon"></i>
                                 <p>Bad Order</p>
                             </a>
@@ -276,7 +276,6 @@
                         </form>
                     </a>
                 </li>
-
         </nav>
         <!-- /.sidebar-menu -->
     </div>

@@ -11,6 +11,7 @@ use App\Models\Drivers;
 use App\Models\Equipment;
 use App\Models\EquipmentStore;
 use App\Models\ItemMasterData;
+use App\Models\NewBadOrder;
 use App\Models\pricelevels;
 use App\Models\prices;
 use App\Models\Product;
@@ -332,10 +333,11 @@ class InboundController extends Controller
 
         if ($bad_order == 1) {
 
-            BadOrder::where('bo_id', $request->bad_order_id)->update(['is_active' => 0]);
+            $badOrder = NewBadOrder::find($request->bad_order_id);
+            $badOrder->is_active = 0;
+            $badOrder->save();
 
             $inbound->bad_order_id = $request->bad_order_id;
-
             $inbound->bo_amount = $request->bo_amount;
         }
 

@@ -39,7 +39,7 @@ class EquipmentStore extends Model
 
     protected $table = 'equipment_store';
 
-    protected $with = ['customer'];
+    protected $with = ['customer', 'equipment'];
 
     public function equipment(): BelongsTo
     {

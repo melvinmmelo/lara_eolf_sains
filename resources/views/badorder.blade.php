@@ -49,28 +49,19 @@
 
                         @php $grandTotal = []; @endphp
                         @foreach ($badOrders as $badOrder)
-                            @php $grandTotal[] = $badOrder['amount']; @endphp
                             <tr>
+                                <td>{{ $badOrder->customer->fullName }}</td>
+                                <td>{{ $badOrder->amount }}</td>
+                                <td>{{ $badOrder->bo_percentage }}</td>
+                                <td>{{ $badOrder->remarks }}</td>
+                                <td>{{ $badOrder->created_at }}</td>
                                 <td>
-                                    {{ optional($badOrder['customer'])->firstname }}
-                                    {{ optional($badOrder['customer'])->lastname }}
-                                    ({{ optional($badOrder['storeinfo'])->storename }})
-                                </td>
-                                <td>{{ formatNumber($badOrder['amount']) }}</td>
-                                <td>{{ $badOrder['bo_percentage'] }}</td>
-                                <td>{{ $badOrder['remarks'] }}</td>
-                                <td>{{ $badOrder['created_at'] }}</td>
-                                <td> <!-- Add a delete button -->
-                                    <form method="POST" action="{{ route('badOrders.destroy', $badOrder['bo_id']) }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger"
-                                            onclick="return confirm('Are you sure you want to delete this item?')">Delete</button>
-                                        <button type="button" class="btn btn-success btn-print"
-                                            data-bo-id="{{ $badOrder['bo_id'] }}" onclick="printPage(this)">
-                                            <i class="fa-solid fa-print"></i> Print
-                                        </button>
-                                    </form>
+                                    <button type="submit" class="btn btn-danger"
+                                        onclick="return deleteBO(`{{ $badOrder->id }}`);">Delete</button>
+                                    <button type="button" class="btn btn-success btn-print"
+                                        data-bo-id="{{ $badOrder->id }}" onclick="printPage(this)">
+                                        <i class="fa-solid fa-print"></i> Print
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
@@ -91,7 +82,7 @@
             <!-- /.card-body -->
             <div class="card-footer">
                 <button type="button" class="btn btn-primary"
-                    onclick="window.location.href='{{ route('addbadorder.create') }}'">
+                    onclick="window.location.href='{{ route('newbo.create') }}'">
                     Add New
                 </button>
             </div>
@@ -145,6 +136,39 @@
         </div>
 
     </section>
+
+
+    <div class="modal fade" id="modal-delete">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="deleteHeaderTitle">Delete bad order</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('bo.destroy') }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+
+                        <div class="form-group">
+                            <input type="text" name="bo_id" class="form-control mb-2 mt-2" required readonly>
+                        </div>
+
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+    </div>
 @endsection
 
 @section('custom_js')
@@ -152,27 +176,37 @@
         function confirmSetInactive() {
             return confirm("Are you sure you want to update the product status?")
         }
+
+        function deleteBO(obId) {
+            var boId = obId;
+            $('#modal-delete').modal('show');
+            $('#modal-delete').find('input[name="bo_id"]').val(boId);
+
+        }
     </script>
     <script>
         function printPage(button) {
             var boId = button.getAttribute('data-bo-id');
 
             // AJAX request to fetch BO details
-            fetch(`/getBoDetails?boId=${boId}`)
+            fetch(`/getBoDetails/${boId}`)
                 .then(response => response.json())
                 .then(data => {
-                    // Assuming data is an array of items
-                    var items = data.map(item => `
-            <tr>
-                <td>${item.code}</td>
-                <td>${item.quantity}</td>
-                <td align="right">${formatNumber(item.amount)}</td>
-            </tr>
-        `).join('');
-                    //console.log(data);
 
-                    var totalAmount = data.reduce((total, item) => total + parseFloat(item.amount), 0);
-                    var created = data[0].created_at;
+                    badOrder = data["badOrder"];
+                    dbProducts = data["products"];
+
+                    // Assuming data is an array of items
+                    var products = dbProducts.map(item => `
+                            <tr>
+                                <td>${item.ptype_code}</td>
+                                <td>${item.quantity}</td>
+                                <td align="right">${formatNumber(item.quantity * item.price)}</td>
+                            </tr>
+                        `).join('');
+
+                    var totalAmount = data["amount"];
+                    var created = badOrder["created_at"];
                     // Create a Date object from the string
                     var dateObj = new Date(created);
 
@@ -184,12 +218,12 @@
                     // Format the date as MM-DD-YYYY
                     var formattedDate =
                         `${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}-${year}`;
-                    var boperc = data[0].bo_percentage;
+                    var boperc = badOrder["bo_percentage"];
                     var lessamt = totalAmount * (boperc / 100);
                     var netamt = totalAmount - lessamt;
 
-                    var fname = data[0].customer.firstname;
-                    var lname = data[0].customer.lastname;
+                    var fname = badOrder.customer.firstname;
+                    var lname = badOrder.customer.lastname;
                     // Create a new window for printing
                     var mywindow = window.open('', 'PRINT', 'height=900,width=1000');
                     mywindow.document.write('<html><head><title>BAD ORDER SLIP</title>');
@@ -209,7 +243,7 @@
                     mywindow.document.write('Customer: ' + lname + ', ' + fname + '<br>');
                     mywindow.document.write('<table width="100%">');
                     mywindow.document.write('<tr><td>Items</td><td>Pcs</td><td align="right">Amount</td></tr>');
-                    mywindow.document.write(items);
+                    mywindow.document.write(products);
                     mywindow.document.write('</table>');
                     mywindow.document.write('<hr>');
                     mywindow.document.write('<table width="100%">');

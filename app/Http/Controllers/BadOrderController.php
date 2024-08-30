@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BadOrder;
 use App\Models\Customers;
+use App\Models\NewBadOrder;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -78,6 +79,24 @@ class BadOrderController extends Controller
         $amount = $lastBadOrderTotal * ($badOrder->bo_percentage / 100);
 
         return response()->json(['id' => $badOrder->bo_id, 'amount' => $amount]);
+    }
+
+    public function newFetchLastBadOrderOfCustomer($customerId, $storeId)
+    {
+
+        $newBadOrder = NewBadOrder::where('customer_id', $customerId)
+            ->where('is_active', 1)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if (!$newBadOrder) {
+            return response()->json(['id' => null, 'amount' => 0]);
+        }
+
+        $percentageAmount = $newBadOrder->amount * ($newBadOrder->bo_percentage / 100);
+        $amount = $newBadOrder->amount - $percentageAmount;
+
+        return response()->json(['id' => $newBadOrder->id, 'amount' => $amount]);
     }
 
     public function getBoDetails(Request $request)

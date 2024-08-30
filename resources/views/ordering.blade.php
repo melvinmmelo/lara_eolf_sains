@@ -402,8 +402,8 @@
 
         @if (session('branch_code') == 'EFTO-TAR')
 
-            document.getElementById('deliveryPerson').addEventListener('change', function() {
-                var driver = document.getElementById('deliveryPerson').value;
+            document.getElementById('delivery_person_id').addEventListener('change', function() {
+                var driver = document.getElementById('delivery_person_id').value;
                 $.ajax({
                     type: "GET",
                     url: "/dp-details/" + driver,
@@ -496,6 +496,7 @@
         }
 
         document.getElementById("isBadPricing").addEventListener('click', function() {
+            console.log("isBadPricing clicked.");
             if (this.checked) {
                 fetchLastInsertedBadPricing("{{ $inbound->customer_id ?? '' }}",
                     "{{ $inbound->store_id ?? '' }}");

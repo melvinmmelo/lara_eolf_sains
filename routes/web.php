@@ -26,6 +26,7 @@ use App\Http\Controllers\BadOrderController;
 use App\Http\Controllers\MaterialsInventoryController;
 use App\Http\Controllers\DeliveryReceiptController;
 use App\Http\Controllers\EquipmentHistoryController;
+use App\Http\Controllers\NewBadOrderController;
 use App\Http\Controllers\OrderSlipController;
 use App\Http\Controllers\ReportGeneratorController;
 use App\Http\Controllers\TicketController;
@@ -77,20 +78,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/ticket-inbounds/{grp}', [TicketController::class, 'show'])->name('inbounds-ticket');
 
 
-    Route::get('/lastBadOrderOfCustomer/{customerId}/{storeId}', [BadOrderController::class, 'fetchLastBadOrderOfCustomer']);
+    Route::get('/lastBadOrderOfCustomer/{customerId}/{storeId}', [BadOrderController::class, 'newFetchLastBadOrderOfCustomer']);
 
-    Route::get('/getBoDetails', [BadOrderController::class, 'getBoDetails']);
+    Route::get('/getBoDetails/{boId}', [NewBadOrderController::class, 'getBoDetails']);
 
     Route::post('/delivery-receipt', [DeliveryReceiptController::class, 'store'])->name('delivery-receipt.store');
 
     Route::get('/drprint/{id}', [DeliveryReceiptController::class, 'show'])->name('drprint');
 
     Route::get('/deliveryreceipt', [DeliveryReceiptController::class, 'index'])->name('deliveryreceipt.index');
+
     Route::get('/deliveryreceipt-done', [DeliveryReceiptController::class, 'indexDone'])->name('deliveryreceipt.indexDone');
 
-
     Route::get('/updateDRPrintedDate/{id}', [DeliveryReceiptController::class, 'updateDRPrintedDate'])->name('deliveryreceipt.updateDRPrintedDate');
-
 
     Route::get('/api/getCustomerItems/{customerId}', [addbadorderController::class, 'getCustomerItems']);
 
@@ -100,12 +100,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/get-price/{pricelevel_id}/{p_code}', [addbadorderController::class, 'getPrice']);
 
-    Route::get('/bad-orders-list', [BadOrderController::class, 'index'])->name('badOrders.index');
+    Route::get('/bad-orders', [NewBadOrderController::class, 'index'])->name('bo.index');
 
     Route::get('/bad-orders-deducted', [BadOrderController::class, 'badOrdersDeducted'])->name('badOrders.deducted');
 
 
-    Route::delete('/bad-orders/{id}', [BadOrderController::class, 'destroy'])->name('badOrders.destroy');
+    Route::delete('/bad-orders/delete', [NewBadOrderController::class, 'destroy'])->name('bo.destroy');
 
     Route::post('/save-temp-bad-order', [TempBadOrderController::class, 'store']);
 
@@ -145,8 +145,15 @@ Route::middleware('auth')->group(function () {
     })->name('branch-select');
 
 
-    Route::get('/addbadorder/create', [addbadorderController::class, 'create'])->name('addbadorder.create');
-    Route::post('/addbadorder/store', [addbadorderController::class, 'store'])->name('addbadorder.store');
+
+    Route::get('/bad-order/create', [NewBadOrderController::class, 'create'])->name('newbo.create');
+
+    Route::post('/bad-order/create', [NewBadOrderController::class, 'store'])->name('newbo.store');
+
+    Route::post('/bad-order-temp-product/store', [NewBadOrderController::class, 'storeTempProduct'])->name('newbo.storetp');
+
+    Route::delete('/newbo/{id}/delete', [NewBadOrderController::class, 'deleteTempProduct'])->name('newbo.deletetp');
+
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit'); // views
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update'); // backend
