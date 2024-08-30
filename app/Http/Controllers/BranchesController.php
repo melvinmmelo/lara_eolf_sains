@@ -19,7 +19,7 @@ class BranchesController extends Controller
             return redirect()->route('dashboard')->with('success', 'Branch set successfully!');
         }
 
-        session()->forget(['inboundId','products']);
+        session()->forget(['inboundId','products', 'session_bo_id']);
 
         return redirect()->back()->with('success', 'Branch set successfully!');
     }

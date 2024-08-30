@@ -98,11 +98,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/get-products/{inboundId}/{customerId}', [addbadorderController::class, 'getProducts']);
 
-    Route::get('/get-price/{pricelevel_id}/{p_code}', [addbadorderController::class, 'getPrice']);
+    Route::get('/bo-get-price/{pricelevel_id}/{p_code}', [NewBadOrderController::class, 'getPricing']);
 
-    Route::get('/bad-orders', [NewBadOrderController::class, 'index'])->name('bo.index');
+    Route::get('/bad-orders', [NewBadOrderController::class, 'index'])->name('newbo.index');
 
-    Route::get('/bad-orders-deducted', [BadOrderController::class, 'badOrdersDeducted'])->name('badOrders.deducted');
+    Route::get('/bo-deducted', [NewBadOrderController::class, 'badOrdersDeducted'])->name('newbo.deducted');
 
 
     Route::delete('/bad-orders/delete', [NewBadOrderController::class, 'destroy'])->name('bo.destroy');
@@ -146,7 +146,7 @@ Route::middleware('auth')->group(function () {
 
 
 
-    Route::get('/bad-order/create', [NewBadOrderController::class, 'create'])->name('newbo.create');
+    Route::get('/bad-order/create/{q?}', [NewBadOrderController::class, 'create'])->name('newbo.create');
 
     Route::post('/bad-order/create', [NewBadOrderController::class, 'store'])->name('newbo.store');
 

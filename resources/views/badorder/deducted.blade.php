@@ -57,13 +57,8 @@
                                         <td>{{ formatNumber($badOrder['amount']) }}</td>
                                         <td>{{ $badOrder['bo_percentage'] }}</td>
                                         <td>{{ $badOrder['remarks'] }}</td>
-                                        <td>{{ $badOrder['created_at'] }}</td>
-                                        <td> <!-- Add a delete button -->
-
-                                                <button type="button" class="btn btn-success btn-print"
-                                                    data-bo-id="{{ $badOrder['bo_id'] }}" onclick="printPage(this)">
-                                                    <i class="fa-solid fa-print"></i> Print
-                                                </button>
+                                        <td>{{ $badOrder['updated_at'] }}</td>
+                                        <td>
                                         </td>
                                     </tr>
                                 @endforeach

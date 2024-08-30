@@ -23,8 +23,12 @@ class NewBadOrderController extends Controller
         return view('badorder', compact('badOrders'));
     }
 
-    public function create()
+    public function create($q = null)
     {
+        $plId = null;
+        if ($q) {
+            $plId = $q;
+        }
 
         if (session()->has('session_bo_id')) {
             $sessionBo = session('session_bo_id');
@@ -41,19 +45,21 @@ class NewBadOrderController extends Controller
 
         $equipment = Equipment::has('equipmentStore')->branch(session('branch_code'))->get();
 
-        $badPricing = pricelevels::where('pl_name', 'BAD PRICING')->first();
+        $items = ProductType::where('is_active', 1)->orderBy("sequence_no")->get();
 
-        $items = prices::where('pricelevel_id', $badPricing->id)
-            ->join('product_types', 'prices.p_code', '=', 'product_types.code')
-            ->select('prices.*', 'product_types.name as description', 'product_types.code as ptype_code')
-            ->orderBy('product_types.sequence_no')
-            ->get();
+        $pricingLevels = pricelevels::branch(session("branch_code"))->where('pl_name', 'BAD PRICING')->get();
 
         $boProducts = NewTempBadOrder::where('session_bo_id', $sessionBo)->get();
 
         $totalAmount = NewTempBadOrder::where('session_bo_id', $sessionBo)->sum(\DB::raw('price * quantity'));
 
-        return view('newaddbadorder', compact('customers', 'badPricing', 'items', 'sessionBo', 'boProducts', 'equipment', 'totalAmount'));
+        return view('newaddbadorder', compact('customers', 'pricingLevels', 'items', 'sessionBo', 'boProducts', 'equipment', 'totalAmount', 'plId'));
+    }
+
+    public function getPricing($plId, $pCode)
+    {
+        $price = prices::getPricePerPriceLevelAndPCode($plId, $pCode);
+        return response()->json($price);
     }
 
     public function store(Request $request)
@@ -91,13 +97,14 @@ class NewBadOrderController extends Controller
             ->performedOn($newBadOrder)
             ->log('Created new bad order');
 
-        return redirect()->route('bo.index')->with('success', 'Bad order created successfully.');
+        return redirect()->route('newbo.index')->with('success', 'Bad order created successfully.');
     }
 
     public function storeTempProduct(Request $request)
     {
         $request->validate([
             'session_bo_id' => 'required',
+            'priceLevel' => 'required',
             'item' => 'required',
             'price' => 'required',
             'quantity' => 'required',
@@ -110,7 +117,7 @@ class NewBadOrderController extends Controller
             ->where('ptype_code', $request->item)
             ->exists();
 
-        if($isExisting) {
+        if ($isExisting) {
             return back()->withErrors(['error' => 'Product already added to bad order.']);
         }
 
@@ -122,40 +129,41 @@ class NewBadOrderController extends Controller
         $newTempBadOrder->price = $request->price;
         $newTempBadOrder->save();
 
-        return back()->with('success', 'Product added to bad order.');
+        return redirect()->route('newbo.create', ["q" => $request->priceLevel])->with('success', 'Product added to bad order.');
     }
 
-    function deleteTempProduct($id)
+    public function deleteTempProduct($id)
     {
         $res = NewTempBadOrder::find($id)->delete();
 
         return response()->json(['success' => $res]);
-
     }
 
-    function destroy(Request $request)
+    public function destroy(Request $request)
     {
         $request->validate([
             'bo_id' => 'required',
         ]);
 
-        try {
-            $affectedRows = NewBadOrder::find($request->bo_id)->delete();
-            if ($affectedRows > 0) {
-                return redirect()->route('bo.index')->with('success', 'Bad orders deleted successfully.');
-            } else {
-                return back()->withErrors(['error' => 'Bad orders not found.']);
-            }
-        } catch (\Exception $e) {
-            return back()->withErrors(['error' => 'Failed to delete bad orders.']);
+        $res = NewBadOrder::find($request->bo_id)->delete();
+        if ($res) {
+            return redirect()->route('newbo.index')->with('success', 'Bad order deleted successfully.');
+        } else {
+            return back()->withErrors(['error' => 'Bad order not found.']);
         }
     }
 
-    function getBoDetails($boId){
+    public function getBoDetails($boId)
+    {
         $badOrder = NewBadOrder::find($boId);
         $badOrder->load('customer');
 
         return response()->json(["badOrder" => $badOrder, "products" => $badOrder->products, "amount" => $badOrder->amount]);
     }
 
+    public function badOrdersDeducted()
+    {
+        $badOrders = NewBadOrder::with('customer')->branch(session("branch_code"))->where("is_active", 0)->get();
+        return view('badorder.deducted', ['badOrders' => $badOrders]);
+    }
 }

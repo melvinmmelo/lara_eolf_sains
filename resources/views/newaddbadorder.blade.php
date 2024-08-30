@@ -28,15 +28,27 @@
                     <input type="hidden" name="session_bo_id" value="{{ $sessionBo }}" required readonly>
 
                     <div class="row mb-4">
-                        <div class="col-sm-6">
+
+                        <div class="col-sm-4">
+                            <label class="form-label" for="item"><i style="color:red">*</i>Price Level</label>
+                            <select class="form-control select2bs4" id="priceLevel" name="priceLevel">
+                                <option>-- Select Pricing Level --</option>
+                                @foreach ($pricingLevels as $priceLevel)
+                                    <option value="{{ $priceLevel->id }}">
+                                        {{ $priceLevel->pl_desc }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-sm-4">
                             <label class="form-label" for="item"><i style="color:red">*</i>Item</label>
                             <select class="form-control select2bs4" id="item" name="item">
                                 <option>-- Select Item --</option>
                                 @foreach ($items as $item)
-                                    <option value="{{ $item->p_code }}" data-ptype-code="{{ $item->ptype_code }}"
-                                        data-price="{{ $item->p_price }}" data-unit="{{ $item->p_unit }}"
-                                        data-quantity="{{ $item->p_quant }}">
-                                        {{ $item->description }}
+                                    <option value="{{ $item->code }}" data-ptype-code="{{ $item->code }}"
+                                        data-price="{{ $item->p_price }}">
+                                        {{ $item->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -44,12 +56,12 @@
 
                         <div class="col-sm-2">
                             <label class="form-label" for="price">Unit Price</label>
-                            <input type="text" class="form-control" id="price" name="price" readonly>
+                            <input type="text" class="form-control" id="price" name="price" required readonly>
                         </div>
 
                         <div class="col-sm-2">
                             <label class="form-label" for="quantity">Quantity</label>
-                            <input type="text" class="form-control" id="quantity" name="quantity">
+                            <input type="text" class="form-control" id="quantity" name="quantity" required>
                         </div>
 
                         <div class="col-sm-2">
@@ -148,43 +160,62 @@
 
 @section('custom_js')
     <script>
+        // set price level
+        const priceLevel = `{{ $plId ?? ''}}`;
+        $('#priceLevel').val(priceLevel);
 
-            const sessionBo = '{{ $sessionBo }}';
+        const sessionBo = '{{ $sessionBo }}';
 
-            const itemSelect = $('#item');
-            const priceInput = $('#price');
-            const quantityInput = $('#quantity');
+        const itemSelect = $('#item');
+        const priceInput = $('#price');
+        const quantityInput = $('#quantity');
 
 
+        // Event listener for item selection
+        itemSelect.on('change', function() {
+            const selectedOption = $(this).find(':selected');
+            const price = selectedOption.data('price');
+            const quantity = selectedOption.data('quantity');
+            priceInput.val(price);
 
-            // Event listener for item selection
-            itemSelect.on('change', function() {
-                const selectedOption = $(this).find(':selected');
-                const price = selectedOption.data('price');
-                const quantity = selectedOption.data('quantity');
-                priceInput.val(price);
+            // focus on quantity input
+            quantityInput.focus();
 
-                // focus on quantity input
-                quantityInput.focus();
+        });
 
+        // convert deleteItem function to ajax request
+        function deleteItem(id) {
+            $.ajax({
+                url: `/newbo/${id}/delete`,
+                type: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    location.reload();
+                },
+                error: function(error) {
+                    console.log(error);
+                }
             });
+        }
 
-            // convert deleteItem function to ajax request
-            function deleteItem(id) {
-                $.ajax({
-                    url: `/newbo/${id}/delete`,
-                    type: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        location.reload();
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
+        function getPricing() {
+
+            let item = itemSelect.val();
+            let priceLevel = $('#priceLevel').val();
+
+            fetch(`/bo-get-price/${priceLevel}/${item}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    priceInput.val(data.p_price);
+                })
+                .catch(error => {
+                    console.log(error);
                 });
-            }
+        }
 
+        itemSelect.on('change', getPricing);
     </script>
 @endsection

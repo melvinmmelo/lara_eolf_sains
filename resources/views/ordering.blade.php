@@ -496,7 +496,6 @@
         }
 
         document.getElementById("isBadPricing").addEventListener('click', function() {
-            console.log("isBadPricing clicked.");
             if (this.checked) {
                 fetchLastInsertedBadPricing("{{ $inbound->customer_id ?? '' }}",
                     "{{ $inbound->store_id ?? '' }}");
@@ -510,6 +509,9 @@
                 var newTotal = parseInt(total) + parseInt(totalBadOrder);
                 document.getElementById("total").value = newTotal;
                 console.log(newTotal + " added.");
+
+                document.getElementById("bad_order_id").value = "";
+                document.getElementById("bo_amount").value = 0;
             }
         });
 

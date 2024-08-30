@@ -23,13 +23,10 @@
 
         <!-- Default box -->
         <div class="card">
-
             <div class="card-body">
-
                 @include('layouts.errors')
-
                 <div class="pb-2">
-                    <a href="{{ route('badOrders.deducted') }}"><button type="button" class="btn btn-primary">
+                    <a href="{{ route('newbo.deducted') }}"><button type="button" class="btn btn-primary">
                             Deducted BOs
                         </button></a>
                 </div>
@@ -50,7 +47,7 @@
                         @php $grandTotal = []; @endphp
                         @foreach ($badOrders as $badOrder)
                             <tr>
-                                <td>{{ $badOrder->customer->fullName }}</td>
+                                <td>{{ $badOrder->degic_code . " " . $badOrder->customer->fullName }}</td>
                                 <td>{{ $badOrder->amount }}</td>
                                 <td>{{ $badOrder->bo_percentage }}</td>
                                 <td>{{ $badOrder->remarks }}</td>

@@ -56,7 +56,7 @@
                         </thead>
                         <tbody>
                             @php
-                                $grandBOTotal= [];
+                                $grandBOTotal = [];
                                 $grandDiscount = [];
                                 $grandTotal = [];
                                 $grandTotalBDue = [];
@@ -77,7 +77,8 @@
                                     <td>{{ formatNumber($inbound->grandTotal) }}</td>
                                     <td>{{ formatNumber($inbound->discount) }}</td>
                                     <td>{{ formatNumber($inbound->bo_amount) }}</td>
-                                    <td><span class="label label-primary">{{ formatNumber($inbound->totalAmount) }}</span></td>
+                                    <td><span class="label label-primary">{{ formatNumber($inbound->totalAmount) }}</span>
+                                    </td>
                                     <td>{{ $inbound->status }}</td>
                                     <td>{{ $inbound->with_invoice === 1 ? 'W/ SI' : '' }}</td>
                                     <td>
@@ -98,7 +99,6 @@
                                         @endif
 
                                         @if ($inbound->status === 'Paid' or $inbound->totalBalance === 0)
-
                                         @else
                                             <a href="#"
                                                 onclick="setObId(`{{ $inbound->id }}`, `{{ $inbound->totalBalance }}`)"><button
@@ -107,6 +107,11 @@
                                             @if ($inbound->delivery_receipt_id === null)
                                                 <a href="{{ route('order.edit', ['inboundId' => $inbound->id]) }}"
                                                     class="btn btn-primary"><i class="fas fa-edit"></i></button></a>
+                                            @else
+                                                @role('admin')
+                                                    <a href="{{ route('order.edit', ['inboundId' => $inbound->id]) }}"
+                                                        class="btn btn-primary"><i class="fas fa-edit"></i></button></a>
+                                                @endrole
                                             @endif
                                         @endif
                                     </td>

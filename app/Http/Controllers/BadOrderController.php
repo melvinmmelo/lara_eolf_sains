@@ -84,7 +84,7 @@ class BadOrderController extends Controller
     public function newFetchLastBadOrderOfCustomer($customerId, $storeId)
     {
 
-        $newBadOrder = NewBadOrder::where('customer_id', $customerId)
+        $newBadOrder = NewBadOrder::branch(session("branch_code"))->where('customer_id', $customerId)
             ->where('is_active', 1)
             ->orderBy('created_at', 'desc')
             ->first();
@@ -94,9 +94,8 @@ class BadOrderController extends Controller
         }
 
         $percentageAmount = $newBadOrder->amount * ($newBadOrder->bo_percentage / 100);
-        $amount = $newBadOrder->amount - $percentageAmount;
 
-        return response()->json(['id' => $newBadOrder->id, 'amount' => $amount]);
+        return response()->json(['id' => $newBadOrder->id, 'amount' => $percentageAmount]);
     }
 
     public function getBoDetails(Request $request)

@@ -513,7 +513,7 @@ class InboundController extends Controller
 
         $inbound = Inbound::find($inboundId);
 
-        if ($inbound->delivery_receipt_id !== NULL) {
+        if ($inbound->delivery_receipt_id !== NULL and !auth()->user()->hasRole(['admin'])) {
             return back()->withErrors('This order is already delivered.');
         }
 
