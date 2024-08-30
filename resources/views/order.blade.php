@@ -45,6 +45,8 @@
                                 <th>Degic No.</th>
                                 <th>Customer</th>
                                 <th>Invoice Amount</th>
+                                <th>Discount</th>
+                                <th>Bad Orders</th>
                                 <th>Balance Due</th>
                                 <th>Status</th>
                                 <th>W/ SI</th>
@@ -54,14 +56,17 @@
                         </thead>
                         <tbody>
                             @php
+                                $grandBOTotal= [];
+                                $grandDiscount = [];
                                 $grandTotal = [];
                                 $grandTotalBDue = [];
                             @endphp
                             @foreach ($inbounds as $inbound)
                                 @php
-                                    $total = $inbound->totalAmount;
-                                    $grandTotal[] = $total;
-                                    $grandTotalBDue[] = $total - $inbound->delivered_amount;
+                                    $grandBOTotal[] = $inbound->bo_amount;
+                                    $grandDiscount[] = $inbound->discount;
+                                    $grandTotal[] = $inbound->grandTotal;
+                                    $grandTotalBDue[] = $inbound->totalAmount;
                                 @endphp
 
                                 <tr>
@@ -69,8 +74,10 @@
                                     <td>{{ $inbound->code }}</td>
                                     <td>{{ $inbound->degic_no }}</td>
                                     <td>{{ $inbound->customer->fullName }}</td>
-                                    <td><span class="label label-primary">{{ formatNumber($total) }}</span></td>
-                                    <td>{{ formatNumber($total - $inbound->delivered_amount) }}</td>
+                                    <td>{{ formatNumber($inbound->grandTotal) }}</td>
+                                    <td>{{ formatNumber($inbound->discount) }}</td>
+                                    <td>{{ formatNumber($inbound->bo_amount) }}</td>
+                                    <td><span class="label label-primary">{{ formatNumber($inbound->totalAmount) }}</span></td>
                                     <td>{{ $inbound->status }}</td>
                                     <td>{{ $inbound->with_invoice === 1 ? 'W/ SI' : '' }}</td>
                                     <td>
@@ -112,8 +119,10 @@
                                 <th></th>
                                 <th></th>
                                 <th>Total:</th>
-                                <th>@php echo formatNumber(array_sum($grandTotal)) @endphp</th>
-                                <th>@php echo formatNumber(array_sum($grandTotalBDue)) @endphp</th>
+                                <th>{{ formatNumber(array_sum($grandTotal)) }}</th>
+                                <th>{{ formatNumber(array_sum($grandDiscount)) }}</th>
+                                <th>{{ formatNumber(array_sum($grandBOTotal)) }}</th>
+                                <th>{{ formatNumber(array_sum($grandTotalBDue)) }}</th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
