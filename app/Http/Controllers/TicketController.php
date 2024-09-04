@@ -44,7 +44,9 @@ class TicketController extends Controller
             'inboundIds' => 'required',
         ]);
 
-        $grpPrintTicketNo = "LT" .date('y') . "-" .str_pad(Inbound::max('id') + 1, 5, '0', STR_PAD_LEFT);
+        // generate two random numbers
+        $twoRandomNumbers = date('i') . date('s') . mt_rand(01, 99);
+        $grpPrintTicketNo = "LT" .date('y') . "-" .str_pad(Inbound::max('id') + 1, 5, '0', STR_PAD_LEFT) . $twoRandomNumbers;
 
         $inbounds = Inbound::whereIn('id', $request->inboundIds)->get();
         $cnt = 1;
