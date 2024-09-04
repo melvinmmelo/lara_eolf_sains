@@ -169,10 +169,10 @@ class InboundController extends Controller
         $branchCode = session('branch_code');
 
         $products = Product::where('product_type_code', $code)
-        ->join('item_master_data', function ($join) use ($branchCode) {
-            $join->on('products.code', '=', 'item_master_data.product_code')
-            ->where('item_master_data.branch_code', '=', $branchCode);
-        })
+            ->join('item_master_data', function ($join) use ($branchCode) {
+                $join->on('products.code', '=', 'item_master_data.product_code')
+                    ->where('item_master_data.branch_code', '=', $branchCode);
+            })
             ->whereRaw('GREATEST(CAST(item_master_data.stocks AS SIGNED) - CAST(item_master_data.reserved AS SIGNED), 0) > 0')
             ->select(
                 'products.code',
@@ -448,7 +448,11 @@ class InboundController extends Controller
         foreach ($products as $product) {
             $itemData = ItemMasterData::branch(session('branch_code'))->productCode($product['code'])->first();
             if ($itemData) {
-                $newReserved = $itemData->reserved - $product['quantity'];
+
+                if ($inbound->delivery_receipt_id == NULL) {
+                    $newReserved = $itemData->reserved - $product['quantity'];
+                }
+
                 if ($newReserved < 0) {
                     $errors[] = "Product $product[code] has negative reserved stocks.";
                     $newReserved = 0;
@@ -459,7 +463,11 @@ class InboundController extends Controller
                     $errors[] = "Product $product[code] has negative stocks.";
                     $newStocks = 0;
                 }
-                $itemData->reserved = $newReserved;
+
+                if ($inbound->delivery_receipt_id == NULL) {
+                    $itemData->reserved = $newReserved;
+                }
+
                 $itemData->stocks = $newStocks;
                 $itemData->save();
             }
@@ -683,6 +691,9 @@ class InboundController extends Controller
     private function updateItemMasterData($differentProducts, $branchCode, $inboundId)
     {
         $errors = [];
+
+        $inbound = Inbound::find($inboundId);
+
         foreach ($differentProducts as $product) {
             $itemData = ItemMasterData::branch($branchCode)->productCode($product['code'])->first();
             if (!$itemData) {
@@ -690,8 +701,12 @@ class InboundController extends Controller
                 activity('outbound-update')->log($errMsg);
                 $errors[] = $errMsg;
             } else {
-                if(isset($product['old_quantity'])){
-                    $itemData->reserved -= $product['old_quantity'];
+                if (isset($product['old_quantity'])) {
+
+                    if($inbound->delivery_receipt_id == NULL){
+                        $itemData->reserved -= $product['old_quantity'];
+                    }
+
                 }
                 $itemData->reserved += $product['quantity'];
                 $itemData->save();
@@ -703,7 +718,11 @@ class InboundController extends Controller
             foreach ($deletedProducts as $product) {
                 $itemData = ItemMasterData::branch($branchCode)->productCode($product["code"])->first();
                 if ($itemData) {
-                    $itemData->reserved -= $product['quantity'];
+
+                    if($inbound->delivery_receipt_id == NULL){
+                        $itemData->reserved -= $product['quantity'];
+                    }
+
                     $itemData->save();
                 }
             }
