@@ -237,7 +237,7 @@
             );
             mywindow.document.write('</table>');
             mywindow.document.write('<br><br><br>');
-            mywindow.document.write('--------------------------------- &nbsp;&nbsp;&nbsp; --------------------<br>');
+            mywindow.document.write('--------------------------------- &nbsp;&nbsp;&nbsp; ---------------<br>');
             mywindow.document.write('{{ $inbound->customer_name }} <br>');
             mywindow.document.write('</body></html>');
 
