@@ -66,7 +66,7 @@
                                     $grandBOTotal[] = $inbound->bo_amount;
                                     $grandDiscount[] = $inbound->discount;
                                     $grandTotal[] = $inbound->grandTotal;
-                                    $grandTotalBDue[] = $inbound->totalAmount;
+                                    $grandTotalBDue[] = $inbound->totalBalance;
                                 @endphp
 
                                 <tr>
@@ -77,7 +77,7 @@
                                     <td>{{ formatNumber($inbound->grandTotal) }}</td>
                                     <td>{{ formatNumber($inbound->discount) }}</td>
                                     <td>{{ formatNumber($inbound->bo_amount) }}</td>
-                                    <td><span class="label label-primary">{{ formatNumber($inbound->totalAmount) }}</span>
+                                    <td><span class="label label-primary">{{ formatNumber($inbound->totalBalance) }}</span>
                                     </td>
                                     <td>{{ $inbound->status }}</td>
                                     <td>{{ $inbound->with_invoice === 1 ? 'W/ SI' : '' }}</td>
@@ -98,7 +98,7 @@
                                                         class="fas fa-trash"></i></button></a>
                                         @endif
 
-                                        @if ($inbound->status === 'Paid' or $inbound->totalBalance === 0)
+                                        @if ($inbound->status === 'Paid' or $inbound->balance === 0)
                                         @else
                                             <a href="#"
                                                 onclick="setObId(`{{ $inbound->id }}`, `{{ $inbound->totalBalance }}`)"><button
@@ -215,8 +215,14 @@
 @section('custom_js')
     <script>
         function setObId(obId, totalAmount) {
+            if(totalAmount == 0) {
+
+                return;
+            }
+
             $('#ob_id').val(obId);
             $('#delivered_amount').val(totalAmount);
+
             $('#modalAddAmountDelivered').modal('show');
         }
 

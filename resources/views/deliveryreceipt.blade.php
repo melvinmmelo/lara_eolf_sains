@@ -31,8 +31,8 @@
                 </button>
 
                 <a href="{{ route('deliveryreceipt.indexDone') }}"><button type="button" class="btn btn-default">
-                    Done Delivery Receipts
-                </button></a>
+                        Done Delivery Receipts
+                    </button></a>
 
 
                 <form action="{{ route('deliveryreceipt.index') }}" method="GET">
@@ -65,39 +65,64 @@
                             <th>Date</th>
                             <th>DR No.</th>
                             <th>Customer</th>
-                            <th>Total Amount</th>
-                            <th>Bad Orders</th>
+                            <th>Invoice Amount</th>
                             <th>Discount</th>
-                            <th>Amount Due</th>
+                            <th>Bad Orders</th>
+                            <th>Balance Due</th>
                             <th>Amount Paid</th>
-                            <th>Balance</th>
                             <th>Generate By</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @php $grandTotal = []; $grandTotalDiscount = []; $grandTotalAmtPaid = []; $grandTotalBalance = []; $grandBOTotal = []; $grandTotalAmtDue = []; @endphp
+                        @php
+                            $grandTotal = [];
+                            $grandTotalDiscount = [];
+                            $grandTotalAmtPaid = [];
+                            $grandTotalBalance = [];
+                            $grandBOTotal = [];
+                            $grandTotalAmtDue = [];
+                        @endphp
                         @foreach ($deliveryReceipts as $receipt)
-
-                            @php $grandTotal[] = $receipt->inbound->grandTotal;
+                            @php
+                                $grandTotal[] = $receipt->inbound->grandTotal;
                                 $grandTotalDiscount[] = $receipt->inbound->discount;
-                                $grandTotalAmtPaid[] = $receipt->inbound->delivered_amount;
                                 $grandTotalBalance[] = $receipt->inbound->totalBalance;
                                 $grandBOTotal[] = $receipt->inbound->bo_amount;
-                                $grandTotalAmtDue[] = $receipt->inbound->totalAmount;
+                                $grandTotalAmtDue[] = $receipt->inbound->balance;
+                                $grandTotalAmtPaid[] = $receipt->inbound->delivered_amount;
                             @endphp
                             <tr>
                                 <td>{{ $receipt->fCreatedAt }}</td>
                                 <td>{{ $receipt->code }}</td>
                                 <td>{{ $receipt->customer_name }}</td>
                                 <td>{{ formatNumber($receipt->inbound->grandTotal) }}</td>
-                                <td>{{ formatNumber($receipt->inbound->bo_amount) }}</td>
                                 <td>{{ formatNumber($receipt->inbound->discount) }}</td>
-                                <td>{{ formatNumber($receipt->inbound->totalAmount) }}</td>
-                                <td>{{ formatNumber($receipt->inbound->delivered_amount) }}</td>
+                                <td>{{ formatNumber($receipt->inbound->bo_amount) }}</td>
                                 <td>{{ formatNumber($receipt->inbound->totalBalance) }}</td>
+                                <td>{{ formatNumber($receipt->inbound->delivered_amount) }}</td>
                                 <td>{{ $receipt->generated_by }}</td>
                                 <td>
+
+                                    <a href="{{ route('order.view', ['inboundId' => $receipt->inbound->id]) }}"
+                                        ><button class="btn btn-default"><i class="fas fa-eye"></i></button></a>
+
+                                    @if ($receipt->inbound->status === 'Paid' or $receipt->inbound->totalBalance === 0)
+                                    @else
+                                        <a href="#"
+                                            onclick="setObId(`{{ $receipt->inbound->id }}`, `{{ $receipt->inbound->totalBalance }}`)"><button
+                                                class="btn btn-success"><i class="fas fa-plus"></i></button></a>
+
+                                        @if ($receipt->inbound->delivery_receipt_id === null)
+                                            <a href="{{ route('order.edit', ['inboundId' => $receipt->inbound->id]) }}"><button
+                                                class="btn btn-primary"><i class="fas fa-edit"></i></button></a>
+                                        @else
+                                            @role('admin')
+                                                <a href="{{ route('order.edit', ['inboundId' => $receipt->inbound->id]) }}"><button
+                                                    class="btn btn-primary"><i class="fas fa-edit"></i></button></a>
+                                            @endrole
+                                        @endif
+                                    @endif
                                     <a href="{{ route('drprint', ['id' => $receipt->id]) }}"><button type="button"
                                             class="btn btn-primary">Print</button></a>
                                 </td>
@@ -107,16 +132,15 @@
                     <tfoot>
 
                         <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th>Total Amount</th>
-                            <th>Bad Orders</th>
+                            <th>Date</th>
+                            <th>DR No.</th>
+                            <th>Customer</th>
+                            <th>Invoice Amount</th>
                             <th>Discount</th>
-                            <th>Amount Due</th>
+                            <th>Bad Orders</th>
+                            <th>Balance Due</th>
                             <th>Amount Paid</th>
-                            <th>Balance</th>
-                            <th></th>
+                            <th>Generate By</th>
                             <th></th>
                         </tr>
                         <tr>
@@ -124,17 +148,15 @@
                             <th></th>
                             <th></th>
                             <th>{{ formatNumber(array_sum($grandTotal)) }}</th>
-                            <th>{{ formatNumber(array_sum($grandBOTotal)) }}</th>
                             <th>{{ formatNumber(array_sum($grandTotalDiscount)) }}</th>
+                            <th>{{ formatNumber(array_sum($grandBOTotal)) }}</th>
                             <th>{{ formatNumber(array_sum($grandTotalAmtDue)) }}</th>
                             <th>{{ formatNumber(array_sum($grandTotalAmtPaid)) }}</th>
-                            <th>{{ formatNumber(array_sum($grandTotalBalance)) }}</th>
                             <th></th>
                             <th></th>
                         </tr>
                     </tfoot>
                 </table>
-
             </div>
             <!-- /.card-body -->
             <div class="card-footer">
@@ -143,16 +165,13 @@
                 </button>
 
                 <a href="{{ route('deliveryreceipt.indexDone') }}"><button type="button" class="btn btn-default">
-                    Done Delivery Receipts
-                </button></a>
+                        Done Delivery Receipts
+                    </button></a>
 
                 {{-- <button type="button" class="btn btn-success"><i class="fas fa-print"></i>&nbsp;Delivery Receipt</button> --}}
             </div>
             <!-- /.card-footer-->
         </div>
-
-
-
         <!-- /.card -->
         <div class="modal fade" id="modal-branch">
             <div class="modal-dialog">
@@ -181,7 +200,8 @@
                                         <label class="form-label" for="inbound_id"><i
                                                 style="color:red">*</i>Customer</label>
 
-                                        <select name="inbound_id" id="inbound_id" class="form-control select2bs4" required>
+                                        <select name="inbound_id" id="inbound_id" class="form-control select2bs4"
+                                            required>
 
                                             @foreach ($outbounds as $outbound)
                                                 <option value="{{ $outbound->id }}">
@@ -198,7 +218,8 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label class="form-label" for="discount">Discount</label>
-                                        <input type="number" class="form-control" name="discount" value="0" required>
+                                        <input type="number" class="form-control" name="discount" value="0"
+                                            required>
                                         {{-- Add check if fixed amount --}}
                                         <input type="checkbox" name="is_fixed_amount" value="1"> Fixed Amount
                                     </div>
@@ -277,8 +298,12 @@
 
 
         </div>
+        </div>
+
     </section>
     <!-- /.content -->
+
+    @include('modalAddAmountDelivered')
 @endsection
 
 @section('custom_js')
@@ -296,6 +321,18 @@
         //     document.querySelector('input[name=e_office_no]').value = data[3];
 
         // }
+
+        function setObId(obId, totalAmount) {
+            if(totalAmount == 0) {
+
+                return;
+            }
+
+            $('#ob_id').val(obId);
+            $('#delivered_amount').val(totalAmount);
+
+            $('#modalAddAmountDelivered').modal('show');
+        }
 
         function setToUpdateBranch() {
 

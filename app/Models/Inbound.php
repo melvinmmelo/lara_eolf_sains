@@ -141,7 +141,7 @@ class Inbound extends Model
         return $this->netAmount = $total - ($this->bo_amount + $this->discount);
     }
 
-    public function getGrandTotalAttribute()
+    public function getGrandTotalAttribute() // always call this first before getting the netAmount
     {
         if($this->grandTotal === 0) {
             $this->getTotalAmountAttribute();
@@ -151,6 +151,6 @@ class Inbound extends Model
 
     public function getTotalBalanceAttribute()
     {
-        return $this->balance =  $this->getTotalAmountAttribute() - $this->delivered_amount;
+        return $this->balance =  $this->netAmount - $this->delivered_amount;
     }
 }
