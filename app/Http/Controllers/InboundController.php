@@ -448,30 +448,20 @@ class InboundController extends Controller
         foreach ($products as $product) {
             $itemData = ItemMasterData::branch(session('branch_code'))->productCode($product['code'])->first();
             if ($itemData) {
-
-                if ($inbound->delivery_receipt_id == NULL) {
-                    $newReserved = $itemData->reserved - $product['quantity'];
+                if ($inbound->delivery_receipt_id !== NULL) {
+                    // If inbound has delivery receipt and is being deleted
+                    $newStocks = $itemData->stocks + $product['quantity'];
+                    if ($newStocks < 0) {
+                        $errors[] = "Product {$product['code']} has negative stocks.";
+                        $newStocks = 0;
+                    }
+                    $itemData->stocks = $newStocks;
+                    $itemData->save();
                 }
-
-                if ($newReserved < 0) {
-                    $errors[] = "Product $product[code] has negative reserved stocks.";
-                    $newReserved = 0;
-                }
-
-                $newStocks = $itemData->stocks + $product['quantity'];
-                if ($newStocks < 0) {
-                    $errors[] = "Product $product[code] has negative stocks.";
-                    $newStocks = 0;
-                }
-
-                if ($inbound->delivery_receipt_id == NULL) {
-                    $itemData->reserved = $newReserved;
-                }
-
-                $itemData->stocks = $newStocks;
-                $itemData->save();
+                // If inbound doesn't have delivery receipt, we don't touch reserved or stocks
             }
         }
+
         $inbound->status = $request->remarks;
         $inbound->remarks = $request->remarks . " - " . $request->remarks_details;
         $inbound->save();
@@ -484,7 +474,11 @@ class InboundController extends Controller
 
         activity('outbound')
             ->performedOn($inbound)
-            ->log("Inbound $inbound deleted by " . auth()->user()->fullName);
+            ->log("Inbound {$inbound->id} deleted by " . auth()->user()->fullName);
+
+        if (!empty($errors)) {
+            return back()->withErrors($errors);
+        }
 
         return redirect()->route('order.index')->with('success', 'The order has been deleted.');
     }
