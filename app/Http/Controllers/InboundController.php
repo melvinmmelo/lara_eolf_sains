@@ -691,8 +691,8 @@ class InboundController extends Controller
     private function updateItemMasterData($differentProducts, $branchCode, $inboundId)
     {
         $errors = [];
-
         $inbound = Inbound::find($inboundId);
+        $hasDeliveryReceipt = $inbound->delivery_receipt_id !== NULL;
 
         foreach ($differentProducts as $product) {
             $itemData = ItemMasterData::branch($branchCode)->productCode($product['code'])->first();
@@ -700,17 +700,26 @@ class InboundController extends Controller
                 $errMsg = "Product {$product['code']} not found in ItemMasterData. Order $inboundId failed.";
                 activity('outbound-update')->log($errMsg);
                 $errors[] = $errMsg;
-            } else {
-                if (isset($product['old_quantity'])) {
-
-                    if($inbound->delivery_receipt_id == NULL){
-                        $itemData->reserved -= $product['old_quantity'];
-                    }
-
-                }
-                $itemData->reserved += $product['quantity'];
-                $itemData->save();
+                continue;
             }
+
+            if (isset($product['old_quantity'])) {
+                // Modified existing product
+                $quantityDifference = $product['quantity'] - $product['old_quantity'];
+                if (!$hasDeliveryReceipt) {
+                    $itemData->reserved += $quantityDifference;
+                } else {
+                    $itemData->stocks -= $quantityDifference;
+                }
+            } else {
+                // New product
+                if (!$hasDeliveryReceipt) {
+                    $itemData->reserved += $product['quantity'];
+                }
+                // If there's a delivery receipt, we don't touch stocks for new products
+            }
+
+            $itemData->save();
         }
 
         $deletedProducts = session()->get('deleted_products');
@@ -718,15 +727,16 @@ class InboundController extends Controller
             foreach ($deletedProducts as $product) {
                 $itemData = ItemMasterData::branch($branchCode)->productCode($product["code"])->first();
                 if ($itemData) {
-
-                    if($inbound->delivery_receipt_id == NULL){
+                    if (!$hasDeliveryReceipt) {
                         $itemData->reserved -= $product['quantity'];
+                    } else {
+                        $itemData->stocks += $product['quantity'];
                     }
-
                     $itemData->save();
                 }
             }
         }
+
         return $errors;
     }
 }
