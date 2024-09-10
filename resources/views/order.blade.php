@@ -217,7 +217,7 @@
         function setObId(obId, totalAmount) {
             if(totalAmount == 0) {
 
-                return;
+                alert("This order is already paid.");
             }
 
             $('#ob_id').val(obId);
