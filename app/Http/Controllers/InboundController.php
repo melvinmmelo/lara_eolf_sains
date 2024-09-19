@@ -313,10 +313,8 @@ class InboundController extends Controller
         $inbound->delivery_person_id = $request->delivery_person_id;
         $inbound->vehicle_id = $request->vehicle_id;
         $inbound->products = json_encode($products);
-        $inbound->status = 'Completed';
         $inbound->pricelevel_id = $request->pricelevel_id;
         $inbound->customer_id = $request->customer_id;
-        $inbound->status = 'Completed';
 
         $inbound->degic_no = $equipStore->equipment->code;
         $inbound->customer_name = $customer->fullName;
@@ -327,9 +325,14 @@ class InboundController extends Controller
         $inbound->with_invoice = $request->with_invoice == 'on' ? 1 : NULL;
 
         $bad_order = $request->bad_order === 'on' ? 1 : 0;
-        $is_foc = $request->is_foc === 'on' ? 1 : NULL;
+        $is_foc = $request->foc === 'on' ? 1 : NULL;
         $inbound->is_foc = $is_foc;
 
+        $inbound->status = 'Completed';
+        if($is_foc == 1){
+            $inbound->delivered_amount = 0;
+            $inbound->remarks = 'Free of charge';
+        }
 
         if ($bad_order == 1) {
 
@@ -451,14 +454,22 @@ class InboundController extends Controller
                 if ($inbound->delivery_receipt_id !== NULL) {
                     // If inbound has delivery receipt and is being deleted
                     $newStocks = $itemData->stocks + $product['quantity'];
+                    $newReserved = $itemData->reserved - $product['quantity'];
                     if ($newStocks < 0) {
                         $errors[] = "Product {$product['code']} has negative stocks.";
                         $newStocks = 0;
                     }
+                    if ($newReserved < 0) {
+                        $errors[] = "Product {$product['code']} has negative reserved.";
+                        $newReserved = 0;
+                    }
                     $itemData->stocks = $newStocks;
+                    $itemData->reserved = $newReserved;
+                    $itemData->save();
+                }else{
+                    $itemData->reserved -= $product['quantity'];
                     $itemData->save();
                 }
-                // If inbound doesn't have delivery receipt, we don't touch reserved or stocks
             }
         }
 
