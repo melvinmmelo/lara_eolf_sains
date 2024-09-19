@@ -454,17 +454,12 @@ class InboundController extends Controller
                 if ($inbound->delivery_receipt_id !== NULL) {
                     // If inbound has delivery receipt and is being deleted
                     $newStocks = $itemData->stocks + $product['quantity'];
-                    $newReserved = $itemData->reserved - $product['quantity'];
                     if ($newStocks < 0) {
                         $errors[] = "Product {$product['code']} has negative stocks.";
                         $newStocks = 0;
                     }
-                    if ($newReserved < 0) {
-                        $errors[] = "Product {$product['code']} has negative reserved.";
-                        $newReserved = 0;
-                    }
+
                     $itemData->stocks = $newStocks;
-                    $itemData->reserved = $newReserved;
                     $itemData->save();
                 }else{
                     $itemData->reserved -= $product['quantity'];
