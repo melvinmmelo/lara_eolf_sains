@@ -267,6 +267,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/order/{inboundId}/view', [InboundController::class, 'view'])->name('order.view');
 
+    Route::get('/free-orders', [InboundController::class, 'freeOrders'])->name('orders.free');
+
+    Route::get('/paid-orders', [InboundController::class, 'paidOrders'])->name('orders.paid');
+
 
     Route::put('/order/update', [InboundController::class, 'updateInbound'])->name('order.updateInbound');
 

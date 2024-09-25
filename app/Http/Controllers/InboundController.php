@@ -650,6 +650,7 @@ class InboundController extends Controller
         }
 
         $differentProducts = $this->getDifferentProducts($products, $oldProducts);
+
         $errors = $this->updateItemMasterData($differentProducts, $branchCode, $inbound->id);
 
         $inbound->save();
@@ -712,11 +713,12 @@ class InboundController extends Controller
                     $itemData->stocks -= $quantityDifference;
                 }
             } else {
-                // New product
+
                 if (!$hasDeliveryReceipt) {
                     $itemData->reserved += $product['quantity'];
+                }else{
+                    $itemData->stocks -= $product['quantity'];
                 }
-                // If there's a delivery receipt, we don't touch stocks for new products
             }
 
             $itemData->save();
@@ -738,5 +740,16 @@ class InboundController extends Controller
         }
 
         return $errors;
+    }
+
+    public function freeOrders(){
+        $inbounds = Inbound::with('driver', 'vehicle')->branch(session('branch_code'))->freeOrders()->get();
+        return view('free', compact('inbounds'));
+    }
+
+    public function paidOrders()
+    {
+        $inbounds = Inbound::with('driver', 'vehicle')->branch(session('branch_code'))->paidOrders()->get();
+        return view('paid', compact('inbounds'));
     }
 }

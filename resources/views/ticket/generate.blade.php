@@ -158,7 +158,7 @@
                         mywindow.document.write('Sequence No: {{ $ticketdetail->ticket_sequence_no }}<br>');
                         mywindow.document.write('Date: {{ $ticketdetail->updated_at }}<br>');
                         mywindow.document.write(
-                            'Delivery Person: (ID {{ $ticketdetail->driver_id }}) {{ $ticketdetail->driver->name }}<br>'
+                            'Delivery Person: (ID {{ $ticketdetail->delivery_person_id }}) {{ $ticketdetail->delivery_person }}<br>'
                             );
                         mywindow.document.write(
                             'Customer: {{ $ticketdetail->customer->fullName }} ({{ $ticketdetail->store->storename }})<br>'

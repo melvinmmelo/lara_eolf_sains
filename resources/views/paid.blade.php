@@ -9,12 +9,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Orders</h1>
+                    <h1>Paid Orders</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">Orders</li>
+                        <li class="breadcrumb-item active">Paid Orders</li>
                     </ol>
                 </div>
             </div>
@@ -34,14 +34,6 @@
                 <div class="pb-2">
                     <a href="{{ route('order.create') }}"><button type="button" class="btn btn-primary">
                             Add New
-                        </button></a>
-
-                    <a href="{{ route('orders.free') }}"><button type="button" class="btn btn-default">
-                            Free Orders
-                        </button></a>
-
-                    <a href="{{ route('orders.paid') }}"><button type="button" class="btn btn-default">
-                            Paid Orders
                         </button></a>
                 </div>
                 <div class="tbContainer">
@@ -99,29 +91,6 @@
                                         <a href="{{ route('order.view', ['inboundId' => $inbound->id]) }}"
                                             class="btn btn-default"><i class="fas fa-eye"></i></button></a>
 
-                                        @if ($inbound->status == 'Completed' or $inbound->status == 'Unpaid')
-                                            <a href="#" data-target="#modalDeleteOrder" data-toggle="modal"><button
-                                                    class="btn btn-danger"
-                                                    onclick="setObIdToDelete(`{{ $inbound->id }}`, `{{ $inbound->degic_no }}`, `{{ $inbound->customer_name }}`)"><i
-                                                        class="fas fa-trash"></i></button></a>
-                                        @endif
-
-                                        @if ($inbound->status === 'Paid' or $inbound->balance === 0)
-                                        @else
-                                            <a href="#"
-                                                onclick="setObId(`{{ $inbound->id }}`, `{{ $inbound->totalBalance }}`)"><button
-                                                    class="btn btn-success"><i class="fas fa-plus"></i></button></a>
-
-                                            @if ($inbound->delivery_receipt_id === null)
-                                                <a href="{{ route('order.edit', ['inboundId' => $inbound->id]) }}"
-                                                    class="btn btn-primary"><i class="fas fa-edit"></i></button></a>
-                                            @else
-                                                @role('admin')
-                                                    <a href="{{ route('order.edit', ['inboundId' => $inbound->id]) }}"
-                                                        class="btn btn-primary"><i class="fas fa-edit"></i></button></a>
-                                                @endrole
-                                            @endif
-                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -223,7 +192,7 @@
 @section('custom_js')
     <script>
         function setObId(obId, totalAmount) {
-            if (totalAmount == 0) {
+            if(totalAmount == 0) {
 
                 alert("This order is already paid.");
             }

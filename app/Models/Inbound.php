@@ -119,10 +119,18 @@ class Inbound extends Model
     // scope that is not free and status is not deleted
     public function scopeActiveOrders($query)
     {
-        return $query->whereNull('is_foc')
+        return $query->whereNull('is_foc')->where('status', 'Completed')
             ->whereNotIn('status', ['Deleted', 'Cancelled', 'Wrong entry']);
     }
 
+    public function scopeFreeOrders($query){
+        return $query->where('is_foc', 1);
+    }
+
+    public function scopePaidOrders($query)
+    {
+        return $query->where('status', 'Paid');
+    }
 
     public function getTotalAmountAttribute()
     {

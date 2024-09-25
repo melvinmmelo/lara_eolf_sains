@@ -445,7 +445,7 @@
 
         // page on load show modalReminder
         $(document).ready(function() {
-            $('#modalReminder').modal('show');
+            // $('#modalReminder').modal('show');
         });
 
         // set value on document load
