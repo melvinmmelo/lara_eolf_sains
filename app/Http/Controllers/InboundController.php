@@ -88,18 +88,20 @@ class InboundController extends Controller
 
         $total = InboundService::getTotalOfInboundProducts($inbound->id);
 
-        if ($request->delivered_amount == $inbound->totalAmount) {
+        $totalDelivered = $inbound->delivered_amount + $request->delivered_amount;
+
+        if ($totalDelivered == $inbound->totalAmount) {
             $inbound->status = "Paid";
         }
 
-        if ($request->delivered_amount > $total) {
+        if ($totalDelivered > $total) {
             return redirect()->route('order.index')->withErrors('Delivered amount is greater than the total amount.');
         }
 
 
         $inbound->payment_type = $request->payment_type;
         $inbound->ref_no = $request->ref_no;
-        $inbound->delivered_amount = $request->delivered_amount;
+        $inbound->delivered_amount = $totalDelivered;
 
         $inbound->save();
 
