@@ -59,7 +59,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php $grandTotal = []; $grandTotalBDue = []; @endphp
+                                @php
+                                    $grandTotal = [];
+                                    $grandTotalBDue = [];
+                                @endphp
                                 @foreach ($inbounds as $inbound)
                                     @php
                                         $total = $inbound->totalAmount;
@@ -69,8 +72,8 @@
 
                                     <tr>
                                         <td>
-                                            <input class="checkbox" type="checkbox" name="inboundIds[]" value="{{ $inbound->id }}"
-                                                id="inboundIds{{ $inbound->id }}">
+                                            <input class="checkbox" type="checkbox" name="inboundIds[]"
+                                                value="{{ $inbound->id }}" id="inboundIds{{ $inbound->id }}">
                                         </td>
                                         <td>{{ $inbound->f_created_at }}</td>
                                         <td>{{ $inbound->code }}</td>
@@ -128,8 +131,7 @@
             try {
                 var curr_total = 0;
                 var last = 0;
-                var sp_count = 0;
-                var sp_set = 0;
+
 
                 @if (Session::has('ticketnum'))
                     // Create a new window for printing
@@ -139,6 +141,8 @@
                         return;
                     }
                     @foreach ($ticketdetails as $ticketdetail)
+                        var sp_count = 0;
+                        var sp_set = 0;
 
                         @php $prod = json_decode($ticketdetail->products); @endphp
 
@@ -146,11 +150,11 @@
                         mywindow.document.write('<style>');
                         mywindow.document.write(
                             'body { font-family: "Arial", Helvetica, sans-serif; font-size: 9pt; word-wrap: break-word; }'
-                            );
+                        );
                         mywindow.document.write('hr { border: none; border-top: 1px dotted black; }');
                         mywindow.document.write(
                             'td { font-family: "Arial", Helvetica, sans-serif; font-size: 9pt; word-wrap: break-word; } @media print { body { margin: 0 0 5px 10px; } } @page { margin: 0 0 10px 5px; }'
-                            );
+                        );
                         mywindow.document.write('</style>');
                         mywindow.document.write('</head><body>');
                         mywindow.document.write('<center>EOLF FOOD TRADING OPC</center><br>');
@@ -159,15 +163,15 @@
                         mywindow.document.write('Date: {{ $ticketdetail->updated_at }}<br>');
                         mywindow.document.write(
                             'Delivery Person: (ID {{ $ticketdetail->delivery_person_id }}) {{ $ticketdetail->delivery_person }}<br>'
-                            );
+                        );
                         mywindow.document.write(
                             'Customer: {{ $ticketdetail->customer->fullName }} ({{ $ticketdetail->store->storename }})<br>'
-                            );
+                        );
                         mywindow.document.write('Encoded By: <br>');
                         mywindow.document.write('<table width="100%">');
                         mywindow.document.write(
                             '<tr><td>PRODUCT</td><td></td><td><center>QUANTITY</center></td><td align="right"></td></tr>'
-                            );
+                        );
 
                         @foreach ($sorted_product_codes as $sorted_code)
                             curr_total = 0;
@@ -176,7 +180,7 @@
                                 @if ($product->ptype_code == $sorted_code->code)
                                     mywindow.document.write(
                                         '<tr><td>{{ $product->code }}</td><td></td><td style="text-align: center;">{{ $product->quantity }}</td><td style="text-align: right;"></td></tr>'
-                                        );
+                                    );
                                     curr_total += {{ $product->quantity }};
                                     sp_count += {{ $sorted_code->spoon_pcs_per_bag }} * {{ $product->quantity }};
                                     last = 1;
@@ -205,7 +209,7 @@
                         mywindow.document.write('Sequence No: {{ $ticketdetail->ticket_sequence_no }}<br>');
                         mywindow.document.write(
                             'Customer: {{ $ticketdetail->customer->fullName }} ({{ $ticketdetail->store->storename }})<br>'
-                            );
+                        );
                         mywindow.document.write('Total Spoon Count: ' + sp_count + '<br>');
                         mywindow.document.write('Spoon Set: ' + sp_set.toFixed(0) + '<br><br><br>');
                         mywindow.document.write('<hr>');
