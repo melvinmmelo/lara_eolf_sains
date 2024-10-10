@@ -52,7 +52,7 @@ class InboundService extends Model
             $toDate = date('Y-m-d', strtotime($toDate));
 
             $inbounds = Inbound::where('branch_code', $branchCode)
-            ->whereBetween('order_date', [$fromDate, $toDate])->whereNotIn('status', ['Cancelled', 'Wrong entry', 'Deleted'])->whereNull('is_foc')
+            ->whereBetween('order_date', [$fromDate, $toDate])->whereNotIn('status', ['Cancelled', 'Wrong entry', 'Deleted'])
             ->get();
 
         }else{
@@ -61,7 +61,7 @@ class InboundService extends Model
 
 
             $inbounds = Inbound::where('branch_code', $branchCode)
-            ->whereDate('order_date', $dateToExtract)->whereNotIn('status', ['Cancelled', 'Wrong entry', 'Deleted'])->whereNull('is_foc')
+            ->whereDate('order_date', $dateToExtract)->whereNotIn('status', ['Cancelled', 'Wrong entry', 'Deleted'])
             ->get();
 
         }
@@ -100,7 +100,7 @@ class InboundService extends Model
     public static function getTotalOfAllInboundProductsv2($branchCode) // ! PANG OVERALL
     {
 
-        $inbounds = Inbound::where('branch_code', $branchCode)->whereNotIn('status', ['Cancelled', 'Wrong entry', 'Deleted'])->whereNull('is_foc')->get();
+        $inbounds = Inbound::where('branch_code', $branchCode)->whereNotIn('status', ['Cancelled', 'Wrong entry', 'Deleted'])->get();
         // $inbounds = Inbound::where('branch_code', $branchCode)->whereBetween('order_date', ['2024-08-19', '2024-08-21'])->get(); // ! uncomment if you want to filter by range of dates
         $products = $inbounds->flatMap(function ($inbound) {
             $inboundProducts = json_decode($inbound->products, true);
