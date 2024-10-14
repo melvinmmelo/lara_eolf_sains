@@ -11,5 +11,9 @@ use Illuminate\Support\Facades\Schedule;
 // })->dailyAt('23:59');
 
 
-Schedule::command('backup:clean')->daily()->at('01:00');
-Schedule::command('backup:run')->daily()->at('01:30');
+// Schedule::command('backup:clean')->daily()->at('01:00');
+// Schedule::command('backup:run')->daily()->at('01:30');
+
+
+
+  Schedule::command('db:backup')->daily()->at('09:46');

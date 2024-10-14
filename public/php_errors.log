@@ -1,8 +1,0 @@
-[08-Apr-2024 06:53:08 UTC] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 262144 bytes) in G:\eolf-sains-lara\vendor\laravel\framework\src\Illuminate\Database\Eloquent\Concerns\HasAttributes.php on line 1790
-[08-Apr-2024 06:53:08 UTC] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 262144 bytes) in G:\eolf-sains-lara\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\HandleExceptions.php on line 256
-[08-Apr-2024 06:53:09 UTC] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 262144 bytes) in G:\eolf-sains-lara\vendor\laravel\framework\src\Illuminate\Database\Eloquent\Concerns\HasAttributes.php on line 1790
-[08-Apr-2024 06:53:09 UTC] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 262144 bytes) in G:\eolf-sains-lara\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\HandleExceptions.php on line 256
-[08-Apr-2024 06:53:15 UTC] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 262144 bytes) in G:\eolf-sains-lara\vendor\laravel\framework\src\Illuminate\Database\Eloquent\Concerns\HasAttributes.php on line 502
-[08-Apr-2024 06:53:15 UTC] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 262144 bytes) in Unknown on line 0
-[26-Jun-2024 16:23:59 Asia/Manila] PHP Fatal error:  Out of memory (allocated 16777216 bytes) (tried to allocate 1310720 bytes) in G:\eolf-sains-lara\routes\auth.php on line 26
-[26-Jul-2024 12:45:49 Asia/Manila] PHP Fatal error:  Out of memory (allocated 18874368 bytes) (tried to allocate 32768 bytes) in G:\eolf-sains-lara\vendor\doctrine\inflector\lib\Doctrine\Inflector\Inflector.php on line 354

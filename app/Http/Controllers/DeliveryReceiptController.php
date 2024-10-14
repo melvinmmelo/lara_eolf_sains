@@ -32,16 +32,16 @@ class DeliveryReceiptController extends Controller
             $deliveryReceipt->save();
 
             activity('delivery-receipt')
-            ->performedOn($deliveryReceipt)
-            ->log("DR $deliveryReceipt->id printed by " . auth()->user()->fullName);
+                ->performedOn($deliveryReceipt)
+                ->log("DR $deliveryReceipt->id printed by " . auth()->user()->fullName);
 
             return response()->json(['message' => 'Printed date updated.']);
         } else {
 
-           if($inbound->delivery_receipt_id !== null && $deliveryReceipt->printed_date === null){
+            if ($inbound->delivery_receipt_id !== null && $deliveryReceipt->printed_date === null) {
                 $deliveryReceipt->printed_date = now();
                 $deliveryReceipt->save();
-           }
+            }
 
             return response()->json(['message' => 'Printed date already updated.']);
         }
@@ -114,9 +114,14 @@ class DeliveryReceiptController extends Controller
 
         $inbound = Inbound::findOrFail($request->inbound_id);
 
+        $isExisting = DeliveryReceipt::where('inbound_id', $validatedData['inbound_id'])->first();
+        if ($isExisting) {
+            return redirect()->route('deliveryreceipt.index')->withErrors('Delivery receipt already exists.');
+        }
+
         $validatedData['branch_code'] = session('branch_code');
 
-        if(empty(session('branch_code'))){
+        if (empty(session('branch_code'))) {
             return redirect()->route('deliveryreceipt.index')->withErrors('Branch code not found.');
         }
 
@@ -125,6 +130,8 @@ class DeliveryReceiptController extends Controller
         }
 
         $validatedData['customer_name'] = $inbound->customer_name;
+
+
 
         $deliveryReceipt = DeliveryReceipt::create($validatedData);
 
@@ -150,15 +157,15 @@ class DeliveryReceiptController extends Controller
 
         $inbound->delivery_receipt_id = $deliveryReceipt->id;
 
-        if($request->is_fixed_amount && $request->is_fixed_amount == "1"){
+        if ($request->is_fixed_amount && $request->is_fixed_amount == "1") {
             $discount_type = 'Php ' . $request->discount;
             $totalDiscount = $request->discount;
-        }else{
+        } else {
             $discount_type = $request->discount . '%';
             $totalDiscount = $totalOfOutbound * ($request->discount / 100);
         }
 
-        if($request->discount != 0){
+        if ($request->discount != 0) {
             $inbound->discount_details = $discount_type;
             $inbound->discount = $totalDiscount;
         }

@@ -18,8 +18,8 @@ class CleanUpTempBadOrders extends Command
 
     public function handle()
     {
-        $threshold = Carbon::now()->subHours(1); // Adjust as needed
-        TempBadOrder::where('created_at', '<', $threshold)->delete();
-        $this->info('Old entries cleaned up from temp_bad_orders table.');
+        // $threshold = Carbon::now()->subHours(1); // Adjust as needed
+        // TempBadOrder::where('created_at', '<', $threshold)->delete();
+        // $this->info('Old entries cleaned up from temp_bad_orders table.');
     }
 }
