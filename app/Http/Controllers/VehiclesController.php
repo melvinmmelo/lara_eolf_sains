@@ -76,11 +76,11 @@ class VehiclesController extends Controller
             // Add more validation rules as needed
         ]);
     // Set default status
-    $status = 'NOT AVAILABLE';
+    $status = 'NOT ACTIVE';
 
     // Check if the request data is 'on'
     if ($request->status === 'on') {
-        $status = 'AVAILABLE';
+        $status = 'ACTIVE';
     }
         $vehicle->update([
             'plateno' => $request->plateno,
