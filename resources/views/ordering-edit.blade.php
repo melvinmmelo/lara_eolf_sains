@@ -68,7 +68,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Edit Order </h1>
+                    <h1>Edit Order {{ $inbound->code }}</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -522,7 +522,7 @@
                         document.getElementById("inboundList").innerHTML = this.responseText;
                     }
                 };
-                xmlhttp.open("GET", "/delete-inboundin/" + pcode, true);
+                xmlhttp.open("GET", "/delete-inboundin/" + pcode + "/" + {{ $inbound->id }}, true);
                 xmlhttp.send();
             }
         }
@@ -682,7 +682,7 @@
                     }
 
                 };
-                xmlhttp.open("GET", "/inboundin/" + code + "/" + qty + "/" + priceLevelId, true);
+                xmlhttp.open("GET", "/inboundin/" + code + "/" + qty + "/" + priceLevelId + "/" + {{ $inbound->id }}, true);
                 xmlhttp.send();
             }
         }
@@ -742,7 +742,7 @@
                     } catch (error) {}
                 }
             };
-            xmlhttp.open("GET", "/inbound-updateProdQty/" + productCode + "/" + action, true);
+            xmlhttp.open("GET", "/inbound-updateProdQty/" + productCode + "/" + action + "/" + {{ $inbound->id }}, true);
             xmlhttp.send();
         }
     </script>

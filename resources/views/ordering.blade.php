@@ -548,9 +548,8 @@
                 if (branch_code == 'EFTO-CAG') {
                     $('#pricelevel_id').val(4);
                 }
-                console.log(branch_code);
             } catch (error) {
-                console.log(error);
+                console.log("Error Line 552" . error);
             }
 
         });

@@ -276,15 +276,15 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/productsin/{code}', [InboundController::class, 'ajaxProductList'])->name('products.ajaxProductList');
 
-    Route::get('/inboundin/{code}/{qty}/{pid}', [InboundController::class, 'ajaxInboundList'])->name('inbound.inboundList');
+    Route::get('/inboundin/{code}/{qty}/{pid}/{inboundId?}', [InboundController::class, 'ajaxInboundList'])->name('inbound.inboundList');
 
-    Route::get('/delete-inboundin/{pcode}', [InboundController::class, 'deleteAInbound'])->name('inbound.deleteAInbound');
+    Route::get('/delete-inboundin/{pcode}/{inboundId?}', [InboundController::class, 'deleteAInbound'])->name('inbound.deleteAInbound');
 
     Route::post('/inbound', [InboundController::class, 'store'])->name('inbound.store');
 
     Route::patch('/inbound/add-payment', [InboundController::class, 'addPayment'])->name('inbound.addPayment');
 
-    Route::get('/inbound-updateProdQty/{code}/{action}', [InboundController::class, 'update'])->name('inbound.update');
+    Route::get('/inbound-updateProdQty/{code}/{action}/{inboundId?}', [InboundController::class, 'update'])->name('inbound.update');
 
     Route::delete('/inbound-destroy', [InboundController::class, 'destroy'])->name('inbound.destroy');
 

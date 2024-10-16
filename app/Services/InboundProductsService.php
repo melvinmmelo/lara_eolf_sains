@@ -169,6 +169,21 @@ class InboundProductsService extends Model
 
     }
 
+    public function getProductDetails($productCode)
+    {
+        $currentProduct = null;
+
+        if ($this->products) {
+            foreach ($this->products as $product) {
+                if ($product['code'] == $productCode) {
+                    $currentProduct = $product;
+                }
+            }
+        }
+
+        return $currentProduct;
+    }
+
 
 
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BadOrder;
+use App\Models\NewInboundProduct;
 use App\Models\Customers;
 use App\Models\DeliveryPurchaseReceipt;
 use App\Models\DeliveryReceipt;
@@ -16,6 +16,7 @@ use App\Models\pricelevels;
 use App\Models\prices;
 use App\Models\Product;
 use App\Models\ProductType;
+use App\Models\UpdateOrder;
 use App\Models\Vehicles;
 use App\Services\DPRService;
 use App\Services\InboundProductsService;
@@ -115,11 +116,17 @@ class InboundController extends Controller
         return redirect()->route('order.index')->with('success', 'Payment has been added.');
     }
 
-    public function deleteAInbound($pcode)
+    public function deleteAInbound($pcode, $inboundId = 0)
     {
 
-
-        $products = json_encode(session()->get('products'));
+        $products = NewInboundProduct::where("inbound_id", $inboundId)->get();
+        if($inboundId != 0){
+            $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where("code", $pcode)->first();
+            $newInboundProduct->status = "Deleted";
+            $newInboundProduct->save();
+        }else{
+            $newInboundProduct = NewInboundProduct::whereNull("inbound_id")->where("code", $pcode)->delete();
+        }
 
         $summary = [];
 
@@ -138,8 +145,6 @@ class InboundController extends Controller
             $summary = $inboundService->addSppbinSummary(); // ! you need to call summary() first before addSppbinSummary()
         }
 
-        session()->put('products', $products);
-
         activity('outbound')
             ->log("Product $pcode deleted by " . auth()->user()->fullName);
 
@@ -151,6 +156,7 @@ class InboundController extends Controller
      */
     public function index()
     {
+
         $drivers = Drivers::active()->get();
 
         $vehicles = Vehicles::active()->get();
@@ -201,14 +207,17 @@ class InboundController extends Controller
     // ajax inbound products
     // per product na ito ha, ito na yung table ng product, yung may details
     // adding, editing tayo ng order dito
-    public function ajaxInboundList($code, $qty = 1, $pid)
+    public function ajaxInboundList($code, $qty = 1, $pid, $inboundId = 0)
     {
-        if (!session()->has('pricelevelId')) {
-            session()->put('pricelevelId', $pid);
+        if ($inboundId == 0) {
+            // dump('here');
+            $products = NewInboundProduct::where("inbound_id", 0)->get();
+        } else {
+            // dump('there');
+            $inbound = Inbound::find($inboundId);
+            $products = $inbound->products;
         }
 
-
-        $products = InboundProductsService::getInboundProducts();
         $summary = [];
 
         $product = Product::where('code', $code)->first();
@@ -224,6 +233,28 @@ class InboundController extends Controller
 
         $data = ['order' => $sequence_no, 'ptype_code' => $product->product_type_code, 'code' => $product->code, 'quantity' => $qty, 'price' => $price->p_price, 'unit' => $price->p_unit, 'sppb' => $product->spoon_pcs_per_bag, 'description' => $product->productName, 'created_at' => now()];
 
+        if(NewInboundProduct::whereNull("inbound_id")->where('code', $code)->exists()){
+
+            $newInboundProduct = NewInboundProduct::whereNull("inbound_id")->where('code', $code)->first();
+            $newInboundProduct->quantity += $qty;
+
+        }else{
+            $newInboundProduct = new NewInboundProduct();
+            $newInboundProduct->inbound_id = $inboundId;
+            $newInboundProduct->order = $sequence_no;
+            $newInboundProduct->ptype_code = $product->product_type_code;
+            $newInboundProduct->code = $product->code;
+            $newInboundProduct->old_quantity = 0;
+            $newInboundProduct->quantity = $qty;
+            $newInboundProduct->price = $price->p_price;
+            $newInboundProduct->unit = $price->p_unit;
+            $newInboundProduct->description = $product->productName;
+            $newInboundProduct->user_id = auth()->user()->id;
+
+        }
+
+        $newInboundProduct->save();
+
 
         $isExist = false;
 
@@ -234,7 +265,6 @@ class InboundController extends Controller
         if ($newQty > $item->availableStocks) {
             return response()->json(['error' => 'Insufficient stocks.', 'current' => $currentProduct, 'available' => $item->availableStocks]);
         }
-
 
         try {
             $products = $inProdService->addQty($code, $qty);
@@ -252,14 +282,13 @@ class InboundController extends Controller
             array_push($products, $data);
         }
 
-        session()->forget('products');
-        session()->put('products', $products);
-
         $uiProducts = $products;
 
-        usort($uiProducts, function ($a, $b) {
-            return $a['order'] <=> $b['order'];
-        });
+        if (!$uiProducts === null) {
+            usort($uiProducts, function ($a, $b) {
+                return $a['order'] <=> $b['order'];
+            });
+        }
 
         $newProdService = new InboundProductsService(json_encode($products));
 
@@ -288,7 +317,7 @@ class InboundController extends Controller
             'order_date' => 'required|date',
         ]);
 
-        $products = session()->get('products');
+        $products = NewInboundProduct::where("inbound_id", 0)->get();
 
         $equipStore = EquipmentStore::find($request->equipment_id);
         $customer = Customers::find($request->customer_id);
@@ -331,7 +360,7 @@ class InboundController extends Controller
         $inbound->is_foc = $is_foc;
 
         $inbound->status = 'Completed';
-        if($is_foc == 1){
+        if ($is_foc == 1) {
             $inbound->delivered_amount = 0;
             $inbound->remarks = 'Free of charge';
         }
@@ -373,9 +402,9 @@ class InboundController extends Controller
             }
         }
 
-        session()->put('updatingDataResults', $updatingData);
+        // delete all new inbound products
+        NewInboundProduct::where("inbound_id", 0)->delete();
 
-        session()->forget('products');
 
         activity('outbound')
             ->performedOn($inbound)
@@ -386,44 +415,86 @@ class InboundController extends Controller
         return redirect()->route('order.index')->with('success', 'Your order has been completed.');
     }
 
-    public function update(Request $request, $code, $action)
+    public function update(Request $request, $code, $action, $inboundId = 0)
     {
 
-        $products = InboundProductsService::getInboundProducts();
+        if($inboundId == 0){
 
-        if ($products == null) {
-            return back()->withErrors('Please add products.');
+            $newInboundProduct = NewInboundProduct::where("inbound_id", 0)->where("code", $code)->first();
+            if ($action === 'add') {
+                $newInboundProduct->quantity += 1;
+            } else {
+                $newInboundProduct->quantity -= 1;
+            }
+            $newInboundProduct->save();
+
+        }else{
+
+            $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where('code', $code)->first();
+            if($action === 'add'){
+                $newInboundProduct->quantity += 1;
+            }else{
+                $newInboundProduct->quantity -= 1;
+            }
+            $newInboundProduct->save();
+
         }
 
+        if (NewInboundProduct::where('inbound_id', $inboundId)->exists()) {
+            $products = NewInboundProduct::where('inbound_id', $inboundId)->get();
+        } else {
+            $products = NewInboundProduct::where("inbound_id", 0)->get();
+        }
+
+
         $inboundService = new InboundProductsService($products);
-        $currentProduct = $inboundService->getCurrentQty($code);
+        $currentProduct = $inboundService->getProductDetails($code);
+        $currentProductQty = $currentProduct['quantity'];
 
         $item = ItemMasterData::branch(session('branch_code'))->productCode($code)->first();
-        if ($action == 'add' && ($currentProduct + 1) > $item->availableStocks) {
+        if ($action == 'add' && ($currentProductQty + 1) > $item->availableStocks) {
             return response()->json(['error' => 'Insufficient stocks.']);
         }
 
+        // if ($action == 'add') {
+        //     $newQty = $currentProductQty + 1;
+        //     try {
+        //         $products = $inboundService->addQty($code, 1);
+        //     } catch (\Exception $e) {
+        //         return response()->json(['error' => $e->getMessage()]);
+        //     }
+        // } else {
+        //     $newQty = $currentProductQty - 1;
+        //     try {
+        //         $products = $inboundService->minQty($code);
+        //     } catch (\Exception $e) {
+        //         return response()->json(['error' => $e->getMessage()]);
+        //     }
+        // }
 
-        if ($action == 'add') {
-            try {
-                $products = $inboundService->addQty($code, 1);
-            } catch (\Exception $e) {
-                return response()->json(['error' => $e->getMessage()]);
-            }
-        } else {
-            try {
-                $products = $inboundService->minQty($code);
-            } catch (\Exception $e) {
-                return response()->json(['error' => $e->getMessage()]);
-            }
+        // if (UpdateOrder::where('inbound_id', $inboundId)->where('code', $code)->where('action', $action)->exists()) {
+        //     $updateProduct = OrderUpdate::where('inbound_id', $inboundId)->where('product_code', $code)->where('action', $action)->first();
+        // } else {
+        //     $updateProduct = new UpdateOrder();
+        //     $updateProduct->inbound_id = $inboundId;
+        //     $updateProduct->ptype_code = substr($code, 0, 2);
+        //     $updateProduct->code = $code;
+        //     $updateProduct->description = $currentProduct['description'];
+        //     $updateProduct->price = $item->price;
+        //     $updateProduct->unit = $currentProduct['unit'];
+        // }
+
+        // $updateProduct->old_quantity = $currentProductQty;
+        // $updateProduct->quantity = $newQty;
+        // $updateProduct->action = $action;
+        // $updateProduct->user_id = auth()->user()->id;
+        // $updateProduct->save();
+
+        if (!$products === null) {
+            usort($products, function ($a, $b) {
+                return $a['order'] <=> $b['order'];
+            });
         }
-
-        usort($products, function ($a, $b) {
-            return $a['order'] <=> $b['order'];
-        });
-
-        session()->forget('products');
-        session()->put('products', $products);
 
         $summary = $inboundService->summary();
         $summary = $inboundService->addSppbinSummary();
@@ -463,7 +534,7 @@ class InboundController extends Controller
 
                     $itemData->stocks = $newStocks;
                     $itemData->save();
-                }else{
+                } else {
                     $itemData->reserved -= $product['quantity'];
                     $itemData->save();
                 }
@@ -494,8 +565,7 @@ class InboundController extends Controller
     public function create()
     {
 
-        session()->forget('products');
-        session()->forget('inboundId');
+
         $nextDay = date('Y-m-d', strtotime('+1 day'));
 
 
@@ -519,9 +589,10 @@ class InboundController extends Controller
     public function edit($inboundId)
     {
 
-        session()->put('inboundId', $inboundId);
-
         $inbound = Inbound::find($inboundId);
+
+        // delete all new inbound products
+        NewInboundProduct::where('inbound_id', $inboundId)->delete();
 
         if ($inbound->delivery_receipt_id !== NULL and !auth()->user()->hasRole(['admin'])) {
             return back()->withErrors('This order is already delivered.');
@@ -532,6 +603,25 @@ class InboundController extends Controller
         }
 
         $products = $inbound->products;
+        $convertedProducts = json_decode($products, true);
+
+        foreach ($convertedProducts as $product) {
+
+
+            $newInboundProduct = new NewInboundProduct();
+            $newInboundProduct->inbound_id = $inboundId;
+            $newInboundProduct->order = $product['order'];
+            $newInboundProduct->ptype_code = $product['ptype_code'];
+            $newInboundProduct->code = $product['code'];
+            $newInboundProduct->old_quantity = $product['quantity'];
+            $newInboundProduct->quantity = $product['quantity'];
+            $newInboundProduct->price = $product['price'];
+            $newInboundProduct->unit = $product['unit'];
+            $newInboundProduct->description = $product['description'];
+            $newInboundProduct->user_id = auth()->user()->id;
+            $newInboundProduct->save();
+
+        }
 
         $deliveryPersons = Drivers::active()->perDesignation('Salesman')->get();
 
@@ -561,14 +651,9 @@ class InboundController extends Controller
             $summary = $inboundService->addSppbinSummary(); // ! you need to call summary() first before addSppbinSummary()
         }
 
-
         usort($inboundList, function ($a, $b) {
             return $a['order'] <=> $b['order'];
         });
-
-        session()->put('products', $inboundList);
-        session()->put('old_products', $inboundList);
-
 
         $equipmentStore = EquipmentStore::where('customer_id', $inbound->customer_id)->where('equipment_id', $inbound->equipment_id)->where('store_id', $inbound->store_id)->first();
 
@@ -611,9 +696,8 @@ class InboundController extends Controller
 
     public function updateInbound(Request $request)
     {
+
         $branchCode = session('branch_code');
-        $products = session('products');
-        $oldProducts = session('old_products');
 
         $request->validate([
             'inbound_id' => 'required|exists:inbounds,id',
@@ -631,6 +715,11 @@ class InboundController extends Controller
         $equipStore = EquipmentStore::findOrFail($request->equipment_id);
         $inbound = Inbound::findOrFail($request->inbound_id);
 
+        $products = NewInboundProduct::where('inbound_id', $request->inbound_id)->get();
+
+        // dump($oldProducts);
+        // dd($products);
+
         $inbound->fill([
             'equipment_id' => $equipStore->equipment->id,
             'driver_id' => $request->driver_id,
@@ -643,7 +732,7 @@ class InboundController extends Controller
             'is_foc' => $request->is_foc == 'on' ? 1 : NULL,
             'driver_name' => Drivers::find($request->driver_id)->name,
             'delivery_person' => Drivers::find($request->delivery_person_id)->name,
-            'products' => json_encode($products),
+            'products' => json_encode($products->toArray()),
         ]);
 
         if ($request->boolean('bad_order')) {
@@ -651,10 +740,36 @@ class InboundController extends Controller
             $inbound->bo_amount = $request->bo_amount;
         }
 
-        $differentProducts = $this->getDifferentProducts($products, $oldProducts);
+        foreach ($products as $product) {
+            $itemData = ItemMasterData::branch($branchCode)->productCode($product->code)->first();
+            if ($itemData) {
 
-        $errors = $this->updateItemMasterData($differentProducts, $branchCode, $inbound->id);
+                if($inbound->delivery_receipt_id !== NULL){
+                    $newStocks = ($itemData->stocks + $product->old_quantity) - $product->quantity;
 
+                    if($product->status === 'Deleted'){
+                        $newStocks = $itemData->stocks + $product->old_quantity;
+                    }
+
+                    $itemData->stocks = $newStocks;
+                }else{
+                    $newReserved = ($itemData->reserved - $product->old_quantity) + $product->quantity;
+
+                    if ($product->status === 'Deleted') {
+                        $newReserved = $itemData->reserved - $product->old_quantity;
+                    }
+                    $itemData->reserved = $newReserved;
+                }
+
+                $itemData->save();
+            }
+        }
+
+        $activeProducts = array_filter($products->toArray(), function ($product) {
+            return $product['status'] !== 'Deleted';
+        });
+
+        $inbound->products = $activeProducts;
         $inbound->save();
 
         session()->forget(['inboundId', 'products']);
@@ -662,6 +777,8 @@ class InboundController extends Controller
         activity('outbound')
             ->performedOn($inbound)
             ->log("Outbound $inbound->id updated by " . auth()->user()->fullName);
+
+        NewInboundProduct::where('inbound_id', $inbound->id)->delete();
 
         if (!empty($errors)) {
             return back()->withErrors($errors);
@@ -718,7 +835,7 @@ class InboundController extends Controller
 
                 if (!$hasDeliveryReceipt) {
                     $itemData->reserved += $product['quantity'];
-                }else{
+                } else {
                     $itemData->stocks -= $product['quantity'];
                 }
             }
@@ -744,7 +861,8 @@ class InboundController extends Controller
         return $errors;
     }
 
-    public function freeOrders(){
+    public function freeOrders()
+    {
         $inbounds = Inbound::with('driver', 'vehicle')->branch(session('branch_code'))->freeOrders()->get();
         return view('free', compact('inbounds'));
     }
