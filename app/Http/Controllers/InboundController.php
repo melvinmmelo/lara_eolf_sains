@@ -125,7 +125,7 @@ class InboundController extends Controller
             $newInboundProduct->status = "Deleted";
             $newInboundProduct->save();
         }else{
-            $newInboundProduct = NewInboundProduct::whereNull("inbound_id")->where("code", $pcode)->delete();
+            $newInboundProduct = NewInboundProduct::where("inbound_id", 0)->where("code", $pcode)->delete();
         }
 
         $summary = [];
@@ -233,9 +233,9 @@ class InboundController extends Controller
 
         $data = ['order' => $sequence_no, 'ptype_code' => $product->product_type_code, 'code' => $product->code, 'quantity' => $qty, 'price' => $price->p_price, 'unit' => $price->p_unit, 'sppb' => $product->spoon_pcs_per_bag, 'description' => $product->productName, 'created_at' => now()];
 
-        if(NewInboundProduct::whereNull("inbound_id")->where('code', $code)->exists()){
+        if(NewInboundProduct::where("inbound_id", 0)->where('code', $code)->exists()){
 
-            $newInboundProduct = NewInboundProduct::whereNull("inbound_id")->where('code', $code)->first();
+            $newInboundProduct = NewInboundProduct::where("inbound_id", 0)->where('code', $code)->first();
             $newInboundProduct->quantity += $qty;
 
         }else{
