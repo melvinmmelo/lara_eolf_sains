@@ -53,6 +53,9 @@
                     @foreach ($pageInbounds as $inbound)
                         @php
                             $orderedProducts = json_decode($inbound->products, true);
+                            usort($orderedProducts, function ($a, $b) {
+                                return $a['order'] <=> $b['order'];
+                            });
                             $totalProducts = count($orderedProducts);
                         @endphp
 

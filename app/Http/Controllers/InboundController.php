@@ -215,7 +215,6 @@ class InboundController extends Controller
         } else {
             // dump('there');
             $inbound = Inbound::find($inboundId);
-            $products = $inbound->products;
         }
 
         $summary = [];
@@ -233,12 +232,14 @@ class InboundController extends Controller
 
         $data = ['order' => $sequence_no, 'ptype_code' => $product->product_type_code, 'code' => $product->code, 'quantity' => $qty, 'price' => $price->p_price, 'unit' => $price->p_unit, 'sppb' => $product->spoon_pcs_per_bag, 'description' => $product->productName, 'created_at' => now()];
 
-        if(NewInboundProduct::where("inbound_id", 0)->where('code', $code)->exists()){
+        $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where('code', $code)->first();
 
-            $newInboundProduct = NewInboundProduct::where("inbound_id", 0)->where('code', $code)->first();
+        if($newInboundProduct){
             $newInboundProduct->quantity += $qty;
 
         }else{
+
+
             $newInboundProduct = new NewInboundProduct();
             $newInboundProduct->inbound_id = $inboundId;
             $newInboundProduct->order = $sequence_no;
@@ -255,6 +256,7 @@ class InboundController extends Controller
 
         $newInboundProduct->save();
 
+        $products = NewInboundProduct::where("inbound_id", $inboundId)->whereNull("status")->get();
 
         $isExist = false;
 
@@ -264,22 +266,6 @@ class InboundController extends Controller
 
         if ($newQty > $item->availableStocks) {
             return response()->json(['error' => 'Insufficient stocks.', 'current' => $currentProduct, 'available' => $item->availableStocks]);
-        }
-
-        try {
-            $products = $inProdService->addQty($code, $qty);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()]);
-        }
-
-        $isExist = $inProdService->isExist();
-
-
-        if ($isExist == false and $products) {
-            array_push($products, $data);
-        } else if ($products == null) {
-            $products = [];
-            array_push($products, $data);
         }
 
         $uiProducts = $products;
@@ -690,6 +676,10 @@ class InboundController extends Controller
 
             $summary = $inboundService->addSppbinSummary(); // ! you need to call summary() first before addSppbinSummary()
         }
+
+        usort($inboundList, function ($a, $b) {
+            return $a['order'] <=> $b['order'];
+        });
 
         return view('ordering-view', compact('inbound', 'inboundId', 'drivers', 'inboundList', 'summary', 'priceLevel'));
     }
