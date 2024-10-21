@@ -16,7 +16,6 @@ use App\Models\pricelevels;
 use App\Models\prices;
 use App\Models\Product;
 use App\Models\ProductType;
-use App\Models\UpdateOrder;
 use App\Models\Vehicles;
 use App\Services\DPRService;
 use App\Services\InboundProductsService;
@@ -119,13 +118,13 @@ class InboundController extends Controller
     public function deleteAInbound($pcode, $inboundId = 0)
     {
 
-        $products = NewInboundProduct::where("inbound_id", $inboundId)->get();
+        $products = NewInboundProduct::where("inbound_id", $inboundId)->where('branch_code', session('branch_code'))->get();
         if($inboundId != 0){
-            $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where("code", $pcode)->first();
+            $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where("code", $pcode)->where('branch_code', session('branch_code'))->first();
             $newInboundProduct->status = "Deleted";
             $newInboundProduct->save();
         }else{
-            $newInboundProduct = NewInboundProduct::where("inbound_id", 0)->where("code", $pcode)->delete();
+            $newInboundProduct = NewInboundProduct::where("inbound_id", 0)->where("code", $pcode)->where('branch_code', session('branch_code'))->delete();
         }
 
         $summary = [];
@@ -211,7 +210,7 @@ class InboundController extends Controller
     {
         if ($inboundId == 0) {
             // dump('here');
-            $products = NewInboundProduct::where("inbound_id", 0)->get();
+            $products = NewInboundProduct::where("inbound_id", 0)->where('branch_code', session('branch_code'))->get();
         } else {
             // dump('there');
             $inbound = Inbound::find($inboundId);
@@ -232,16 +231,16 @@ class InboundController extends Controller
 
         $data = ['order' => $sequence_no, 'ptype_code' => $product->product_type_code, 'code' => $product->code, 'quantity' => $qty, 'price' => $price->p_price, 'unit' => $price->p_unit, 'sppb' => $product->spoon_pcs_per_bag, 'description' => $product->productName, 'created_at' => now()];
 
-        $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where('code', $code)->first();
+        $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where('code', $code)->where('branch_code', session('branch_code'))->first();
 
         if($newInboundProduct){
             $newInboundProduct->quantity += $qty;
 
         }else{
 
-
             $newInboundProduct = new NewInboundProduct();
             $newInboundProduct->inbound_id = $inboundId;
+            $newInboundProduct->branch_code = session('branch_code');
             $newInboundProduct->order = $sequence_no;
             $newInboundProduct->ptype_code = $product->product_type_code;
             $newInboundProduct->code = $product->code;
@@ -254,19 +253,12 @@ class InboundController extends Controller
 
         }
 
-        $newInboundProduct->save();
-
-        $products = NewInboundProduct::where("inbound_id", $inboundId)->whereNull("status")->get();
-
-        $isExist = false;
-
-        $inProdService = new InboundProductsService($products);
-        $currentProduct = $inProdService->getCurrentQty($code);
-        $newQty = $currentProduct + $qty;
-
-        if ($newQty > $item->availableStocks) {
-            return response()->json(['error' => 'Insufficient stocks.', 'current' => $currentProduct, 'available' => $item->availableStocks]);
+        if ($newInboundProduct->quantity > $item->availableStocks) {
+            return response()->json(['error' => 'Insufficient stocks.', 'current' => $newInboundProduct, 'available' => $item->availableStocks]);
         }
+
+        $newInboundProduct->save();
+        $products = NewInboundProduct::where("inbound_id", $inboundId)->whereNull("status")->where('branch_code', session('branch_code'))->get();
 
         $uiProducts = $products;
 
@@ -277,7 +269,6 @@ class InboundController extends Controller
         }
 
         $newProdService = new InboundProductsService(json_encode($products));
-
 
         $summary = $newProdService->summary();
         $summary = $newProdService->addSppbinSummary();
@@ -389,7 +380,7 @@ class InboundController extends Controller
         }
 
         // delete all new inbound products
-        NewInboundProduct::where("inbound_id", 0)->delete();
+        NewInboundProduct::where("inbound_id", 0)->where('branch_code', session('branch_code'))->delete();
 
 
         activity('outbound')
@@ -406,7 +397,7 @@ class InboundController extends Controller
 
         if($inboundId == 0){
 
-            $newInboundProduct = NewInboundProduct::where("inbound_id", 0)->where("code", $code)->first();
+            $newInboundProduct = NewInboundProduct::where("inbound_id", 0)->where("code", $code)->where('branch_code', session('branch_code'))->first();
             if ($action === 'add') {
                 $newInboundProduct->quantity += 1;
             } else {
@@ -416,7 +407,7 @@ class InboundController extends Controller
 
         }else{
 
-            $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where('code', $code)->first();
+            $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where('code', $code)->where('branch_code', session('branch_code'))->first();
             if($action === 'add'){
                 $newInboundProduct->quantity += 1;
             }else{
@@ -426,10 +417,10 @@ class InboundController extends Controller
 
         }
 
-        if (NewInboundProduct::where('inbound_id', $inboundId)->exists()) {
-            $products = NewInboundProduct::where('inbound_id', $inboundId)->get();
+        if (NewInboundProduct::where('inbound_id', $inboundId)->where('branch_code', session('branch_code'))->exists()) {
+            $products = NewInboundProduct::where('inbound_id', $inboundId)->where('branch_code', session('branch_code'))->get();
         } else {
-            $products = NewInboundProduct::where("inbound_id", 0)->get();
+            $products = NewInboundProduct::where("inbound_id", 0)->where('branch_code', session('branch_code'))->get();
         }
 
 

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('new_inbound_products', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('inbound_id')->default(0);
+            $table->string('branch_code');
             $table->string('order');
             $table->string('ptype_code');
             $table->string('code');

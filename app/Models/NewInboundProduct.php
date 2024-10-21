@@ -11,6 +11,7 @@ class NewInboundProduct extends Model
 
     protected $fillable = [
         'inbound_id',
+        'branch_code',
         'order',
         'ptype_code',
         'code',
@@ -21,4 +22,9 @@ class NewInboundProduct extends Model
         'unit',
         'user_id'
     ];
+
+    public function inbound()
+    {
+        return $this->belongsTo(Inbound::class);
+    }
 }
