@@ -46,6 +46,10 @@
 
                         @php $grandTotal = []; @endphp
                         @foreach ($badOrders as $badOrder)
+
+                            @php
+                                $grandTotal[] = $badOrder->amount;
+                            @endphp
                             <tr>
                                 <td>{{ $badOrder->degic_code . " " . $badOrder->customer->fullName }}</td>
                                 <td>{{ $badOrder->amount }}</td>

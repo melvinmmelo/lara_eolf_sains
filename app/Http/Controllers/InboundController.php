@@ -587,6 +587,7 @@ class InboundController extends Controller
 
             $newInboundProduct = new NewInboundProduct();
             $newInboundProduct->inbound_id = $inboundId;
+            $newInboundProduct->branch_code = session('branch_code');
             $newInboundProduct->order = $product['order'];
             $newInboundProduct->ptype_code = $product['ptype_code'];
             $newInboundProduct->code = $product['code'];

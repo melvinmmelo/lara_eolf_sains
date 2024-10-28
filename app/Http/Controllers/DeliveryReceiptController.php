@@ -78,7 +78,7 @@ class DeliveryReceiptController extends Controller
 
     public function indexDone(Request $request)
     {
-        $outbounds = Inbound::branch(session('branch_code'))->whereNull('delivery_receipt_id')->withProducts()->get();
+        $outbounds = Inbound::branch(session('branch_code'))->whereNotIn('status', ['Deleted', 'Cancelled', 'Wrong entry'])->withProducts()->get();
 
         $query = DeliveryReceipt::query();
 
