@@ -74,7 +74,12 @@
                                     <td>{{ $inbound->code }}</td>
                                     <td>{{ $inbound->degic_no }}</td>
                                     <td>{{ $inbound->customer->fullName }}</td>
-                                    <td>{{ formatNumber($inbound->grandTotal) }}</td>
+                                    <td>{{ formatNumber($inbound->grandTotal) }}
+                                        @if ($inbound->is_with_sf)
+                                            (<span class="label label-warning">+1000</span>)
+                                        @endif
+
+                                    </td>
                                     <td>{{ formatNumber($inbound->discount) }}</td>
                                     <td>{{ formatNumber($inbound->bo_amount) }}</td>
                                     <td><span class="label label-primary">{{ formatNumber($inbound->totalBalance) }}</span>

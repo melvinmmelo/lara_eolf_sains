@@ -19,7 +19,7 @@ class DeliveryReceipt extends Model
         'generated_by',
     ];
 
-    protected $appends = ['f_created_at', 'code'];
+    protected $appends = ['f_created_at'];
 
     protected $casts = [
         'date' => 'datetime'
@@ -29,12 +29,6 @@ class DeliveryReceipt extends Model
     {
         return self::whereYear('created_at', $year)->count();
     }
-
-    public function getCodeAttribute()
-    {
-        return $this->created_at->format('y') . "-" . str_pad($this->id, 5, "0", STR_PAD_LEFT);
-    }
-
     public function inbound()
     {
         return $this->belongsTo(Inbound::class);
@@ -43,5 +37,17 @@ class DeliveryReceipt extends Model
     public function getfCreatedAtAttribute()
     {
         return $this->date ? $this->date->format('Y-m-d') : null;
+    }
+
+    public static function generateCode($branchCode)
+    {
+
+        if ($branchCode == 'EFTO-CAG') {
+            $prefix = 'C';
+        } else {
+            $prefix = 'T';
+        }
+
+        return "DR-" . $prefix . str_pad(self::count() + 1, 4, "0", STR_PAD_LEFT);
     }
 }

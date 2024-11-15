@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inbound;
+use App\Models\LoadingTicket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -13,9 +14,8 @@ class TicketController extends Controller
 
     public function index()
     {
-
-        $inbounds = Inbound::select('grp_print_ticket_no')->whereNotNull('grp_print_ticket_no')->groupBy('grp_print_ticket_no')->get();
-        return view('ticket.index', compact('inbounds'));
+        $loadingTickets = LoadingTicket::where('branch_code', session('branch_code'))->get();
+        return view('ticket.index', compact('loadingTickets'));
     }
 
     public function show($grp)
@@ -26,39 +26,50 @@ class TicketController extends Controller
 
     public function generate()
     {
-        $ticketdetails="";
-        $sorted_product_codes = DB::table('product_types')->orderBy('sequence_no', 'asc')->select('code','spoon_pcs_per_bag')->get();
-        //dd($sorted_product_codes);
-        $inbounds = Inbound::branch(session('branch_code'))->forLoading()->WithProducts()->activeOrders()->get();
-        if(Session::has('ticketnum')){
-            $ticketdetails = Inbound::where('grp_print_ticket_no', session()->get('ticketnum'))->get();
-        }
-        return view('ticket.generate', compact('inbounds','ticketdetails','sorted_product_codes'));
-    }
 
+        $ticketdetails = "";
+        $sorted_product_codes = DB::table('product_types')->orderBy('sequence_no', 'asc')->select('code','spoon_pcs_per_bag')->get();
+        $inbounds = Inbound::branch(session('branch_code'))->forLoading()->WithProducts()->activeOrders()->get();
+
+        $print = false;
+
+        return view('ticket.generate', compact('inbounds','ticketdetails','sorted_product_codes', 'print'));
+
+    }
 
     public function print(Request $request)
     {
+
+        $sorted_product_codes = DB::table('product_types')->orderBy('sequence_no', 'asc')->select('code', 'spoon_pcs_per_bag')->get();
 
         $request->validate([
             'inboundIds' => 'required',
         ]);
 
-        // generate two random numbers
-        $twoRandomNumbers = date('i') . date('s') . mt_rand(01, 99);
-        $grpPrintTicketNo = "LT" .date('y') . "-" .str_pad(Inbound::max('id') + 1, 5, '0', STR_PAD_LEFT) . $twoRandomNumbers;
+        $ticketNo = LoadingTicket::generateTicketNo(session('branch_code'));
+
+        LoadingTicket::create([
+            'ticket_no' => $ticketNo,
+            'branch_code' => session('branch_code'),
+            'user_name' => auth()->user()->fullName,
+        ]);
 
         $inbounds = Inbound::whereIn('id', $request->inboundIds)->get();
-        $cnt = 1;
 
+        $cnt = 1;
         foreach ($inbounds as $inbound) {
-            $inbound->grp_print_ticket_no = $grpPrintTicketNo;
+            $inbound->grp_print_ticket_no = $ticketNo;
             $inbound->ticket_sequence_no = $cnt++;
             $inbound->save();
         }
-        session()->put('ticketnum', $grpPrintTicketNo);
 
-        return redirect()->route('generate-ticket');
+        $ticketdetails = Inbound::where('grp_print_ticket_no', $ticketNo)->get();
+
+        session()->put('ticketnum', $ticketNo);
+
+        $print = true;
+
+        return view('ticket.generate', compact('inbounds', 'ticketdetails', 'sorted_product_codes', 'print'));
     }
 
     public function reprint(Request $request)

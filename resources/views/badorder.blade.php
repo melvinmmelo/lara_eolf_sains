@@ -57,9 +57,13 @@
                                 <td>{{ $badOrder->remarks }}</td>
                                 <td>{{ $badOrder->created_at }}</td>
                                 <td>
+                                    <button type="submit" class="btn btn-success"
+                                        onclick="window.location.href='{{ route('newbo.edit', $badOrder->id) }}'">Edit</button>
+
+
                                     <button type="submit" class="btn btn-danger"
                                         onclick="return deleteBO(`{{ $badOrder->id }}`);">Delete</button>
-                                    <button type="button" class="btn btn-success btn-print"
+                                    <button type="button" class="btn btn-default btn-print"
                                         data-bo-id="{{ $badOrder->id }}" onclick="printPage(this)">
                                         <i class="fa-solid fa-print"></i> Print
                                     </button>
@@ -123,9 +127,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-success">Save changes</button>
                             </div>

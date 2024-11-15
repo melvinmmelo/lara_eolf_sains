@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('inbounds', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id');
+            $table->unsignedInteger('order_no');
             $table->string('branch_code', 15);
             $table->unsignedInteger('equipment_id');
             $table->unsignedInteger('customer_id');
@@ -30,6 +31,7 @@ return new class extends Migration
             $table->unsignedInteger('bad_order_id')->nullable();
             $table->float('bo_amount', 2)->nullable();
             $table->tinyInteger('is_foc')->nullable();
+            $table->tinyInteger('is_with_sf')->default(0);
             $table->string('status', 10);
             $table->unsignedInteger('pricelevel_id');
             $table->string('payment_type', 30)->nullable();
@@ -37,8 +39,8 @@ return new class extends Migration
             $table->float('total_discount', 8, 2)->default(0);
             $table->string('ref_no', 30)->nullable();
             $table->float('delivered_amount', 2)->nullable();
-            $table->string('grp_print_ticket_no',)->nullable();
-            $table->integer('ticket_sequence_no',)->default(0);
+            $table->string('grp_print_ticket_no')->nullable();
+            $table->integer('ticket_sequence_no')->default(0);
             $table->string('degic_no');
             $table->string('customer_name');
             $table->string('store_name');

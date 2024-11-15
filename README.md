@@ -1,29 +1,12 @@
 # Project Description: EOLF Trading Sales and Inventory System 2024
 
-Aug. 5-6 Updates
-1. Testing of inbound and outbound and item master data - Ok
-2. Testing of amounts if tallied (checked in table and report) - Ok
-3. Adding payment testing - Ok
-4. Encoding of driver in outbound and order slip - Ok
-5. Added driver name in order slip - Ok
-6. Encoding of order date in outbound and dr (ok na din sa table) (default +1 day) - Ok
-7. Testing of editing of inventory (should be reflected in item master data) - Ok
-8. Order slip duplicate product - Ok
-9. Negative reserved - Ok
-
-
-Aug 6-8 Updates
-1. Audit trail description
-2. Inbound summary per products total quantity
-3. Reset inventory tar and cag branch
-4. Double checking of inventory
-5. Order slip enhancement
-6. Product order summary
-
-
-Aug. 11 Updates
-1. Check notes in iphone8
-
-Aug. 12 Updates
-1. Checkbox bigger
-2. Order slip ordering
+17-Nov-2024 Updates
+1. Inbound
+    New Column: is_with_sf
+    New Column: order_no
+2. Loading Ticket - New Table
+3. Order Slip
+    New Column: code
+4. Delivery Receipt
+    New Column: code
+5. New Codes in Inbound, Loading Ticket, Order Slip, Delivery Receipt

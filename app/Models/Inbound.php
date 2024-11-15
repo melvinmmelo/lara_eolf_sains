@@ -12,6 +12,7 @@ class Inbound extends Model
 
     protected $fillable = [
         'user_id',
+        'order_no',
         'branch_code',
         'equipment_id',
         'customer_id',
@@ -23,6 +24,7 @@ class Inbound extends Model
         'with_invoice',
         'bad_order',
         'is_foc',
+        'is_with_sf',
         'status',
         'pricelevel_id',
         'payment_type',
@@ -48,31 +50,53 @@ class Inbound extends Model
         'order_date' => 'datetime'
     ];
 
-    public function priceLevel() : BelongsTo {
+    /**
+     * Get the next order number for the given branch code.
+     *
+     * @param string $branchCode
+     * @return int
+     */
+    public static function getNextOrderNo($branchCode)
+    {
+        $lastOrder = self::where('branch_code', $branchCode)
+            ->orderBy('order_no', 'desc')
+            ->first();
+
+        return $lastOrder ? $lastOrder->order_no + 1 : 1;
+    }
+
+    public function priceLevel(): BelongsTo
+    {
         return $this->belongsTo(pricelevels::class, 'pricelevel_id');
     }
 
-    public function customer() : BelongsTo {
+    public function customer(): BelongsTo
+    {
         return $this->belongsTo(Customers::class);
     }
 
-    public function store() : BelongsTo {
+    public function store(): BelongsTo
+    {
         return $this->belongsTo(StoreInfo::class);
     }
 
-    public function equipment() : BelongsTo {
+    public function equipment(): BelongsTo
+    {
         return $this->belongsTo(Equipment::class);
     }
 
-    public function driver() : BelongsTo {
+    public function driver(): BelongsTo
+    {
         return $this->belongsTo(Drivers::class);
     }
 
-    public function vehicle() : BelongsTo {
+    public function vehicle(): BelongsTo
+    {
         return $this->belongsTo(Vehicles::class);
     }
 
-    public function deliveryReceipt() : BelongsTo {
+    public function deliveryReceipt(): BelongsTo
+    {
         return $this->belongsTo(DeliveryReceipt::class);
     }
 
@@ -88,7 +112,16 @@ class Inbound extends Model
 
     public function getCodeAttribute()
     {
-        return $this->created_at->format('y') . "-" . str_pad($this->id, 5, "0", STR_PAD_LEFT);
+
+        if ($this->branch_code === 'EFTO-CAG') {
+            $prefix = 'C';
+        } elseif ($this->branch_code === 'EFTO-TAR') {
+            $prefix = 'T';
+        } else {
+            $prefix = 'N';
+        }
+
+        return $this->created_at->format('y') . "-" . $prefix  . str_pad($this->order_no, 5, "0", STR_PAD_LEFT);
     }
 
     public function scopeBranch($query, $branch_code)
@@ -103,7 +136,7 @@ class Inbound extends Model
 
     public function scopeForLoading($query)
     {
-        return $query->where('status', 'Completed')->where('ticket_sequence_no' , 0);
+        return $query->where('status', 'Completed')->where('ticket_sequence_no', 0);
     }
 
     public function scopeForOrderSlip($query)
@@ -116,14 +149,13 @@ class Inbound extends Model
         return $query->whereNotNull('products');
     }
 
-    // scope that is not free and status is not deleted
     public function scopeActiveOrders($query)
     {
-        return $query->where('status', 'Completed')
-            ->whereNotIn('status', ['Deleted', 'Cancelled', 'Wrong entry']);
+        return $query->where('status', 'Completed');
     }
 
-    public function scopeFreeOrders($query){
+    public function scopeFreeOrders($query)
+    {
         return $query->where('is_foc', 1);
     }
 
@@ -137,7 +169,7 @@ class Inbound extends Model
         $total = 0;
         $products = json_decode($this->products, true);
 
-        if($products == null) {
+        if ($products == null) {
             return 0;
         }
 
@@ -145,13 +177,13 @@ class Inbound extends Model
             $total += $product['quantity'] * $product['price'];
         }
 
-        $this->grandTotal = $total;
-        return $this->netAmount = $total - ($this->bo_amount + $this->discount);
+        $this->grandTotal = $total + ($this->is_with_sf ? 1000 : 0);
+        return $this->netAmount = $this->grandTotal - ($this->bo_amount + $this->discount);
     }
 
     public function getGrandTotalAttribute() // always call this first before getting the netAmount
     {
-        if($this->grandTotal === 0) {
+        if ($this->grandTotal === 0) {
             $this->getTotalAmountAttribute();
         }
         return $this->grandTotal;

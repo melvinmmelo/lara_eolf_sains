@@ -60,10 +60,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/order-slip/{code}', [ReportGeneratorController::class, 'orderSlip'])->name('report.orderSlip');
 
     Route::get('/products-summary', [ReportGeneratorController::class, 'productsSummary'])->name('report.productsSummary');
+
     Route::get('/products-summary-filtered', [ReportGeneratorController::class, 'productsSummary'])->name('report.productsSummaryFiltered');
 
     Route::get('/products-summary-v2', [ReportGeneratorController::class, 'productsSummaryv2'])->name('report.productsSummaryv2');
-
 
     Route::get('/loading-ticket', function () {
         return view('loading-ticket');
@@ -72,9 +72,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/generate-ticket', [TicketController::class, 'generate'])->name('generate-ticket');
 
     Route::post('/print-ticket', [TicketController::class, 'print'])->name('print-ticket');
+
     Route::post('/reprint-ticket', [TicketController::class, 'reprint'])->name('reprint-ticket');
 
     Route::get('/tickets', [TicketController::class, 'index'])->name('index-ticket');
+
     Route::get('/ticket-inbounds/{grp}', [TicketController::class, 'show'])->name('inbounds-ticket');
 
 
@@ -103,7 +105,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/bad-orders', [NewBadOrderController::class, 'index'])->name('newbo.index');
 
     Route::get('/bo-deducted', [NewBadOrderController::class, 'badOrdersDeducted'])->name('newbo.deducted');
-
 
     Route::delete('/bad-orders/delete', [NewBadOrderController::class, 'destroy'])->name('bo.destroy');
 
@@ -148,11 +149,21 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/bad-order/create/{q?}', [NewBadOrderController::class, 'create'])->name('newbo.create');
 
+    Route::get('/bad-order/edit/{q?}', [NewBadOrderController::class, 'edit'])->name('newbo.edit');
+
     Route::post('/bad-order/create', [NewBadOrderController::class, 'store'])->name('newbo.store');
 
     Route::post('/bad-order-temp-product/store', [NewBadOrderController::class, 'storeTempProduct'])->name('newbo.storetp');
 
     Route::delete('/newbo/{id}/delete', [NewBadOrderController::class, 'deleteTempProduct'])->name('newbo.deletetp');
+
+    Route::delete('/newbo-item/{id}/delete', [NewBadOrderController::class, 'deleteBOItem'])->name('newbo.deleteboitem');
+
+    Route::patch('/newbo-item/update', [NewBadOrderController::class, 'updateBOItem'])->name('newbo.updateboitem');
+
+    Route::post('/newbo/save', [NewBadOrderController::class, 'saveBO'])->name('newbo.save');
+
+    Route::post('/newbo/add-item', [NewBadOrderController::class, 'addItemToBO'])->name('newbo.additem');
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit'); // views
@@ -176,13 +187,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
     Route::post('/customers/store', [CustomersController::class, 'store'])->name('customers.store');
     Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
-    Route::patch('/customers/', [CustomersController::class, 'update'])->name('customer.update');
+    Route::patch('/customers', [CustomersController::class, 'update'])->name('customer.update');
     Route::delete('/customers/{customer}/store/{store}', [CustomersController::class, 'destroyStore'])->name('customer.store.destroy');
 
     Route::get('/equipment', [EquipmentController::class, 'index'])->name('equipment.index');
     Route::post('/equipment/store', [EquipmentController::class, 'store'])->name('equipment.store');
     Route::get('/equipment/{id}/edit', [EquipmentController::class, 'edit'])->name('equipment.edit');
-    Route::patch('/equipment/', [EquipmentController::class, 'update'])->name('equipment.update');
+    Route::patch('/equipment', [EquipmentController::class, 'update'])->name('equipment.update');
     Route::delete('/equipment/bulk-delete', [EquipmentController::class, 'bulkDelete'])->name('equipment.bulk-delete');
 
     Route::get('/equipment-history/{dno}', [EquipmentHistoryController::class, 'equipmentHistory'])->name('equipment.history');
@@ -214,7 +225,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/vehicles/store', [VehiclesController::class, 'store']);
     Route::put('/vehicles/{id}', [VehiclesController::class, 'update']);
     Route::delete('/vehicles/{id}', [VehiclesController::class, 'destroy'])->name('vehicle.destroy');
-    Route::patch('/vehicles/', [VehiclesController::class, 'update'])->name('vehicle.update');
+    Route::patch('/vehicles', [VehiclesController::class, 'update'])->name('vehicle.update');
 
     Route::get('/delivery-persons', [DriversController::class, 'index'])->name('delivery-persons');
     Route::get('/edit-delivery-person/{id}', [DriversController::class, 'edit'])->name('delivery-person.edit');
@@ -256,10 +267,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/product-type/{id}/toggle-status', [ProductTypeController::class, 'toggleStatus'])->name('productType.toggleStatus');
 
     Route::get('/orders', [InboundController::class, 'index'])->name('order.index');
-
-    // Route::post('/submit/process-one', [InboundController::class, 'submitProcessOne'])->name('order.submitProcessOne');
-
-    // Route::get('/ordering/{inbound}', [InboundController::class, 'orderProcessTwoUI'])->name('order.processTwo');
 
     Route::get('/order/create', [InboundController::class, 'create'])->name('order.create');
 

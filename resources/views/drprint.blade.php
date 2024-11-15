@@ -131,6 +131,11 @@
                                 </div>
 
                                 <div class="d-flex justify-content-between">
+                                    <div>Delivery Charge:</div>
+                                    <div>{{ formatNumber($inbound->is_with_sf ? 1000 : 0) }} </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
                                     <div>Less BO:</div>
                                     <div>{{ formatNumber($inbound->bo_amount) }} </div>
                                 </div>
@@ -226,6 +231,11 @@
             mywindow.document.write(
                 '<table width="100%"><tr> <td width="50%">Total Sales:</td>  <td style="text-align:right"> {{ formatNumber($totalSales) }}</td></tr>'
             );
+
+            mywindow.document.write(
+                '<tr> <td>Delivery Charge:  </td> <td style="text-align:right">{{ formatNumber($inbound->is_with_sf ? 1000 : 0) }} </td> </tr>'
+                );
+
             mywindow.document.write(
                 '<tr> <td>Less BO:  </td> <td style="text-align:right">{{ formatNumber($inbound->bo_amount) }} </td> </tr>'
                 );
@@ -233,7 +243,7 @@
                 '<tr> <td>Discount (%): </td> <td style="text-align:right"> {{ formatNumber($inbound->discount) }} </td> </tr>'
             );
             mywindow.document.write(
-                '<tr> <td> Total Amount</td> <td style="text-align:right"> {{ formatNumber($inbound->totalAmount) }} </td> </tr></table>'
+                '<tr> <td> Total Amount</td> <td style="text-align:right">{{ formatNumber($inbound->totalAmount) }} </td> </tr></table>'
             );
             mywindow.document.write('</table>');
             mywindow.document.write('<br><br><br>');

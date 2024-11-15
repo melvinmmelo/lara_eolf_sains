@@ -12,6 +12,7 @@ class NewBadOrder extends Model
     protected $fillable = [
         'branch_code',
         'customer_id',
+        'session_bo_id',
         'degic_code',
         'bo_percentage',
         'remarks',

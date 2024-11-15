@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pricelevels', function (Blueprint $table) {
+        Schema::create('loading_tickets', function (Blueprint $table) {
             $table->id();
+            $table->string('ticket_no');
             $table->string('branch_code', 15);
-            $table->string('pl_name');
-            $table->string('pl_desc');
-            $table->string('pl_status');
-            $table->string('pl_type', 15);
+            $table->string('user_name');
             $table->timestamps();
-            $table->index('branch_code');
         });
     }
 
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pricelevels');
+        Schema::dropIfExists('loading_tickets');
     }
 };

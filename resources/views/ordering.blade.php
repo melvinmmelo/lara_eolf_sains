@@ -351,6 +351,11 @@
                                 <input type="checkbox" id="isFOC" name="foc" value="on">
                                 <label for="isFOC">FOC</label>
                             </div>
+
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="withSF" name="with_sf" value="on">
+                                <label for="withSF">With Delivery Charge</label>
+                            </div>
                         </div>
                     </div>
 

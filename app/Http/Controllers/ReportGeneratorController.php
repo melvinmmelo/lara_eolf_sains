@@ -47,7 +47,7 @@ class ReportGeneratorController extends Controller
 
         $pagesData = $this->distributeInboundsToPages($inbounds);
         $totalPages = count($pagesData);
-        $grandTotal = $inbounds->sum('totalAmount');
+        $grandTotal = $inbounds->sum('grandTotal');
 
 
         return view('report.orderSlip', compact('inbounds', 'code', 'orderSlip', 'grandTotal', 'totalInbounds', 'totalPages', 'pagesData'));

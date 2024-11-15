@@ -70,10 +70,18 @@ class OrderSlipController extends Controller
 
         $validated['total_amount'] = 0;
 
-        $validated['code'] = date('y') . "-" . str_pad(OrderSlip::count() + 1, 5, "0", STR_PAD_LEFT);
+        if (session('branch_code') == 'EFTO-CAG') {
+            $prefix = 'C';
+        } else {
+            $prefix = 'T';
+        }
 
-        if(OrderSlip::where('code', $validated['code'])->exists()){
-            $validated['code'] = date('y') . "-" . str_pad(OrderSlip::count() + 2, 5, "0", STR_PAD_LEFT);
+        $code = "OS-" . $prefix . str_pad(OrderSlip::count() + 1, 4, "0", STR_PAD_LEFT);
+
+        $validated['code'] = $code;
+
+        if (OrderSlip::where('code', $validated['code'])->exists()) {
+            $validated['code'] = "OS-" . $prefix . str_pad(OrderSlip::count() + 2, 4, "0", STR_PAD_LEFT);
         }
 
         $validated['generated_by'] = auth()->user()->fullName;

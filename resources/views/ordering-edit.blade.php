@@ -416,6 +416,11 @@
                                 <input type="checkbox" id="isFOC" name="foc" value="on">
                                 <label for="isFOC">FOC</label>
                             </div>
+
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="withSF" name="with_sf" value="on">
+                                <label for="withSF">With Delivery Charge</label>
+                            </div>
                         </div>
                     </div>
 
@@ -456,6 +461,11 @@
         document.getElementById('equipment').value = "{{ $equipmentStore->id ?? '' }}";
         document.getElementById('customer_id').value = "{{ $inbound->customer_id ?? '' }}";
         document.getElementById('customer').value = "{{ $inbound->customer->fullName ?? '' }}";
+
+        if({{ $inbound->is_with_sf }}){
+            document.getElementById('withSF').checked = true;
+        }
+
         // checked is_foc
         @if($inbound->is_foc)
             document.getElementById("isFOC").checked = true;
@@ -470,11 +480,7 @@
             document.getElementById("withInvoice").checked = true;
          @endif
 
-
-
-
         document.getElementById("BOContainer").style.display = "none";
-
 
         const total = document.getElementById("total").value ?? 0;
 

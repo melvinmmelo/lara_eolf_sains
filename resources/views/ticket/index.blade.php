@@ -46,11 +46,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($inbounds as $inbound)
+                                @foreach ($loadingTickets as $loadingTicket)
                                     <tr>
-                                        <td>{{ $inbound->grp_print_ticket_no }}</td>
+                                        <td>{{ $loadingTicket->ticket_no }}</td>
                                         <td>
-                                            <a href="{{ route('inbounds-ticket', ['grp' => $inbound->grp_print_ticket_no]) }}"
+                                            <a href="{{ route('inbounds-ticket', ['grp' => $loadingTicket->ticket_no]) }}"
                                                 class="btn btn-primary">Show</a>
                                         </td>
                                     </tr>

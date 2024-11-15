@@ -79,7 +79,11 @@
                                         <td>{{ $inbound->code }}</td>
                                         <td>{{ $inbound->degic_no }}</td>
                                         <td>{{ $inbound->customer_name }}</td>
-                                        <td><span class="label label-primary">{{ formatNumber($total) }}</span></td>
+                                        <td><span class="label label-primary">{{ formatNumber($total) }}</span>
+                                            @if ($inbound->is_with_sf)
+                                                (<span class="label label-warning">+1000</span>)
+                                            @endif
+                                        </td>
                                         <td>{{ formatNumber($total - $inbound->delivered_amount) }}</td>
                                         <td>{{ $inbound->status }}</td>
                                         <td>{{ number_format($inbound->created_at->diffInDays(now()), 0) }}</td>
@@ -125,21 +129,19 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
         $(document).ready(function() {
-
-
-
             try {
                 var curr_total = 0;
                 var last = 0;
 
 
-                @if (Session::has('ticketnum'))
+                @if ($print)
                     // Create a new window for printing
                     var mywindow = window.open('', 'PRINT', 'height=600,width=600');
                     if (!mywindow) {
                         console.log("Failed to open print window. Pop-up blocked?");
                         return;
                     }
+
                     @foreach ($ticketdetails as $ticketdetail)
                         var sp_count = 0;
                         var sp_set = 0;

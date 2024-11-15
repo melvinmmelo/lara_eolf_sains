@@ -64,8 +64,14 @@
                                 <!-- Inbound details -->
                                 <div class="flex">
                                     <p class="w-1/2 text-sm">Total</p>
-                                    <div class="text-sm font-bold">{{ formatNumber($inbound->totalAmount) }}</div>
+                                    <div class="text-sm font-bold">{{ formatNumber($inbound->grandTotal) }}</div>
                                 </div>
+
+                                <div class="flex">
+                                    <p class="w-1/2 text-sm">DC</p>
+                                    <div class="text-sm font-bold">{{ formatNumber($inbound->is_with_sf ? 1000 : 0) }}</div>
+                                </div>
+
                                 <div class="flex">
                                     <div class="w-1/2 text-sm">Seq. No.</div>
                                     <div class="text-sm font-bold">{{ $inbound->order_slip_sno }}</div>

@@ -56,6 +56,63 @@ class NewBadOrderController extends Controller
         return view('newaddbadorder', compact('customers', 'pricingLevels', 'items', 'sessionBo', 'boProducts', 'equipment', 'totalAmount', 'plId'));
     }
 
+    public function edit($badOrderId = null)
+    {
+
+        $badOrder = NewBadOrder::find($badOrderId);
+
+        if($badOrder->inbound_id !== null){
+            return redirect()->route('newbo.index')->withErrors(['error' => 'Bad order has been added to inbound.']);
+        }
+
+        $pricingLevels = pricelevels::branch(session("branch_code"))->where('pl_name', 'BAD PRICING')->get();
+
+        $boProducts = NewTempBadOrder::where('new_bad_order_id', $badOrderId)->get();
+
+        $totalAmount = NewTempBadOrder::where('new_bad_order_id', $badOrderId)->sum(\DB::raw('price * quantity'));
+
+        $items = ProductType::where('is_active', 1)->orderBy("sequence_no")->get();
+
+        return view('neweditbadorder', compact('badOrder', 'pricingLevels', 'items', 'boProducts', 'totalAmount'));
+    }
+
+    public function addItemToBO(Request $request)
+    {
+
+        $request->validate([
+            'new_bad_order_id' => 'required',
+            'priceLevel' => 'required',
+            'item' => 'required',
+            'price' => 'required',
+            'quantity' => 'required',
+        ]);
+
+        $newBadOrder = NewBadOrder::find($request->new_bad_order_id);
+        $newTempBadOrderSessionId = NewTempBadOrder::where('new_bad_order_id', $newBadOrder->id)->first()->session_bo_id;
+
+        $ptypeDetails = ProductType::where('code', $request->item)->first();
+
+        // check if product type is existing
+        $isExisting = NewTempBadOrder::where('session_bo_id', $newTempBadOrderSessionId)
+            ->where('ptype_code', $request->item)
+            ->exists();
+
+        if ($isExisting) {
+            return back()->withErrors(['error' => 'Product already added to bad order.']);
+        }
+
+        $newTempBadOrder = new NewTempBadOrder();
+        $newTempBadOrder->new_bad_order_id = $newBadOrder->id;
+        $newTempBadOrder->session_bo_id = $newTempBadOrderSessionId;
+        $newTempBadOrder->ptype_code = $request->item;
+        $newTempBadOrder->description = $ptypeDetails->name;
+        $newTempBadOrder->quantity = $request->quantity;
+        $newTempBadOrder->price = $request->price;
+        $newTempBadOrder->save();
+
+        return redirect()->route('newbo.edit', ["q" => $request->new_bad_order_id])->with('success', 'Product added to bad order.');
+    }
+
     public function getPricing($plId, $pCode)
     {
         $price = prices::getPricePerPriceLevelAndPCode($plId, $pCode);
@@ -84,6 +141,7 @@ class NewBadOrderController extends Controller
         $newBadOrder->branch_code = session('branch_code');
         $newBadOrder->customer_id = $equipStore->customer_id;
         $newBadOrder->degic_code = $equipStore->equipment->code;
+        $newBadOrder->session_bo_id = session('session_bo_id');
         $newBadOrder->bo_percentage = $request->bo_percentage;
         $newBadOrder->remarks = $request->remarks;
         $newBadOrder->save();
@@ -139,6 +197,14 @@ class NewBadOrderController extends Controller
         return response()->json(['success' => $res]);
     }
 
+    public function deleteBOItem($id)
+    {
+        $res = NewTempBadOrder::find($id)->delete();
+
+        return response()->json(['success' => $res]);
+
+    }
+
     public function destroy(Request $request)
     {
         $request->validate([
@@ -165,5 +231,23 @@ class NewBadOrderController extends Controller
     {
         $badOrders = NewBadOrder::with('customer')->branch(session("branch_code"))->where("is_active", 0)->get();
         return view('badorder.deducted', ['badOrders' => $badOrders]);
+    }
+
+    public function updateBOItem(Request $request)
+    {
+
+        $request->validate([
+            'item_id' => 'required',
+            'quantity' => 'required',
+        ]);
+
+        NewTempBadOrder::find($request->item_id)->update(['quantity' => $request->quantity]);
+
+        return redirect()->back()->with('success', 'Item updated successfully.');
+    }
+
+    public function saveBO(Request $request)
+    {
+
     }
 }

@@ -86,11 +86,11 @@ class InboundController extends Controller
 
         $inbound = Inbound::findOrFail($request->ob_id);
 
-        $total = InboundService::getTotalOfInboundProducts($inbound->id);
+        $total = $inbound->grandTotal;
 
         $totalDelivered = $inbound->delivered_amount + $request->delivered_amount;
 
-        if ($totalDelivered == $inbound->totalAmount) {
+        if ($totalDelivered == $total) {
             $inbound->status = "Paid";
         }
 
@@ -118,13 +118,13 @@ class InboundController extends Controller
     public function deleteAInbound($pcode, $inboundId = 0)
     {
 
-        $products = NewInboundProduct::where("inbound_id", $inboundId)->where('branch_code', session('branch_code'))->get();
+        $products = NewInboundProduct::where("inbound_id", $inboundId)->where('branch_code', session('branch_code'))->whereNull('status')->get();
         if($inboundId != 0){
-            $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where("code", $pcode)->where('branch_code', session('branch_code'))->first();
+            $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where("code", $pcode)->where('branch_code', session('branch_code'))->whereNull('status')->first();
             $newInboundProduct->status = "Deleted";
             $newInboundProduct->save();
         }else{
-            $newInboundProduct = NewInboundProduct::where("inbound_id", 0)->where("code", $pcode)->where('branch_code', session('branch_code'))->delete();
+            $newInboundProduct = NewInboundProduct::where("inbound_id", 0)->where("code", $pcode)->where('branch_code', session('branch_code'))->whereNull('status')->delete();
         }
 
         $summary = [];
@@ -294,7 +294,8 @@ class InboundController extends Controller
             'order_date' => 'required|date',
         ]);
 
-        $products = NewInboundProduct::where("inbound_id", 0)->get();
+        $products = NewInboundProduct::where("inbound_id", 0)->where('branch_code', session('branch_code'))->get();
+        $orderNo = Inbound::getNextOrderNo($branchCode);
 
         $equipStore = EquipmentStore::find($request->equipment_id);
         $customer = Customers::find($request->customer_id);
@@ -314,6 +315,7 @@ class InboundController extends Controller
 
         $inbound = new Inbound();
         $inbound->user_id = auth()->user()->id;
+        $inbound->order_no = $orderNo;
         $inbound->branch_code = session('branch_code');
         $inbound->equipment_id = $equipStore->equipment->id;
         $inbound->store_id = $equipStore->store_id;
@@ -334,7 +336,10 @@ class InboundController extends Controller
 
         $bad_order = $request->bad_order === 'on' ? 1 : 0;
         $is_foc = $request->foc === 'on' ? 1 : NULL;
+        $is_with_sf = $request->with_sf === 'on' ? 1 : NULL;
+
         $inbound->is_foc = $is_foc;
+        $inbound->is_with_sf = $is_with_sf;
 
         $inbound->status = 'Completed';
         if ($is_foc == 1) {
@@ -528,6 +533,8 @@ class InboundController extends Controller
             $deliveryReceipt->save();
         }
 
+        NewInboundProduct::where('inbound_id', $inbound->id)->delete();
+
         activity('outbound')
             ->performedOn($inbound)
             ->log("Inbound {$inbound->id} deleted by " . auth()->user()->fullName);
@@ -692,15 +699,14 @@ class InboundController extends Controller
             'bad_order_id' => 'nullable',
             'bo_amount' => 'nullable',
             'is_foc' => 'nullable',
+            'with_sf' => 'nullable',
         ]);
 
         $equipStore = EquipmentStore::findOrFail($request->equipment_id);
         $inbound = Inbound::findOrFail($request->inbound_id);
 
         $products = NewInboundProduct::where('inbound_id', $request->inbound_id)->get();
-
-        // dump($oldProducts);
-        // dd($products);
+        $customer = Customers::find($request->customer_id);
 
         $inbound->fill([
             'equipment_id' => $equipStore->equipment->id,
@@ -715,6 +721,7 @@ class InboundController extends Controller
             'driver_name' => Drivers::find($request->driver_id)->name,
             'delivery_person' => Drivers::find($request->delivery_person_id)->name,
             'products' => json_encode($products->toArray()),
+            'is_with_sf' => $request->with_sf == 'on' ? 1 : NULL,
         ]);
 
         if ($request->boolean('bad_order')) {
@@ -752,6 +759,7 @@ class InboundController extends Controller
         });
 
         $inbound->products = $activeProducts;
+        $inbound->customer_name = $customer->fullName;
         $inbound->save();
 
         session()->forget(['inboundId', 'products']);
