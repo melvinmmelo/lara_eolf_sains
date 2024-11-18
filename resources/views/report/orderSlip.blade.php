@@ -29,6 +29,11 @@
 <body>
 
     @foreach ($pagesData as $pageNumber => $pageInbounds)
+    @php
+        if($pageNumber == 1) {
+            $sequence_no = 1;
+        }
+    @endphp
         <page class="text-md" size="legal" layout="landscape">
             <div class="flex mt-5 mb-2">
                 <div class="w-[5%]"></div>
@@ -74,7 +79,7 @@
 
                                 <div class="flex">
                                     <div class="w-1/2 text-sm">Seq. No.</div>
-                                    <div class="text-sm font-bold">{{ $inbound->order_slip_sno }}</div>
+                                    <div class="text-sm font-bold">{{ $sequence_no++ }}</div>
                                 </div>
 
                                 <div class="flex">

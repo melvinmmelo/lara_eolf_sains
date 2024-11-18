@@ -462,9 +462,9 @@
         document.getElementById('customer_id').value = "{{ $inbound->customer_id ?? '' }}";
         document.getElementById('customer').value = "{{ $inbound->customer->fullName ?? '' }}";
 
-        if({{ $inbound->is_with_sf }}){
+        @if($inbound->is_with_sf)
             document.getElementById('withSF').checked = true;
-        }
+        @endif
 
         // checked is_foc
         @if($inbound->is_foc)
