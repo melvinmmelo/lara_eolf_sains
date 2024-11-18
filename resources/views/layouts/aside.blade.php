@@ -259,6 +259,14 @@
                                 <p>Products Summary2</p>
                             </a>
                         </li>
+
+                        <li>
+                            <a href="{{ route('report.availableStocks') }}"
+                                class="nav-link {{ Route::currentRouteNamed('report.availableStocks')  ? 'active' : '' }}">
+                                <i class="fas fa-box nav-icon"></i>
+                                <p>Available Stocks</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

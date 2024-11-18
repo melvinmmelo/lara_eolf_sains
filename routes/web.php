@@ -65,11 +65,14 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/products-summary-v2', [ReportGeneratorController::class, 'productsSummaryv2'])->name('report.productsSummaryv2');
 
+    Route::get('/available-stocks', [ReportGeneratorController::class, 'availableStocks'])->name('report.availableStocks');
+
+
     Route::get('/loading-ticket', function () {
         return view('loading-ticket');
     });
 
-    Route::get('/generate-ticket', [TicketController::class, 'generate'])->name('generate-ticket');
+    Route::get('/generate-ticket/{print?}', [TicketController::class, 'generate'])->name('generate-ticket');
 
     Route::post('/print-ticket', [TicketController::class, 'print'])->name('print-ticket');
 
@@ -310,6 +313,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/materials-inventory/delete-withdraw', [MaterialsInventoryController::class, 'deleteOrWithdraw'])->name('materialsInventory.delete');
 
     Route::get('/materials-inventory/{id}/history', [MaterialsInventoryController::class, 'history'])->name('materialsInventory.history');
+
 });
 
 require __DIR__ . '/auth.php';

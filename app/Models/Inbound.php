@@ -60,9 +60,9 @@ class Inbound extends Model
     {
         $lastOrder = self::where('branch_code', $branchCode)
             ->orderBy('order_no', 'desc')
-            ->first();
+            ->count();
 
-        return $lastOrder ? $lastOrder->order_no + 1 : 1;
+        return $lastOrder ? $lastOrder + 1 : 1;
     }
 
     public function priceLevel(): BelongsTo

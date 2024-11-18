@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inbound;
+use App\Models\ItemMasterData;
 use App\Models\OrderSlip;
 use App\Services\InboundService;
 use Illuminate\Http\Request;
@@ -84,5 +85,28 @@ class ReportGeneratorController extends Controller
         } else {
             return 3;
         }
+    }
+
+
+    public function availableStocks()
+    {
+        // Get products with their types
+        $products = ItemMasterData::branch(session('branch_code'))
+        ->with('product.productType') // Eager load relationships
+        ->select('id', 'product_code', 'reserved', 'stocks')
+        ->get()
+            ->map(function ($product) {
+                $product->available_stocks = $product->stocks - $product->reserved;
+                return $product;
+            })
+            ->groupBy(function ($product) {
+                return $product->product->productType->name;
+            })
+            ->sortBy(function ($products, $key) {
+                // Sort by product type sequence_no
+                return $products->first()->product->productType->sequence_no;
+            });
+
+        return view('available-stocks', compact('products'));
     }
 }

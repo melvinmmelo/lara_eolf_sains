@@ -24,14 +24,13 @@ class TicketController extends Controller
         return view('ticket.show', compact('inbounds', 'grp'));
     }
 
-    public function generate()
+    public function generate($print = false)
     {
 
-        $ticketdetails = "";
+
+        $ticketdetails = Inbound::where('grp_print_ticket_no', session('ticketNumber'))->get();
         $sorted_product_codes = DB::table('product_types')->orderBy('sequence_no', 'asc')->select('code','spoon_pcs_per_bag')->get();
         $inbounds = Inbound::branch(session('branch_code'))->forLoading()->WithProducts()->activeOrders()->get();
-
-        $print = false;
 
         return view('ticket.generate', compact('inbounds','ticketdetails','sorted_product_codes', 'print'));
 
@@ -74,7 +73,7 @@ class TicketController extends Controller
 
     public function reprint(Request $request)
     {
-        session()->put('ticketnum', $request->grp);
-        return redirect()->route('generate-ticket');
+        session()->put('ticketNumber', $request->grp);
+        return redirect()->route('generate-ticket', ['print' => true]);
     }
 }
