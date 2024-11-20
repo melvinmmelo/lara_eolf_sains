@@ -28,17 +28,22 @@
                             foreach ($products as $productType => $items) {
                                 $stockText .= strtoupper($productType) . "\n";
                                 foreach ($items as $product) {
-                                    $stockText .= $product->product_code . ' - ' . $product->available_stocks . "\n";
+                                    if ($product->available_stocks > 0) {
+                                        $stockText .=
+                                            $product->product_code .
+                                            ' - ' .
+                                            $product->variant_name .
+                                            ' - ' .
+                                            $product->available_stocks .
+                                            "\n";
+                                    }
                                 }
                                 $stockText .= "\n";
                             }
                         @endphp
 
                         <div class="form-group">
-                            <textarea class="form-control"
-                                      rows="20"
-                                      id="stocksList"
-                                      readonly>{{ $stockText }}</textarea>
+                            <textarea class="form-control" rows="20" id="stocksList" readonly>{{ $stockText }}</textarea>
                         </div>
                         <button class="btn btn-primary" onclick="copyFullText()">
                             Copy All
@@ -51,19 +56,19 @@
 @endsection
 
 @section('custom_js')
-<script>
-    function copyFullText() {
-        const textarea = document.getElementById('stocksList');
-        textarea.select();
-        document.execCommand('copy');
+    <script>
+        function copyFullText() {
+            const textarea = document.getElementById('stocksList');
+            textarea.select();
+            document.execCommand('copy');
 
-        // Show feedback
-        const button = event.target;
-        const originalText = button.textContent;
-        button.textContent = 'Copied!';
-        setTimeout(() => {
-            button.textContent = originalText;
-        }, 1000);
-    }
-</script>
+            // Show feedback
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            setTimeout(() => {
+                button.textContent = originalText;
+            }, 1000);
+        }
+    </script>
 @endsection

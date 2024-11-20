@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Inbound;
 use App\Models\ItemMasterData;
 use App\Models\OrderSlip;
+use App\Models\ProductVariant;
 use App\Services\InboundService;
 use Illuminate\Http\Request;
 
@@ -28,17 +29,16 @@ class ReportGeneratorController extends Controller
     {
         $branchCode = session('branch_code');
 
-        if($request->filled('from_date') && $request->filled('to_date')) {
+        if ($request->filled('from_date') && $request->filled('to_date')) {
             $products = InboundService::getTotalOfAllInboundProducts($branchCode, $request->from_date, $request->to_date); // ! you can add 2nd parameter for date sample "2024-08-08"
-            $title= "From: ".$request->from_date." To: ".$request->to_date;
+            $title = "From: " . $request->from_date . " To: " . $request->to_date;
         } else {
             $products = InboundService::getTotalOfAllInboundProducts($branchCode); // ! you can add 2nd parameter for date sample "2024-08-08"
-            $title= "Today";
+            $title = "Today";
         }
 
 
         return view('report.productsSummary', compact('products', 'title'));
-
     }
     public function orderSlip($code)
     {
@@ -90,20 +90,37 @@ class ReportGeneratorController extends Controller
 
     public function availableStocks()
     {
-        // Get products with their types
+        // First, get all unique variant codes
+        $variantCodes = ItemMasterData::branch(session('branch_code'))
+            ->get()
+            ->pluck('product_code')
+            ->map(function ($code) {
+                $parts = explode('_', $code);
+                return end($parts); // Get the last part after underscore
+            })
+            ->unique();
+
+        // Preload all needed variants
+        $variants = ProductVariant::whereIn('code', $variantCodes)
+            ->get()
+            ->keyBy('code');
+
         $products = ItemMasterData::branch(session('branch_code'))
-        ->with('product.productType') // Eager load relationships
-        ->select('id', 'product_code', 'reserved', 'stocks')
-        ->get()
-            ->map(function ($product) {
+            ->with(['product.productType'])
+            ->select('id', 'product_code', 'product_description', 'reserved', 'stocks')
+            ->get()
+            ->map(function ($product) use ($variants) {
+                $parts = explode('_', $product->product_code);
+                $variantCode = end($parts); // Get the last part after underscore
+
                 $product->available_stocks = $product->stocks - $product->reserved;
+                $product->variant_name = $variants->get($variantCode)?->name ?? 'N/A';
                 return $product;
             })
             ->groupBy(function ($product) {
                 return $product->product->productType->name;
             })
             ->sortBy(function ($products, $key) {
-                // Sort by product type sequence_no
                 return $products->first()->product->productType->sequence_no;
             });
 
