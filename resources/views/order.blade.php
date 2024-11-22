@@ -71,9 +71,14 @@
                             @endphp
                             @foreach ($inbounds as $inbound)
                                 @php
+                                    if($inbound->is_with_sf){
+                                        $grandTotal_amount = $inbound->grandTotal - 1000;
+                                    }else{
+                                        $grandTotal_amount = $inbound->grandTotal;
+                                    }
                                     $grandBOTotal[] = $inbound->bo_amount;
                                     $grandDiscount[] = $inbound->discount;
-                                    $grandTotal[] = $inbound->grandTotal;
+                                    $grandTotal[] = $grandTotal_amount;
                                     $grandTotalBDue[] = $inbound->totalBalance;
                                 @endphp
 
@@ -82,7 +87,7 @@
                                     <td>{{ $inbound->code }}</td>
                                     <td>{{ $inbound->degic_no }}</td>
                                     <td>{{ $inbound->customer->fullName }}</td>
-                                    <td>{{ formatNumber($inbound->grandTotal) }}
+                                    <td>{{ formatNumber($grandTotal_amount) }}
                                          @if ($inbound->is_with_sf)
                                                 (<span class="label label-warning">+1000</span>)
                                             @endif

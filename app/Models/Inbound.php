@@ -178,7 +178,7 @@ class Inbound extends Model
         }
 
         $this->grandTotal = $total + ($this->is_with_sf ? 1000 : 0);
-        return $this->netAmount = ( $this->grandTotal +  ($this->is_with_sf ? 1000 : 0) ) - ($this->bo_amount + $this->discount );
+        return $this->netAmount = ( $this->grandTotal ) - ($this->bo_amount + $this->discount );
     }
 
     public function getGrandTotalAttribute() // always call this first before getting the netAmount

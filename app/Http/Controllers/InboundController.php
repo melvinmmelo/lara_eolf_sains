@@ -90,9 +90,11 @@ class InboundController extends Controller
 
         $totalDelivered = $inbound->delivered_amount + $request->delivered_amount;
 
-        if ($totalDelivered == $total) {
+        if ($inbound->totalBalance == $request->delivered_amount) {
             $inbound->status = "Paid";
         }
+
+        // dd("$inbound->totalBalance, $request->delivered_amount, $inbound->status");
 
         if ($totalDelivered > $total) {
             return redirect()->route('order.index')->withErrors('Delivered amount is greater than the total amount.');

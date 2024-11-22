@@ -89,11 +89,13 @@ class DeliveryReceiptController extends Controller
             $query->whereBetween('date', [$fromDate, $toDate])
                 ->whereNotNull('printed_date')
                 ->whereHas('inbound', function ($query) {
-                    $query->where('branch_code', session('branch_code'));
+                    $query->where('branch_code', session('branch_code'))
+                        ->whereNotIn('status', ['Cancelled', 'Deleted']);
                 });
         } else {
             $query->whereNotNull('printed_date')->whereHas('inbound', function ($query) {
-                $query->where('branch_code', session('branch_code'));
+                $query->where('branch_code', session('branch_code'))
+                    ->whereNotIn('status', ['Cancelled', 'Deleted']);
             });
         }
 
