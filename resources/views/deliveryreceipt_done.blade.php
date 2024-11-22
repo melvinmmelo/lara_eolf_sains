@@ -69,13 +69,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @php $grandTotal = []; $grandTotalDiscount = []; $grandTotalAmtPaid = []; $grandTotalBalance = []; @endphp
+                        @php
+                            $grandTotal = [];
+                            $grandTotalDiscount = [];
+                            $grandTotalAmtPaid = [];
+                            $grandTotalBalance = [];
+                        @endphp
                         @foreach ($deliveryReceipts as $receipt)
-
-                            @php $grandTotal[] = $receipt->inbound->grandTotal;
-                                $grandTotalDiscount[] = $receipt->inbound->discount;
-                                $grandTotalAmtPaid[] = $receipt->inbound->delivered_amount;
-                                $grandTotalBalance[] = $receipt->inbound->totalBalance;
+                            @php
+                                    $grandTotal[] = $receipt->inbound->grandTotal;
+                                    $grandTotalDiscount[] = $receipt->inbound->discount;
+                                    $grandTotalAmtPaid[] = $receipt->inbound->delivered_amount;
+                                    $grandTotalBalance[] = $receipt->inbound->totalBalance;
                             @endphp
                             <tr>
                                 <td>{{ $receipt->fCreatedAt }}</td>
@@ -91,6 +96,11 @@
                                 <td>
                                     <a href="{{ route('drprint', ['id' => $receipt->id]) }}"><button type="button"
                                             class="btn btn-primary">Print</button></a>
+
+                                    @if (checkSuperAdmin(auth()->user()->id))
+                                        <a href="#" onclick="setToUpdateDR('{{ $receipt->id  }}')"><button
+                                                type="button" class="btn btn-success">Edit</button></a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -104,8 +114,8 @@
                             <th>Total:</th>
                             <th>@php echo formatNumber(array_sum($grandTotalDiscount)) @endphp</th>
                             <th>@php echo formatNumber(array_sum($grandTotal)) @endphp</th>
-                            <th>{{ formatNumber(array_sum($grandTotalAmtPaid))  }}</th>
-                            <th>{{ formatNumber(array_sum($grandTotalBalance))  }}</th>
+                            <th>{{ formatNumber(array_sum($grandTotalAmtPaid)) }}</th>
+                            <th>{{ formatNumber(array_sum($grandTotalBalance)) }}</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -126,6 +136,38 @@
         </div>
     </section>
     <!-- /.content -->
+
+    <div class="modal fade" id="modal-edit-dr">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Delivery Receipt</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <form action="{{ route('deliveryreceipt.update') }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <input type="text" class="form-control" name="dr_id" id="dr_id" required readonly>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label class="form-label" for="discount">Discount</label>
+                                    <input type="number" class="form-control" name="discount" value="0" required>
+                                    {{-- Add check if fixed amount --}}
+                                    <input type="checkbox" name="is_fixed_amount" value="1"> Fixed Amount
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('custom_js')
@@ -159,6 +201,10 @@
 
 
             });
+        }
+
+        function setToUpdateDR(id) {
+            document.getElementBy("dr_id").value = id;
         }
     </script>
 @endsection

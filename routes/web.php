@@ -93,6 +93,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/deliveryreceipt', [DeliveryReceiptController::class, 'index'])->name('deliveryreceipt.index');
 
+    Route::patch('edit-dr', [DeliveryReceiptController::class, 'update'])->name('deliveryreceipt.update');
+
     Route::get('/deliveryreceipt-done', [DeliveryReceiptController::class, 'indexDone'])->name('deliveryreceipt.indexDone');
 
     Route::get('/updateDRPrintedDate/{id}', [DeliveryReceiptController::class, 'updateDRPrintedDate'])->name('deliveryreceipt.updateDRPrintedDate');

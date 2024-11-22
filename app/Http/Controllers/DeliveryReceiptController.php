@@ -104,6 +104,8 @@ class DeliveryReceiptController extends Controller
 
         return view('deliveryreceipt_done', compact('deliveryReceipts', 'outbounds'));
     }
+
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -180,6 +182,11 @@ class DeliveryReceiptController extends Controller
             ->log("DR $deliveryReceipt->id created by $deliveryReceipt->generated_by.");
 
         return redirect()->route('drprint', ['id' => $deliveryReceipt->id]);
+    }
+
+    public function update(){
+
+
     }
 
     public function show($id)
