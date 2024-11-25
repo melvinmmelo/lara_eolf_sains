@@ -184,9 +184,26 @@ class DeliveryReceiptController extends Controller
         return redirect()->route('drprint', ['id' => $deliveryReceipt->id]);
     }
 
-    public function update(){
+    public function update(Request $request){
 
+        $request->validate([
+            'dr_id' => 'required',
+            'discount' => 'required|numeric',
+        ]);
 
+        $deliveryReceipt = DeliveryReceipt::findOrFail($request->dr_id);
+
+        $inbound = Inbound::findOrFail($deliveryReceipt->inbound_id);
+
+        $discount_type = $request->discount . '%';
+        $totalDiscount = $inbound->grandTotal * ($request->discount / 100);
+
+        $inbound->discount_details = $discount_type;
+        $inbound->discount = $totalDiscount;
+
+        $inbound->save();
+
+        return redirect()->route('deliveryreceipt.indexDone');
     }
 
     public function show($id)

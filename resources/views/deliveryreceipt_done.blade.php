@@ -97,9 +97,9 @@
                                     <a href="{{ route('drprint', ['id' => $receipt->id]) }}"><button type="button"
                                             class="btn btn-primary">Print</button></a>
 
-                                    @if (checkSuperAdmin(auth()->user()->id))
+                                    @if (Auth::user()->isSuperAdmin())
                                         <a href="#" onclick="setToUpdateDR('{{ $receipt->id  }}')"><button
-                                                type="button" class="btn btn-success">Edit</button></a>
+                                                type="button" class="btn btn-success"><i class="fas fa-edit"></i></button></a>
                                     @endif
                                 </td>
                             </tr>
@@ -156,12 +156,17 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <label class="form-label" for="discount">Discount</label>
+                                    <label class="form-label" for="discount">Discount (%)</label>
                                     <input type="number" class="form-control" name="discount" value="0" required>
-                                    {{-- Add check if fixed amount --}}
-                                    <input type="checkbox" name="is_fixed_amount" value="1"> Fixed Amount
+                                    {{-- Add check if fixed amount
+                                    <input type="checkbox" name="is_fixed_amount" value="1"> Fixed Amount--}}
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
                         </div>
                     </form>
                 </div>
@@ -204,7 +209,8 @@
         }
 
         function setToUpdateDR(id) {
-            document.getElementBy("dr_id").value = id;
+            document.getElementById("dr_id").value = id;
+            $('#modal-edit-dr').modal('show');
         }
     </script>
 @endsection

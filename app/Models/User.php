@@ -54,4 +54,9 @@ class User extends Authenticatable
     {
         return $this->first_name . ' ' . $this->last_name;
     }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->id === 1 || $this->id === 2 || $this->id === 3;
+    }
 }

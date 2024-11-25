@@ -55,14 +55,3 @@ function getSummaryOfProducts($products)
 
     return $summary;
 }
-
-function checkSuperAdmin($userId){
-    $superAdmins = [1,2,3]; // melvs, nalen and jofren id in users
-
-    if(in_array($userId, $superAdmins)){
-        return true;
-    }
-
-    return false;
-
-}
