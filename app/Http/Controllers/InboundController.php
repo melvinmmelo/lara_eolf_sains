@@ -344,9 +344,11 @@ class InboundController extends Controller
         $inbound->is_with_sf = $is_with_sf;
 
         $inbound->status = 'Completed';
+
         if ($is_foc == 1) {
             $inbound->delivered_amount = 0;
             $inbound->remarks = 'Free of charge';
+            $inbound->status = 'Paid';
         }
 
         if ($bad_order == 1) {
@@ -357,6 +359,10 @@ class InboundController extends Controller
 
             $inbound->bad_order_id = $request->bad_order_id;
             $inbound->bo_amount = $request->bo_amount;
+
+            if($inbound->bo_amount == $inbound->grandTotal){
+                $inbound->status = 'Paid';
+            }
         }
 
         $inbound->order_date = $request->order_date;
