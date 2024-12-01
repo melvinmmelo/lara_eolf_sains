@@ -442,8 +442,8 @@ class InboundController extends Controller
         $currentProductQty = $currentProduct['quantity'];
 
         $item = ItemMasterData::branch(session('branch_code'))->productCode($code)->first();
-        if ($action == 'add' && ($currentProductQty + 1) > $item->availableStocks) {
-            return response()->json(['error' => 'Insufficient stocks.']);
+        if ($action == 'add' && $item->availableStocks === 0) {
+            return response()->json(['error' => 'Insufficient stocks.', 'current' => $currentProductQty, 'available' => $item->availableStocks]);
         }
 
         // if ($action == 'add') {

@@ -46,6 +46,22 @@
             max-height: 250px;
             overflow: auto;
         }
+
+        .summary-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .summary-section h5 {
+            margin-bottom: 15px;
+            color: #495057;
+        }
+
+        .summary-section .btn {
+            margin: 3px;
+            min-width: 100px;
+        }
     </style>
 @endsection
 @section('contents')
@@ -142,13 +158,14 @@
                             </form>
                         @endif
 
-                        @if($deliveryPurchaseReceipt->status == 'Completed')
+                        @if ($deliveryPurchaseReceipt->status == 'Completed')
                             <p>Summary</p>
-                        <div class="d-flex flex-row mb-2">
-                            @foreach($productsSumm as $productSummary)
-                                <div class="btn btn-default mr-2">{{ $productSummary['code'] . ': ' . $productSummary['quantity'] }}</div>
-                            @endforeach
-                        </div>
+                            <div class="d-flex flex-row mb-2">
+                                @foreach ($productsSumm as $productSummary)
+                                    <div class="btn btn-default mr-2">
+                                        {{ $productSummary['code'] . ': ' . $productSummary['quantity'] }}</div>
+                                @endforeach
+                            </div>
                         @endif
                         <div class="row">
                             <div class="col-sm-12">
@@ -213,14 +230,13 @@
                                                     </tr>
                                                 @endforeach
                                             @else
-
                                             @endif
                                         </tbody>
                                         <tfoot class="desktop-view">
                                             <tr>
                                                 <td colspan="2"></td>
                                                 <td>Total:</td>
-                                                <td>{{ isset($sum) ? formatNumber($sum) : 0  }}</td>
+                                                <td>{{ isset($sum) ? formatNumber($sum) : 0 }}</td>
                                                 <td></td>
                                                 <td></td>
                                             </tr>
@@ -231,10 +247,22 @@
                         </div>
                         <!-- /.card-body -->
                         @if ($deliveryPurchaseReceipt->status == 'Encoding')
-                            <div class="card-footer">
+                            <div class="card-footer mt-2">
+                                <div class="summary-section mb-3">
+                                    <h5 class="font-weight-bold">Summary</h5>
+                                    <div class="d-flex flex-row flex-wrap">
+                                        @foreach ($productsSumm as $productSummary)
+                                            <div class="btn btn-default mr-2 mb-2">
+                                                {{ $productSummary['code'] . ': ' . $productSummary['quantity'] }}
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
                                 <a href="{{ route('dpr.save', ['id' => $deliveryPurchaseReceipt->id]) }}"
-                                    onclick="return saveDPR();"><button type="button"
-                                        class="btn btn-success">Save</button></a>
+                                    onclick="return saveDPR();">
+                                    <button type="button" class="btn btn-success">Save</button>
+                                </a>
                             </div>
                         @endif
                         <!-- /.card-footer-->
@@ -284,7 +312,12 @@
 @section('custom_js')
     <script>
         function saveDPR() {
-            return confirm('Are you sure you want to save this DR?');
+            let summaryText = '';
+            document.querySelectorAll('.summary-section .btn').forEach(btn => {
+                summaryText += '\n' + btn.textContent.trim();
+            });
+
+            return confirm('Are you sure you want to save this DR with the following quantities?' + summaryText);
         }
 
         function confirmDeleteProduct() {
@@ -292,12 +325,9 @@
         }
 
         function holdProduct(dpr_id, product_code) {
-
             $('#hold_dpr_id').val(dpr_id);
             $('#hold_pcode').val(product_code);
-
             $('#modal-hold-product').modal('show');
-
         }
     </script>
 @endsection
