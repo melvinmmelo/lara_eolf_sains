@@ -154,6 +154,11 @@ class Inbound extends Model
         return $query->where('status', 'Completed');
     }
 
+    public function scopeNotDRYet($query)
+    {
+        return $query->whereNull('delivery_receipt_id');
+    }
+
     public function scopeFreeOrders($query)
     {
         return $query->where('is_foc', 1);
