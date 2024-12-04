@@ -16,4 +16,4 @@ use Illuminate\Support\Facades\Schedule;
 
 
 
-  Schedule::command('db:backup')->daily()->at('09:46');
+  Schedule::command('db:backup')->daily()->at('09:00');
