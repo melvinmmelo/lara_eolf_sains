@@ -79,7 +79,7 @@ class DeliveryReceiptController extends Controller
 
     public function indexDone(Request $request)
     {
-        $outbounds = Inbound::branch(session('branch_code'))->whereNotIn('status', ['Deleted', 'Cancelled', 'Wrong entry'])->withProducts()->get();
+        $outbounds = Inbound::branch(session('branch_code'))->withProducts()->get();
 
         $query = DeliveryReceipt::query();
 
@@ -89,13 +89,11 @@ class DeliveryReceiptController extends Controller
             $query->whereBetween('date', [$fromDate, $toDate])
                 ->whereNotNull('printed_date')
                 ->whereHas('inbound', function ($query) {
-                    $query->where('branch_code', session('branch_code'))
-                        ->whereNotIn('status', ['Cancelled', 'Deleted']);
+                    $query->where('branch_code', session('branch_code'));
                 });
         } else {
             $query->whereNotNull('printed_date')->whereHas('inbound', function ($query) {
-                $query->where('branch_code', session('branch_code'))
-                    ->whereNotIn('status', ['Cancelled', 'Deleted']);
+                $query->where('branch_code', session('branch_code'));
             });
         }
 

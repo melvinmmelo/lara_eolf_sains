@@ -27,131 +27,112 @@
         @include('layouts.errors')
 
 
-        <!-- Default box -->
-        <div class="card">
-            <form action="{{ route('materialsInventory.delete') }}" method="POST">
-                @csrf
 
-                <div class="card-body table-responsive">
+        <form id="withdrawForm" action="{{ route('materialsInventory.delete') }}" method="POST">
+            @csrf
 
-                    <div class="pb-2">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-inventory">
-                            Add New
-                        </button>
+            <div class="row">
+                <!-- Default box -->
 
-                        <button type="submit" class="btn btn-default" name="submit_form" value="delete" onclick="return askToDelete()">
-                            Delete
-                        </button>
+                <div class="col-lg-8">
+                    <div class="card">
 
-                        <button type="button" class="btn btn-default" value="withdraw" data-target="#modal-withdraw" data-toggle="modal">
-                            Withdraw
-                        </button>
-                    </div>
-                    <table id="example1" class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Quantity</th>
-                                <th>Unit</th>
-                                <th>Unit Price</th>
-                                <th>Total Amount</th>
-                                <th>Remarks</th>
-                                <th>Date</th>
-                                <th>Modified By</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                        <div class="card-body">
+                            <div class="pb-2">
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#modal-inventory">
+                                    Add New
+                                </button>
 
-                            @foreach ($materials as $material)
-                            @php
-                                $totalAmount = $material->quantity * $material->amount;
-                            @endphp
-                                <tr>
-                                    <td>
-                                        <input class="checkbox" type="checkbox" name="items[]" id="items"
-                                            value="{{ $material->id }}">
-                                    </td>
-                                    <td>{{ $material->id }}</td>
-                                    <td>{{ $material->name }}</td>
-                                    <td>{{ $material->unit }}</td>
-                                    <td>{{ $material->quantity }}</td>
-                                    <td>{{ formatNumber($material->amount) }}</td>
-                                    <td>{{ formatNumber($totalAmount) }}</td>
-                                    <td>{{ $material->remarks }}</td>
-                                    <td>{{ $material->created_at }}</td>
-                                    <td>{{ $material->modified_by }}</td>
-                                    <td>
-                                        <a href="#" id="updateInventoryLink">Update</a> | <a
-                                            href="{{ route('materialsInventory.history', ['id' => $material->id]) }}">History</a>
-                                    </td>
-                                </tr>
-                            @endforeach
-
-                        </tbody>
-
-                        <tfoot>
-                            <tr>
-                                <th></th>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Quantity</th>
-                                <th>Unit</th>
-                                <th>Unit Price</th>
-                                <th>Amount</th>
-                                <th>Remarks</th>
-                                <th>Date</th>
-                                <th>Modified By</th>
-                                <th></th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-inventory">
-                        Add New
-                    </button>
-                </div>
-                <!-- /.card-footer-->
-
-                <div class="modal fade" id="modal-withdraw">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title">Withdraw Materials</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
+                                <button type="submit" class="btn btn-default" name="submit_form" value="delete"
+                                    onclick="return askToDelete()">
+                                    Delete
                                 </button>
                             </div>
-                            <div class="modal-body">
+                            <div class="table-responsive">
+                                <table id="example1" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Name</th>
+                                            <th>Quantity</th>
+                                            <th>Unit</th>
+                                            <th>Unit Price</th>
+                                            <th>Total Amount</th>
+                                            <th>Remarks</th>
+                                            <th>Date</th>
+                                            <th>Modified By</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
 
-                                <div class="form-group">
-                                    <label class="form-label" for="requested_by">Requested by</label>
-                                    <input type="text" class="form-control" name="requested_by" id="requested_by" required>
-                                </div>
+                                        @foreach ($materials as $material)
+                                            @php
+                                                $totalAmount = $material->quantity * $material->amount;
+                                            @endphp
+                                            <tr>
+                                                <td>
+                                                    <input class="checkbox" type="checkbox" name="items[]" id="items"
+                                                        value="{{ $material->id }}">
+                                                </td>
+                                                <td>{{ $material->name }}</td>
+                                                <td>{{ $material->unit }}</td>
+                                                <td>{{ $material->quantity }}</td>
+                                                <td>{{ formatNumber($material->amount) }}</td>
+                                                <td>{{ formatNumber($totalAmount) }}</td>
+                                                <td>{{ $material->remarks }}</td>
+                                                <td>{{ $material->created_at }}</td>
+                                                <td>{{ $material->modified_by }}</td>
+                                                <td>
+                                                    <a href="#" id="updateInventoryLink">Update</a> | <a
+                                                        href="{{ route('materialsInventory.history', ['id' => $material->id]) }}">History</a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#modal-inventory">
+                                Add New
+                            </button>
+                        </div>
+                        <!-- /.card-footer-->
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label" for="requested_by">Requested by</label>
+                                <input type="text" class="form-control" name="requested_by" id="requested_by" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="issued_by">Issued by</label>
+                                <input type="text" class="form-control" name="issued_by" id="issued_by"
+                                    value=" {{ auth()->user()->fullName }}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="withdrawal_date">Date</label>
+                                <input type="date" class="form-control" name="withdrawal_date" id="withdrawal_date"
+                                    value="{{ date('Y-m-d') }}" required>
+                            </div>
 
-                                <div class="form-group">
-                                    <label class="form-label" for="issued_by">Issued by</label>
-                                    <input type="text" class="form-control" name="issued_by" id="issued_by" value=" {{ auth()->user()->fullName }}">
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="form-label" for="withdrawal_date">Date</label>
-                                    <input type="date" class="form-control" name="withdrawal_date" id="withdrawal_date" value="{{ date('Y-m-d') }}" required>
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-success" name="submit_form" value="withdraw">Save changes</button>
-                                </div>
-
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-primary" name="submit_form" id="submitButton"
+                                    onclick="submitForm();"><i class="fas fa-check"></i> Withdraw</button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
+        </form>
+
+        </div>
         </div>
         <!-- /.card -->
         <div class="modal fade" id="modal-inventory">
@@ -338,6 +319,27 @@
 
         function askToDelete() {
             return confirm('Are you sure you want to delete this record(s)?');
+        }
+
+        function submitForm() {
+            // clear data table search input
+            $('#example1').DataTable().search('').draw();
+
+
+
+            if (confirm('Are you sure you want to withdraw this record(s)?')) {
+                // add delay before submitting the form
+                // disable submit button
+                $('#submitButton').prop('disabled', true);
+
+                $('#submitButton').text('Processing...');
+
+                setTimeout(function() {
+                    $('#withdrawForm').submit();
+                }, 1000);
+            }
+
+            return false;
         }
     </script>
 @endsection

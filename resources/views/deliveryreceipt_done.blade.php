@@ -28,7 +28,7 @@
 
             <div class="card-body">
 
-                <form action="{{ route('deliveryreceipt.index') }}" method="GET">
+                <form action="{{ route('deliveryreceipt.indexDone') }}" method="GET">
                     @csrf
                     <div class="form-group">
                         <div class="row">
@@ -65,6 +65,7 @@
                             <th>Amount Paid</th>
                             <th>Balance</th>
                             <th>Generate By</th>
+                            <th>Status</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -94,6 +95,15 @@
                                 <td>{{ formatNumber($receipt->inbound->totalBalance) }}</td>
                                 <td>{{ $receipt->generated_by }}</td>
                                 <td>
+                                @if ($receipt->inbound->status === 'Deleted' or $receipt->inbound->status === 'Cancelled')
+                                        <span class="badge badge-danger">{{ $receipt->inbound->status }}</span>
+                                    @elseif ($receipt->inbound->status === 'Paid')
+                                        <span class="badge badge-primary">{{ $receipt->inbound->status }}</span>
+                                    @else
+                                        <span class="badge badge-success">{{ $receipt->inbound->status }}</span>
+                                    @endif
+                                </td>
+                                <td>
                                     <a href="{{ route('drprint', ['id' => $receipt->id]) }}"><button type="button"
                                             class="btn btn-primary">Print</button></a>
 
@@ -118,20 +128,12 @@
                             <th>{{ formatNumber(array_sum($grandTotalBalance)) }}</th>
                             <th></th>
                             <th></th>
+                            <th></th>
                         </tr>
                     </tfoot>
                 </table>
 
             </div>
-            <!-- /.card-body -->
-            <div class="card-footer">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-branch">
-                    Add New
-                </button>
-
-                {{-- <button type="button" class="btn btn-success"><i class="fas fa-print"></i>&nbsp;Delivery Receipt</button> --}}
-            </div>
-            <!-- /.card-footer-->
         </div>
         </div>
     </section>

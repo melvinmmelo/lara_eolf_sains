@@ -71,6 +71,7 @@
                             <th>Balance Due</th>
                             <th>Amount Paid</th>
                             <th>Generate By</th>
+                            <th>Status</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -102,6 +103,15 @@
                                 <td>{{ formatNumber($receipt->inbound->totalBalance) }}</td>
                                 <td>{{ formatNumber($receipt->inbound->delivered_amount) }}</td>
                                 <td>{{ $receipt->generated_by }}</td>
+                                <td>
+                                    @if ($receipt->inbound->status === 'Deleted' or $receipt->inbound->status === 'Cancelled')
+                                        <span class="badge badge-danger">{{ $receipt->inbound->status }}</span>
+                                    @elseif ($receipt->inbound->status === 'Paid')
+                                        <span class="badge badge-primary">{{ $receipt->inbound->status }}</span>
+                                    @else
+                                        <span class="badge badge-success">{{ $receipt->inbound->status }}</span>
+                                    @endif
+                                </td>
                                 <td>
 
                                     <a href="{{ route('order.view', ['inboundId' => $receipt->inbound->id]) }}"
@@ -141,6 +151,7 @@
                             <th>Balance Due</th>
                             <th>Amount Paid</th>
                             <th>Generate By</th>
+                            <th>Status</th>
                             <th></th>
                         </tr>
                         <tr>
@@ -152,6 +163,7 @@
                             <th>{{ formatNumber(array_sum($grandBOTotal)) }}</th>
                             <th>{{ formatNumber(array_sum($grandTotalAmtDue)) }}</th>
                             <th>{{ formatNumber(array_sum($grandTotalAmtPaid)) }}</th>
+                            <th></th>
                             <th></th>
                             <th></th>
                         </tr>

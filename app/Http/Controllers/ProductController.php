@@ -57,7 +57,7 @@ class ProductController extends Controller
         $Product->product_variant_code = $request->product_variant_code;
         $Product->save();
 
-        return redirect()->back()->with('sucess', 'Data saved!');
+        return redirect()->back()->with('success', 'Data saved!');
     }
 
     public function toggleStatus(int $id)
@@ -66,7 +66,7 @@ class ProductController extends Controller
         $Product->is_active = !$Product->is_active;
         $Product->save();
 
-        return redirect()->back()->with('sucess', 'Data saved!');
+        return redirect()->back()->with('success', 'Data saved!');
     }
 
     /**
@@ -103,7 +103,7 @@ class ProductController extends Controller
         $Product->product_variant_code = $request->product_variant_code;
         $Product->save();
 
-        return redirect()->back()->with('sucess', 'Data saved!');
+        return redirect()->back()->with('success', 'Data saved!');
 
     }
 

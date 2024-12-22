@@ -870,4 +870,28 @@ class InboundController extends Controller
         $inbounds = Inbound::with('driver', 'vehicle')->branch(session('branch_code'))->paidOrders()->get();
         return view('paid', compact('inbounds'));
     }
+
+    public function updateStatus(Request $request)
+    {
+        if (!auth()->user()->hasRole('admin')) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
+
+        $request->validate([
+            'order_ids' => 'required|array',
+            'order_ids.*' => 'exists:inbounds,id',
+            'new_status' => 'required|in:Paid,Free'
+        ]);
+
+        foreach ($request->order_ids as $orderId) {
+            $order = Inbound::find($orderId);
+            $order->status = $request->new_status;
+            $order->save();
+        }
+
+        activity('order-status')
+            ->log("Orders status updated by " . auth()->user()->fullName);
+
+        return redirect()->back()->with('success', 'Orders status updated successfully.');
+    }
 }

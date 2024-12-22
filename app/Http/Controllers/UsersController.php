@@ -8,6 +8,21 @@ use Spatie\Permission\Models\Role as ModelsRole;
 
 class UsersController extends Controller
 {
+
+    public function reset(Request $request)
+    {
+        $request->validate([
+            'ruser_id' => 'required|integer|exists:users,id',
+            'password' => 'required|string|min:8',
+        ]);
+
+        $user = User::findOrFail($request->ruser_id);
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        return redirect()->back()->with('success', 'Password reset!');
+    }
+
     public function index()
     {
         $users = User::all();

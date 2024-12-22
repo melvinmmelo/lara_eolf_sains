@@ -316,6 +316,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/materials-inventory/{id}/history', [MaterialsInventoryController::class, 'history'])->name('materialsInventory.history');
 
+    Route::post('/orders/update-status', [InboundController::class, 'updateStatus'])->name('order.updateStatus');
+
+    Route::patch('/user/reset', [UsersController::class, 'reset'])->name('user.reset');
+
 });
 
 require __DIR__ . '/auth.php';

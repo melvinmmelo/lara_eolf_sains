@@ -151,7 +151,7 @@ class Inbound extends Model
 
     public function scopeActiveOrders($query)
     {
-        return $query->where('status', 'Completed');
+        return $query->where('status', 'Completed')->whereNull('is_foc');
     }
 
     public function scopeNotDRYet($query)

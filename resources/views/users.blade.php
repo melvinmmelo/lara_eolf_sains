@@ -288,8 +288,9 @@
     {{-- Reset password user modal --}}
     <div class="modal fade" id="resetUser">
         <div class="modal-dialog">
-            <form id="resetForm" method="GET" action="">
+            <form id="resetForm" method="POST" action="{{ route('user.reset') }}">
                 @csrf
+                @method('PATCH')
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Reset User Password</h4>
@@ -299,12 +300,12 @@
                     </div>
                     <div class="modal-body">
 
-                        <input type="hidden" class="form-control" name="ruser_id" id="ruser_id" required readonly>
+                        <input type="text" class="form-control" name="ruser_id" id="ruser_id" required readonly>
 
                         <div class="form-group">
                             <div class="row mb-2">
                                 <div class="col-sm-12">
-                                    <label class="form-label" for="password">Confirm Password</label>
+                                    <label class="form-label" for="password">New Password</label>
                                     <input type="text" name="password" class="form-control"
                                         value="Eolf@2024">
                                 </div>
@@ -340,7 +341,7 @@
         }
 
         function setUserToReset(uid) {
-            document.getElementById("resetForm").action = "/usereset/" + uid;
+            // document.getElementById("resetForm").action = "/usereset/" + uid;
             document.getElementById("ruser_id").value = uid;
         }
 

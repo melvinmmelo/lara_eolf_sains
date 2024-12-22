@@ -94,10 +94,9 @@ class MaterialsInventoryController extends Controller
 
     public function deleteOrWithdraw(Request $request)
     {
-
         $request->validate([
             'items' => 'required|array',
-            'submit_form' => 'required'
+            'submit_form' => 'nullable'
         ]);
 
         $ids = request('items');
