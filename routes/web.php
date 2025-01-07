@@ -142,6 +142,8 @@ Route::middleware('auth')->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
+    Route::get('/problematic-orders', [InboundController::class, 'problematicOrders'])->name('orders.problematic');
+
     Route::get('/inventory-items', function () {
         return view('inventory-items');
     });

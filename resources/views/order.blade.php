@@ -46,6 +46,10 @@
                                 Paid Orders
                             </button></a>
 
+                        <a href="{{ route('orders.problematic') }}"><button type="button" class="btn btn-danger">
+                                Deleted Orders
+                            </button></a>
+
                         @role('admin')
                             <div class="float-right">
                                 <select name="new_status" class="form-control d-inline-block" style="width: 150px;">

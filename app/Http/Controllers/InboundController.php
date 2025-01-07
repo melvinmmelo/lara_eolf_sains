@@ -22,6 +22,7 @@ use App\Services\InboundProductsService;
 use App\Services\InboundService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 // this is actually the outboundcontroller, nagkamali lang ng naming
 class InboundController extends Controller
@@ -438,6 +439,7 @@ class InboundController extends Controller
 
 
         $inboundService = new InboundProductsService($products);
+
         $currentProduct = $inboundService->getProductDetails($code);
         $currentProductQty = $currentProduct['quantity'];
 
@@ -500,8 +502,8 @@ class InboundController extends Controller
         $request->validate([
             'inbound_id' => 'required|exists:inbounds,id',
             'confirm_delete' => 'required',
-            'remarks' => 'required',
-            'remarks_details' => 'nullable',
+            'remarks' => 'required|max:191',
+            'remarks_details' => 'nullable|max:191',
         ]);
 
         if ($request->confirm_delete !== 'Delete') {
@@ -511,24 +513,35 @@ class InboundController extends Controller
         $inbound = Inbound::findOrFail($request->inbound_id);
 
         $products = json_decode($inbound->products, true);
+        $logMessage = "";
         foreach ($products as $product) {
             $itemData = ItemMasterData::branch(session('branch_code'))->productCode($product['code'])->first();
+            $itemDataStock = $itemData->stocks;
+            $itemDataReserved = $itemData->reserved;
             if ($itemData) {
                 if ($inbound->delivery_receipt_id !== NULL) {
                     // If inbound has delivery receipt and is being deleted
-                    $newStocks = $itemData->stocks + $product['quantity'];
+                    $newStocks = $itemDataStock + $product['quantity'];
                     if ($newStocks < 0) {
                         $errors[] = "Product {$product['code']} has negative stocks.";
                         $newStocks = 0;
+                        
                     }
 
                     $itemData->stocks = $newStocks;
+                    $logMessage = 'stock touched.';
                     $itemData->save();
                 } else {
                     $itemData->reserved -= $product['quantity'];
+                    $logMessage = 'reserved touched.';
                     $itemData->save();
                 }
+            }else{
+                $logMessage = 'not found';
             }
+
+            // log everything
+            Log::info("Deleting Order {$inbound->id} - {$logMessage}", ["Product" => $product['code'], "Qua ntity" => $product['quantity'], "Branch" => session('branch_code'), "Stocks" => $itemDataStock, "Reserved" => $itemDataReserved]);
         }
 
         $inbound->status = $request->remarks;
@@ -728,7 +741,7 @@ class InboundController extends Controller
             'is_foc' => $request->is_foc == 'on' ? 1 : NULL,
             'driver_name' => Drivers::find($request->driver_id)->name,
             'delivery_person' => Drivers::find($request->delivery_person_id)->name,
-            'products' => json_encode($products->toArray()),
+            'vehicle_no' => Vehicles::find($request->vehicle_id)->plateno,
             'is_with_sf' => $request->with_sf == 'on' ? 1 : NULL,
         ]);
 
@@ -893,5 +906,21 @@ class InboundController extends Controller
             ->log("Orders status updated by " . auth()->user()->fullName);
 
         return redirect()->back()->with('success', 'Orders status updated successfully.');
+    }
+
+    public function problematicOrders()
+    {
+        $branchCode = session('branch_code');
+        
+        $problematicOrders = Inbound::where('branch_code', $branchCode)
+            ->where(function($query) {
+                $query->where('status', 'Cancelled')
+                      ->orWhere('status', 'Deleted')
+                      ->orWhere('status', 'Wrong Entry');
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+            
+        return view('problematic-orders', compact('problematicOrders'));
     }
 }
