@@ -30,6 +30,7 @@ use App\Http\Controllers\NewBadOrderController;
 use App\Http\Controllers\OrderSlipController;
 use App\Http\Controllers\ReportGeneratorController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\MaterialWithdrawalController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -315,8 +316,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/materials-inventory', [MaterialsInventoryController::class, 'index'])->name('materialsInventory.index');
     Route::post('/materials-inventory', [MaterialsInventoryController::class, 'store'])->name('materialsInventory.store');
     Route::patch('/materials-inventory', [MaterialsInventoryController::class, 'update'])->name('materialsInventory.update');
-    Route::post('/materials-inventory/delete-withdraw', [MaterialsInventoryController::class, 'deleteOrWithdraw'])->name('materialsInventory.delete');
-
+    Route::delete('/materials-inventory', [MaterialsInventoryController::class, 'destroy'])->name('materialsInventory.destroy');
     Route::get('/materials-inventory/{id}/history', [MaterialsInventoryController::class, 'history'])->name('materialsInventory.history');
 
     Route::post('/orders/update-status', [InboundController::class, 'updateStatus'])->name('order.updateStatus');
@@ -327,6 +327,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/bulk-update-stocks', [ItemMasterDataController::class, 'bulkUpdateStocksPage'])->middleware('can:admin')->name('bulk.update.stocks.page');
     Route::post('/bulk-update-stocks', [ItemMasterDataController::class, 'bulkUpdateStocks'])->middleware('can:admin')->name('bulk.update.stocks');
+
+    // Material Withdrawals
+    Route::get('/material-withdrawals', [MaterialWithdrawalController::class, 'index'])->name('material-withdrawals.index');
+    Route::get('/material-withdrawals/search', [MaterialWithdrawalController::class, 'search'])->name('material-withdrawals.search');
+    Route::post('/material-withdrawals', [MaterialWithdrawalController::class, 'store'])->name('material-withdrawals.store');
 });
 
 require __DIR__ . '/auth.php';

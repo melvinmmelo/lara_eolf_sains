@@ -26,28 +26,23 @@
 
         @include('layouts.errors')
 
-
-
-        <form id="withdrawForm" action="{{ route('materialsInventory.delete') }}" method="POST">
+        <form id="deleteForm" action="{{ route('materialsInventory.destroy') }}" method="POST">
             @csrf
-
+            @method('DELETE')
             <div class="row">
-                <!-- Default box -->
-
-                <div class="col-lg-8">
+                <div class="col-lg-12">
                     <div class="card">
-
                         <div class="card-body">
                             <div class="pb-2">
-                                <button type="button" class="btn btn-primary" data-toggle="modal"
-                                    data-target="#modal-inventory">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-inventory">
                                     Add New
                                 </button>
-
-                                <button type="submit" class="btn btn-default" name="submit_form" value="delete"
-                                    onclick="return askToDelete()">
-                                    Delete
+                                <button type="submit" class="btn btn-danger" onclick="return askToDelete()">
+                                    Delete Selected
                                 </button>
+                                <a href="{{ route('material-withdrawals.index') }}" class="btn btn-warning">
+                                    Material Withdrawal
+                                </a>
                             </div>
                             <div class="table-responsive">
                                 <table id="example1" class="table table-bordered table-striped">
@@ -55,14 +50,14 @@
                                         <tr>
                                             <th></th>
                                             <th>Name</th>
-                                            <th>Quantity</th>
                                             <th>Unit</th>
+                                            <th>Quantity</th>
                                             <th>Unit Price</th>
                                             <th>Total Amount</th>
                                             <th>Remarks</th>
-                                            <th>Date</th>
+                                            <th>Location</th>
                                             <th>Modified By</th>
-                                            <th></th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -82,7 +77,7 @@
                                                 <td>{{ formatNumber($material->amount) }}</td>
                                                 <td>{{ formatNumber($totalAmount) }}</td>
                                                 <td>{{ $material->remarks }}</td>
-                                                <td>{{ $material->created_at }}</td>
+                                                <td>{{ $material->location }}</td>
                                                 <td>{{ $material->modified_by }}</td>
                                                 <td>
                                                     <a href="#" id="updateInventoryLink">Update</a> | <a
@@ -104,37 +99,9 @@
                         <!-- /.card-footer-->
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label class="form-label" for="requested_by">Requested by</label>
-                                <input type="text" class="form-control" name="requested_by" id="requested_by" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="issued_by">Issued by</label>
-                                <input type="text" class="form-control" name="issued_by" id="issued_by"
-                                    value=" {{ auth()->user()->fullName }}">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="withdrawal_date">Date</label>
-                                <input type="date" class="form-control" name="withdrawal_date" id="withdrawal_date"
-                                    value="{{ date('Y-m-d') }}" required>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-primary" name="submit_form" id="submitButton"
-                                    onclick="submitForm();"><i class="fas fa-check"></i> Withdraw</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </form>
 
-        </div>
-        </div>
-        <!-- /.card -->
         <div class="modal fade" id="modal-inventory">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -199,7 +166,6 @@
                                 </div>
                             </div>
 
-
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-success">Save changes</button>
                             </div>
@@ -209,7 +175,6 @@
                 </div>
             </div>
         </div>
-
 
         <div class="modal fade" id="modal-edit">
             <div class="modal-dialog">
@@ -222,9 +187,9 @@
                     </div>
                     <div class="modal-body">
 
-                        <form action="{{ route('materialsInventory.update') }}" method="post">
+                        <form action="{{ route('materialsInventory.update') }}" method="POST">
                             @csrf
-                            @method('PATCH')
+                            <input type="hidden" name="_method" value="PATCH">
 
                             <input type="hidden" class="form-control" name="inv_id" id="inv_id" required readonly>
 
@@ -294,6 +259,7 @@
                 </div>
             </div>
         </div>
+
     </section>
     <!-- /.content -->
 @endsection
@@ -301,45 +267,23 @@
 @section('custom_js')
     <script>
         $(document).ready(function() {
-            $('#example1').on('click', '#updateInventoryLink', function() {
-                var table = $('#example1').DataTable();
-                var data = table.row($(this).parents('tr')).data();
-                console.log(data);
-                $('#inv_id').val(data[1]);
-                $('#e_name').val(data[2]);
-                $('#e_unit').val(data[3]);
-                $('#e_quantity').val(data[4]);
-                $('#e_amount').val(data[5]);
-                $('#e_location').val(data[6]);
-                $('#e_remarks').val(data[7]);
-
+            $('#example1').on('click', '#updateInventoryLink', function(e) {
+                e.preventDefault();
+                var tr = $(this).closest('tr');
+                $('#inv_id').val(tr.find('input[type="checkbox"]').val());
+                $('#e_name').val(tr.find('td:eq(1)').text());
+                $('#e_unit').val(tr.find('td:eq(2)').text());
+                $('#e_quantity').val(tr.find('td:eq(3)').text());
+                $('#e_amount').val(tr.find('td:eq(4)').text().replace(/[^0-9.-]+/g, ''));
+                $('#e_remarks').val(tr.find('td:eq(6)').text());
+                $('#e_location').val(tr.find('td:eq(7)').text());
+                
                 $('#modal-edit').modal('show');
             });
         });
 
         function askToDelete() {
-            return confirm('Are you sure you want to delete this record(s)?');
-        }
-
-        function submitForm() {
-            // clear data table search input
-            $('#example1').DataTable().search('').draw();
-
-
-
-            if (confirm('Are you sure you want to withdraw this record(s)?')) {
-                // add delay before submitting the form
-                // disable submit button
-                $('#submitButton').prop('disabled', true);
-
-                $('#submitButton').text('Processing...');
-
-                setTimeout(function() {
-                    $('#withdrawForm').submit();
-                }, 1000);
-            }
-
-            return false;
+            return confirm('Are you sure you want to delete the selected items?');
         }
     </script>
 @endsection
