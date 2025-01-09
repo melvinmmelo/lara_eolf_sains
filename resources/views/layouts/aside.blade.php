@@ -1,6 +1,3 @@
-
-
-
 <aside class="main-sidebar sidebar-light-primary elevation-1">
     <a href="{{ route('dashboard') }}" class="brand-link">
         <img src="{{ asset('img/eolf_heart_logo.png') }}" alt="EOLF Logo" class="brand-image" style="opacity: .8">
@@ -196,7 +193,7 @@
                     </ul>
                 </li>
 
-                <li class="nav-item {{ Route::currentRouteNamed('delivery-purchase-receipts.index') || Route::currentRouteNamed('itemdata.index') || Route::currentRouteNamed('drp.products') || Route::currentRouteNamed('materialsInventory.index') || Route::currentRouteNamed('materialsInventory.history') ? 'menu-is-opening menu-open' : '' }}">
+                <li class="nav-item {{ Route::currentRouteNamed('delivery-purchase-receipts.index') || Route::currentRouteNamed('itemdata.index') || Route::currentRouteNamed('drp.products') || Route::currentRouteNamed('materialsInventory.index') || Route::currentRouteNamed('materialsInventory.history') || Route::currentRouteNamed('update.stocks.page') || Route::currentRouteNamed('bulk.update.stocks.page') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-warehouse" style="color: #74C0FC;"></i>
                         <p>
@@ -230,6 +227,23 @@
                             </a>
                         </li>
 
+                        @can('admin')
+
+                        <li>
+                            <a href="{{ route('update.stocks.page') }}" class="nav-link {{ request()->routeIs('update.stocks.page') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-edit"></i>
+                                <p>Update Stocks</p>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('bulk.update.stocks.page') }}" class="nav-link {{ request()->routeIs('bulk.update.stocks.page') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-boxes"></i>
+                                <p>Bulk Update Stocks</p>
+                            </a>
+                        </li>
+
+                        @endcan
 
                     </ul>
                 </li>

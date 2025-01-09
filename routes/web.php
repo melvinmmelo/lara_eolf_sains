@@ -310,6 +310,7 @@ Route::middleware('auth')->group(function () {
 
     Route::put('/branch', [BranchesController::class, 'update'])->name('branch.update');
 
+    Route::post('/update-item-stocks', [ItemMasterDataController::class, 'updateStocks'])->middleware('can:admin')->name('update.item.stocks');
 
     Route::get('/materials-inventory', [MaterialsInventoryController::class, 'index'])->name('materialsInventory.index');
     Route::post('/materials-inventory', [MaterialsInventoryController::class, 'store'])->name('materialsInventory.store');
@@ -322,6 +323,10 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('/user/reset', [UsersController::class, 'reset'])->name('user.reset');
 
+    Route::get('/update-stocks', [ItemMasterDataController::class, 'updateStocksPage'])->middleware('can:admin')->name('update.stocks.page');
+
+    Route::get('/bulk-update-stocks', [ItemMasterDataController::class, 'bulkUpdateStocksPage'])->middleware('can:admin')->name('bulk.update.stocks.page');
+    Route::post('/bulk-update-stocks', [ItemMasterDataController::class, 'bulkUpdateStocks'])->middleware('can:admin')->name('bulk.update.stocks');
 });
 
 require __DIR__ . '/auth.php';

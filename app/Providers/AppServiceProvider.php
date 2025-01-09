@@ -6,6 +6,7 @@ use App\Models\Branches;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -37,6 +38,10 @@ class AppServiceProvider extends ServiceProvider
             }
 
             $view->with('gbranches', $gbranches)->with('branch_name', $branchName);
+        });
+
+        Gate::define('admin', function ($user) {
+            return $user->hasRole('admin');
         });
     }
 }

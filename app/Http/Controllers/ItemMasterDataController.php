@@ -7,6 +7,8 @@ use App\Http\Requests\StoreItemMasterDataRequest;
 use App\Http\Requests\UpdateItemMasterDataRequest;
 use App\Models\ProductType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Gate;
 
 class ItemMasterDataController extends Controller
 {
@@ -116,5 +118,98 @@ class ItemMasterDataController extends Controller
             ->log('Quantity added from hold.');
 
         return redirect()->back()->with('success', 'Quantity added successfully.');
+    }
+
+    public function updateStocks(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:item_master_data,id',
+            'stocks' => 'required|numeric|min:0',
+            'reserved' => 'required|numeric|min:0'
+        ]);
+
+        $item = ItemMasterData::findOrFail($request->id);
+        $oldStock = $item->stocks;
+        $item->update([
+            'stocks' => $request->stocks,
+            'reserved' => $request->reserved
+        ]);
+
+        activity()
+                ->performedOn($item)
+                ->withProperties(['old_stocks' => $oldStock])
+                ->log('stocks-updated');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Stocks updated successfully',
+            'item' => $item
+        ]);
+    }
+
+    public function updateStocksPage(Request $request)
+    {
+        Gate::authorize('admin');
+
+        $query = ItemMasterData::branch(session('branch_code'))
+            ->with('product') // Include the product relationship
+            ->select('id', 'product_code', 'reserved', 'hold_quantity', 'stocks', 'updated_at');
+
+        if ($request->has('search')) {
+            $search = $request->get('search');
+            $query->where('product_code', 'like', "%{$search}%");
+        }
+
+        $products = $query->paginate(10);
+
+        return view('update-stocks', compact('products'));
+    }
+
+    public function bulkUpdateStocksPage(Request $request)
+    {
+        Gate::authorize('admin');
+
+        $selectedProducts = collect();
+        $query = ItemMasterData::branch(session('branch_code'))
+            ->select('id', 'product_code', 'reserved', 'hold_quantity', 'stocks', 'updated_at');
+
+        if ($request->has('search')) {
+            $search = $request->get('search');
+            $query->where('product_code', 'like', "%{$search}%");
+        }
+
+        $products = $query->paginate(10);
+
+        return view('bulk-update-stocks', compact('products', 'selectedProducts'));
+    }
+
+    public function bulkUpdateStocks(Request $request)
+    {
+        Gate::authorize('admin');
+
+        $request->validate([
+            'products' => 'required|array',
+            'products.*.id' => 'required|exists:item_master_data,id',
+            'products.*.quantity' => 'required|numeric|min:0'
+        ]);
+
+        foreach ($request->products as $product) {
+            $item = ItemMasterData::findOrFail($product['id']);
+            $oldStock = $item->stocks;
+            
+            $item->update([
+                'stocks' => $item->stocks + $product['quantity']
+            ]);
+
+            activity()
+                ->performedOn($item)
+                ->withProperties(['old_stocks' => $oldStock, 'added_quantity' => $product['quantity']])
+                ->log('bulk-stocks-updated');
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Stocks updated successfully'
+        ]);
     }
 }
