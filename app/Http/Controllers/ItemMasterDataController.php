@@ -160,7 +160,7 @@ class ItemMasterDataController extends Controller
             $query->where('product_code', 'like', "%{$search}%");
         }
 
-        $products = $query->paginate(10);
+        $products = $query->paginate(50);
 
         return view('update-stocks', compact('products'));
     }
@@ -178,7 +178,7 @@ class ItemMasterDataController extends Controller
             $query->where('product_code', 'like', "%{$search}%");
         }
 
-        $products = $query->paginate(10);
+        $products = $query->paginate(50);
 
         return view('bulk-update-stocks', compact('products', 'selectedProducts'));
     }
