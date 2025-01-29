@@ -210,10 +210,10 @@
                         mywindow.document.write('<center>CUT FOR SPOON</center><br>');
                         mywindow.document.write('Sequence No: {{ $ticketdetail->ticket_sequence_no }}<br>');
                         mywindow.document.write(
-                            'Customer: {{ $ticketdetail->customer->fullName }} ({{ $ticketdetail->store->storename }})<br>'
+                            'Customer: <span style="font-size: 16px;">{{ $ticketdetail->customer->fullName }} ({{ $ticketdetail->store->storename }}</span>)<br>'
                         );
-                        mywindow.document.write('Total Spoon Count: ' + sp_count + '<br>');
-                        mywindow.document.write('Spoon Set: ' + sp_set.toFixed(0) + '<br><br><br>');
+                        mywindow.document.write('Total Spoon Count: <span style="font-size: 16px;">' + sp_count + '</span><br>');
+                        mywindow.document.write('Spoon Set: <span style="font-size: 16px;">' + sp_set.toFixed(0) + '</span><br><br><br>');
                         mywindow.document.write('<hr>');
                         mywindow.document.write('</body></html>');
                     @endforeach

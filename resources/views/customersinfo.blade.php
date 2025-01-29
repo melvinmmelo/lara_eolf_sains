@@ -87,10 +87,7 @@
                                                 <a class="dropdown-item"
                                                     href="/equipment-store?store_id={{ $store->id }}&store_name={{ $store->storename }}&customer_id={{ $customer->id }}&customer_name={{ $customer->lastname }}, {{ $customer->firstname }} {{ $customer->middlename }}"
                                                     role="button">Equipment</a>
-                                                <a href="#" class="dropdown-item" data-toggle="modal"
-                                                    data-target="#editModal"
-                                                    onclick="setToUpdatecustomer('{{ $customer->id }}','{{ $customer->branch_code }}','{{ $customer->lastname }}','{{ $customer->firstname }}','{{ $customer->middlename }}','{{ $customer->contact_no }}','{{ $customer->companyname }}','{{ $customer->tin }}',`{{ $customer->longitude }}`,`{{ $customer->latitude }}`,`{{ $customer->region }}`,`{{ $customer->province }}`,`{{ $customer->city }}`,`{{ $customer->brgy }}`,`{{ $customer->subdivision }}`,'{{ $store->id }}',`{{ $store->storename }}`,'{{ $store->contactno }}','{{ $store->region }}','{{ $store->province }}','{{ $store->city }}','{{ $store->brgy }}','{{ $store->subdivision }}',`{{ $store->latitude }}`,`{{ $store->longitude }}`,'{{ $store->listype }}','{{ $store->length_stay }}','{{ $store->remarks }}')">Edit</a>
-
+                                                
                                                 <a href="{{ route('customer.store.destroy', ['customer' => $customer->id, 'store' => $store->id]) }}"
                                                     class="dropdown-item"
                                                     onclick="event.preventDefault();
@@ -112,7 +109,13 @@
                                                     @endforeach
                                                 </form>
                                             </div>
+                                            <a href="#" class="dropdown-item" data-toggle="modal"
+                                                    data-target="#editModal"
+                                                    onclick="setToUpdatecustomer(`{{ $customer->id }}`,`{{ $customer->branch_code }}`,`{{ $customer->lastname }}`,`{{ $customer->firstname }}`,`{{ $customer->middlename }}`,`{{ $customer->contact_no }}`,`{{ $customer->companyname }}`,`{{ $customer->tin }}`,`{{ $customer->longitude }}`,`{{ $customer->latitude }}`,`{{ $customer->region }}`,`{{ $customer->province }}`,`{{ $customer->city }}`,`{{ $customer->brgy }}`,`{{ $customer->subdivision }}`,'{{ $store->id }}',`{{ $store->storename }}`,'{{ $store->contactno }}','{{ $store->region }}','{{ $store->province }}','{{ $store->city }}','{{ $store->brgy }}','{{ $store->subdivision }}',`{{ $store->latitude }}`,`{{ $store->longitude }}`,`{{ $store->listype }}`,`{{ $store->length_stay }}`,`{{ $store->remarks }}`)"><i class="fa fa-edit"></i></a>
                                         </div>
+
+                                 
+
                                     </td>
                                 </tr>
                             @endforeach

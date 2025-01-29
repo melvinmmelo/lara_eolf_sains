@@ -170,8 +170,9 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
+                                    <th></th>
                                     <th>Total:</th>
-                                    <th>{{ formatNumber(array_sum($grandTotal)) }}</th>
+                                    <th>{{ formatNumber(array_sum($grandTotal)) }} </th>
                                     <th>{{ formatNumber(array_sum($grandDiscount)) }}</th>
                                     <th>{{ formatNumber(array_sum($grandBOTotal)) }}</th>
                                     <th>{{ formatNumber(array_sum($grandTotalBDue)) }}</th>

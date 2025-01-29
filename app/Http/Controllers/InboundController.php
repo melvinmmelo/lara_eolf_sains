@@ -261,15 +261,9 @@ class InboundController extends Controller
         }
 
         $newInboundProduct->save();
-        $products = NewInboundProduct::where("inbound_id", $inboundId)->whereNull("status")->where('branch_code', session('branch_code'))->get();
+        $products = NewInboundProduct::where("inbound_id", $inboundId)->whereNull("status")->where('branch_code', session('branch_code'))->orderBy('order')->get();
 
         $uiProducts = $products;
-
-        if (!$uiProducts === null) {
-            usort($uiProducts, function ($a, $b) {
-                return $a['order'] <=> $b['order'];
-            });
-        }
 
         $newProdService = new InboundProductsService(json_encode($products));
 
