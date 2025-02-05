@@ -11,7 +11,7 @@ class OrderSlip extends Model
 
     protected $appends = ['f_created_at', 'r_created_at'];
 
-
+    
     protected $fillable = [
         'branch_code',
         'code',

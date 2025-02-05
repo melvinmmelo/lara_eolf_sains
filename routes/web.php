@@ -31,6 +31,7 @@ use App\Http\Controllers\OrderSlipController;
 use App\Http\Controllers\ReportGeneratorController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\MaterialWithdrawalController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -47,6 +48,8 @@ Route::get('/', function () {
 
 
 Route::middleware('auth')->group(function () {
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/organize', [OrderSlipController::class, 'organize'])->name('orderSlip.organize');
 
@@ -138,10 +141,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/dpr-hold', [DeliveryPurchaseReceiptController::class, 'holdProduct'])->name('dpr.holdProduct');
 
-
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
 
     Route::get('/problematic-orders', [InboundController::class, 'problematicOrders'])->name('orders.problematic');
 

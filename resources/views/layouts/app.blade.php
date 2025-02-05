@@ -356,7 +356,7 @@
     @yield('custom_js')
 
     <script src="{{ asset('js/editcustomeraddress.js') }}"></script>
-
+    @stack('scripts')
 </body>
 
 </html>

@@ -126,11 +126,18 @@ class InboundController extends Controller
             $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where("code", $pcode)->where('branch_code', session('branch_code'))->whereNull('status')->first();
             $newInboundProduct->status = "Deleted";
             $newInboundProduct->save();
+
+            $inboundDesc = Inbound::find($inboundId)->code;
         }else{
             $newInboundProduct = NewInboundProduct::where("inbound_id", 0)->where("code", $pcode)->where('branch_code', session('branch_code'))->whereNull('status')->delete();
+
+            $inboundDesc = "new order";
         }
 
         $summary = [];
+
+        // sort by order
+        $products = $products->sortBy('order');
 
         $inboundService = new InboundProductsService($products);
 
@@ -147,8 +154,9 @@ class InboundController extends Controller
             $summary = $inboundService->addSppbinSummary(); // ! you need to call summary() first before addSppbinSummary()
         }
 
+
         activity('outbound')
-            ->log("Product $pcode deleted by " . auth()->user()->fullName);
+            ->log("Product $pcode was deleted by " . auth()->user()->fullName . " in $inboundDesc");
 
         return view('inboundList', compact('uiProducts', 'summary'));
     }
@@ -264,6 +272,9 @@ class InboundController extends Controller
         $products = NewInboundProduct::where("inbound_id", $inboundId)->whereNull("status")->where('branch_code', session('branch_code'))->orderBy('order')->get();
 
         $uiProducts = $products;
+
+        // sort by #uiProducts
+        $uiProducts = $uiProducts->sortBy('order');
 
         $newProdService = new InboundProductsService(json_encode($products));
 
@@ -393,7 +404,7 @@ class InboundController extends Controller
 
         activity('outbound')
             ->performedOn($inbound)
-            ->log("Outbound $inbound->id created by " . auth()->user()->fullName);
+            ->log("Order $inbound->code was created by " . auth()->user()->fullName);
 
         session('errors', $errors);
 
@@ -519,7 +530,7 @@ class InboundController extends Controller
                     if ($newStocks < 0) {
                         $errors[] = "Product {$product['code']} has negative stocks.";
                         $newStocks = 0;
-                        
+
                     }
 
                     $itemData->stocks = $newStocks;
@@ -905,7 +916,7 @@ class InboundController extends Controller
     public function problematicOrders()
     {
         $branchCode = session('branch_code');
-        
+
         $problematicOrders = Inbound::where('branch_code', $branchCode)
             ->where(function($query) {
                 $query->where('status', 'Cancelled')
@@ -914,7 +925,7 @@ class InboundController extends Controller
             })
             ->orderBy('created_at', 'desc')
             ->paginate(15);
-            
+
         return view('problematic-orders', compact('problematicOrders'));
     }
 }

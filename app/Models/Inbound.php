@@ -112,6 +112,9 @@ class Inbound extends Model
 
     public function getCodeAttribute()
     {
+        if (!$this->created_at) {
+            return null;
+        }
 
         if ($this->branch_code === 'EFTO-CAG') {
             $prefix = 'C';
