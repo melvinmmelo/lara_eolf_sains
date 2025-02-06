@@ -162,11 +162,8 @@ class DashboardController extends Controller
             ->first();
 
         // Get pending deliveries
-        $pendingDeliveries = Inbound::branch(session('branch_code'))
+        $pendingDeliveries = Inbound::branch(session()->get('branch_code'))
             ->whereDoesntHave('deliveryReceipt')
-            ->orWhereHas('deliveryReceipt', function($query) {
-                $query->where('status', '!=', 'delivered');
-            })
             ->with(['customer', 'deliveryReceipt'])
             ->latest()
             ->take(5)
@@ -179,8 +176,8 @@ class DashboardController extends Controller
 
         $data = [
             'products_count' => Product::count(),
-            'orders_count' => Inbound::branch(session('branch_code'))->count(),
-            'customers_count' => Customers::branch(session('branch_code'))->count(),
+            'orders_count' => Inbound::branch(session()->get('branch_code'))->count(),
+            'customers_count' => Customers::branch(session()->get('branch_code'))->count(),
             'deliveries_count' => Delivery::count(),
             'todays_orders_count' => $todaysOrders->count ?? 0,
             'todays_orders_amount' => $todaysOrders->total ?? 0,
@@ -191,7 +188,7 @@ class DashboardController extends Controller
             'yearly_sales' => $yearlySales,
             'monthly_sales' => $monthlySales,
             'pending_deliveries' => $pendingDeliveries,
-            'recent_orders' => Inbound::branch(session('branch_code'))
+            'recent_orders' => Inbound::branch(session()->get('branch_code'))
                 ->with(['customer', 'deliveryReceipt'])
                 ->latest()
                 ->take(5)
