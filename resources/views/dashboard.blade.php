@@ -43,7 +43,7 @@
                     <div class="small-box bg-success">
                         <div class="inner">
                             <h3>{{ number_format($todays_orders_count) }}</h3>
-                            <p>Today's Orders</p>
+                            <p><a href="{{ route('order.index') }}" class="small-box-footer">Today's Orders <i class="fas fa-arrow-circle-right"></i></a></p>
                             <h5>₱{{ number_format($todays_orders_amount, 2) }}</h5>
                         </div>
                         <div class="icon">
@@ -56,7 +56,7 @@
                     <div class="small-box bg-warning">
                         <div class="inner">
                             <h3>{{ number_format($todays_paid_count) }}</h3>
-                            <p>Today's Paid Orders</p>
+                            <p><a href="{{ route('order.index') }}" class="small-box-footer">Today's Paid Orders <i class="fas fa-arrow-circle-right"></i></a></p>
                             <h5>₱{{ number_format($todays_paid_amount, 2) }}</h5>
                         </div>
                         <div class="icon">
@@ -69,7 +69,7 @@
                     <div class="small-box bg-primary">
                         <div class="inner">
                             <h3>{{ number_format($todays_completed_count) }}</h3>
-                            <p>Today's Completed</p>
+                            <p><a href="{{ route('order.index') }}" class="small-box-footer">Today's Completed Orders <i class="fas fa-arrow-circle-right"></i></a></p>
                             <h5>₱{{ number_format($todays_completed_amount, 2) }}</h5>
                         </div>
                         <div class="icon">

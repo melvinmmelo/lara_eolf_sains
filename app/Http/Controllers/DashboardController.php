@@ -23,17 +23,15 @@ class DashboardController extends Controller
         // Debug: Check raw data first
         $rawData = Inbound::select('id', 'branch_code','order_date', 'status', 'delivered_amount')
             ->where('branch_code', '=', session()->get('branch_code'))
-            ->whereNotNull('order_date')
-            ->whereNotNull('delivered_amount')
             ->whereIn('status', ['Paid', 'Completed'])
             ->orderBy('order_date', 'desc')
             ->limit(10)
             ->get();
 
-        \Log::info('Sample Raw Data:', $rawData->toArray());
 
         // Get low stock items
-        $lowStockItems = ItemMasterData::with(['product.productType', 'product.productVariant'])
+        $lowStockItems = ItemMasterData::branch(session('branch_code'))
+            ->with(['product.productType', 'product.productVariant'])
             ->where('branch_code', '=', session()->get('branch_code'))
             ->whereRaw('stocks - reserved <= ?', [10])
             ->orderBy('stocks')
@@ -69,7 +67,6 @@ class DashboardController extends Controller
             ];
         });
 
-        \Log::info('Yearly Sales Results:', $yearlySales->toArray());
 
         // Get monthly sales data for current year
         $monthlySales = collect();
@@ -84,8 +81,6 @@ class DashboardController extends Controller
             ->where('branch_code', '=', session()->get('branch_code'))
             ->whereYear('order_date', $currentYear)
             ->whereMonth('order_date', $month)
-            ->whereNotNull('order_date')
-            ->whereNotNull('delivered_amount')
             ->whereIn('status', ['Paid', 'Completed'])
             ->first();
 
@@ -167,11 +162,11 @@ class DashboardController extends Controller
             ->first();
 
         // Get pending deliveries
-        $pendingDeliveries = Inbound::whereDoesntHave('deliveryReceipt')
+        $pendingDeliveries = Inbound::branch(session('branch_code'))
+            ->whereDoesntHave('deliveryReceipt')
             ->orWhereHas('deliveryReceipt', function($query) {
                 $query->where('status', '!=', 'delivered');
             })
-            ->where('branch_code', '=', session()->get('branch_code'))
             ->with(['customer', 'deliveryReceipt'])
             ->latest()
             ->take(5)
@@ -184,8 +179,8 @@ class DashboardController extends Controller
 
         $data = [
             'products_count' => Product::count(),
-            'orders_count' => Inbound::count(),
-            'customers_count' => Customers::count(),
+            'orders_count' => Inbound::branch(session('branch_code'))->count(),
+            'customers_count' => Customers::branch(session('branch_code'))->count(),
             'deliveries_count' => Delivery::count(),
             'todays_orders_count' => $todaysOrders->count ?? 0,
             'todays_orders_amount' => $todaysOrders->total ?? 0,
@@ -196,7 +191,8 @@ class DashboardController extends Controller
             'yearly_sales' => $yearlySales,
             'monthly_sales' => $monthlySales,
             'pending_deliveries' => $pendingDeliveries,
-            'recent_orders' => Inbound::with(['customer', 'deliveryReceipt'])
+            'recent_orders' => Inbound::branch(session('branch_code'))
+                ->with(['customer', 'deliveryReceipt'])
                 ->latest()
                 ->take(5)
                 ->get(),

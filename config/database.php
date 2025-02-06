@@ -57,6 +57,12 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
+            'dump' => [
+                // 'dump_binary_path' => '/usr/local/bin/php', // Adjust the path based on Hostinger's binary location
+                'use_single_transaction' => true, // Ensures atomic backup
+                'timeout' => 60 * 5, // Set a timeout (e.g., 5 minutes)
+                'skip_ssl' => true
+            ],
         ],
 
         'mariadb' => [
