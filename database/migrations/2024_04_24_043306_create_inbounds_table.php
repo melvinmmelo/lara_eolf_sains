@@ -21,9 +21,6 @@ return new class extends Migration
             $table->unsignedInteger('driver_id');
             $table->unsignedInteger('delivery_person_id');
             $table->unsignedInteger('vehicle_id');
-            $table->tinyInteger('bad_order')->nullable();
-            $table->unsignedInteger('bad_order_id')->nullable();
-            $table->float('bo_amount', 2)->nullable();
             $table->json('products')->nullable();
             $table->tinyInteger('with_invoice')->nullable();
             $table->tinyInteger('bad_order')->nullable();
