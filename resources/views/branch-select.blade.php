@@ -39,8 +39,6 @@
             <div class="m-2">
 
                 @include("layouts.errors")
-                <br>
-
                 <a href="{{ route('dashboard') }}">Click here if you are not automatically redirected.</a>
 
             </div>
