@@ -39,7 +39,10 @@
             <div class="m-2">
 
                 @include("layouts.errors")
-                <a href="{{ route('dashboard') }}">Click here if you are not automatically redirected.</a>
+
+                @if (session('success'))
+                    <a href="{{ route('dashboard') }}">Click here if you are not automatically redirected.</a>
+                @endif
 
             </div>
 
