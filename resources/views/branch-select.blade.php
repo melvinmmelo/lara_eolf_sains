@@ -35,6 +35,9 @@
     <div class="login-box">
         <!-- /.login-logo -->
         <div class="card card-outline card-primary">
+
+            @include("layouts.errors")
+
             <div class="card-header text-center">
                 <img src="{{ asset('img/eolf_logo.jpg') }}" alt="EOLF Logo" class="img-fluid"
                     style="max-width: 100%; height: auto; ">
