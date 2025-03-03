@@ -89,77 +89,24 @@ class DashboardController extends Controller
                 'amount' => (float)($monthData->total ?? 0)
             ]);
         }
+ 
 
-        // Get today's orders metrics
-        $todaysOrders = Inbound::whereDate('order_date', $today)
+        $todaysOrders = Inbound::whereNotIn('status', ['Cancelled', 'Rejected', 'Deleted'])
             ->where('branch_code', '=', session()->get('branch_code'))
-            ->select([
-                DB::raw('COUNT(*) as count'),
-                DB::raw('SUM(
-                    CASE
-                        WHEN products IS NOT NULL AND JSON_LENGTH(products) > 0 THEN (
-                            SELECT SUM(
-                                CAST(JSON_UNQUOTE(JSON_EXTRACT(products, CONCAT("$[", numbers.n, "].quantity"))) AS DECIMAL) *
-                                CAST(JSON_UNQUOTE(JSON_EXTRACT(products, CONCAT("$[", numbers.n, "].price"))) AS DECIMAL)
-                            )
-                            FROM (
-                                SELECT 0 AS n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION
-                                SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9
-                            ) numbers
-                            WHERE numbers.n < JSON_LENGTH(products)
-                        ) +
-                        CASE WHEN is_with_sf = 1 THEN 1000 ELSE 0 END -
-                        COALESCE(bo_amount, 0) -
-                        COALESCE(discount, 0)
-                        ELSE 0
-                    END
-                ) as total'),
-                DB::raw('SUM(CASE
-                    WHEN status = "Paid" THEN (
-                        CASE
-                            WHEN products IS NOT NULL AND JSON_LENGTH(products) > 0 THEN (
-                                SELECT SUM(
-                                    CAST(JSON_UNQUOTE(JSON_EXTRACT(products, CONCAT("$[", numbers.n, "].quantity"))) AS DECIMAL) *
-                                    CAST(JSON_UNQUOTE(JSON_EXTRACT(products, CONCAT("$[", numbers.n, "].price"))) AS DECIMAL)
-                                )
-                                FROM (
-                                    SELECT 0 AS n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION
-                                    SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9
-                                ) numbers
-                                WHERE numbers.n < JSON_LENGTH(products)
-                            ) +
-                            CASE WHEN is_with_sf = 1 THEN 1000 ELSE 0 END -
-                            COALESCE(bo_amount, 0) -
-                            COALESCE(discount, 0)
-                            ELSE 0
-                        END
-                    )
-                    ELSE 0 END) as paid_amount'),
-                DB::raw('COUNT(CASE WHEN status = "Paid" THEN 1 END) as paid_count'),
-                DB::raw('SUM(CASE
-                    WHEN status = "Completed" THEN (
-                        CASE
-                            WHEN products IS NOT NULL AND JSON_LENGTH(products) > 0 THEN (
-                                SELECT SUM(
-                                    CAST(JSON_UNQUOTE(JSON_EXTRACT(products, CONCAT("$[", numbers.n, "].quantity"))) AS DECIMAL) *
-                                    CAST(JSON_UNQUOTE(JSON_EXTRACT(products, CONCAT("$[", numbers.n, "].price"))) AS DECIMAL)
-                                )
-                                FROM (
-                                    SELECT 0 AS n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION
-                                    SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9
-                                ) numbers
-                                WHERE numbers.n < JSON_LENGTH(products)
-                            ) +
-                            CASE WHEN is_with_sf = 1 THEN 1000 ELSE 0 END -
-                            COALESCE(bo_amount, 0) -
-                            COALESCE(discount, 0)
-                            ELSE 0
-                        END
-                    )
-                    ELSE 0 END) as completed_amount'),
-                DB::raw('COUNT(CASE WHEN status = "Completed" THEN 1 END) as completed_count')
-            ])
-            ->first();
+            ->whereDate('order_date', $today)
+            ->orderBy('order_slip_sno')->get();
+
+        // Calculate today's order metrics
+        $todaysOrdersCount = $todaysOrders->count();
+        $todaysOrdersAmount = $todaysOrders->sum(function($order) {
+            return $order->grand_total;
+        });
+        $todaysPaidOrders = $todaysOrders->where('status', 'Paid');
+        $todaysPaidCount = $todaysPaidOrders->count();
+        $todaysPaidAmount = $todaysPaidOrders->sum('delivered_amount');
+        $todaysCompletedOrders = $todaysOrders->where('status', 'Completed');
+        $todaysCompletedCount = $todaysCompletedOrders->count();
+        $todaysCompletedAmount = $todaysCompletedOrders->sum('delivered_amount');
 
         // Get pending deliveries
         $pendingDeliveries = Inbound::branch(session()->get('branch_code'))
@@ -179,12 +126,12 @@ class DashboardController extends Controller
             'orders_count' => Inbound::branch(session()->get('branch_code'))->count(),
             'customers_count' => Customers::branch(session()->get('branch_code'))->count(),
             'deliveries_count' => Delivery::count(),
-            'todays_orders_count' => $todaysOrders->count ?? 0,
-            'todays_orders_amount' => $todaysOrders->total ?? 0,
-            'todays_paid_count' => $todaysOrders->paid_count ?? 0,
-            'todays_paid_amount' => $todaysOrders->paid_amount ?? 0,
-            'todays_completed_count' => $todaysOrders->completed_count ?? 0,
-            'todays_completed_amount' => $todaysOrders->completed_amount ?? 0,
+            'todays_orders_count' => $todaysOrdersCount,
+            'todays_orders_amount' => $todaysOrdersAmount,
+            'todays_paid_count' => $todaysPaidCount,
+            'todays_paid_amount' => $todaysPaidAmount,
+            'todays_completed_count' => $todaysCompletedCount,
+            'todays_completed_amount' => $todaysCompletedAmount,
             'yearly_sales' => $yearlySales,
             'monthly_sales' => $monthlySales,
             'pending_deliveries' => $pendingDeliveries,

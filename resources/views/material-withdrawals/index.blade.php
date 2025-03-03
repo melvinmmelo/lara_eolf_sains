@@ -36,12 +36,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Material Withdrawal</h1>
+                    <h1>Withdraw Materials</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">Material Withdrawal</li>
+                        <li class="breadcrumb-item active">Withdraw Materials</li>
                     </ol>
                 </div>
             </div>
@@ -54,10 +54,34 @@
         <form id="withdrawalForm" action="{{ route('material-withdrawals.store') }}" method="POST">
             @csrf
             <div class="row">
-                <div class="col-md-4">
+
+            <div class="col-md-3">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Search Items</h3>
+                            <h3 class="card-title text-blue">Details</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="requested_by">Requested By</label>
+                                <input type="text" class="form-control" name="requested_by" id="requested_by" value="{{ auth()->user()->fullName }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="issued_by">Issued By</label>
+                                <input type="text" class="form-control" name="issued_by" id="issued_by" value="{{ auth()->user()->fullName }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="withdrawal_date">Withdrawal Date</label>
+                                <input type="date" class="form-control" name="withdrawal_date" id="withdrawal_date" value="{{ date('Y-m-d') }}" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-9">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title text-blue">Items</h3>
                         </div>
                         <div class="card-body">
                             <div class="form-group">
@@ -76,44 +100,23 @@
                                 <!-- Search results will be populated here -->
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-5">
-                <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Selected Items</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="selected-items" id="selectedItems">
-                                <!-- Selected items will be shown here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Withdrawal Form</h3>
+
+                        <div class="selected-items" id="selectedItems">
+                            <!-- Selected items will be shown here -->
                         </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="requested_by">Requested By</label>
-                                <input type="text" class="form-control" name="requested_by" id="requested_by" value="{{ auth()->user()->fullName }}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="issued_by">Issued By</label>
-                                <input type="text" class="form-control" name="issued_by" id="issued_by" value="{{ auth()->user()->fullName }}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="withdrawal_date">Withdrawal Date</label>
-                                <input type="date" class="form-control" name="withdrawal_date" id="withdrawal_date" value="{{ date('Y-m-d') }}" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary" id="submitBtn">Submit Withdrawal</button>
+
+                        <div class="text-right m-2">
+                            <button type="submit" class="btn btn-primary" id="submitBtn"> <i class="fas fa-save"></i> Save</button>
                         </div>
+
+
                     </div>
+                    
                 </div>
             </div>
+
+
         </form>
     </section>
 @endsection
@@ -168,28 +171,36 @@ $(document).ready(function() {
                     hideLoading();
                     let html = '';
                     if (data && data.length > 0) {
+                        html += `<h5 class="card-header text-blue">Search Results <small> Click Plus Icon to Add</small></h5>`;
+                        
+                        html += `<div class="row g-2 p-2">`;
+                        
                         data.forEach(function(item) {
                             if (!selectedItems.has(item.id)) {
                                 html += `
-                                    <div class="card mb-2">
-                                        <div class="card-body p-2">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div>
-                                                    <h6 class="mb-1">${item.name}</h6>
-                                                    <p class="mb-0">Available: ${item.quantity} ${item.unit || ''}</p>
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card h-100">
+                                            <div class="card-body p-3">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="mb-1">${item.name}</h6>
+                                                        <p class="mb-0">Available: ${item.quantity} ${item.unit || ''}</p>
+                                                    </div>
+                                                    <button type="button" class="btn btn-sm btn-primary add-item" 
+                                                        data-id="${item.id}"
+                                                        data-name="${item.name}"
+                                                        data-unit="${item.unit || ''}"
+                                                        data-available="${item.quantity}">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
                                                 </div>
-                                                <button type="button" class="btn btn-sm btn-primary add-item" 
-                                                    data-id="${item.id}"
-                                                    data-name="${item.name}"
-                                                    data-unit="${item.unit || ''}"
-                                                    data-available="${item.quantity}">
-                                                    Add
-                                                </button>
                                             </div>
                                         </div>
                                     </div>`;
                             }
                         });
+                        
+                        html += `</div>`;
                     } else {
                         html = '<p class="text-muted p-2">No items found</p>';
                     }
@@ -218,39 +229,58 @@ $(document).ready(function() {
         if (!selectedItems.has(id)) {
             selectedItems.set(id, { name, unit, available });
             updateSelectedItemsView();
-            $(this).closest('.card').remove();
+            $(this).closest('tr').remove();
         }
     });
 
     function updateSelectedItemsView() {
         let html = '';
-        selectedItems.forEach((item, id) => {
+        
+        if (selectedItems.size > 0) {
             html += `
-                <div class="card mb-2">
-                    <div class="card-body p-2">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5 class="mb-1">${item.name}</h5>
-                                <p class="mb-0">Available: ${item.available} ${item.unit}</p>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <input type="number" class="form-control form-control-sm mr-2" 
-                                    style="width: 100px"
-                                    name="items[${id}][quantity]"
-                                    min="1"
-                                    max="${item.available}"
-                                    required
-                                    placeholder="Qty">
-                                <input type="hidden" name="items[${id}][id]" value="${id}">
-                                <button type="button" class="btn btn-sm btn-danger remove-item" data-id="${id}">
-                                    Remove
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-        });
-        $('#selectedItems').html(html || '<p class="text-muted p-2">No items selected</p>');
+                <table class="table table-bordered table-hover m-2">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Item</th>
+                            <th>Available</th>
+                            <th>Quantity</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+            
+            selectedItems.forEach((item, id) => {
+                html += `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>${item.available} ${item.unit}</td>
+                        <td>
+                            <input type="number" class="form-control form-control-sm" 
+                                style="width: 100px"
+                                name="items[${id}][quantity]"
+                                min="1"
+                                max="${item.available}"
+                                required
+                                placeholder="Qty"
+                                value="1">
+                            <input type="hidden" name="items[${id}][id]" value="${id}">
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-danger remove-item" data-id="${id}">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+            });
+            
+            html += `
+                    </tbody>
+                </table>`;
+        } else {
+            html = '<p class="text-muted p-2 m-2">No items selected</p>';
+        }
+        
+        $('#selectedItems').html(html);
     }
 
     $(document).on('click', '.remove-item', function() {

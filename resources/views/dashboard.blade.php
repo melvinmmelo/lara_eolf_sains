@@ -69,7 +69,7 @@
                     <div class="small-box bg-primary">
                         <div class="inner">
                             <h3>{{ number_format($todays_completed_count) }}</h3>
-                            <p><a href="{{ route('order.index') }}" class="small-box-footer">Today's Completed Orders <i class="fas fa-arrow-circle-right"></i></a></p>
+                            <p><a href="{{ route('order.index') }}" class="small-box-footer text-white">Today's Completed Orders <i class="fas fa-arrow-circle-right"></i></a></p>
                             <h5>₱{{ number_format($todays_completed_amount, 2) }}</h5>
                         </div>
                         <div class="icon">
