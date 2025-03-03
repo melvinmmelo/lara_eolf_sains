@@ -36,7 +36,14 @@
         <!-- /.login-logo -->
         <div class="card card-outline card-primary">
 
-            @include("layouts.errors")
+            <div class="m-2">
+
+                @include("layouts.errors")
+                <br>
+
+                <a href="{{ route('dashboard') }}">Click here if you are not automatically redirected.</a>
+
+            </div>
 
             <div class="card-header text-center">
                 <img src="{{ asset('img/eolf_logo.jpg') }}" alt="EOLF Logo" class="img-fluid"
