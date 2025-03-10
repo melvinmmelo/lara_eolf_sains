@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Process\Exceptions\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use App\Console\Commands\Log;
 
 class BackupDatabase extends Command
 {

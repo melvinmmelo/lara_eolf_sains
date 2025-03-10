@@ -162,7 +162,7 @@ $(document).ready(function() {
 
         searchTimeout = setTimeout(function() {
             currentRequest = $.ajax({
-                url: '{{ route("material-withdrawals.search") }}',
+                url: '{{ config('app.url') }}/material-withdrawals/search',
                 data: { query: query },
                 beforeSend: function() {
                     showLoading();
