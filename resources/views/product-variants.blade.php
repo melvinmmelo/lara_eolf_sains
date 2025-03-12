@@ -53,7 +53,7 @@
                                 <td>{{ $productVariant->date_created }}</td>
                                 <td>
                                     <a href="#" data-toggle="modal" data-target="#modalEdit"
-                                        onclick="setToUpdateProduct(`{{ $productVariant->code }}`,`{{ $productVariant->name }}`)"><button
+                                        onclick="setToUpdateProduct(`{{ $productVariant->code }}`,`{{ $productVariant->name }}`,{{ $productVariant->is_active }})"><button
                                             type="submit" class="btn btn-sm btn-primary">Edit</button></a>
                                 </td>
                             </tr>
@@ -188,9 +188,10 @@
 
 @section('custom_js')
     <script>
-        function setToUpdateProduct(code, name) {
+        function setToUpdateProduct(code, name, is_active) {
             document.querySelector('input[name="e_code"]').value = code;
             document.querySelector('input[name="e_name"]').value = name;
+            document.querySelector('input[name="e_status"]').checked = is_active;
         }
     </script>
 @endsection
