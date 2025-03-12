@@ -191,7 +191,20 @@
         function setToUpdateProduct(code, name, is_active) {
             document.querySelector('input[name="e_code"]').value = code;
             document.querySelector('input[name="e_name"]').value = name;
-            document.querySelector('input[name="e_status"]').checked = is_active;
+            
+            // Get the switch element
+            const switchElement = $('input[name="e_status"]');
+            
+            // Set the checked state based on is_active value
+            switchElement.prop('checked', is_active == 1);
+            
+            // Refresh the Bootstrap Switch to reflect the new state
+            switchElement.bootstrapSwitch('state', is_active == 1);
         }
+        
+        // Initialize Bootstrap Switch when the document is ready
+        $(function () {
+            $('input[data-bootstrap-switch]').bootstrapSwitch();
+        });
     </script>
 @endsection
