@@ -61,7 +61,7 @@
                                     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                                         <button type="button" class="btn btn-success" data-toggle="modal"
                                             data-target="#editUser"
-                                            onclick="setToUpdateUser('{{ $user->id }}','{{ $user->last_name }}','{{ $user->first_name }}','{{ $user->contact_no }}','{{ $user->address }}', '{{ $user->roles->first() ? $user->roles->first()->name : '' }}')"> <i class="fas fa-edit"></i>
+                                            onclick="setToUpdateUser('{{ $user->id }}','{{ $user->last_name }}','{{ $user->first_name }}','{{ $user->contact_no }}','{{ $user->address }}', '{{ $user->roles->first() ? $user->roles->first()->name : '' }}','{{ $user->status }}')"> <i class="fas fa-edit"></i>
                                         </button>
                                         <div class="btn-group" role="group">
                                             <button id="btnGroupDrop1" type="button" class="btn btn-danger dropdown-toggle"
@@ -353,13 +353,14 @@
 
 @section('custom_js')
     <script>
-        function setToUpdateUser(uid, ln, fn, con, addr, role) {
+        function setToUpdateUser(uid, ln, fn, con, addr, role, status) {
             document.getElementById("user_id").value = uid;
             document.getElementById("e_lname").value = ln;
             document.getElementById("e_fname").value = fn;
             document.getElementById("e_cno").value = con;
             document.getElementById("e_addr").value = addr;
             document.getElementById("e_role").value = role;
+            document.getElementById("e_status").value = status;
         }
 
         function setUserToReset(uid, ln, fn) {
