@@ -69,7 +69,7 @@ class UsersController extends Controller
 
         $user->save();
 
-        return redirect()->back()->with('sucess', 'Data saved!');
+        return redirect()->back()->with('success', 'Data saved!');
 
     }
 
