@@ -39,7 +39,7 @@ class ProductVariantController extends Controller
         $productType->name = $request->name;
         $productType->save();
 
-        return redirect()->back()->with('sucess', 'Data saved!');
+        return redirect()->back()->with('success', 'Data saved!');
     }
 
     /**
@@ -75,7 +75,7 @@ class ProductVariantController extends Controller
         $pvar->is_active = $request->e_status == 'on' ? 1 : 0;
         $pvar->save();
 
-        return redirect()->back()->with('sucess', 'Data saved!');
+        return redirect()->back()->with('success', 'Data saved!');
     }
 
     /**

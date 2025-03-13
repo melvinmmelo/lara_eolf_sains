@@ -93,7 +93,7 @@ class UsersController extends Controller
             return redirect()->back()->withErrors('Cannot delete admin!');
         }
 
-        return redirect()->back()->with('sucess', 'Data deleted!');
+        return redirect()->back()->with('success', 'Data deleted!');
     }
 
     public function resetPassword($id)
@@ -107,6 +107,6 @@ class UsersController extends Controller
         $user->password = bcrypt('password');
         $user->save();
 
-        return redirect()->back()->with('sucess', 'Password reset!');
+        return redirect()->back()->with('success', 'Password reset!');
     }
 }

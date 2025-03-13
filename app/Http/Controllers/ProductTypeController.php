@@ -51,7 +51,7 @@ class ProductTypeController extends Controller
             ->performedOn($productType)
             ->log('Product type created.');
 
-        return redirect()->back()->with('sucess', 'Data saved!');
+        return redirect()->back()->with('success', 'Data saved!');
     }
 
     public function toggleStatus(string $id)
@@ -60,7 +60,7 @@ class ProductTypeController extends Controller
         $productType->is_active = !$productType->is_active;
         $productType->save();
 
-        return redirect()->back()->with('sucess', 'Data saved!');
+        return redirect()->back()->with('success', 'Data saved!');
     }
 
     /**
@@ -109,7 +109,7 @@ class ProductTypeController extends Controller
             ->withProperties($changes)
             ->log('Product type updated.');
 
-        return redirect()->back()->with('sucess', 'Data saved!');
+        return redirect()->back()->with('success', 'Data saved!');
 
     }
 
