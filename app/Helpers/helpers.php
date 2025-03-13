@@ -18,6 +18,18 @@ if (!function_exists('statusBadge')) {
     }
 }
 
+if (!function_exists('statusEmployeeBadge')) {
+    function statusEmployeeBadge($status)
+    {
+        $status = strtolower($status);
+        $class = ($status === 'active') ? 'bg-success' : 'bg-danger';
+
+        $statusDesc = ($status === 'active') ? 'Active' : 'Resigned';
+
+        return '<span class="badge ' . $class . '">' . e(ucfirst($statusDesc)) . '</span>';
+    }
+}
+
 // format number with comma and decimal
 if (!function_exists('formatNumber')) {
     function formatNumber($number)

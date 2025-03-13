@@ -33,10 +33,10 @@
                         <tr>
                             <th>Last Name</th>
                             <th>First Name</th>
-                            <th>Contact</th>
-                            <th>Address</th>
+                            <th>Contact No.</th>
                             <th>Email</th>
                             <th>Role</th>
+                            <th>Status</th>
                             <th>Created at</th>
                             <th></th>
                         </tr>
@@ -48,7 +48,6 @@
                                 <td>{{ $user->last_name }}</td>
                                 <td>{{ $user->first_name }}</td>
                                 <td>{{ $user->contact_no }}</td>
-                                <td>{{ $user->address }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>
                                     @foreach ($user->roles as $role)
@@ -56,13 +55,13 @@
                                     @endforeach
 
                                 </td>
+                                <td>{!! statusEmployeeBadge($user->status) !!}</td>
                                 <td>{{ $user->created_at }}</td>
                                 <td>
                                     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                                         <button type="button" class="btn btn-success" data-toggle="modal"
                                             data-target="#editUser"
-                                            onclick="setToUpdateUser('{{ $user->id }}','{{ $user->last_name }}','{{ $user->first_name }}','{{ $user->contact_no }}','{{ $user->address }}')">
-                                            View
+                                            onclick="setToUpdateUser('{{ $user->id }}','{{ $user->last_name }}','{{ $user->first_name }}','{{ $user->contact_no }}','{{ $user->address }}', '{{ $user->roles->first() ? $user->roles->first()->name : '' }}')"> <i class="fas fa-edit"></i>
                                         </button>
                                         <div class="btn-group" role="group">
                                             <button id="btnGroupDrop1" type="button" class="btn btn-danger dropdown-toggle"
@@ -75,7 +74,7 @@
                                                     onclick="return deleteUser();">
                                                     Delete
                                                 </a>
-                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target='#resetUser' onclick="setUserToReset('{{ $user->id }}')">
+                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target='#resetUser' onclick="setUserToReset('{{ $user->id }}','{{ $user->last_name }}','{{ $user->first_name }}')">
                                                     Reset password
                                                 </a>
                                             </div>
@@ -89,9 +88,9 @@
                             <th>Last Name</th>
                             <th>First Name</th>
                             <th>Contact</th>
-                            <th>Address</th>
                             <th>Email</th>
                             <th>Role</th>
+                            <th>Status</th>
                             <th>Created at</th>
                             <th></th>
                         </tr>
@@ -124,11 +123,11 @@
                             <div class="form-group">
                                 <div class="row mb-2">
                                     <div class="col-sm-6">
-                                        <label class="form-label" for="name">Last Name</label>
+                                        <label class="form-label" for="name">Last Name<span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" name="last_name">
                                     </div>
                                     <div class="col-sm-6">
-                                        <label class="form-label" for="name">First Name</label>
+                                        <label class="form-label" for="name">First Name<span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" name="first_name">
                                     </div>
                                 </div>
@@ -138,7 +137,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="email">E-mail</label>
+                                        <label class="form-label" for="email">E-mail<span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" name="email">
                                     </div>
                                 </div>
@@ -147,7 +146,7 @@
                             <div class="form-group">
                                 <div class="row mb-2">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="password">Password</label>
+                                        <label class="form-label" for="password">Password<span class="text-danger">*</span></label>
                                         <input type="password" class="form-control" name="password" value="Eolf@2024">
                                     </div>
                                 </div>
@@ -156,7 +155,7 @@
                             <div class="form-group">
                                 <div class="row mb-2">
                                     <div class="col-sm-12">
-                                        <label class="form-label" for="password">Confirm Password</label>
+                                        <label class="form-label" for="password">Confirm Password<span class="text-danger">*</span></label>
                                         <input type="password" name="password_confirmation" class="form-control"
                                             value="Eolf@2024">
                                     </div>
@@ -178,6 +177,17 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <div class="row mb-2">
+                                    <div class="col-sm-12">
+                                        <label class="form-label" for="status">Status</label>
+                                        <select name="status" id="status" class="form-control">
+                                            <option value="active">Active</option>
+                                            <option value="resigned">Resigned</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
 
                             <!-- /.modal-content -->
                             <!-- /.modal-dialog -->
@@ -226,13 +236,13 @@
                         <div class="form-group">
                             <div class="row mb-2">
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="e_lname">Last Name</label>
+                                    <label class="form-label" for="e_lname">Last Name<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="e_lname" id="e_lname">
                                 </div>
 
 
                                 <div class="col-sm-6">
-                                    <label class="form-label" for="e_fname">First Name</label>
+                                    <label class="form-label" for="e_fname">First Name<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="e_fname" id="e_fname">
                                 </div>
 
@@ -243,7 +253,7 @@
                         <div class="form-group">
                             <div class="row mb-2">
                                 <div class="col-sm-12">
-                                    <label class="form-label" for="e_cno">Contact No</label>
+                                    <label class="form-label" for="e_cno">Contact No<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="e_cno" id="e_cno">
                                 </div>
                             </div>
@@ -261,11 +271,23 @@
                         <div class="form-group">
                             <div class="row mb-2">
                                 <div class="col-sm-12">
-                                    <label class="form-label" for="e_role">Role</label>
+                                    <label class="form-label" for="e_role">Role<span class="text-danger">*</span></label>
                                     <select name="e_role" id="e_role" class="form-control">
                                         @foreach ($roles as $role)
                                             <option value="{{ $role->name }}">{{ $role->name }}</option>
                                         @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row mb-2">
+                                <div class="col-sm-12">
+                                    <label class="form-label" for="e_status">Status<span class="text-danger">*</span></label>
+                                    <select name="e_status" id="e_status" class="form-control">
+                                        <option value="active">Active</option>
+                                        <option value="resigned">Resigned</option>
                                     </select>
                                 </div>
                             </div>
@@ -293,19 +315,19 @@
                 @method('PATCH')
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Reset User Password</h4>
+                        <h4 class="modal-title" id="resetHeaderTitle">Reset User Password</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
 
-                        <input type="text" class="form-control" name="ruser_id" id="ruser_id" required readonly>
+                        <input type="hidden" class="form-control" name="ruser_id" id="ruser_id" required readonly>
 
                         <div class="form-group">
                             <div class="row mb-2">
                                 <div class="col-sm-12">
-                                    <label class="form-label" for="password">New Password</label>
+                                    <label class="form-label" for="password">New Password<span class="text-danger">*</span></label>
                                     <input type="text" name="password" class="form-control"
                                         value="Eolf@2024">
                                 </div>
@@ -340,7 +362,9 @@
             document.getElementById("e_role").value = role;
         }
 
-        function setUserToReset(uid) {
+        function setUserToReset(uid, ln, fn) {
+            document.getElementById("resetHeaderTitle").textContent = `${ln} ${fn} - Reset Password`;
+
             // document.getElementById("resetForm").action = "/usereset/" + uid;
             document.getElementById("ruser_id").value = uid;
         }
