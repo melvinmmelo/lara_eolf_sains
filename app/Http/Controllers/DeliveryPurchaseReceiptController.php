@@ -43,7 +43,7 @@ class DeliveryPurchaseReceiptController extends Controller
         $request->validate([
             'dpr_id' => 'required|exists:delivery_purchase_receipts,id',
             'product_code' => 'required',
-            'qty' => 'required',
+            'qty' => 'required|numeric',
         ]);
 
         $dpr = DeliveryPurchaseReceipt::findOrFail($request->dpr_id);
