@@ -9,6 +9,8 @@ use App\Models\ProductType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Gate;
+use App\Models\Inbound;
+use Illuminate\Support\Facades\Artisan;
 
 class ItemMasterDataController extends Controller
 {
@@ -211,5 +213,71 @@ class ItemMasterDataController extends Controller
             'success' => true,
             'message' => 'Stocks updated successfully'
         ]);
+    }
+
+    /**
+     * Revert order items back to inventory stocks
+     * 
+     * @param \App\Models\Inbound $inbound
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function revertOrderItems($inboundId)
+    {
+        // Find the inbound order
+        $inbound = Inbound::findOrFail($inboundId);
+        
+        // Get the products from the inbound order
+        $products = json_decode($inbound->products, true);
+        
+        if (!$products) {
+            return redirect()->back()->withErrors('No products found in this order.');
+        }
+        
+        $branchCode = session('branch_code');
+        $revertedProducts = [];
+        
+        // Begin transaction to ensure all stock updates are atomic
+        \DB::beginTransaction();
+        
+        try {
+
+            // backup database first 
+            // run the php artisan command
+            Artisan::call('db:backup');
+            
+
+
+            foreach ($products as $product) {
+                // Find the corresponding item in the master data
+                $itemData = ItemMasterData::branch($branchCode)
+                    ->productCode($product['code'])
+                    ->first();
+                
+                if ($itemData) {
+                    // Add the quantity back to stocks
+                    $itemData->stocks += $product['quantity'];
+                    $itemData->save();
+                    
+                    $revertedProducts[] = [
+                        'code' => $product['code'],
+                        'description' => $product['description'],
+                        'quantity' => $product['quantity']
+                    ];
+                }
+            }
+            
+            // Log the activity
+            activity()
+                ->performedOn($inbound)
+                ->withProperties(['reverted_products' => $revertedProducts])
+                ->log('Order items reverted back to inventory');
+            
+            \DB::commit();
+            
+            return redirect()->back()->with('success', 'Order items have been successfully reverted back to inventory.');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return redirect()->back()->withErrors('Failed to revert order items: ' . $e->getMessage());
+        }
     }
 }

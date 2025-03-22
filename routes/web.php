@@ -205,8 +205,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/equipment-history/{dno}', [EquipmentHistoryController::class, 'equipmentHistory'])->name('equipment.history');
 
-
-
     Route::get('/get-regions', [PhAddrController::class, 'getRegions']);
     Route::get('/get-provinces/{regionId}', [PhAddrController::class, 'getProvinces']);
     Route::get('/get-cities/{provinceId}', [PhAddrController::class, 'getCities']);
@@ -225,7 +223,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/equipment-store/{id}', [EquipmentStoreController::class, 'destroy'])->name('equipment-store.destroy');
     Route::post('/equipment-store/update-pull-status', [EquipmentStoreController::class, 'updatePullStatus'])->name('equipment-store.updatePullStatus');
 
-
     Route::get('/vehicles', [VehiclesController::class, 'index'])->name('vehicles');
     Route::get('/vehicles/{id}/edit', [VehiclesController::class, 'edit'])->name('vehicle.edit');
     Route::get('/vehicles/create', [VehiclesController::class, 'create'])->name('vehicle.create');
@@ -240,7 +237,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dp-details/{id}', [DriversController::class, 'getDetails'])->name('dp.details');
 
-
     Route::post('/Drivers/store', [DriversController::class, 'store']);
 
     Route::get('/pricing-level', [PriceLevelsController::class, 'index'])->name('pricing-level.index');
@@ -248,11 +244,9 @@ Route::middleware('auth')->group(function () {
 
     Route::put('/pricing-level/update', [PriceLevelsController::class, 'update'])->name('pricing-level.update');
 
-
     Route::get('/pricing', [PricesController::class, 'index'])->name('pricing.index');
     Route::post('/pricing/store', [PricesController::class, 'store']);
     Route::patch('/pricing/update', [PricesController::class, 'update'])->name('price.update');
-
 
     Route::get('/product-types', [ProductTypeController::class, 'index'])->name('productType.index');
     Route::post('/product-types', [ProductTypeController::class, 'store'])->name('productType.store');
@@ -269,7 +263,6 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('/product/update', [ProductController::class, 'update'])->name('product.update');
 
-
     Route::get('/product/{id}/toggle-status', [ProductController::class, 'toggleStatus'])->name('product.toggleStatus');
     Route::get('/product-type/{id}/toggle-status', [ProductTypeController::class, 'toggleStatus'])->name('productType.toggleStatus');
 
@@ -284,7 +277,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/free-orders', [InboundController::class, 'freeOrders'])->name('orders.free');
 
     Route::get('/paid-orders', [InboundController::class, 'paidOrders'])->name('orders.paid');
-
 
     Route::put('/order/update', [InboundController::class, 'updateInbound'])->name('order.updateInbound');
 
@@ -307,6 +299,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/item-master-data', [ItemMasterDataController::class, 'index'])->name('itemdata.index');
 
     Route::post('/idm-addQtyFromHold', [ItemMasterDataController::class, 'addQtyFromHold'])->name('imd.addQtyFromHold');
+
+    Route::post('/revert-order-items/{inbound}', [ItemMasterDataController::class, 'revertOrderItems'])->name('itemdata.revertOrderItems');
 
     Route::put('/branch', [BranchesController::class, 'update'])->name('branch.update');
 

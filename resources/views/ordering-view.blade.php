@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>View Order </h1>
+                    <h1>View Order {{ $inbound->code }}</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -21,8 +21,27 @@
     <section class="content">
         @include('layouts.errors')
         <div class="card">
-            <form action="#">
                 <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <h4 class="form-label" for="date_modified">Date Modified: 
+                                {{ $inbound->updated_at->format('Y-m-d H:i') }}</h4>
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="text-right">
+                                <a href="{{ route('order.index') }}" class="btn btn-primary mr-2"><i class="fa fa-arrow-left"></i> Orders</a>
+                                @can('admin')
+                                <form id="revertForm" action="{{ route('itemdata.revertOrderItems', $inbound->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to revert this order\'s items back to inventory? This action cannot be undone.')">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger"><i class="fa fa-undo"></i> Revert Order Items to Inventory</button>
+                                </form>
+                                @endcan
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm">
@@ -52,13 +71,28 @@
                                 </div>
 
                                 <div class="form-checkbox">
-                                    <input type="checkbox" id="withInvoice" name="with_invoice" value="on">
+                                    <input type="checkbox" id="withInvoice" name="with_invoice" value="on" disabled>
                                     <label for="withInvoice">With Invoice</label>
+                                </div>
+    
+                                <div class="form-checkbox">
+                                    <input type="checkbox" id="isBadPricing" name="bad_order" value="on" disabled>
+                                    <label for="isBadPricing">Bad order</label>
+                                </div>
+    
+                                <div class="form-checkbox">
+                                    <input type="checkbox" id="isFOC" name="foc" value="on" disabled>
+                                    <label for="isFOC">FOC</label>
+                                </div>
+    
+                                <div class="form-checkbox">
+                                    <input type="checkbox" id="withSF" name="with_sf" value="on" disabled>
+                                    <label for="withSF">With Delivery Charge</label>
                                 </div>
 
                                 <div class="form-checkbox">
-                                    <input type="checkbox" id="isBadPricing" name="bad_order" value="on">
-                                    <label for="isBadPricing">Bad order</label>
+                                    <input type="checkbox" id="withDR" name="with_dr" value="on" disabled>
+                                    <label for="withDR">With DR</label>
                                 </div>
                             </div>
 
@@ -187,10 +221,35 @@
                     </div>
                 </div>
                 <!-- /.card-footer-->
-            </form>
         </div>
         <!-- /.card -->
 
     </section>
     <!-- /.content -->
+@endsection
+
+@section('custom_js')
+    <script>
+        @if($inbound->is_with_sf)
+            document.getElementById('withSF').checked = true;
+        @endif
+
+        // checked is_foc
+        @if($inbound->is_foc)
+            document.getElementById("isFOC").checked = true;
+        @endif
+
+        // check if bad order is checked
+        @if($inbound->bo_amount > 0)
+            document.getElementById("isBadPricing").checked = true;
+        @endif
+
+         @if($inbound->with_invoice)
+            document.getElementById("withInvoice").checked = true;
+         @endif
+
+         @if($inbound->delivery_receipt_id)
+            document.getElementById("withDR").checked = true;
+         @endif
+    </script>
 @endsection
