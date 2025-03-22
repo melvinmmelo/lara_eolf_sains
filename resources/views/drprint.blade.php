@@ -167,11 +167,15 @@
                             <i class="fa-solid fa-xmark"></i> Close
                         </a>
                     </div>
+
+                    <div class="p-2">
+                        <a href="{{ route('order.view', $inbound->id) }}" class="btn btn-primary btn-print" target="_blank">
+                            <i class="fa-solid fa-eye"></i> View order
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-
-
     </section>
 @endsection
 

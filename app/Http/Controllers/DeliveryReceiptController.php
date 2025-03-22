@@ -116,6 +116,10 @@ class DeliveryReceiptController extends Controller
 
 
         $inbound = Inbound::findOrFail($request->inbound_id);
+        // check status
+        if ($inbound->status === 'Deleted' || $inbound->status === 'Cancelled' || $inbound->status === 'Wrong entry') {
+            return redirect()->route('deliveryreceipt.index')->withErrors('Order status is deleted, cancelled, or wrong entry.');
+        }
 
         $isExisting = DeliveryReceipt::where('inbound_id', $validatedData['inbound_id'])->first();
         if ($isExisting) {
@@ -128,7 +132,7 @@ class DeliveryReceiptController extends Controller
             return redirect()->route('deliveryreceipt.index')->withErrors('Branch code not found.');
         }
 
-        if ($inbound->products == null) {
+        if ($inbound->products === null) {
             return redirect()->route('deliveryreceipt.index')->withErrors('No products found.');
         }
 
@@ -213,6 +217,7 @@ class DeliveryReceiptController extends Controller
         $inboundService = new InboundProductsService($inbound->products);
         $summary = $inboundService->summary();
         $products = $inboundService->addSppbinSummary();
+
         return view('drprint', compact('deliveryReceipt', 'products', 'inbound'));
     }
 }
