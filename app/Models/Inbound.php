@@ -201,4 +201,9 @@ class Inbound extends Model
     {
         return $this->balance =  $this->netAmount - $this->delivered_amount;
     }
+
+    public function scopeActiveOrdersv2($query)
+    {
+        return $query->whereIn('status', ['Completed', 'Paid', 'Free']);
+    }
 }
