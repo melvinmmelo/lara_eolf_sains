@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,11 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Schema::defaultStringLength(191);
+
+        // Force HTTPS for all URLs in production
+        if (config('app.env') !== 'local') {
+            URL::forceScheme('https');
+        }
 
         view()->composer('*', function ($view) {
             $gbranches = Branches::all(); // Get all branches from the Branch model
