@@ -248,7 +248,7 @@
                     </ul>
                 </li>
 
-                <li class="nav-item {{ Route::currentRouteNamed('report.productsSummary') ? 'menu-is-opening menu-open' : '' }}">
+                <li class="nav-item {{ Route::currentRouteNamed('report.productsSummary') || Route::currentRouteNamed('report.deliveryPurchaseReceiptSummary') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-folder-open" style="color: #74C0FC;"></i>
                         <p>
@@ -262,7 +262,7 @@
                             <a href="{{ route('report.productsSummary') }}"
                                 class="nav-link {{ Route::currentRouteNamed('report.productsSummary')  ? 'active' : '' }}">
                                 <i class="fas fa-list nav-icon"></i>
-                                <p>Products Summary</p>
+                                <p>Outbound Summary</p>
                             </a>
                         </li>
 
@@ -270,7 +270,15 @@
                             <a href="{{ route('report.productsSummaryv2') }}"
                                 class="nav-link {{ Route::currentRouteNamed('report.productsSummaryv2')  ? 'active' : '' }}">
                                 <i class="fas fa-list nav-icon"></i>
-                                <p>Products Summary2</p>
+                                <p>Outbound Summary v2</p>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('report.deliveryPurchaseReceiptSummary') }}"
+                                class="nav-link {{ Route::currentRouteNamed('report.deliveryPurchaseReceiptSummary')  ? 'active' : '' }}">
+                                <i class="fas fa-arrow-right nav-icon"></i>
+                                <p>Inbound Summary</p>
                             </a>
                         </li>
 

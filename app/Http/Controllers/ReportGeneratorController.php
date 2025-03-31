@@ -6,6 +6,7 @@ use App\Models\Inbound;
 use App\Models\ItemMasterData;
 use App\Models\OrderSlip;
 use App\Models\ProductVariant;
+use App\Models\DeliveryPurchaseReceipt;
 use App\Services\InboundService;
 use Illuminate\Http\Request;
 
@@ -125,5 +126,70 @@ class ReportGeneratorController extends Controller
             });
 
         return view('available-stocks', compact('products'));
+    }
+
+    public function deliveryPurchaseReceiptSummary(Request $request)
+    {
+        $branchCode = session('branch_code');
+        
+        $query = DeliveryPurchaseReceipt::branch($branchCode)
+            ->where('status', 'Completed');
+            
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $query->whereBetween('issue_date', [$request->from_date, $request->to_date]);
+            $title = "From: " . $request->from_date . " To: " . $request->to_date;
+        } else {
+            $query->whereDate('issue_date', now()->toDateString());
+            $title = "Today";
+        }
+        
+        $receipts = $query->get();
+        
+        // Process all products from the receipts
+        $productSummary = [];
+        
+        foreach ($receipts as $receipt) {
+            $products = json_decode($receipt->products, true);
+            
+            if (!is_array($products)) {
+                continue;
+            }
+            
+            foreach ($products as $product) {
+                $code = $product['code'];
+                $description = $product['description'] ?? 'Unknown';
+                $quantity = $product['quantity'] ?? 0;
+                $unit = $product['unit'] ?? 'pcs';
+                $price = $product['price'] ?? 0;
+                $hold = $product['hold'] ?? 0;
+                
+                if (!isset($productSummary[$code])) {
+                    $productSummary[$code] = [
+                        'code' => $code,
+                        'description' => $description,
+                        'total_quantity' => 0,
+                        'total_hold' => 0,
+                        'available_quantity' => 0,
+                        'unit' => $unit,
+                        'price' => $price,
+                        'total_value' => 0
+                    ];
+                }
+                
+                $productSummary[$code]['total_quantity'] += $quantity;
+                $productSummary[$code]['total_hold'] += $hold;
+                $productSummary[$code]['available_quantity'] += ($quantity - $hold);
+                $productSummary[$code]['total_value'] += ($quantity * $price);
+            }
+        }
+        
+        // Sort by product code
+        ksort($productSummary);
+        
+        return view('report.delivery-purchase-receipt-summary', [
+            'products' => $productSummary,
+            'title' => $title,
+            'receipts_count' => $receipts->count()
+        ]);
     }
 }

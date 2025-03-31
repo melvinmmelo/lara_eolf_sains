@@ -71,6 +71,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/available-stocks', [ReportGeneratorController::class, 'availableStocks'])->name('report.availableStocks');
 
+    Route::get('/delivery-purchase-receipt-summary', [ReportGeneratorController::class, 'deliveryPurchaseReceiptSummary'])->name('report.deliveryPurchaseReceiptSummary');
 
     Route::get('/loading-ticket', function () {
         return view('loading-ticket');
