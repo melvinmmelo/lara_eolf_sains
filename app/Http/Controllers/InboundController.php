@@ -23,6 +23,7 @@ use App\Services\InboundService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 // this is actually the outboundcontroller, nagkamali lang ng naming
 class InboundController extends Controller
@@ -286,6 +287,13 @@ class InboundController extends Controller
 
     public function store(Request $request)
     {
+        // Validate form token to prevent duplicate submissions
+        $token = $request->input('form_submit_token');
+        $tokenKey = 'form_token_' . $token;
+        
+        if (empty($token) || Cache::has($tokenKey)) {
+            return back()->withErrors('Invalid or expired form submission.');
+        }
 
         $branchCode = session('branch_code');
         $errors = [];
@@ -300,7 +308,11 @@ class InboundController extends Controller
             'bad_order_id' => 'nullable',
             'bo_amount' => 'nullable',
             'order_date' => 'required|date',
+            'form_submit_token' => 'required|string|size:32'
         ]);
+
+        // Store the token in cache for 1 hour to prevent reuse
+        Cache::put($tokenKey, true, now()->addHour());
 
         $products = NewInboundProduct::where("inbound_id", 0)->where('branch_code', session('branch_code'))->get();
         $orderNo = Inbound::getNextOrderNo($branchCode);
@@ -360,14 +372,17 @@ class InboundController extends Controller
         if ($bad_order == 1) {
 
             $badOrder = NewBadOrder::find($request->bad_order_id);
-            $badOrder->is_active = 0;
-            $badOrder->save();
+            if($badOrder){
 
-            $inbound->bad_order_id = $request->bad_order_id;
-            $inbound->bo_amount = $request->bo_amount;
+                $badOrder->is_active = 0;
+                $badOrder->save();
 
-            if($inbound->bo_amount == $inbound->grandTotal){
-                $inbound->status = 'Paid';
+                $inbound->bad_order_id = $request->bad_order_id;
+                $inbound->bo_amount = $request->bo_amount;
+
+                if($inbound->bo_amount == $inbound->grandTotal){
+                    $inbound->status = 'Paid';
+                }
             }
         }
 

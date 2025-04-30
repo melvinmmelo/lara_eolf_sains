@@ -22,8 +22,28 @@
         <div class="card">
 
             <div class="card-body">
+                <h4 class="mt-3">Summary</h4>
+                <div class="d-flex flex-row mb-2">
+                    @foreach ($productsSumm as $productSummary)
+                        <div class="btn btn-default mr-2">
+                            {{ $productSummary['code'] . ': ' . $productSummary['quantity'] }}
+                        </div>
+                    @endforeach
+                </div>
 
-                @include('layouts.errors')
+                <h4> Total</h4>
+
+                <div class="d-flex flex-row mb-2">
+                    <div class="btn btn-default mr-2">
+                        Total Stocks: {{ $products->sum('stocks') }}
+                    </div>
+                    <div class="btn btn-default mr-2">
+                        Total Reserved: {{ $products->sum('reserved') }}
+                    </div>
+                    <div class="btn btn-default mr-2">
+                        Total Hold: {{ $products->sum('hold_quantity') }}
+                    </div>
+                </div>
 
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
@@ -54,13 +74,12 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>Product</th>
-                            <th>Reserved</th>
-                            <th>Hold</th>
-                            <th>Quantity</th>
-                            <th>Date</th>
+                            <th>Total</th>
+                            <th>{{ $products->sum('reserved') }}</th>
+                            <th>{{ $products->sum('hold_quantity') }}</th>
+                            <th>{{ $products->sum('stocks') }}</th>
+                            <th></th>
                         </tr>
-
                     </tfoot>
                 </table>
             </div>

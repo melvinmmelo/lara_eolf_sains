@@ -362,8 +362,8 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-default" value="save">Save</button>
-
+                    <button type="submit" id="submitBtn" class="btn btn-default" value="save">Save</button>
+                    <input type="hidden" name="form_submit_token" value="{{ Str::random(32) }}">
                 </div>
                 <!-- /.card-footer-->
             </form>
@@ -379,7 +379,6 @@
 
 @section('custom_js')
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
 
     <script>
         // page on load show modalReminder
@@ -513,7 +512,7 @@
                 var total = document.getElementById("total").value;
                 var newTotal = parseInt(total) + parseInt(totalBadOrder);
                 document.getElementById("total").value = newTotal;
-                console.log(newTotal + " added.");
+                // console.log(newTotal + " added.");
 
                 document.getElementById("bad_order_id").value = "";
                 document.getElementById("bo_amount").value = 0;
@@ -686,5 +685,27 @@
         //         }
         //     });
         // });
+    </script>
+
+    <script>
+        // Prevent form resubmission on page refresh
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+        
+        // Handle form submission
+        document.querySelector('form').addEventListener('submit', function(e) {
+            var submitBtn = document.getElementById('submitBtn');
+            if (submitBtn.disabled) {
+                e.preventDefault();
+                return false;
+            }
+            submitBtn.disabled = true;
+        });
+        
+        // Enable form resubmission if there are validation errors
+        @if($errors->any())
+            document.getElementById('submitBtn').disabled = false;
+        @endif
     </script>
 @endsection

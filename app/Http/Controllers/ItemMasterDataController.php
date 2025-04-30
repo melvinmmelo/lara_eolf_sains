@@ -44,7 +44,38 @@ class ItemMasterDataController extends Controller
             })
             ->sortBy('sequence_no');
 
-        return view('item-master-data', compact('products'));
+        $productsSumm = $products->map(function ($product) {
+
+                if (isset($product->product_type_code)) {
+                    $ptypeCode = $product->product_type_code;
+                } else {
+                    $ptypeCode = substr($product->product_code, 0, 2);
+                    if ($ptypeCode == 'IC') {
+                        $ptypeCode = substr($product->product_code, 0, 3);
+                    }
+                }
+
+                $productType = ProductType::where("code", "LIKE", "$ptypeCode%")->first();
+
+                return [
+                    'code' => $ptypeCode,
+                    'quantity' => $product->stocks,
+                    'order' => $productType->sequence_no ?? '',
+                ];
+            })
+            ->groupBy('code')
+            ->map(function ($group) {
+                return [
+                    'code' => $group->first()['code'],
+                    'quantity' => $group->sum('quantity'),
+                    'order' => $group->first()['order'],
+                ];
+            })
+            ->sortBy('order')
+            ->values()
+            ->toArray();
+        
+        return view('item-master-data', compact('products', 'productsSumm'));
     }
 
     /**
