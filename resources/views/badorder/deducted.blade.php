@@ -59,6 +59,10 @@
                                         <td>{{ $badOrder['remarks'] }}</td>
                                         <td>{{ $badOrder['updated_at'] }}</td>
                                         <td>
+                                            <button type="button" class="btn btn-outline-primary btn-print"
+                                        data-bo-id="{{ $badOrder->id }}" onclick="printPage(this)">
+                                        <i class="fa-solid fa-print"></i> Print
+                                    </button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -83,4 +87,8 @@
         <!-- /.card -->
     </section>
     <!-- /.content -->
+@endsection
+
+@section('custom_js')
+    @include('bad_order_js')
 @endsection

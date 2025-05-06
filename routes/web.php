@@ -32,6 +32,7 @@ use App\Http\Controllers\ReportGeneratorController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\MaterialWithdrawalController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\StockReconciliationController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -138,10 +139,16 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dpr-delete/{drid}/{pcode}', [DeliveryPurchaseReceiptController::class, 'delete'])->name('dpr.delete');
 
-    Route::get('/dpr-delete/{drid}/{pcode}', [DeliveryPurchaseReceiptController::class, 'delete'])->name('dpr.delete');
-
     Route::post('/dpr-hold', [DeliveryPurchaseReceiptController::class, 'holdProduct'])->name('dpr.holdProduct');
 
+    // Stock Reconciliation Tool Routes
+    Route::prefix('stock-reconciliation')->name('stock-reconciliation.')->middleware(['auth'])->group(function () {
+        Route::get('/', [StockReconciliationController::class, 'index'])->name('index');
+        Route::get('/product/{productCode}', [StockReconciliationController::class, 'showProduct'])->name('product');
+        Route::post('/fix/{productCode}', [StockReconciliationController::class, 'fixStock'])->name('fix');
+        Route::get('/history/{productCode}', [StockReconciliationController::class, 'productHistory'])->name('history');
+        Route::get('/reconcile-all', [StockReconciliationController::class, 'reconcileAll'])->name('reconcile-all');
+    });
 
     Route::get('/problematic-orders', [InboundController::class, 'problematicOrders'])->name('orders.problematic');
 

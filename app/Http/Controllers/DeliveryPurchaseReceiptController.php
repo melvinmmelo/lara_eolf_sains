@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\ProductType;
 use App\Services\DPRService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DeliveryPurchaseReceiptController extends Controller
 {
@@ -129,11 +130,6 @@ class DeliveryPurchaseReceiptController extends Controller
     public function productsEdit(int $dprId)
     {
         $deliveryPurchaseReceipt = DeliveryPurchaseReceipt::findOrFail($dprId);
-        // dd($deliveryPurchaseReceipt);
-
-        if (strtolower($deliveryPurchaseReceipt->status) == 'completed') {
-            // return redirect()->back()->with('error', 'Delivery receipt already saved.');
-        }
 
         $originalProducts = Product::all();
         $originalProducts = $originalProducts->sortBy(function ($product) {
@@ -206,35 +202,55 @@ class DeliveryPurchaseReceiptController extends Controller
             'new_quantity' => 'required_if:action,edit',
         ]);
 
-        $dpr = DeliveryPurchaseReceipt::findOrFail($request->dprId);
-        $dprService = new DPRService($dpr->products);
-        $item = ItemMasterData::branch(session('branch_code'))->productCode($request->code)->firstOrFail();
-        $product = $dprService->getProduct($request->code);
-
         try {
+            return DB::transaction(function () use ($request) {
+                // Only lock the DPR since we're modifying its contents
+                $dpr = DeliveryPurchaseReceipt::lockForUpdate()->findOrFail($request->dprId);
+                
+                $dprService = new DPRService($dpr->products);
+                
+                // Don't lock ItemMasterData for read operations
+                $item = ItemMasterData::branch(session('branch_code'))
+                    ->productCode($request->code)
+                    ->firstOrFail();
+                    
+                $product = $dprService->getProduct($request->code);
 
-            switch ($request->action) {
-                case 'delete':
-                    $this->handleDelete($item, $product, $dprService);
-                    break;
-                case 'add':
-                    $this->handleAdd($item, $product, $dprService, $request);
-                    break;
-                case 'edit':
-                    $this->handleEdit($item, $product, $dprService, $request);
-                    break;
-                default:
-                    throw new \InvalidArgumentException('Invalid action specified.');
-            }
+                switch ($request->action) {
+                    case 'delete':
+                        $this->handleDelete($item, $product, $dprService);
+                        break;
+                    case 'add':
+                        $this->handleAdd($item, $product, $dprService, $request);
+                        break;
+                    case 'edit':
+                        $this->handleEdit($item, $product, $dprService, $request);
+                        break;
+                    default:
+                        throw new \InvalidArgumentException('Invalid action specified.');
+                }
 
-            $dpr->products = $dprService->getNewProducts();
+                $dpr->products = $dprService->getNewProducts();
+                $dpr->save();
+                
+                // Only lock ItemMasterData when we're about to update it
+                $itemToUpdate = ItemMasterData::branch(session('branch_code'))
+                    ->productCode($request->code)
+                    ->lockForUpdate()
+                    ->firstOrFail();
+                    
+                // Re-verify our calculations are still valid
+                if ($itemToUpdate->stocks !== $item->stocks) {
+                    throw new \Exception('Stock quantity has changed. Please try again.');
+                }
+                
+                $itemToUpdate->stocks = $item->stocks;
+                $itemToUpdate->save();
 
-            $dpr->save();
-            $item->save();
+                $this->logActivity($dpr, $request->code);
 
-            $this->logActivity($dpr, $request->code);
-
-            return redirect()->back()->with('success', 'Item updated successfully.');
+                return redirect()->back()->with('success', 'Item updated successfully.');
+            });
         } catch (\Exception $e) {
             return redirect()->back()->withErrors('Error processing your request: ' . $e->getMessage());
         }

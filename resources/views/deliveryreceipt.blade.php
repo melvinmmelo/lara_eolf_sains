@@ -237,8 +237,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
@@ -248,54 +246,6 @@
                                     </div>
                                 </div>
                             </div>
-                            {{-- <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="total_amount">Total Amount</label>
-                                        <input type="text" class="form-control" name="total_amount">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="bad_orders">Bad Orders</label>
-                                        <input type="text" class="form-control" name="bad_orders">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="discount">Discount</label>
-                                        <input type="text" class="form-control" name="discount">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="amount_due">Amount Due</label>
-                                        <input type="text" class="form-control" name="amount_due">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="amount_paid">Amount Paid</label>
-                                        <input type="text" class="form-control" name="amount_paid">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="form-label" for="balance">Balance</label>
-                                        <input type="text" class="form-control" name="balance">
-                                    </div>
-                                </div>
-                            </div> --}}
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-success">Save changes</button>
@@ -320,20 +270,6 @@
 
 @section('custom_js')
     <script>
-        // function setToUpdateBranch() {
-        //     // get datatable
-        //     var table = $('#example1').DataTable();
-
-        //     // get the data of clicked row
-        //     var data = table.row($(this).parents('tr')).data();
-
-        //     document.querySelector('input[name=e_code]').value = data[0];
-        //     document.querySelector('input[name=e_name]').value = data[1];
-        //     document.querySelector('textarea[name=e_address]').value = data[2];
-        //     document.querySelector('input[name=e_office_no]').value = data[3];
-
-        // }
-
         function setObId(obId, totalAmount) {
             if(totalAmount == 0) {
 

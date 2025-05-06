@@ -193,7 +193,7 @@
                     </ul>
                 </li>
 
-                <li class="nav-item {{ Route::currentRouteNamed('delivery-purchase-receipts.index') || Route::currentRouteNamed('itemdata.index') || Route::currentRouteNamed('drp.products') || Route::currentRouteNamed('materialsInventory.index') || Route::currentRouteNamed('materialsInventory.history') || Route::currentRouteNamed('update.stocks.page') || Route::currentRouteNamed('bulk.update.stocks.page') ? 'menu-is-opening menu-open' : '' }}">
+                <li class="nav-item {{ Route::currentRouteNamed('delivery-purchase-receipts.index') || Route::currentRouteNamed('itemdata.index') || Route::currentRouteNamed('drp.products') || Route::currentRouteNamed('materialsInventory.index') || Route::currentRouteNamed('materialsInventory.history') || Route::currentRouteNamed('update.stocks.page') || Route::currentRouteNamed('bulk.update.stocks.page') || Route::currentRouteNamed('stock-reconciliation.index') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-warehouse" style="color: #74C0FC;"></i>
                         <p>
@@ -227,9 +227,19 @@
                             </a>
                         </li>
 
+                      
                         @can('admin')
 
                         <li>
+                            <a href="{{ route('stock-reconciliation.index') }}" 
+                               class="nav-link {{ Route::currentRouteNamed('stock-reconciliation.index') ? 'active' : '' }}">
+                                <i class="fas fa-balance-scale nav-icon" style="color: #74C0FC;"></i>
+                                <p>Stock Reconciliation</p>
+                            </a>
+                        </li>
+
+
+                        {{-- <li>
                             <a href="{{ route('update.stocks.page') }}" class="nav-link {{ request()->routeIs('update.stocks.page') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>Update Stocks</p>
@@ -241,7 +251,7 @@
                                 <i class="nav-icon fas fa-boxes"></i>
                                 <p>Bulk Update Stocks</p>
                             </a>
-                        </li>
+                        </li> --}}
 
                         @endcan
 

@@ -9,7 +9,7 @@ class ItemMasterData extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded = ["stocks", "reserved"];
 
     // create a scope that gets the product based on the branch code
     public function scopeBranch($query, $branchCode)
