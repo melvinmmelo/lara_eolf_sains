@@ -21,26 +21,18 @@ class StockReconciliationController extends Controller
     public function index(Request $request)
     {
         $branchCode = session('branch_code');
-        $searchTerm = $request->get('search', '');
+        $searchTerm = $request->search;
         $items = [];
-        $items = ItemMasterData::branch($branchCode)
+        $items = DB::table('item_master_data')
+            ->where('branch_code', $branchCode)
             ->paginate(20);
             
         if ($searchTerm) {
-            $items->where(function($q) use ($searchTerm) {
-                $q->where('product_code', 'like', "%{$searchTerm}%");
-            });
+            $items = DB::table('item_master_data')
+                        ->where('branch_code', $branchCode)
+                        ->where('product_code', 'like', "%$searchTerm%")
+                        ->paginate(20);
         }
-
-       foreach ($items as $item) {
-            $orders = Inbound::where('branch_code', $branchCode)
-                ->where('products', 'like', "%{$item->product_code}%")
-                ->whereIn('status', ['Completed', 'Paid', 'Free'])
-                ->get();
-            
-            $item->orders = $orders;
-        }
-
             
         return view('stock-reconciliation.index', compact('items', 'searchTerm'));
     }
@@ -332,7 +324,7 @@ class StockReconciliationController extends Controller
         $history = [];
         
         $orders = Inbound::where('branch_code', $branchCode)
-            ->whereIn('status', ['Completed', 'Paid'])
+            ->whereIn('status', ['Completed', 'Paid', 'Free'])
             ->orderBy('created_at', 'desc')
             ->get();
 

@@ -48,42 +48,32 @@
 
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped">
-                            <thead class="thead-dark">
+                            <thead class="thead-light">
                                 <tr>
                                     <th>Product Code</th>
                                     <th>Description</th>
-                                    <th>Master Stock</th>
-                                    <th>Transactions Based Stock</th>
-                                    <th>Status</th>
+                                    <th>Stock</th>
+                                    <th>Reserved</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($items as $item)
-                                    <tr class="{{ $item->stocks < $item->orders->sum('quantity') ? 'table-danger' : '' }}">
+                                    <tr>
                                         <td>{{ $item->product_code }}</td>
                                         <td>{{ $item->product_description }}</td>
                                         <td>{{ $item->stocks }}</td>
-                                        <td>{{ $item->orders->sum('quantity') }}</td>
-                                        <td>
-                                            @if($item->stocks < $item->orders->sum('quantity'))
-                                                <span class="badge badge-danger">Negative Stock</span>
-                                            @elseif($item->stocks > $item->orders->sum('quantity'))
-                                                <span class="badge badge-warning">Stock > Orders</span>
-                                            @else
-                                                <span class="badge badge-success">OK</span>
-                                            @endif
-                                        </td>
+                                        <td>{{ $item->reserved }}</td>
                                         <td>
                                             <a href="{{ route('stock-reconciliation.product', $item->product_code) }}" 
-                                               class="btn btn-sm btn-info">
+                                               class="btn btn-sm btn-default">
                                                 <i class="fas fa-search"></i> Details
                                             </a>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center">No items found</td>
+                                        <td colspan="5" class="text-center">No items found</td>
                                     </tr>
                                 @endforelse
                             </tbody>

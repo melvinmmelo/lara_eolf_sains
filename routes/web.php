@@ -33,6 +33,7 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\MaterialWithdrawalController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StockReconciliationController;
+use App\Http\Controllers\InventoryBadOrderController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -333,6 +334,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/material-withdrawals', [MaterialWithdrawalController::class, 'index'])->name('material-withdrawals.index');
     Route::get('/material-withdrawals/search', [MaterialWithdrawalController::class, 'search'])->name('material-withdrawals.search');
     Route::post('/material-withdrawals', [MaterialWithdrawalController::class, 'store'])->name('material-withdrawals.store');
+
+    Route::get('/inventory/bad-orders', [InventoryBadOrderController::class, 'index'])->name('inventory.bad-orders');
+    Route::get('/inventory/bad-orders/product/{productCode}', [InventoryBadOrderController::class, 'product'])->name('inventory.bad-orders.product');
+
+    Route::get('/inventory/bad-orders/create', [InventoryBadOrderController::class, 'create'])->name('inventory.bad-orders.create');
+    Route::post('/inventory/bad-orders', [InventoryBadOrderController::class, 'store'])->name('inventory.bad-orders.store');
 });
 
 require __DIR__ . '/auth.php';

@@ -28,4 +28,9 @@ class Delivery extends Model
     {
         return $this->created_at->format('m-d-Y h:i A');
     }
+
+    public function scopeBranch($query, $branchCode)
+    {
+        return $query->where('branch_code', $branchCode);
+    }
 }

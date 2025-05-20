@@ -47,25 +47,22 @@ class DashboardController extends Controller
             });
 
         // Get yearly sales data
-        $yearlySales = Inbound::select([
-            DB::raw('YEAR(order_date) as year'),
-            DB::raw('COUNT(*) as order_count'),
-            DB::raw('SUM(COALESCE(delivered_amount, 0)) as total')
-        ])
-        ->where('branch_code', '=', session()->get('branch_code'))
-        ->whereNotNull('order_date')
-        ->whereNotNull('delivered_amount')
-        ->whereIn('status', ['Paid', 'Completed'])
-        ->groupBy(DB::raw('YEAR(order_date)'))
-        ->orderBy('year', 'desc')
-        ->get()
-        ->map(function($item) {
-            return [
-                'year' => (int)$item->year,
-                'amount' => (float)$item->total,
-                'count' => (int)$item->order_count
-            ];
-        });
+        $yearlySales = Inbound::branch(session('branch_code'))
+            ->whereNotNull('order_date')
+            ->whereIn('status', ['Paid', 'Completed'])
+            ->get()
+            ->groupBy(function($item) {
+                return Carbon::parse($item->order_date)->year;
+            })
+            ->map(function($items, $year) {
+                return [
+                    'year' => (int)$year,
+                    'amount' => (float)$items->sum('grand_total'),
+                    'count' => (int)$items->count()
+                ];
+            })
+            ->sortByDesc('year')
+            ->values();
 
 
         // Get monthly sales data for current year
@@ -74,25 +71,21 @@ class DashboardController extends Controller
 
         for ($month = 1; $month <= 12; $month++) {
             $date = Carbon::createFromDate($currentYear, $month, 1);
-            $monthData = Inbound::select([
-                DB::raw('COUNT(*) as order_count'),
-                DB::raw('SUM(COALESCE(delivered_amount, 0)) as total')
-            ])
-            ->where('branch_code', '=', session()->get('branch_code'))
-            ->whereYear('order_date', $currentYear)
-            ->whereMonth('order_date', $month)
-            ->whereIn('status', ['Paid', 'Completed'])
-            ->first();
+            $monthData = Inbound::branch(session('branch_code'))
+                ->whereYear('order_date', $currentYear)
+                ->whereMonth('order_date', $month)
+                ->whereIn('status', ['Paid', 'Completed'])
+                ->get();
 
             $monthlySales->push([
                 'month' => $date->format('M'),
-                'amount' => (float)($monthData->total ?? 0)
+                'amount' => (float)$monthData->sum('grand_total')
             ]);
         }
  
 
-        $todaysOrders = Inbound::whereNotIn('status', ['Cancelled', 'Rejected', 'Deleted'])
-            ->where('branch_code', '=', session()->get('branch_code'))
+        $todaysOrders = Inbound::branch(session('branch_code'))
+            ->whereNotIn('status', ['Cancelled', 'Rejected', 'Deleted'])
             ->whereDate('order_date', $today)
             ->orderBy('order_slip_sno')->get();
 
@@ -109,7 +102,7 @@ class DashboardController extends Controller
         $todaysCompletedAmount = $todaysCompletedOrders->sum('delivered_amount');
 
         // Get pending deliveries
-        $pendingDeliveries = Inbound::branch(session()->get('branch_code'))
+        $pendingDeliveries = Inbound::branch(session('branch_code'))
             ->whereDoesntHave('deliveryReceipt')
             ->with(['customer', 'deliveryReceipt'])
             ->latest()
@@ -123,9 +116,8 @@ class DashboardController extends Controller
 
         $data = [
             'products_count' => Product::count(),
-            'orders_count' => Inbound::branch(session()->get('branch_code'))->count(),
-            'customers_count' => Customers::branch(session()->get('branch_code'))->count(),
-            'deliveries_count' => Delivery::count(),
+            'orders_count' => Inbound::branch(session('branch_code'))->count(),
+            'customers_count' => Customers::branch(session('branch_code'))->count(),
             'todays_orders_count' => $todaysOrdersCount,
             'todays_orders_amount' => $todaysOrdersAmount,
             'todays_paid_count' => $todaysPaidCount,
@@ -135,7 +127,7 @@ class DashboardController extends Controller
             'yearly_sales' => $yearlySales,
             'monthly_sales' => $monthlySales,
             'pending_deliveries' => $pendingDeliveries,
-            'recent_orders' => Inbound::branch(session()->get('branch_code'))
+            'recent_orders' => Inbound::branch(session('branch_code'))
                 ->with(['customer', 'deliveryReceipt'])
                 ->latest()
                 ->take(5)

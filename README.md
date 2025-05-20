@@ -1,12 +1,8 @@
-# Project Description: EOLF Trading Sales and Inventory System 2024
+# Project Description: EOLF Trading Sales and Inventory System
+## Updates
+20-May-2025 Updates
+1. Added stock reconciliation feature
+2. Added inventory bad order feature
+3. Update monthly sales graph in dashboard
+    - Sales is based on completed and paid orders
 
-17-Nov-2024 Updates
-1. Inbound
-    New Column: is_with_sf
-    New Column: order_no
-2. Loading Ticket - New Table
-3. Order Slip
-    New Column: code
-4. Delivery Receipt
-    New Column: code
-5. New Codes in Inbound, Loading Ticket, Order Slip, Delivery Receipt
