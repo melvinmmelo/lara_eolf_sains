@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Process\Exceptions\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\Log;
 
 
 class BackupDatabase extends Command
@@ -34,12 +35,13 @@ class BackupDatabase extends Command
         try {
             $process->mustRun();
             $this->info('The backup has been created successfully.');
-            \Log::info('The backup has been created successfully.');
+            Log::info('The backup has been created successfully.');
 
             // Delete old backups
             $this->cleanOldBackups();
         } catch (ProcessFailedException $exception) {
             $this->error('The backup process has failed.');
+            Log::error('The backup process has failed.');
         }
     }
 
@@ -57,6 +59,7 @@ class BackupDatabase extends Command
                 if ($now - filemtime($file) >= 30 * 24 * 60 * 60) { // 30 days in seconds
                     unlink($file);
                     $this->info('Deleted old backup: ' . basename($file));
+                    Log::info('Deleted old backup: ' . basename($file));
                 }
             }
         }

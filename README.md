@@ -5,4 +5,7 @@
 2. Added inventory bad order feature
 3. Update monthly sales graph in dashboard
     - Sales is based on completed and paid orders
+4. Added validation of duplicated order
+5. Added summary in orders index
+6. Added totals column in order index
 
