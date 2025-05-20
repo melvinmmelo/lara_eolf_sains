@@ -75,6 +75,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/delivery-purchase-receipt-summary', [ReportGeneratorController::class, 'deliveryPurchaseReceiptSummary'])->name('report.deliveryPurchaseReceiptSummary');
 
+    Route::get('/customer-update-form', [ReportGeneratorController::class, 'customerUpdateForm'])->name('report.customerUpdateForm');
+
     Route::get('/loading-ticket', function () {
         return view('loading-ticket');
     });

@@ -192,4 +192,9 @@ class ReportGeneratorController extends Controller
             'receipts_count' => $receipts->count()
         ]);
     }
+
+    public function customerUpdateForm()
+    {
+        return view('report.customer-update-form');
+    }
 }
