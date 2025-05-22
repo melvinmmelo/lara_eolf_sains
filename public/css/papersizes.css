@@ -8,7 +8,7 @@ page {
   display: block;
   margin: 0 auto;
   margin-bottom: 0.5cm;
-  box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
+  
 }
 page[size="letter"] {
   width: 8.5in;
@@ -45,4 +45,11 @@ page[size="onehalf"] {
   .hidePrintBtn {
         display: none;
       }
+}
+
+.underline-input {
+  border-bottom: 1px solid black;
+  display: inline-block;
+  min-width: 150px;
+  padding: 0 4px;
 }
