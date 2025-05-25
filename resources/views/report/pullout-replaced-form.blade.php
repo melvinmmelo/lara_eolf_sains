@@ -182,7 +182,23 @@
                 </tr>
             </table>
     
-          
+            <div class="flex justify-end space-x-1 mt-4">
+  <!-- Print Button -->
+  <button 
+    onclick="window.print()" 
+    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
+  >
+    Print
+  </button>
+
+  <!-- Cancel Button -->
+  <button 
+    onclick="window.history.back()" 
+    class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
+  >
+    Cancel
+  </button>
+</div>
                 
             </div>
       
