@@ -29,4 +29,13 @@ class InventoryBadOrder extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public static function generateReferenceName()
+    {
+        $latest = static::count();
+        $prefix = 'INVBO-';
+        $created_at = date('Ymd');
+        $nextNumber = $latest ? (int) $latest + 1 : 1;
+        return $prefix . $created_at . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);      
+    }
 }

@@ -46,7 +46,7 @@
                     @csrf
 
                     <div class="input-group mb-3">
-                        <input type="email" name="email" :value="old('email')" class="form-control"
+                        <input type="email" name="email" value="{{ old('email') }}" class="form-control"
                             placeholder="Email">
                         <div class="input-group-append">
                             <div class="input-group-text">

@@ -40,7 +40,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="reference_name">Reference Name <span class="text-danger">*</span></label>
+                                    <label for="reference_name">Reference no. <span class="text-danger">*</span></label>
                                     <input type="text" 
                                            class="form-control @error('reference_name') is-invalid @enderror" 
                                            id="reference_name" 
@@ -51,7 +51,7 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
 
-                                    <small class="text-danger">Reference name must be unique.</small>
+                                    <small class="text-danger">This is system auto generated.</small>
                                 </div>
                             </div>
                             <div class="col-md-6">

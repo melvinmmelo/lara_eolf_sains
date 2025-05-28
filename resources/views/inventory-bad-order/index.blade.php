@@ -21,7 +21,6 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th>Reference No.</th>
-                                    <th>Branch</th>
                                     <th>Products</th>
                                     <th>Created By</th>
                                     <th>Date</th>
@@ -32,16 +31,10 @@
                                 @forelse($badOrders as $order)
                                     <tr>
                                         <td>{{ $order->reference_name }}</td>
-                                        <td>{{ $order->branch_code }}</td>
                                         <td>
-                                            @php
-                                                $products = $order->products;
-                                                $count = count($products);
-                                            @endphp
-                                            {{ $count }} item(s)
-                                            <button type="button" class="btn btn-sm btn-link" onclick="showProducts({{ $order->id }}, {{ json_encode($order->products) }})">
-                                                View
-                                            </button>
+                                           @foreach ($order->products as $product)
+                                                {{ $product['name'] }} ({{ $product['quantity'] }} {{ $product['unit'] }})<br>
+                                           @endforeach
                                         </td>
                                         <td>{{ $order->user->fullName ?? 'N/A' }}</td>
                                         <td>{{ $order->created_at->format('M d, Y h:i A') }}</td>

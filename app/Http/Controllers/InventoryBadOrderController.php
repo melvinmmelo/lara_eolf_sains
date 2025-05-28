@@ -19,7 +19,8 @@ class InventoryBadOrderController extends Controller
     public function create()
     {
         $itemMasterData = ItemMasterData::where('branch_code', session('branch_code'))->get();
-        return view('inventory-bad-order.create', compact('itemMasterData'));
+        $reference_name = InventoryBadOrder::generateReferenceName();
+        return view('inventory-bad-order.create', compact('itemMasterData', 'reference_name'));
     }
 
     public function store(Request $request)
