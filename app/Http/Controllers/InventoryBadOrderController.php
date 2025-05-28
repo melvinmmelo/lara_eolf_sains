@@ -10,9 +10,27 @@ use Illuminate\Support\Facades\DB;
 class InventoryBadOrderController extends Controller
 {
     //
-    public function index()
-    {   
-        $badOrders = InventoryBadOrder::all();
+    public function index(Request $request)
+    {
+        $query = InventoryBadOrder::query()
+            ->with('user')
+            ->orderBy('created_at', 'desc');
+
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = '%' . strtolower($request->search) . '%';
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('reference_name', 'LIKE', $searchTerm)
+                  ->orWhereRaw('LOWER(JSON_EXTRACT(products, "$[*].name")) LIKE ?', [$searchTerm])
+                  ->orWhereRaw('LOWER(JSON_EXTRACT(products, "$[*].code")) LIKE ?', [$searchTerm]);
+            });
+        }
+
+        $badOrders = $query->paginate(15);
+        
+        if ($request->ajax()) {
+            return response()->json($badOrders);
+        }
+
         return view('inventory-bad-order.index', compact('badOrders'));
     }
 

@@ -16,6 +16,25 @@
                 </div>
 
                 <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <form action="{{ route('inventory.bad-orders') }}" method="GET">
+                                <div class="input-group">
+                                    <input type="text" name="search" class="form-control" placeholder="Search by product name..." value="{{ request('search') }}">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="submit">
+                                            <i class="fas fa-search"></i> Search
+                                        </button>
+                                        @if(request('search'))
+                                            <a href="{{ route('inventory.bad-orders') }}" class="btn btn-outline-danger">
+                                                <i class="fas fa-times"></i> Clear
+                                            </a>
+                                        @endif
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">
                             <thead class="thead-light">
@@ -28,6 +47,11 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @if($badOrders->isEmpty() && request()->has('search'))
+                                    <tr>
+                                        <td colspan="7" class="text-center">No bad orders found matching your search criteria.</td>
+                                    </tr>
+                                @else
                                 @forelse($badOrders as $order)
                                     <tr>
                                         <td>{{ $order->reference_name }}</td>
@@ -45,6 +69,7 @@
                                         <td colspan="7" class="text-center">No bad orders found</td>
                                     </tr>
                                 @endforelse
+                                @endif
                             </tbody>
                         </table>
                     </div>
