@@ -144,7 +144,7 @@ class Inbound extends Model
 
     public function scopeForOrderSlip($query)
     {
-        return $query->whereNull('order_slip_code');
+        return $query->whereNull('order_slip_code')->whereNotIn('status', ['Cancelled', 'Deleted']);
     }
 
     public function scopeWithProducts($query)
