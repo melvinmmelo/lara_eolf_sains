@@ -42,20 +42,20 @@
             <table class="table-fixed w-full border-separate border-spacing-y-2 border-spacing-x-1">
                 <tr>
                     <td>Sales Agent:</td>
-                    <td colspan="2" class="border-b border-black">JOFREN D. COMIA - CAGAYAN</td>
+                    <td colspan="2" class="border-b border-black"></td>
                     <td class="text-right pr-3">Date:</td>
-                    <td class="border-b border-black">March 03, 2025</td>
+                    <td class="border-b border-black">{{ $date }}</td>
                 </tr>
     
                 <tr>
                     <td>Name of Customer/Tel. No:</td>
-                    <td colspan="3" class="border-b border-black">Comia, Jofren D.</td>
+                    <td colspan="3" class="border-b border-black">{{ $customer->lastname }}, {{ $customer->firstname }} {{ $customer->middlename }}</td>
                     <td></td>
                 </tr>
     
                 <tr>
                     <td>Current Address/Location:</td>
-                    <td colspan="4" class="border-b border-black">Pagkakaisa St., MALLIG, ISABELA</td>
+                    <td colspan="4" class="border-b border-black">{{ $customer->region }}, {{ $customer->province }}, {{ $customer->city }} {{ $customer->brgy }}</td>
                 </tr>
     
                 <tr>
@@ -67,19 +67,63 @@
                     <td>RWS No.:</td>
                     <td class="border-b border-black w-[100px]">&nbsp;</td>
                     <td class="text-right pr-3">Freezer Model:</td>
-                    <td colspan="2" class="border-b border-black">EFE-4602</td>
+                    <td colspan="2" class="border-b border-black">
+                        @if ($customer->equipmentStores->isNotEmpty())
+                            @foreach ($customer->equipmentStores as $equipmentStore)
+                                {{ $equipmentStore->equipment->brand }}
+                                @if (!$loop->last)
+                                    ,
+                                @endif
+                            @endforeach
+                        @else
+                            No Equipment Assigned
+                        @endif
+                    </td>
                 </tr>
     
                 <tr>
                     <td>DEGIC Serial No.:</td>
-                    <td class="border-b border-black">8318.2021</td>
+                    <td class="border-b border-black">
+                        @if ($customer->equipmentStores->isNotEmpty())
+                            @foreach ($customer->equipmentStores as $equipmentStore)
+                                {{ $equipmentStore->equipment->code }}
+                                @if (!$loop->last)
+                                    ,
+                                @endif
+                            @endforeach
+                        @else
+                            No Equipment Assigned
+                        @endif
+                    </td>
                     <td class="text-right pr-3">Freezer Serial No.:</td>
-                    <td colspan="2" class="border-b border-black">L61.225.815.8</td>
+                    <td colspan="2" class="border-b border-black">
+                        @if ($customer->equipmentStores->isNotEmpty())
+                            @foreach ($customer->equipmentStores as $equipmentStore)
+                                {{ $equipmentStore->equipment->serial_no }}
+                                @if (!$loop->last)
+                                    ,
+                                @endif
+                            @endforeach
+                        @else
+                            No Equipment Assigned
+                        @endif
+                    </td>
                 </tr>
     
                 <tr>
                     <td>Remarks of DEGIC:</td>
-                    <td colspan="4" class="border-b border-black">CHECK UP FREEZER</td>
+                    <td colspan="4" class="border-b border-black">
+                        @if ($customer->equipmentStores->isNotEmpty())
+                            @foreach ($customer->equipmentStores as $equipmentStore)
+                                {{ $equipmentStore->remarks }}
+                                @if (!$loop->last)
+                                    ,
+                                @endif
+                            @endforeach
+                        @else
+                            No Equipment Assigned
+                        @endif
+                    </td>
                 </tr>
     
                 <tr>
@@ -96,7 +140,7 @@
     
                 <tr>
                     <td class="whitespace-nowrap">Document/s Submitted (if any):</td>
-                    <td colspan="2" class="border-b border-black w-full pl-3">adadsasda</td>
+                    <td colspan="2" class="border-b border-black w-full pl-3"></td>
                     <td> </td>
                     <td class="whitespace-nowrap pr-2">Inspected by:</td>
                     

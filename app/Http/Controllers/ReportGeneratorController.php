@@ -9,8 +9,7 @@ use App\Models\ProductVariant;
 use App\Models\DeliveryPurchaseReceipt;
 use App\Services\InboundService;
 use Illuminate\Http\Request;
-
-use function Ramsey\Uuid\v1;
+use App\Models\Customers as Customer;
 
 class ReportGeneratorController extends Controller
 {
@@ -193,9 +192,10 @@ class ReportGeneratorController extends Controller
         ]);
     }
 
-    public function customerUpdateForm()
+    public function customerUpdateForm(Customer $customer)
     {
-        return view('report.customer-update-form');
+        $date = now()->toDateString();
+        return view('report.customer-update-form', compact('customer', 'date'));
     }
 
     public function pulloutReplacedForm()
