@@ -76,7 +76,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/delivery-purchase-receipt-summary', [ReportGeneratorController::class, 'deliveryPurchaseReceiptSummary'])->name('report.deliveryPurchaseReceiptSummary');
 
     Route::get('/customer-update-form/{customer}', [ReportGeneratorController::class, 'customerUpdateForm'])->name('report.customerUpdateForm');
-    Route::get('/pullout-replaced-form', [ReportGeneratorController::class, 'pulloutReplacedForm'])->name('report.pulloutReplacedForm');
+    Route::get('/pullout-replaced-form/{equipmentStore}', [ReportGeneratorController::class, 'pulloutReplacedForm'])->name('report.pulloutReplacedForm');
     Route::get('/freezer-gatepass-form', [ReportGeneratorController::class, 'freezerGatepassForm'])->name('report.freezerGatepassForm');
 
     Route::get('/loading-ticket', function () {

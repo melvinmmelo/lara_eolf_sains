@@ -10,6 +10,7 @@ use App\Models\DeliveryPurchaseReceipt;
 use App\Services\InboundService;
 use Illuminate\Http\Request;
 use App\Models\Customers as Customer;
+use App\Models\EquipmentStore;
 
 class ReportGeneratorController extends Controller
 {
@@ -198,9 +199,11 @@ class ReportGeneratorController extends Controller
         return view('report.customer-update-form', compact('customer', 'date'));
     }
 
-    public function pulloutReplacedForm()
+    public function pulloutReplacedForm(EquipmentStore $equipmentStore)
     {
-        return view('report.pullout-replaced-form');
+        $customer = $equipmentStore->customer;
+        $date = now()->toDateString();
+        return view('report.pullout-replaced-form', compact('customer','equipmentStore', 'date'));
     }
 
     public function freezerGatepassForm()
