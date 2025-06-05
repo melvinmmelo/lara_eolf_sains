@@ -24,6 +24,31 @@
             }
         }
     </script>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+        }
+        @media print {
+            .modal, .print-hide, .action-buttons {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 
 <body class="text-[12px] font-sans">
@@ -41,8 +66,15 @@
     
             <table class="table-fixed w-full border-separate border-spacing-y-2 border-spacing-x-1">
                 <tr>
-                    <td>Sales Agent:</td>
-                    <td colspan="2" class="border-b border-black"></td>
+                    <td>Distributor:</td>
+                    <td colspan="2" class="border-b border-black">
+
+                        @if (session('branch_code') == 'EFTO-CAG')
+                            JOFREN DALANGIN COMIA - CAGAYAN
+                        @else
+                            JOFREN DALANGIN COMIA - TARLAC
+                        @endif
+                    </td>
                     <td class="text-right pr-3">Date:</td>
                     <td class="border-b border-black">{{ $date }}</td>
                 </tr>
@@ -55,7 +87,7 @@
     
                 <tr>
                     <td>Current Address/Location:</td>
-                    <td colspan="4" class="border-b border-black">{{ $customer->region }}, {{ $customer->province }}, {{ $customer->city }} {{ $customer->brgy }}</td>
+                    <td colspan="4" class="border-b border-black">{{ $customer->storeinfo-> region }}, {{ $customer->storeinfo->province }}, {{ $customer->storeinfo->city }} {{ $customer->storeinfo->brgy }}</td>
                 </tr>
     
                 <tr>
@@ -109,26 +141,10 @@
                         @endif
                     </td>
                 </tr>
-    
-                <tr>
-                    <td>Remarks of DEGIC:</td>
-                    <td colspan="4" class="border-b border-black">
-                        @if ($customer->equipmentStores->isNotEmpty())
-                            @foreach ($customer->equipmentStores as $equipmentStore)
-                                {{ $equipmentStore->remarks }}
-                                @if (!$loop->last)
-                                    ,
-                                @endif
-                            @endforeach
-                        @else
-                            No Equipment Assigned
-                        @endif
-                    </td>
-                </tr>
-    
+
                 <tr>
                     <td>Remarks of Technician:</td>
-                    <td colspan="4" class="border-b border-black">&nbsp;</td>
+                    <td colspan="4" class="border-b border-black" id="technician-remarks-display">&nbsp;</td>
                 </tr>
     
                 <tr>
@@ -167,10 +183,10 @@
                 </tr>
             </table>
     
-         <div class="flex justify-end space-x-1 mt-4">
+         <div class="flex justify-end space-x-1 mt-4 action-buttons">
   <!-- Print Button -->
   <button 
-    onclick="window.print()" 
+    onclick="openRemarksModal()" 
     class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
   >
     Print
@@ -189,5 +205,48 @@
             </div>
       
     </page>
+    <!-- Modal -->
+    <div id="remarksModal" class="modal print-hide">
+        <div class="modal-content">
+            <h2 class="text-xl font-bold mb-4">Enter Technician Remarks</h2>
+            <textarea 
+                id="technicianRemarks" 
+                class="w-full p-2 border border-gray-300 rounded mb-4" 
+                rows="4"
+                placeholder="Enter remarks here..."
+            ></textarea>
+            <div class="flex justify-end space-x-2">
+                <button 
+                    onclick="closeRemarksModal()" 
+                    class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
+                >
+                    Cancel
+                </button>
+                <button 
+                    onclick="submitRemarks()" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
+                >
+                    Submit and Print
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openRemarksModal() {
+            document.getElementById('remarksModal').style.display = 'block';
+        }
+
+        function closeRemarksModal() {
+            document.getElementById('remarksModal').style.display = 'none';
+        }
+
+        function submitRemarks() {
+            const remarks = document.getElementById('technicianRemarks').value;
+            document.getElementById('technician-remarks-display').textContent = remarks;
+            closeRemarksModal();
+            setTimeout(() => window.print(), 100);
+        }
+    </script>
 </body>
 </html>
