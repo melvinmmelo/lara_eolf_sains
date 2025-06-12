@@ -9,8 +9,8 @@ use App\Models\ProductVariant;
 use App\Models\DeliveryPurchaseReceipt;
 use App\Services\InboundService;
 use Illuminate\Http\Request;
-
-use function Ramsey\Uuid\v1;
+use App\Models\Customers as Customer;
+use App\Models\EquipmentStore;
 
 class ReportGeneratorController extends Controller
 {
@@ -113,7 +113,7 @@ class ReportGeneratorController extends Controller
             ->map(function ($product) use ($variants) {
                 $parts = explode('_', $product->product_code);
                 $variantCode = end($parts); // Get the last part after underscore
-
+    
                 $product->available_stocks = $product->stocks - $product->reserved;
                 $product->variant_name = $variants->get($variantCode)?->name ?? 'N/A';
                 return $product;
@@ -131,10 +131,10 @@ class ReportGeneratorController extends Controller
     public function deliveryPurchaseReceiptSummary(Request $request)
     {
         $branchCode = session('branch_code');
-        
+
         $query = DeliveryPurchaseReceipt::branch($branchCode)
             ->where('status', 'Completed');
-            
+
         if ($request->filled('from_date') && $request->filled('to_date')) {
             $query->whereBetween('issue_date', [$request->from_date, $request->to_date]);
             $title = "From: " . $request->from_date . " To: " . $request->to_date;
@@ -142,19 +142,19 @@ class ReportGeneratorController extends Controller
             $query->whereDate('issue_date', now()->toDateString());
             $title = "Today";
         }
-        
+
         $receipts = $query->get();
-        
+
         // Process all products from the receipts
         $productSummary = [];
-        
+
         foreach ($receipts as $receipt) {
             $products = json_decode($receipt->products, true);
-            
+
             if (!is_array($products)) {
                 continue;
             }
-            
+
             foreach ($products as $product) {
                 $code = $product['code'];
                 $description = $product['description'] ?? 'Unknown';
@@ -162,7 +162,7 @@ class ReportGeneratorController extends Controller
                 $unit = $product['unit'] ?? 'pcs';
                 $price = $product['price'] ?? 0;
                 $hold = $product['hold'] ?? 0;
-                
+
                 if (!isset($productSummary[$code])) {
                     $productSummary[$code] = [
                         'code' => $code,
@@ -175,21 +175,42 @@ class ReportGeneratorController extends Controller
                         'total_value' => 0
                     ];
                 }
-                
+
                 $productSummary[$code]['total_quantity'] += $quantity;
                 $productSummary[$code]['total_hold'] += $hold;
                 $productSummary[$code]['available_quantity'] += ($quantity - $hold);
                 $productSummary[$code]['total_value'] += ($quantity * $price);
             }
         }
-        
+
         // Sort by product code
         ksort($productSummary);
-        
+
         return view('report.delivery-purchase-receipt-summary', [
             'products' => $productSummary,
             'title' => $title,
             'receipts_count' => $receipts->count()
         ]);
     }
+
+    public function customerUpdateForm(Customer $customer)
+    {
+        $date = now()->toDateString();
+        return view('report.customer-update-form', compact('customer', 'date'));
+    }
+
+    public function pulloutReplacedForm(EquipmentStore $equipmentStore)
+    {
+        $customer = $equipmentStore->customer;
+        $date = now()->toDateString();
+        return view('report.pullout-replaced-form', compact('customer','equipmentStore', 'date'));
+    }
+
+    public function freezerGatepassForm()
+    {
+        return view('report.freezer-gatepass-form');
+    }
 }
+
+
+

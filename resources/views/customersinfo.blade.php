@@ -112,7 +112,9 @@
                                             <a href="#" class="dropdown-item" data-toggle="modal"
                                                     data-target="#editModal"
                                                     onclick="setToUpdatecustomer(`{{ $customer->id }}`,`{{ $customer->branch_code }}`,`{{ $customer->lastname }}`,`{{ $customer->firstname }}`,`{{ $customer->middlename }}`,`{{ $customer->contact_no }}`,`{{ $customer->companyname }}`,`{{ $customer->tin }}`,`{{ $customer->longitude }}`,`{{ $customer->latitude }}`,`{{ $customer->region }}`,`{{ $customer->province }}`,`{{ $customer->city }}`,`{{ $customer->brgy }}`,`{{ $customer->subdivision }}`,'{{ $store->id }}',`{{ $store->storename }}`,'{{ $store->contactno }}','{{ $store->region }}','{{ $store->province }}','{{ $store->city }}','{{ $store->brgy }}','{{ $store->subdivision }}',`{{ $store->latitude }}`,`{{ $store->longitude }}`,`{{ $store->listype }}`,`{{ $store->length_stay }}`,`{{ $store->remarks }}`)"><i class="fa fa-edit"></i></a>
-                                        </div>
+
+                                            <a href="{{ route('report.customerUpdateForm', $customer->id) }}" class="dropdown-item"><i class="fa fa-print"></i></a>
+                                                </div>
 
                                  
 

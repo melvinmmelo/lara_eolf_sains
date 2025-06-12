@@ -53,13 +53,7 @@
                                 <span class="fas fa-envelope"></span>
                             </div>
                         </div>
-
                     </div>
-                    <p class="text-red-500 text-xs italic">
-                        @error('email')
-                            {{ $message }}
-                        @enderror
-                    </p>
 
                     <div class="input-group mb-3">
                         <input type="password" name="password" required autocomplete="current-password"
@@ -70,6 +64,11 @@
                             </div>
                         </div>
                     </div>
+                    <p class="text-danger">
+                        @error('email')
+                            {{ $message }}
+                        @enderror
+                    </p>
                     <div class="row">
                         <div class="col-8">
                             <div class="icheck-primary">
