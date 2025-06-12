@@ -108,33 +108,35 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Pending Deliveries</h3>
+                            <h3 class="card-title">Customers with no sales in the last 2 months</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    Total: {{ $inactive_customers->count() }}
+                                </button>
+                            </div>
                         </div>
                         <div class="card-body table-responsive p-0" style="height: 300px;">
                             <table class="table table-head-fixed text-nowrap">
                                 <thead>
                                     <tr>
-                                        <th>Order No</th>
                                         <th>Customer</th>
-                                        <th>Status</th>
+                                        <th>Store Name</th>
+                                        <th>Contact No.</th>
+                                        <th>Created at</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($pending_deliveries as $order)
+                                    @forelse($inactive_customers as $customer)
                                     <tr>
-                                        <td>{{ $order->code }}</td>
-                                        <td>{{ $order->customer_name }}</td>
-                                        <td>
-                                            @if(!$order->deliveryReceipt)
-                                                <span class="badge badge-warning">Pending Delivery</span>
-                                            @else
-                                                <span class="badge badge-info">Processing</span>
-                                            @endif
-                                        </td>
+                                        <td>{{ $customer->full_name }}</td>
+                                        <td>{{ $customer->companyname }}</td>
+                                        <td>{{ $customer->contact_no }}</td>
+                                        <td>{{ $customer->created_at->format('M d, Y') }}</td>
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="3" class="text-center">No pending deliveries</td>
+                                        <td colspan="4" class="text-center">No inactive customers found</td>
                                     </tr>
                                     @endforelse
                                 </tbody>

@@ -114,6 +114,17 @@ class DashboardController extends Controller
             ->take(10)
             ->get();
 
+        // Get customers with no sales in last 2 months
+        $twoMonthsAgo = Carbon::now()->subMonths(2);
+        $inactiveCustomers = Customers::branch(session('branch_code'))
+            ->whereDoesntHave('inbounds', function($query) use ($twoMonthsAgo) {
+                $query->where('order_date', '>=', $twoMonthsAgo)
+                    ->whereIn('status', ['Paid', 'Completed']);
+            })
+            ->with(['equipmentStores'])
+            ->latest()
+            ->get();
+
         $data = [
             'products_count' => Product::count(),
             'orders_count' => Inbound::branch(session('branch_code'))->count(),
@@ -136,7 +147,8 @@ class DashboardController extends Controller
                 ->take(5)
                 ->get(),
             'low_stock_items' => $lowStockItems,
-            'recent_activities' => $recentActivities
+            'recent_activities' => $recentActivities,
+            'inactive_customers' => $inactiveCustomers
         ];
 
         return view('dashboard', $data);
