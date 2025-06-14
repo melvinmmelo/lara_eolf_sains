@@ -11,10 +11,10 @@ use App\Services\InboundService;
 use Illuminate\Http\Request;
 use App\Models\Customers as Customer;
 use App\Models\EquipmentStore;
+use Carbon\Carbon;
 
 class ReportGeneratorController extends Controller
 {
-
 
     public function productsSummaryv2()
     {
@@ -196,6 +196,8 @@ class ReportGeneratorController extends Controller
     public function customerUpdateForm(Customer $customer)
     {
         $date = now()->toDateString();
+        // formate date to MM DD, YYYY
+        $date = Carbon::parse($date)->format('F d, Y');
         return view('report.customer-update-form', compact('customer', 'date'));
     }
 
@@ -203,11 +205,14 @@ class ReportGeneratorController extends Controller
     {
         $customer = $equipmentStore->customer;
         $date = now()->toDateString();
+        // formate date to MM DD, YYYY
+        $date = Carbon::parse($date)->format('F d, Y');
         return view('report.pullout-replaced-form', compact('customer','equipmentStore', 'date'));
     }
 
     public function freezerGatepassForm()
     {
+
         return view('report.freezer-gatepass-form');
     }
 }
