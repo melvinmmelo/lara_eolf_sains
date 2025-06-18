@@ -24,6 +24,14 @@
             }
         }
     </script>
+
+    <style>
+        @media print {
+            .modal, .print-hide, .action-buttons {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 
 <body class="text-[12px] font-sans">
@@ -43,19 +51,19 @@
                 <tr>
                     <td colspan="3"></td>
                     <td class="text-right pr-3 font-bold">POF NO:</td>
-                    <td class="border-b border-black">----</td>
+                    <td class="border-b border-black">{{ $pullOutForm->pof_no }}</td>
                 </tr>
                 
                 <tr>
                     <td>Name of Customer:</td>
-                    <td colspan="2" class="border-b border-black">{{ $customer->fullName }}</td>
+                    <td colspan="2" class="border-b border-black">{{ $pullOutForm->customer_name }}</td>
                     <td class="text-right pr-3">Date:</td>
-                    <td class="border-b border-black">{{ $date }}</td>
+                    <td class="border-b border-black">{{ $pullOutForm->date->format('F j, Y') }}</td>
                 </tr>
     
                 <tr>
                     <td>Current Address on file:</td>
-                    <td colspan="4" class="border-b border-black">{{ $customer->storeinfo-> region }}, {{ $customer->storeinfo->province }}, {{ $customer->storeinfo->city }} {{ $customer->storeinfo->brgy }}</td>
+                    <td colspan="4" class="border-b border-black">{{ $pullOutForm->address }}</td>
                 </tr>
     
                 <tr>
@@ -68,23 +76,39 @@
 
                 <tr>
                     <td>MODEL/SERIAL NO.</td>
-                    <td class="border-b border-black" id="pulloutModelSerialNo">{{ $equipmentStore->equipment->model }} / {{ $equipmentStore->equipment->serial_no }}</td>
+                    <td class="border-b border-black" id="pulloutModelSerialNo">{{ $pullOutForm->pullout_model_serial_no }}</td>
                     <td class="pl-2">MODEL/SERIAL NO.</td>
-                    <td class="border-b border-black" id="replacedModelSerialNo">{{ $equipmentStore->equipment->model }} / {{ $equipmentStore->equipment->serial_no }}</td>
+                    <td class="border-b border-black" id="replacedModelSerialNo">
+                        @if($pullOutForm->replaced_equipment_json)
+                            @foreach($pullOutForm->replaced_equipment_json as $index => $replacement)
+                                {{ $replacement['model_serial_no'] }}@if(!$loop->last),<br>@endif
+                            @endforeach
+                        @else
+                            {{ $pullOutForm->replaced_model_serial_no }}
+                        @endif
+                    </td>
                     
                     <td class="pl-1">
-                        <input type="checkbox" class="form-checkbox h-3 w-3 text-blue-600">
+                        <input type="checkbox" class="form-checkbox h-3 w-3 text-blue-600" {{ $pullOutForm->defective_compressor ? 'checked' : '' }} disabled>
                         <span class="text-sm">DEFECTIVE COMPRESSOR</span>
                     </td>
                 </tr>
     
                 <tr>
                     <td>DEGIC NO.</td>
-                    <td class="border-b border-black" id="pulloutDegicNo">{{ $equipmentStore->equipment->code }}</td>
+                    <td class="border-b border-black" id="pulloutDegicNo">{{ $pullOutForm->pullout_degic_no }}</td>
                     <td class="pl-2">DEGIC NO.</td>
-                    <td class="border-b border-black" id="replacedDegicNo">{{ $equipmentStore->equipment->code }}</td>
+                    <td class="border-b border-black" id="replacedDegicNo">
+                        @if($pullOutForm->replaced_equipment_json)
+                            @foreach($pullOutForm->replaced_equipment_json as $index => $replacement)
+                                {{ $replacement['degic_no'] }}@if(!$loop->last),<br>@endif
+                            @endforeach
+                        @else
+                            {{ $pullOutForm->replaced_degic_no }}
+                        @endif
+                    </td>
                     <td class="pl-1">
-                        <input type="checkbox" class="form-checkbox h-3 w-3 text-blue-600">
+                        <input type="checkbox" class="form-checkbox h-3 w-3 text-blue-600" {{ $pullOutForm->not_cooling ? 'checked' : '' }} disabled>
                         <span class="text-sm">NOT COOLING</span>
                     </td>
                 </tr>
@@ -95,7 +119,7 @@
                     <td class="pl-2">LOCK & KEY</td>
                     <td class="border-b border-black"> </td>
                     <td class="pl-1">
-                        <input type="checkbox" class="form-checkbox h-3 w-3 text-blue-600">
+                        <input type="checkbox" class="form-checkbox h-3 w-3 text-blue-600" {{ $pullOutForm->stop_selling ? 'checked' : '' }} disabled>
                         <span class="text-sm">STOP SELLING</span>
                     </td>
                 </tr>
@@ -106,7 +130,7 @@
                     <td class="pl-2">CONDEMNED</td>
                     <td class="border-b border-black"> </td>
                     <td class="pl-1">
-                        <input type="checkbox" class="form-checkbox h-3 w-3 text-blue-600">
+                        <input type="checkbox" class="form-checkbox h-3 w-3 text-blue-600" {{ $pullOutForm->system_leak ? 'checked' : '' }} disabled>
                         <span class="text-sm">SYSTEM LEAK</span>
                     </td>
                 </tr>
@@ -117,14 +141,14 @@
                     <td class="pl-2">SIGNAGE</td>
                     <td class="border-b border-black"> </td>
                     <td class="pl-1">
-                        <input type="checkbox" class="form-checkbox h-3 w-3 text-blue-600">
+                        <input type="checkbox" class="form-checkbox h-3 w-3 text-blue-600" {{ $pullOutForm->return_to_supplier ? 'checked' : '' }} disabled>
                         <span class="text-sm">RETURN TO SUPPLIER</span>
                     </td>
                 </tr>
 
                 <tr>
                     <td>Remarks</td>
-                    <td colspan="4" class="border-b border-black">N/A</td>
+                    <td colspan="4" class="border-b border-black">{{ $pullOutForm->remarks ?? 'N/A' }}</td>
                 </tr>
     
                 <tr>
@@ -144,17 +168,13 @@
 
                 <tr>
                     <td class="border-b border-black">
-                        @if(session('branch_code') == 'EFTO-CAG')
-                            MARY JANE ESTEBAN
-                        @else
-                            MERZELLE URBANO
-                        @endif
+                        {{ $pullOutForm->prepared_by }}
                     </td>
 
-                    <td colspan="2" class="border-b border-black">NALEN COMIA</td>
+                    <td colspan="2" class="border-b border-black">{{ $pullOutForm->noted_by }}</td>
                     
                     <td class="border-b border-black"> </td>
-                    <td class="border-b border-black"></td>
+                    <td class="border-b border-black">{{ $pullOutForm->customer_signature }}</td>
     
                 </tr>
 
@@ -165,24 +185,10 @@
                 </tr>
             </table>
     
-            <div class="flex justify-end space-x-1 mt-4">
-                <button 
-                    onclick="toggleDetails('pullout')"
-                    class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
-                >
-                    Show Pull-Out Details
-                </button>
-
-                <button 
-                    onclick="toggleDetails('replaced')"
-                    class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
-                >
-                    Show Replaced Details
-                </button>
-                
+            <div class="flex justify-end space-x-1 mt-4 action-buttons">
                 <!-- Print Button -->
                 <button 
-                    onclick="openRemarksModal()" 
+                    onclick="window.print()" 
                     class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
                 >
                     Print
@@ -229,61 +235,5 @@
             </div>
       
     </page>
-    <script>
-        function openRemarksModal() {
-            document.getElementById('remarksModal').classList.remove('hidden');
-        }
-
-        function closeRemarksModal() {
-            document.getElementById('remarksModal').classList.add('hidden');
-        }
-
-        function submitRemarks() {
-            const remarks = document.getElementById('remarksInput').value;
-            // Update the remarks in the form
-            const remarksRow = Array.from(document.querySelectorAll('tr')).find(row => 
-                row.querySelector('td')?.textContent.trim() === 'Remarks'
-            );
-            if (remarksRow && remarks.trim() !== '') {
-                const remarksCell = remarksRow.querySelector('td[colspan="4"].border-b.border-black');
-                if (remarksCell) {
-                    remarksCell.textContent = remarks;
-                }
-            }
-            
-            // Close modal and print
-            closeRemarksModal();
-            setTimeout(() => {
-                window.print();
-            }, 100);
-        }
-
-        // Close modal if clicking outside
-        document.getElementById('remarksModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeRemarksModal();
-            }
-        });
-
-        function toggleDetails(type) {
-            const pulloutModelSerialNo = document.getElementById('pulloutModelSerialNo');
-            const pulloutDegicNo = document.getElementById('pulloutDegicNo');
-            const replacedModelSerialNo = document.getElementById('replacedModelSerialNo');
-            const replacedDegicNo = document.getElementById('replacedDegicNo');
-
-            if (type === 'pullout') {
-                pulloutModelSerialNo.textContent = "{{ $equipmentStore->equipment->model }} / {{ $equipmentStore->equipment->serial_no }}";
-                pulloutDegicNo.textContent = "{{ $equipmentStore->equipment->code }}";
-                replacedModelSerialNo.textContent = '';
-                replacedDegicNo.textContent = '';
-            } else if (type === 'replaced') {
-                replacedModelSerialNo.textContent = "{{ $equipmentStore->equipment->model }} / {{ $equipmentStore->equipment->serial_no }}";
-                replacedDegicNo.textContent = "{{ $equipmentStore->equipment->code }}";
-                pulloutModelSerialNo.textContent = '';
-                pulloutDegicNo.textContent = '';
-            }
-            
-        }
-    </script>
 </body>
 </html>

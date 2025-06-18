@@ -34,6 +34,7 @@ use App\Http\Controllers\MaterialWithdrawalController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StockReconciliationController;
 use App\Http\Controllers\InventoryBadOrderController;
+use App\Http\Controllers\PullOutFormController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -344,7 +345,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/inventory/bad-orders/create', [InventoryBadOrderController::class, 'create'])->name('inventory.bad-orders.create');
     Route::post('/inventory/bad-orders', [InventoryBadOrderController::class, 'store'])->name('inventory.bad-orders.store');
+    Route::get('/report/pullout-replaced-form/{degic_no}/{customer_id}', [PullOutFormController::class, 'show'])->name('report.pullout-replaced-form');
 });
+
+    // Pull Out Form Routes
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/ajaxreq.php';

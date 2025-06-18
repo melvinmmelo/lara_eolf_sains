@@ -92,8 +92,6 @@
                                         <button type="submit" class="btn btn-danger btn-sm"
                                             onclick="return confirm('Are you sure you want to delete this equipment store entry?')">Delete</button>
                                     </form>
-                                
-                                    <a href="{{ route('report.pulloutReplacedForm', $equipmentSt->id) }}" class="btn btn-default btn-sm"><i class="fa fa-print"></i></a>
                                 </td>
                             </tr>
                         @endforeach
