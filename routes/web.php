@@ -34,6 +34,7 @@ use App\Http\Controllers\MaterialWithdrawalController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StockReconciliationController;
 use App\Http\Controllers\InventoryBadOrderController;
+use App\Http\Controllers\PullOutFormController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -77,7 +78,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/customer-update-form/{customer}', [ReportGeneratorController::class, 'customerUpdateForm'])->name('report.customerUpdateForm');
     Route::get('/pullout-replaced-form/{equipmentStore}', [ReportGeneratorController::class, 'pulloutReplacedForm'])->name('report.pulloutReplacedForm');
-    Route::get('/freezer-gatepass-form', [ReportGeneratorController::class, 'freezerGatepassForm'])->name('report.freezerGatepassForm');
+    Route::get('/freezer-gatepass-form/{equipment_store_id}', [ReportGeneratorController::class, 'freezerGatepassForm'])->name('report.freezerGatepassForm');
+    Route::post('/equipment/store-freezer-gatepass', [EquipmentStoreController::class, 'storeFreezerGatepass'])->name('equipment.store-freezer-gatepass');
 
     Route::get('/loading-ticket', function () {
         return view('loading-ticket');
@@ -344,7 +346,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/inventory/bad-orders/create', [InventoryBadOrderController::class, 'create'])->name('inventory.bad-orders.create');
     Route::post('/inventory/bad-orders', [InventoryBadOrderController::class, 'store'])->name('inventory.bad-orders.store');
+    Route::get('/report/pullout-replaced-form/{degic_no}/{customer_id}', [PullOutFormController::class, 'show'])->name('report.pullout-replaced-form');
 });
+
+    // Pull Out Form Routes
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/ajaxreq.php';

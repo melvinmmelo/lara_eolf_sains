@@ -11,10 +11,11 @@ use App\Services\InboundService;
 use Illuminate\Http\Request;
 use App\Models\Customers as Customer;
 use App\Models\EquipmentStore;
+use Carbon\Carbon;
+use App\Models\StoreInfo as Store;
 
 class ReportGeneratorController extends Controller
 {
-
 
     public function productsSummaryv2()
     {
@@ -196,6 +197,8 @@ class ReportGeneratorController extends Controller
     public function customerUpdateForm(Customer $customer)
     {
         $date = now()->toDateString();
+        // formate date to MM DD, YYYY
+        $date = Carbon::parse($date)->format('F d, Y');
         return view('report.customer-update-form', compact('customer', 'date'));
     }
 
@@ -203,12 +206,72 @@ class ReportGeneratorController extends Controller
     {
         $customer = $equipmentStore->customer;
         $date = now()->toDateString();
+        // formate date to MM DD, YYYY
+        $date = Carbon::parse($date)->format('F d, Y');
         return view('report.pullout-replaced-form', compact('customer','equipmentStore', 'date'));
     }
 
-    public function freezerGatepassForm()
+    public function freezerGatepassForm($equipment_store_id) // Renamed $store_id for clarity
     {
-        return view('report.freezer-gatepass-form');
+        // Fetch the specific equipment store (freezer) record, along with its related equipment and store (StoreInfo) details.
+        $equipmentStore = EquipmentStore::with([
+                                'equipment', // For model, serial, price etc.
+                                'store'      // For distributor name/area (StoreInfo linked via store_id on equipment_store table)
+                            ])->findOrFail($equipment_store_id);
+
+        // // Validate that the fetched equipment store record actually belongs to the specified customer.
+        // if ($equipmentStore->customer_id != $store->customer_id) {
+        //     abort(404, 'Equipment record not found for this customer or does not match.');
+        // }
+
+        // Prepare data array for the Blade view, matching the variables expected by freezer-gatepass-form.blade.php
+        $data = [
+            // Gatepass specific data
+            'gatepass_no' => time() . $equipmentStore->id, // Use existing gatepass_number or generate one
+            'date' => Carbon::now()->format('m/d/Y'), // Current date formatted
+
+            // Customer details from the $customer model
+            'customer_name' => $customer->name ?? ($customer->customer_name ?? 'N/A'), // Adjust field name as per your Customers model
+            'customer_address' => $customer->address ?? ($customer->full_address ?? ($equipmentStore->store->brgy ?? 'N/A')), // Adjust field name or source
+
+            // Distributor details (from EquipmentStore's related StoreInfo model, accessed via $equipmentStore->store)
+            'distributor_name' => $equipmentStore->store->storename ?? 'N/A', // 'storename' from StoreInfo table
+            'distributor_area' => trim(
+                ($equipmentStore->store->brgy ?? '') .
+                ($equipmentStore->store->brgy && ($equipmentStore->store->city || $equipmentStore->store->province) ? ', ' : '') .
+                ($equipmentStore->store->city ?? '') .
+                ($equipmentStore->store->city && $equipmentStore->store->province ? ', ' : '') .
+                ($equipmentStore->store->province ?? '')
+            , ', '), // Concatenate address parts from StoreInfo, ensuring clean formatting
+
+            // Equipment details (from EquipmentStore's related Equipment model, accessed via $equipmentStore->equipment)
+            'model' => $equipmentStore->equipment->model_name ?? ($equipmentStore->equipment->model ?? ($equipmentStore->equipment->name ?? 'N/A')), // Adjust field name
+            'serial_no' => $equipmentStore->equipment->serial_no ?? ($equipmentStore->serial_number ?? 'N/A'), // Adjust field name
+            'degic_no' => $equipmentStore->equipment->code ?? 'N/A', // Assuming 'degic_no' is a field directly on EquipmentStore
+
+            // Other details, potentially from EquipmentStore
+            'free_small_cup_note' => $equipmentStore->notes_free_small_cup ?? 'Free Small Cup', // Example field
+            'checker_name' => $equipmentStore->checker_name ?? (auth()->check() ? auth()->user()->name : ''), // Default to current user or placeholder
+            'loader_name' => $equipmentStore->loader_name ?? '', // Example field
+            'remarks' => $equipmentStore->remarks_gatepass ?? ($equipmentStore->remarks ?? ''), // Example field
+
+            // Boolean flags for checkboxes in the form
+            'has_ice_scraper' => (bool)($equipmentStore->has_ice_scraper ?? false),
+            'has_lock_and_key' => (bool)($equipmentStore->has_lock_and_key ?? false),
+            'has_signage_bracket' => (bool)($equipmentStore->has_signage_bracket ?? false),
+            'has_tarpaulin_logo' => (bool)($equipmentStore->has_tarpaulin_logo ?? false),
+            'has_tarpaulin_pricelist' => (bool)($equipmentStore->has_tarpaulin_pricelist ?? false),
+
+            // Signatories
+            'issued_by' => auth()->check() ? auth()->user()->name : '', // Current authenticated user issues
+            'received_by' => '', // Typically left blank to be filled upon receipt
+
+            // Equipment Store ID for form submission
+            'equipment_store_id' => $equipment_store_id,
+        ];
+
+        // Pass the prepared data to the Blade view
+        return view('report.freezer-gatepass-form', $data);
     }
 }
 

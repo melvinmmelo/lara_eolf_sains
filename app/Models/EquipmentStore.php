@@ -4,12 +4,33 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\PullOutForm;
 
 class EquipmentStore extends Model
 {
     use HasFactory;
 
     protected $table = 'equipment_store';
+
+    protected $fillable = [
+        'notes_free_small_cup',
+        'checker_name',
+        'loader_name',
+        'remarks_gatepass',
+        'has_ice_scraper',
+        'has_lock_and_key',
+        'has_signage_bracket',
+        'has_tarpaulin_logo',
+        'has_tarpaulin_pricelist',
+    ];
+
+    protected $casts = [
+        'has_ice_scraper' => 'boolean',
+        'has_lock_and_key' => 'boolean',
+        'has_signage_bracket' => 'boolean',
+        'has_tarpaulin_logo' => 'boolean',
+        'has_tarpaulin_pricelist' => 'boolean'
+    ];
 
     protected $with = ['customer', 'equipment'];
 

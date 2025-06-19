@@ -28,12 +28,12 @@
                                 <th></th>
                                 <th>Customer Name</th>
                                 <th>Date Assigned</th>
-                                <th>User Name</th>
+                                <th>Assigned by</th>
                                 <th>Date Pulled Out</th>
-                                <th>User Name</th>
+                                <th>Pulled Out by</th>
                                 <th>Remarks</th>
-                                <th>Updated date</th>
-                                <th>User Name</th>
+                                <th>Date</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,8 +46,13 @@
                                     <td>{{ $equipment->date_pulled_out }}</td>
                                     <td>{{ $equipment->user_name_pulled_out }}</td>
                                     <td>{{ $equipment->pull_out_reason }}</td>
-                                    <td>{{ $equipment->updated_at }}</td>
-                                    <td>{{ $equipment->current_user_name }}</td>
+                                    <td>{{ $equipment->created_at->format('Y-m-d h:i A') }}</td>
+                                    <td>
+                                        <a href="{{ route('report.pullout-replaced-form', ['degic_no' => $equipment->degic_no, 'customer_id' => $equipment->customer_id]) }}"
+                                            class="btn btn-default">
+                                            <i class="fas fa-print"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -56,12 +61,12 @@
                                 <th></th>
                                 <th>Customer Name</th>
                                 <th>Date Assigned</th>
-                                <th>User Name</th>
+                                <th>Assigned by</th>
                                 <th>Date Pulled Out</th>
-                                <th>User Name</th>
+                                <th>Pulled Out by</th>
                                 <th>Remarks</th>
                                 <th>Updated date</th>
-                                <th>User Name</th>
+                                <th></th>
                             </tr>
                         </tfoot>
                     </table>

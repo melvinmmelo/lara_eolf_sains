@@ -48,6 +48,10 @@
                 display: none !important;
             }
         }
+
+        #technicianRemarks {
+            font-size: 24px !important;
+        }
     </style>
 </head>
 
@@ -102,7 +106,7 @@
                     <td colspan="2" class="border-b border-black">
                         @if ($customer->equipmentStores->isNotEmpty())
                             @foreach ($customer->equipmentStores as $equipmentStore)
-                                {{ $equipmentStore->equipment->brand }}
+                                {{ $equipmentStore->equipment->model }}
                                 @if (!$loop->last)
                                     ,
                                 @endif
@@ -205,13 +209,13 @@
             </div>
       
     </page>
-    <!-- Modal -->
-    <div id="remarksModal" class="modal print-hide">
+ 
+<div id="remarksModal" class="modal print-hide">
         <div class="modal-content">
             <h2 class="text-xl font-bold mb-4">Enter Technician Remarks</h2>
             <textarea 
                 id="technicianRemarks" 
-                class="w-full p-2 border border-gray-300 rounded mb-4" 
+                class="w-full p-2 border border-gray-300 rounded mb-4 text-5xl" 
                 rows="4"
                 placeholder="Enter remarks here..."
             ></textarea>

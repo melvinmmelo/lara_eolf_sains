@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pullout_replacements', function (Blueprint $table) {
+        Schema::create('pull_out_forms', function (Blueprint $table) {
             $table->id();
             $table->string('pof_no')->unique();
+            $table->unsignedBigInteger('customer_id');
+            $table->unsignedBigInteger('store_id');
+            $table->unsignedBigInteger('equipment_id');
+            $table->string('degic_no');
             $table->string('customer_name');
             $table->string('address');
-            $table->string('sales_agent');
+            $table->string('sales_agent')->nullable();
             $table->date('date');
             
             // Pull-out details
@@ -34,6 +38,7 @@ return new class extends Migration
             $table->string('replaced_fods_no')->nullable();
             $table->string('replaced_lock_key')->nullable();
             $table->string('replaced_signage')->nullable();
+            $table->json('replaced_equipment_json')->nullable();
             
             // Freezer status
             $table->boolean('defective_compressor')->default(false);
@@ -52,6 +57,11 @@ return new class extends Migration
             
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('pof_no');
+            $table->index('customer_id');
+            $table->index('equipment_id');
+            $table->index('store_id');
         });
     }
 
@@ -60,6 +70,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pullout_replacements');
+        Schema::dropIfExists('pull_out_forms');
     }
 };

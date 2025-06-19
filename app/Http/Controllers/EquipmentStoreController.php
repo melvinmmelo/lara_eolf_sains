@@ -9,9 +9,58 @@ use App\Models\EquipmentHistory;
 use App\Services\EquipmentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\PullOutForm;
+use Illuminate\Support\Facades\Log;
 
 class EquipmentStoreController extends Controller
 {
+    /**
+     * Store freezer gatepass data.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeFreezerGatepass(Request $request)
+    {
+        Log::info('Freezer gatepass data: ' . json_encode($request->all()));
+
+        $request->validate([
+            'equipment_store_id' => 'required|exists:equipment_store,id',
+            'notes_free_small_cup' => 'nullable|string',
+            'checker_name' => 'required|string',
+            'loader_name' => 'required|string',
+            'remarks' => 'nullable|string',
+            'has_ice_scraper' => 'nullable|string',
+            'has_lock_and_key' => 'nullable|string',
+            'has_signage_bracket' => 'nullable|string',
+            'has_tarpaulin_logo' => 'nullable|string',
+            'has_tarpaulin_pricelist' => 'nullable|string',
+        ]);
+
+        try {
+            $equipmentStore = EquipmentStore::findOrFail($request->input('equipment_store_id'));
+            
+            $equipmentStore->update([
+                'notes_free_small_cup' => $request->input('notes_free_small_cup'),
+                'checker_name' => $request->input('checker_name'),
+                'loader_name' => $request->input('loader_name'),
+                'remarks_gatepass' => $request->input('remarks'),
+                'has_ice_scraper' => $request->has('has_ice_scraper'),
+                'has_lock_and_key' => $request->has('has_lock_and_key'),
+                'has_signage_bracket' => $request->has('has_signage_bracket'),
+                'has_tarpaulin_logo' => $request->has('has_tarpaulin_logo'),
+                'has_tarpaulin_pricelist' => $request->has('has_tarpaulin_pricelist')
+            ]);
+
+            // Redirect back to the form with the print parameter
+            return redirect()->route('report.freezerGatepassForm', [
+                'equipment_store_id' => $equipmentStore->id,
+                'print' => true
+            ]);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error saving freezer gatepass data: ' . $e->getMessage());
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -107,7 +156,7 @@ class EquipmentStoreController extends Controller
             return redirect()->back()->withErrors($errors);
         }
 
-        return redirect()->back()->with('success', 'Equipment added successfully.');
+        return redirect()->route('report.freezerGatepassForm', ['store_id' => $store_id, 'equipment_store_id' => $equipmentStore->id])->with('success', 'Equipment added successfully.');
     }
 
 
@@ -248,16 +297,62 @@ class EquipmentStoreController extends Controller
             }
         }
 
+        // Create PullOutForm record
+        $pullOutForm = new PullOutForm();
+        $pullOutForm->customer_id = $request->input('customer_id');
+        $pullOutForm->equipment_id = $pullEquipmentId;
+        $pullOutForm->store_id = $equipmentStore->store_id;
+        $pullOutForm->degic_no = $equipment->code;
+        $pullOutForm->customer_name = $customerName;
+        $pullOutForm->address = $equipmentStore->storeinfo->subdivision . ', ' . 
+                               $equipmentStore->storeinfo->brgy . ', ' . 
+                               $equipmentStore->storeinfo->city;
+        $pullOutForm->sales_agent = auth()->user()->fullName;
+        $pullOutForm->date = now();
+        $pullOutForm->pullout_model_serial_no = $equipment->model . ' / ' . $equipment->serial_no;
+        $pullOutForm->pullout_degic_no = $equipment->code;
+        $pullOutForm->prepared_by = auth()->user()->fullName;
+        $pullOutForm->noted_by = 'NALEN COMIA';
+        $pullOutForm->pullout_by = auth()->user()->fullName;
+
+        // Set status flags based on remarks
+        $pullOutForm->defective_compressor = $remarks === 'DEFFECTIVE COMPRESSOR';
+        $pullOutForm->not_cooling = $remarks === 'NOT COOLING';
+        $pullOutForm->stop_selling = $remarks === 'STOP SELLING';
+        $pullOutForm->system_leak = $remarks === 'SYSTEM LEAK';
+        $pullOutForm->condemned = $remarks === 'CONDEMNED';
+        $pullOutForm->return_to_supplier = $remarks === 'RETURN TO SUPPLIER';
+        $pullOutForm->remarks = $remarks;
+
+        // If there are replacement equipment
+        if (!empty($replaceEquipmentIds)) {
+            $replacedEquipment = [];
+            foreach ($replaceEquipmentIds as $replaceEquipmentId) {
+                $newEquipment = Equipment::findOrFail($replaceEquipmentId);
+                $replacedEquipment[] = [
+                    'model_serial_no' => $newEquipment->model . ' / ' . $newEquipment->serial_no,
+                    'degic_no' => $newEquipment->code,
+                    'equipment_id' => $replaceEquipmentId
+                ];
+            }
+            
+            // Set the first replacement as the main replacement for backward compatibility
+            $firstReplacement = $replacedEquipment[0];
+            $pullOutForm->replaced_model_serial_no = $firstReplacement['model_serial_no'];
+            $pullOutForm->replaced_degic_no = $firstReplacement['degic_no'];
+            
+            // Store all replacements in JSON
+            $pullOutForm->replaced_equipment_json = $replacedEquipment;
+        }
+
+        $pullOutForm->save();
+
         $equipmentStore->delete();
 
         activity('manage-equipment-store')
             ->withProperties(['customer' => $customerName, 'store' => $esName, 'equipment' => $equipment->code, 'pull_equipment_id' => $pullEquipmentId, 'replace_equipment_ids' => $replaceEquipmentIds, 'remarks' => $remarks])
             ->log($activityLog);
 
-        if ($remarks === 'STOP SELLING') {
-            return redirect()->route('customers')->with('success', "Customer status updated to STOP SELLING.");
-        }
-
-        return redirect()->back()->with('success', $successMsg);
+        return redirect()->route('report.pullout-replaced-form', ['degic_no' => $equipment->code, 'customer_id' => $request->customer_id])->with('success', $successMsg);
     }
 }
