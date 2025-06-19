@@ -78,7 +78,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/customer-update-form/{customer}', [ReportGeneratorController::class, 'customerUpdateForm'])->name('report.customerUpdateForm');
     Route::get('/pullout-replaced-form/{equipmentStore}', [ReportGeneratorController::class, 'pulloutReplacedForm'])->name('report.pulloutReplacedForm');
-    Route::get('/freezer-gatepass-form', [ReportGeneratorController::class, 'freezerGatepassForm'])->name('report.freezerGatepassForm');
+    Route::get('/freezer-gatepass-form/{equipment_store_id}', [ReportGeneratorController::class, 'freezerGatepassForm'])->name('report.freezerGatepassForm');
+    Route::post('/equipment/store-freezer-gatepass', [EquipmentStoreController::class, 'storeFreezerGatepass'])->name('equipment.store-freezer-gatepass');
 
     Route::get('/loading-ticket', function () {
         return view('loading-ticket');

@@ -10,9 +10,57 @@ use App\Services\EquipmentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\PullOutForm;
+use Illuminate\Support\Facades\Log;
 
 class EquipmentStoreController extends Controller
 {
+    /**
+     * Store freezer gatepass data.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeFreezerGatepass(Request $request)
+    {
+        Log::info('Freezer gatepass data: ' . json_encode($request->all()));
+
+        $request->validate([
+            'equipment_store_id' => 'required|exists:equipment_store,id',
+            'notes_free_small_cup' => 'nullable|string',
+            'checker_name' => 'required|string',
+            'loader_name' => 'required|string',
+            'remarks' => 'nullable|string',
+            'has_ice_scraper' => 'nullable|string',
+            'has_lock_and_key' => 'nullable|string',
+            'has_signage_bracket' => 'nullable|string',
+            'has_tarpaulin_logo' => 'nullable|string',
+            'has_tarpaulin_pricelist' => 'nullable|string',
+        ]);
+
+        try {
+            $equipmentStore = EquipmentStore::findOrFail($request->input('equipment_store_id'));
+            
+            $equipmentStore->update([
+                'notes_free_small_cup' => $request->input('notes_free_small_cup'),
+                'checker_name' => $request->input('checker_name'),
+                'loader_name' => $request->input('loader_name'),
+                'remarks_gatepass' => $request->input('remarks'),
+                'has_ice_scraper' => $request->has('has_ice_scraper'),
+                'has_lock_and_key' => $request->has('has_lock_and_key'),
+                'has_signage_bracket' => $request->has('has_signage_bracket'),
+                'has_tarpaulin_logo' => $request->has('has_tarpaulin_logo'),
+                'has_tarpaulin_pricelist' => $request->has('has_tarpaulin_pricelist')
+            ]);
+
+            // Redirect back to the form with the print parameter
+            return redirect()->route('report.freezerGatepassForm', [
+                'equipment_store_id' => $equipmentStore->id,
+                'print' => true
+            ]);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error saving freezer gatepass data: ' . $e->getMessage());
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -108,7 +156,7 @@ class EquipmentStoreController extends Controller
             return redirect()->back()->withErrors($errors);
         }
 
-        return redirect()->back()->with('success', 'Equipment added successfully.');
+        return redirect()->route('report.freezerGatepassForm', ['store_id' => $store_id, 'equipment_store_id' => $equipmentStore->id])->with('success', 'Equipment added successfully.');
     }
 
 
