@@ -13,6 +13,7 @@ return new class extends Migration
     {
         //
         Schema::table('equipment_store', function (Blueprint $table) {
+            $table->string('top_freezer_remarks')->nullable();
             $table->string('notes_free_small_cup')->nullable();
             $table->string('loader_name')->nullable();
             $table->string('checker_name')->nullable();

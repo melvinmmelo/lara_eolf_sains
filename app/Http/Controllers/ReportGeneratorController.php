@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\Customers as Customer;
 use App\Models\EquipmentStore;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use App\Models\StoreInfo as Store;
 
 class ReportGeneratorController extends Controller
@@ -216,6 +217,7 @@ class ReportGeneratorController extends Controller
         // Fetch the specific equipment store (freezer) record, along with its related equipment and store (StoreInfo) details.
         $equipmentStore = EquipmentStore::with([
                                 'equipment', // For model, serial, price etc.
+                                'customer',
                                 'store'      // For distributor name/area (StoreInfo linked via store_id on equipment_store table)
                             ])->findOrFail($equipment_store_id);
 
@@ -224,53 +226,44 @@ class ReportGeneratorController extends Controller
         //     abort(404, 'Equipment record not found for this customer or does not match.');
         // }
 
-        // Prepare data array for the Blade view, matching the variables expected by freezer-gatepass-form.blade.php
+        if(session('branch_code') == 'EFTO-CAG') {
+            $distributor_name = 'JOFREN D. COMIA - CAGAYAN';
+        } else {
+            $distributor_name = 'JOFREN D. COMIA - TARLAC';
+        }
+
+        $customerAddress = $equipmentStore->store->region . ', ' . $equipmentStore->store->province . ', ' . $equipmentStore->store->city . ', ' . $equipmentStore->store->brgy . ', ' . $equipmentStore->store->brgy . ' ' . $equipmentStore->store->subdivision;
+
+        $gatePassNo = Str::padLeft($equipmentStore->id, 5, '0');
+
         $data = [
-            // Gatepass specific data
-            'gatepass_no' => time() . $equipmentStore->id, // Use existing gatepass_number or generate one
-            'date' => Carbon::now()->format('m/d/Y'), // Current date formatted
+            'gatepass_no' => $gatePassNo, 
+            'date' => Carbon::now()->format('m/d/Y'), 
+            'customer_name' => Str::upper($equipmentStore->customer->fullName ?? ($equipmentStore->customer->fullName ?? 'N/A')),
+            'customer_address' => Str::upper($customerAddress), 
+            'distributor_name' => $distributor_name,
+     
+            'model' => $equipmentStore->equipment->model_name ?? ($equipmentStore->equipment->model ?? ($equipmentStore->equipment->name ?? 'N/A')), 
+            'serial_no' => $equipmentStore->equipment->serial_no ?? ($equipmentStore->serial_number ?? 'N/A'), 
+            'degic_no' => $equipmentStore->equipment->code ?? 'N/A', 
 
-            // Customer details from the $customer model
-            'customer_name' => $customer->name ?? ($customer->customer_name ?? 'N/A'), // Adjust field name as per your Customers model
-            'customer_address' => $customer->address ?? ($customer->full_address ?? ($equipmentStore->store->brgy ?? 'N/A')), // Adjust field name or source
+            'top_freezer_remarks' => $equipmentStore->top_freezer_remarks ?? '', 
+            'free_small_cup_note' => $equipmentStore->notes_free_small_cup ?? 'Free Small Cup', 
+            'checker_name' => $equipmentStore->checker_name ?? (auth()->check() ? auth()->user()->name : ''),
+            'loader_name' => $equipmentStore->loader_name ?? '', 
+            'remarks' => $equipmentStore->remarks_gatepass ?? ($equipmentStore->remarks ?? ''), 
 
-            // Distributor details (from EquipmentStore's related StoreInfo model, accessed via $equipmentStore->store)
-            'distributor_name' => $equipmentStore->store->storename ?? 'N/A', // 'storename' from StoreInfo table
-            'distributor_area' => trim(
-                ($equipmentStore->store->brgy ?? '') .
-                ($equipmentStore->store->brgy && ($equipmentStore->store->city || $equipmentStore->store->province) ? ', ' : '') .
-                ($equipmentStore->store->city ?? '') .
-                ($equipmentStore->store->city && $equipmentStore->store->province ? ', ' : '') .
-                ($equipmentStore->store->province ?? '')
-            , ', '), // Concatenate address parts from StoreInfo, ensuring clean formatting
-
-            // Equipment details (from EquipmentStore's related Equipment model, accessed via $equipmentStore->equipment)
-            'model' => $equipmentStore->equipment->model_name ?? ($equipmentStore->equipment->model ?? ($equipmentStore->equipment->name ?? 'N/A')), // Adjust field name
-            'serial_no' => $equipmentStore->equipment->serial_no ?? ($equipmentStore->serial_number ?? 'N/A'), // Adjust field name
-            'degic_no' => $equipmentStore->equipment->code ?? 'N/A', // Assuming 'degic_no' is a field directly on EquipmentStore
-
-            // Other details, potentially from EquipmentStore
-            'free_small_cup_note' => $equipmentStore->notes_free_small_cup ?? 'Free Small Cup', // Example field
-            'checker_name' => $equipmentStore->checker_name ?? (auth()->check() ? auth()->user()->name : ''), // Default to current user or placeholder
-            'loader_name' => $equipmentStore->loader_name ?? '', // Example field
-            'remarks' => $equipmentStore->remarks_gatepass ?? ($equipmentStore->remarks ?? ''), // Example field
-
-            // Boolean flags for checkboxes in the form
             'has_ice_scraper' => (bool)($equipmentStore->has_ice_scraper ?? false),
             'has_lock_and_key' => (bool)($equipmentStore->has_lock_and_key ?? false),
             'has_signage_bracket' => (bool)($equipmentStore->has_signage_bracket ?? false),
             'has_tarpaulin_logo' => (bool)($equipmentStore->has_tarpaulin_logo ?? false),
             'has_tarpaulin_pricelist' => (bool)($equipmentStore->has_tarpaulin_pricelist ?? false),
 
-            // Signatories
-            'issued_by' => auth()->check() ? auth()->user()->name : '', // Current authenticated user issues
-            'received_by' => '', // Typically left blank to be filled upon receipt
-
-            // Equipment Store ID for form submission
+            'issued_by' => auth()->check() ? auth()->user()->name : '', 
+            'received_by' => '', 
             'equipment_store_id' => $equipment_store_id,
         ];
 
-        // Pass the prepared data to the Blade view
         return view('report.freezer-gatepass-form', $data);
     }
 }

@@ -69,6 +69,12 @@
                 @csrf
                 <input type="hidden" name="equipment_store_id" value="{{ $equipment_store_id }}">
                 <div class="grid grid-cols-2 gap-4">
+
+                    <div class="form-group">
+                        <label>Top Freezer Remarks</label>
+                        <input type="text" name="top_freezer_remarks" class="form-control" value="{{ $top_freezer_remarks }}">
+                    </div>
+
                     <div class="form-group">
                         <label>Free Small Cup Note</label>
                         <input type="text" name="notes_free_small_cup" class="form-control" value="{{ $free_small_cup_note }}">
@@ -157,8 +163,10 @@
                <tr>
                 <td class="font-bold border border-black text-center align-top">{{ $date ?? 'N/A' }}</td>
                 <td colspan="3" class="font-bold border border-black pl-3">
-<div class="font-bold">DISTRIBUTOR: {{ $distributor_name ?? 'N/A' }} _ {{ $distributor_area ?? 'N/A' }}</div>
-<div>GLASS TOP FREEZER</div>
+<div class="font-bold">{{ $distributor_name ?? 'N/A' }}</div>
+@if($top_freezer_remarks)
+<div>{{ $top_freezer_remarks ?? '' }}</div>
+@endif
 <div class="font-bold">{{ $customer_name ?? 'N/A' }}</div>
 <div>{{ $customer_address ?? 'N/A' }}</div>
 <div class="mb-5"></div>
@@ -191,8 +199,8 @@
 
             <table class="table-fixed w-full border-separate border-spacing-y-5 border-spacing-x-5 pt-2">
                 <tr>
-                    <td class="border-b border-black pt-5 text-center">{{ auth()->user()->fullName }}</td>
-                    <td class="border-b border-black pt-5 text-center">{{ 'Nalen Comia'}}</td>
+                    <td class="border-b border-black pt-5 text-center"></td>
+                    <td class="border-b border-black pt-5 text-center">NALEN COMIA</td>
                     <td class="border-b border-black text-center">{{ $issued_by ?? '' }}</td>
                     <td class="border-b border-black text-center">{{ $received_by ?? '' }}</td>
                 </tr>

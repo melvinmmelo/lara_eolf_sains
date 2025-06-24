@@ -22,10 +22,10 @@ class EquipmentStoreController extends Controller
      */
     public function storeFreezerGatepass(Request $request)
     {
-        Log::info('Freezer gatepass data: ' . json_encode($request->all()));
 
         $request->validate([
             'equipment_store_id' => 'required|exists:equipment_store,id',
+            'top_freezer_remarks' => 'nullable|string',
             'notes_free_small_cup' => 'nullable|string',
             'checker_name' => 'required|string',
             'loader_name' => 'required|string',
@@ -41,6 +41,7 @@ class EquipmentStoreController extends Controller
             $equipmentStore = EquipmentStore::findOrFail($request->input('equipment_store_id'));
             
             $equipmentStore->update([
+                'top_freezer_remarks' => $request->input('top_freezer_remarks'),
                 'notes_free_small_cup' => $request->input('notes_free_small_cup'),
                 'checker_name' => $request->input('checker_name'),
                 'loader_name' => $request->input('loader_name'),

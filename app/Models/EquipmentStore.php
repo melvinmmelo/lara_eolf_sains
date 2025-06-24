@@ -13,6 +13,7 @@ class EquipmentStore extends Model
     protected $table = 'equipment_store';
 
     protected $fillable = [
+        'top_freezer_remarks',
         'notes_free_small_cup',
         'checker_name',
         'loader_name',
