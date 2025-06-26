@@ -14,9 +14,163 @@ use App\Models\EquipmentStore;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use App\Models\StoreInfo as Store;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 
 class ReportGeneratorController extends Controller
 {
+    private function getSalesQuery(Request $request)
+    {
+        $query = Inbound::query();
+        $branchCode = session('branch_code');
+        
+        if ($branchCode) {
+            $query->where('branch_code', $branchCode);
+        }
+
+        $reportType = $request->get('report_type', 'daily');
+        $now = Carbon::now();
+
+        // Filter by date based on order_date
+        switch ($reportType) {
+            case 'daily':
+                $query->whereDate('order_date', $now->format('Y-m-d'));
+                break;
+
+            case 'weekly':
+                $query->whereBetween('order_date', [
+                    $now->startOfWeek()->format('Y-m-d'),
+                    $now->endOfWeek()->format('Y-m-d')
+                ]);
+                break;
+
+            case 'monthly':
+                $query->whereYear('order_date', $now->year)
+                      ->whereMonth('order_date', $now->month);
+                break;
+
+            case 'yearly':
+                $query->whereYear('order_date', $now->year);
+                break;
+
+            case 'custom':
+                if ($request->filled(['start_date', 'end_date'])) {
+                    $query->whereBetween('order_date', [
+                        $request->start_date,
+                        Carbon::parse($request->end_date)->endOfDay()
+                    ]);
+                }
+                break;
+        }
+
+        return $query->with(['customer', 'store'])
+                     ->where('is_foc', NULL)
+                     ->whereNotIn('status', ['Cancelled', 'Deleted'])
+                     ->orderBy('order_date', 'desc');
+    }
+
+    public function salesReport(Request $request)
+    {
+        $query = $this->getSalesQuery($request);
+        
+        // Get all records for totals
+        $allRecords = $query->get();
+        
+        // Calculate totals
+        $totals = [
+            'count' => $allRecords->count(),
+            'grandTotal' => $allRecords->sum('grandTotal'),
+            'completedCount' => $allRecords->whereIn('status', ['Completed', 'Paid'])->count(),
+            'pendingCount' => $allRecords->whereNotIn('status', ['Completed', 'Delivered'])->count()
+        ];
+        
+        // Get paginated results
+        $sales = $query->paginate(15);
+        
+        return view('report.sales', compact('sales', 'totals'));
+    }
+
+    public function exportSalesReport(Request $request)
+    {
+        $sales = $this->getSalesQuery($request)->get();
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set headers
+        $sheet->setCellValue('A1', 'Date');
+        $sheet->setCellValue('B1', 'Order No');
+        $sheet->setCellValue('C1', 'DEGIC No');
+        $sheet->setCellValue('D1', 'Customer');
+        $sheet->setCellValue('E1', 'Store');
+        $sheet->setCellValue('F1', 'Status');
+        $sheet->setCellValue('G1', 'Amount');
+
+        // Style headers
+        $headerStyle = [
+            'font' => ['bold' => true],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                ],
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => 'E2E8F0'],
+            ],
+        ];
+        $sheet->getStyle('A1:G1')->applyFromArray($headerStyle);
+
+        // Add data
+        $row = 2;
+        foreach ($sales as $sale) {
+            $sheet->setCellValue('A' . $row, $sale->order_date->format('Y-m-d'));
+            $sheet->setCellValue('B' . $row, $sale->order_no);
+            $sheet->setCellValue('C' . $row, $sale->degic_no ?: 'N/A');
+            $sheet->setCellValue('D' . $row, $sale->customer_name);
+            $sheet->setCellValue('E' . $row, $sale->store_name);
+            $sheet->setCellValue('F' . $row, $sale->status);
+            $sheet->setCellValue('G' . $row, number_format($sale->grandTotal, 2));
+            $row++;
+        }
+
+        // Add total row
+        $totalRow = $row;
+        $sheet->setCellValue('A' . $totalRow, 'Total');
+        $sheet->setCellValue('G' . $totalRow, number_format($sales->sum('grandTotal'), 2));
+        $sheet->mergeCells('A' . $totalRow . ':F' . $totalRow);
+        
+        // Style total row
+        $sheet->getStyle('A' . $totalRow . ':G' . $totalRow)->applyFromArray([
+            'font' => ['bold' => true],
+            'borders' => [
+                'top' => ['borderStyle' => Border::BORDER_THIN],
+                'bottom' => ['borderStyle' => Border::BORDER_DOUBLE],
+            ],
+        ]);
+
+        // Auto-size columns
+        foreach (range('A', 'G') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Create the Excel file
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'sales_report_' . Carbon::now()->format('Y-m-d_His') . '.xlsx';
+        
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit;
+    }
+
 
     public function productsSummaryv2()
     {

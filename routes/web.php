@@ -51,6 +51,9 @@ Route::get('/', function () {
 
 
 Route::middleware('auth')->group(function () {
+    
+    Route::get('/reports/sales', [ReportGeneratorController::class, 'salesReport'])->middleware('can:admin')->name('report.sales');
+    Route::get('/reports/sales/export', [ReportGeneratorController::class, 'exportSalesReport'])->middleware('can:admin')->name('report.sales.export');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -348,8 +351,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/inventory/bad-orders', [InventoryBadOrderController::class, 'store'])->name('inventory.bad-orders.store');
     Route::get('/report/pullout-replaced-form/{degic_no}/{customer_id}', [PullOutFormController::class, 'show'])->name('report.pullout-replaced-form');
 });
-
-    // Pull Out Form Routes
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/ajaxreq.php';

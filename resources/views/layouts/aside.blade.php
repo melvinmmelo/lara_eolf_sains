@@ -246,27 +246,12 @@
                             </a>
                         </li>
 
-
-                        {{-- <li>
-                            <a href="{{ route('update.stocks.page') }}" class="nav-link {{ request()->routeIs('update.stocks.page') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-edit"></i>
-                                <p>Update Stocks</p>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{{ route('bulk.update.stocks.page') }}" class="nav-link {{ request()->routeIs('bulk.update.stocks.page') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-boxes"></i>
-                                <p>Bulk Update Stocks</p>
-                            </a>
-                        </li> --}}
-
                         @endcan
 
                     </ul>
                 </li>
 
-                <li class="nav-item {{ Route::currentRouteNamed('report.productsSummary') || Route::currentRouteNamed('report.deliveryPurchaseReceiptSummary') ? 'menu-is-opening menu-open' : '' }}">
+                <li class="nav-item {{ Route::currentRouteNamed('report.productsSummary') || Route::currentRouteNamed('report.deliveryPurchaseReceiptSummary') || Route::currentRouteNamed('report.availableStocks') || Route::currentRouteNamed('report.sales') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-folder-open" style="color: #74C0FC;"></i>
                         <p>
@@ -303,10 +288,20 @@
                         <li>
                             <a href="{{ route('report.availableStocks') }}"
                                 class="nav-link {{ Route::currentRouteNamed('report.availableStocks')  ? 'active' : '' }}">
-                                <i class="fas fa-box nav-icon"></i>
+                                <i class="fas fa-table nav-icon"></i>
                                 <p>Available Stocks</p>
                             </a>
                         </li>
+
+                        @can('view-report')
+                        <li>
+                            <a href="{{ route('report.sales') }}"
+                                class="nav-link {{ Route::currentRouteNamed('report.sales')  ? 'active' : '' }}">
+                                <i class="fas fa-chart-line nav-icon"></i>
+                                <p>Sales Report</p>
+                            </a>
+                        </li>
+                        @endcan
                     </ul>
                 </li>
 

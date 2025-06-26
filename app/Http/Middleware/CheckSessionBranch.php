@@ -24,7 +24,6 @@ class CheckSessionBranch
             return $next($request);
         }
 
-
         if (auth()->check() and (session('branch_code') === null or session('branch_code') == '') and $request->route()->getName() !== 'branch-select'){
             return redirect()->route('branch-select');
         }
