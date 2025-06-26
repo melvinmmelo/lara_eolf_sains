@@ -293,7 +293,7 @@
                             </a>
                         </li>
 
-                        @can('view-report')
+                        @can('admin')
                         <li>
                             <a href="{{ route('report.sales') }}"
                                 class="nav-link {{ Route::currentRouteNamed('report.sales')  ? 'active' : '' }}">
