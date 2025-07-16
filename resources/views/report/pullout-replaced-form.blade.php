@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CUSTOMER UPDATE FORM</title>
+    <title>PULL-OUT/REPLACED FORM</title>
 
     <link rel="stylesheet" href="{{ asset('css/papersizes.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -186,6 +186,17 @@
             </table>
     
             <div class="flex justify-end space-x-1 mt-4 action-buttons">
+
+                @if($equipmentStoreId)
+                    <a href="{{ route('report.freezerGatepassForm', ['equipment_store_id' => $equipmentStoreId]) }}">
+                    <button
+                        class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
+                    >
+                        Freezer Gate Pass
+                    </button>
+                    </a>
+                @endif
+
                 <!-- Print Button -->
                 <button 
                     onclick="window.print()" 

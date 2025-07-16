@@ -21,13 +21,18 @@ class PullOutFormController extends Controller
             ->where('degic_no', $degic_no)
             ->where('customer_id', $customer_id)
             ->first();
+        // dd($pullOutForm);
 
         if (!$pullOutForm) {
             return redirect()->route('equipment-store.index')
                 ->with('error', 'No pull-out form found for this equipment and customer.');
         }
 
-        return view('report.pullout-replaced-form', compact('pullOutForm'));
+        // dd($request->all());
+
+        $equipmentStoreId = $request->equipment_store_id;
+
+        return view('report.pullout-replaced-form', compact('pullOutForm', 'equipmentStoreId'));
     }
 
     /**

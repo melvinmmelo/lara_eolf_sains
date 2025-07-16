@@ -72,7 +72,7 @@ class EquipmentStoreController extends Controller
         $customer_id = $request->input('customer_id');
         $store_id = $request->input('store_id');
 
-        $equipments = EquipmentStore::with('storeinfo')
+        $equipments = EquipmentStore::with('storeinfo', 'equipment')
             ->where('customer_id', $customer_id)
             ->where('store_id', $store_id)
             ->get();
@@ -354,6 +354,11 @@ class EquipmentStoreController extends Controller
             ->withProperties(['customer' => $customerName, 'store' => $esName, 'equipment' => $equipment->code, 'pull_equipment_id' => $pullEquipmentId, 'replace_equipment_ids' => $replaceEquipmentIds, 'remarks' => $remarks])
             ->log($activityLog);
 
-        return redirect()->route('report.pullout-replaced-form', ['degic_no' => $equipment->code, 'customer_id' => $request->customer_id])->with('success', $successMsg);
+        $equipmentStoreId = null;
+        if (isset($newEquipmentStore)) {
+            $equipmentStoreId = $newEquipmentStore->id;
+        }
+        
+        return redirect()->route('report.pullout-replaced-form', ['degic_no' => $equipment->code, 'customer_id' => $request->customer_id, 'equipment_store_id' => $equipmentStoreId])->with('success', $successMsg);
     }
 }

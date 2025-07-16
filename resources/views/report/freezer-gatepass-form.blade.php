@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CUSTOMER UPDATE FORM</title>
+    <title>FREEZER GATEPASS FORM</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="stylesheet" href="{{ asset('css/papersizes.css') }}">
@@ -214,32 +214,31 @@
             </table>
     
             <div class="flex justify-end space-x-1 mt-4 action-buttons">
-  <!-- Print Button -->
-  <button 
-    onclick="window.print()" 
-    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
-  >
-    Print
-  </button>
+                    <!-- Cancel Button -->
+                    <button 
+                    onclick="window.history.back()" 
+                    class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded shadow transition duration-200 mr-2"
+                    >
+                    Cancel
+                    </button>
 
-  <!-- Cancel Button -->
-  <button 
-    onclick="window.history.back()" 
-    class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded shadow transition duration-200 mr-2"
-  >
-    Cancel
-  </button>
+                    <!-- Add details Button -->
+                    <button 
+                        onclick="showModal()" 
+                        class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
+                    >
+                        Add details
+                    </button>
 
-  <!-- Print Button -->
-  <button 
-    onclick="showModal()" 
-    class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
-  >
-    Add details
-  </button>
-</div>
-                
+                    <!-- Print Button -->
+                    <button 
+                        onclick="window.print()" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
+                    >
+                        Print
+                    </button>
             </div>
+        </div>
       
     </page>
 

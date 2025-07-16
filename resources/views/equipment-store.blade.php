@@ -82,7 +82,7 @@
 
                                     <button type="button" class="btn btn-success btn-sm manage-btn" data-toggle="modal"
                                         data-target="#modal-manageequipment" data-serial="{{ $equipmentSt->serial }}"
-                                        data-equipment-id="{{ $equipmentSt->equipment_id }}">Manage</button>
+                                        data-equipment-id="{{ $equipmentSt->equipment_id }}"><i class="fas fa-edit"></i></button>
 
                                     <form action="{{ route('equipment-store.destroy', $equipmentSt->id) }}" method="POST"
                                         style="display: inline;">
@@ -90,8 +90,13 @@
                                         @method('DELETE')
                                         <input type="hidden" name="equipment_id" value="{{ $equipmentSt->equipment_id }}">
                                         <button type="submit" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Are you sure you want to delete this equipment store entry?')">Delete</button>
+                                            onclick="return confirm('Are you sure you want to delete this equipment store entry?')"><i class="fas fa-trash"></i></button>
                                     </form>
+
+                                    {{-- <a href="{{ route('report.pullout-replaced-form', ['degic_no' => $equipmentSt->equipment->code, 'customer_id' => $equipmentSt->customer_id]) }}" class="btn btn-primary btn-sm"><i class="fas fa-print"></i></a> --}}
+                                    <a href="{{ route('equipment.history', ['dno' => $equipmentSt->equipment->code]) }}" class="btn btn-success btn-sm"><i class="fas fa-history"></i></a>
+
+                                    <a href="{{ route('report.freezerGatepassForm', ['equipment_store_id' => $equipmentSt->id]) }}" class="btn btn-primary btn-sm"><i class="fas fa-print"></i></a>
                                 </td>
                             </tr>
                         @endforeach
