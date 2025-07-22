@@ -119,4 +119,67 @@ class InventoryBadOrderController extends Controller
 
         return redirect()->route('inventory.bad-orders')->with('success', 'Bad order created successfully.');
     }
+
+    public function rollback(Request $request, InventoryBadOrder $badOrder)
+    {
+
+        if (!auth()->user()->can('admin')) {
+            return redirect()->back()->withErrors('You do not have permission to roll back this bad order.');
+        }
+        $request->validate([
+            'rollback_reason' => 'required|string|max:500',
+        ]);
+
+        if (!$badOrder->canRollback()) {
+            return redirect()->back()->withErrors('This bad order cannot be rolled back. It may have already been rolled back or is in an invalid status.');
+        }
+
+        try {
+            return DB::transaction(function () use ($request, $badOrder) {
+                // Restore stock quantities for each product
+                foreach ($badOrder->products as $product) {
+                    $itemMasterData = ItemMasterData::where('id', $product['id'])
+                        ->where('branch_code', $badOrder->branch_code)
+                        ->lockForUpdate()
+                        ->first();
+
+                    if (!$itemMasterData) {
+                        throw new \Exception("Product {$product['name']} (ID: {$product['id']}) not found in branch {$badOrder->branch_code}");
+                    }
+
+                    $oldValues = [
+                        'stocks' => $itemMasterData->stocks,
+                        'reserved' => $itemMasterData->reserved
+                    ];
+
+                    // Restore the stock by adding back the quantity
+                    $itemMasterData->stocks = $itemMasterData->stocks + $product['quantity'];
+                    $itemMasterData->save();
+
+                    // Log the rollback adjustment
+                    activity()
+                        ->performedOn($itemMasterData)
+                        ->withProperties([
+                            'old_values' => $oldValues,
+                            'new_values' => [
+                                'stocks' => $itemMasterData->stocks,
+                                'reserved' => $itemMasterData->reserved
+                            ],
+                            'notes' => "Rollback of bad order: {$request->rollback_reason}",
+                            'original_bad_order' => $badOrder->reference_name
+                        ])
+                        ->log("Bad order rollback {$badOrder->reference_name} by " . auth()->user()->fullName);
+                }
+
+                // Mark the bad order as rolled back
+                $badOrder->rollback($request->rollback_reason, auth()->id());
+
+                return redirect()->route('inventory.bad-orders')
+                    ->with('success', "Bad order {$badOrder->reference_name} has been successfully rolled back and stock quantities have been restored.");
+            });
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withErrors('Failed to rollback bad order: ' . $e->getMessage());
+        }
+    }
 }
