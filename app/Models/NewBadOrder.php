@@ -17,6 +17,7 @@ class NewBadOrder extends Model
         'bo_percentage',
         'remarks',
         'is_active',
+        'inbound_id',
     ];
 
     public function customer()

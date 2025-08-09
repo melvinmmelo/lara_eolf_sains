@@ -290,7 +290,7 @@ class InboundController extends Controller
         // Validate form token to prevent duplicate submissions
         $token = $request->input('form_submit_token');
         $tokenKey = 'form_token_' . $token;
-        
+
         if (empty($token) || Cache::has($tokenKey)) {
             return back()->withErrors('Invalid or expired form submission.');
         }
@@ -375,6 +375,7 @@ class InboundController extends Controller
             if($badOrder){
 
                 $badOrder->is_active = 0;
+                $badOrder->inbound_id = $inbound->id;
                 $badOrder->save();
 
                 $inbound->bad_order_id = $request->bad_order_id;
@@ -739,6 +740,7 @@ class InboundController extends Controller
             'vehicle_id' => 'required',
             'bad_order_id' => 'nullable',
             'bo_amount' => 'nullable',
+            'bad_order' => 'nullable',
             'is_foc' => 'nullable',
             'with_sf' => 'nullable',
         ]);
@@ -765,9 +767,26 @@ class InboundController extends Controller
             'is_with_sf' => $request->with_sf == 'on' ? 1 : NULL,
         ]);
 
-        if ($request->boolean('bad_order')) {
-            $inbound->bad_order_id = $request->bad_order_id;
-            $inbound->bo_amount = $request->bo_amount;
+        $bad_order = $request->bad_order === 'on' ? 1 : 0;
+
+        if ($bad_order == 1) {
+            $badOrder = NewBadOrder::find($request->bad_order_id);
+            if($badOrder){
+                $badOrder->is_active = 0;
+                $badOrder->inbound_id = $inbound->id;
+                $badOrder->save();
+
+                $inbound->bad_order_id = $request->bad_order_id;
+                $inbound->bo_amount = $request->bo_amount;
+
+//                if($inbound->bo_amount == $inbound->grandTotal){
+//                    $inbound->status = 'Paid';
+//                }
+            }
+        } else {
+            // If bad order checkbox is unchecked, clear bad order data
+            $inbound->bad_order_id = null;
+            $inbound->bo_amount = 0;
         }
 
         foreach ($products as $product) {
