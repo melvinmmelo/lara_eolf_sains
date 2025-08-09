@@ -127,29 +127,29 @@
                 </div>
 
                 <div class="mt-4 flex justify-end space-x-2">
-                    <button type="button" onclick="closeModal()" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
+                    <button type="button" onclick="closeModal()" class="bg-gray-500 text-white px-4 py-2 rounded">Back</button>
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save & Print</button>
                 </div>
             </form>
         </div>
     </div>
 
-    
+
 
     <page class="text-md" size="letter" layout="portrait">
         <div>
             <div class="text-center mb-2">
                 <div class="font-bold">EOLF FOOD TRADING OPC </div>
-                <div>ASTRODAR GASOLINE STATION SAN MIGUEL SAN MANUEL TARLAC / CARRESTO GASOLINE STATION SAN 
+                <div>ASTRODAR GASOLINE STATION SAN MIGUEL SAN MANUEL TARLAC / CARRESTO GASOLINE STATION SAN
                     PEDRO MALLIG ISABELA </div>
                 <div>TEL. NOS.: 09176208582 / 09171661609 </div>
-                <div>Email: <span>danerics.eolffoodtrading@gmail.com 
+                <div>Email: <span>danerics.eolffoodtrading@gmail.com
                 </span></div>
             </div>
-    
+
             <table class="table-fixed w-full border border-black border-collapse">
                 <tr>
-                    
+
                     <td colspan="4" class="font-bold text-center text-xl border border-black">FREEZER GATEPASS </td>
                     <td colspan="2" class="font-bold text-center border border-black"> NO. {{ $gatepass_no ?? 'N/A' }} </td>
                 </tr>
@@ -179,7 +179,7 @@
                     <div class="font-bold">Loader: {{ $loader_name ?? '' }}</div>
                         <div class="font-bold mb-4">Remarks: {{ $remarks ?? '' }}</div>
                 </td>
-                <td colspan="2" class="font-bold border border-black align-top pl-3""> 
+                <td colspan="2" class="font-bold border border-black align-top pl-3"">
                     <div><input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600" {{ ($has_ice_scraper ?? false) ? 'checked' : '' }}>
                             <span class="font-bold">Ice Scraper</span></div>
                     <div><input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600" {{ ($has_lock_and_key ?? false) ? 'checked' : '' }}>
@@ -190,10 +190,10 @@
                                         <span class="font-bold">Tarpaulin (logo)</span></div>
                                         <div><input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600" {{ ($has_tarpaulin_pricelist ?? false) ? 'checked' : '' }}>
                                             <span class="font-bold">Tarpaulin (Price list)</span></div>
-                            
+
 
                 </td>
-               
+
                </tr>
             </table>
 
@@ -212,32 +212,32 @@
                     <td>Customer Signature Over Printed Name:</td>
                 </tr>
             </table>
-    
+
             <div class="flex justify-end space-x-1 mt-4 action-buttons">
                     <!-- Cancel Button -->
                     <a href="{{ route('equipment-store.index', ['store_id' => $customer_id, 'customer_id' => $customer_id]) }}"
                         class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded shadow transition duration-200 mr-2">
-                        Cancel
+                        Back
                     </a>
 
                     <!-- Add details Button -->
-                    <button 
-                        onclick="showModal()" 
+                    <button
+                        onclick="showModal()"
                         class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
                     >
                         Add details
                     </button>
 
                     <!-- Print Button -->
-                    <button 
-                        onclick="window.print()" 
+                    <button
+                        onclick="window.print()"
                         class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
                     >
                         Print
                     </button>
             </div>
         </div>
-      
+
     </page>
 
     <script>

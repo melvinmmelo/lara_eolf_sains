@@ -20,15 +20,14 @@ class PullOutFormController extends Controller
         $pullOutForm = PullOutForm::with(['customer', 'equipment', 'replacementEquipment'])
             ->where('degic_no', $degic_no)
             ->where('customer_id', $customer_id)
+            ->orderBy('id', 'desc')
             ->first();
-        // dd($pullOutForm);
 
         if (!$pullOutForm) {
             return redirect()->route('equipment-store.index')
                 ->with('error', 'No pull-out form found for this equipment and customer.');
         }
 
-        // dd($request->all());
 
         $equipmentStoreId = $request->equipment_store_id;
 

@@ -25,7 +25,7 @@ class ReportGeneratorController extends Controller
     {
         $query = Inbound::query();
         $branchCode = session('branch_code');
-        
+
         if ($branchCode) {
             $query->where('branch_code', $branchCode);
         }
@@ -74,10 +74,10 @@ class ReportGeneratorController extends Controller
     public function salesReport(Request $request)
     {
         $query = $this->getSalesQuery($request);
-        
+
         // Get all records for totals
         $allRecords = $query->get();
-        
+
         // Calculate totals
         $totals = [
             'count' => $allRecords->count(),
@@ -87,10 +87,10 @@ class ReportGeneratorController extends Controller
             'completedCount' => $allRecords->whereIn('status', ['Completed', 'Paid'])->count(),
             'pendingCount' => $allRecords->whereNotIn('status', ['Completed', 'Delivered'])->count()
         ];
-        
+
         // Get paginated results
         $sales = $query->paginate(15);
-        
+
         return view('report.sales', compact('sales', 'totals'));
     }
 
@@ -148,7 +148,7 @@ class ReportGeneratorController extends Controller
             return $sale->getGrandTotalAttribute();
         }), 2));
         $sheet->mergeCells('A' . $totalRow . ':F' . $totalRow);
-        
+
         // Style total row
         $sheet->getStyle('A' . $totalRow . ':G' . $totalRow)->applyFromArray([
             'font' => ['bold' => true],
@@ -166,7 +166,7 @@ class ReportGeneratorController extends Controller
         // Create the Excel file
         $writer = new Xlsx($spreadsheet);
         $filename = 'sales_report_' . Carbon::now()->format('Y-m-d_His') . '.xlsx';
-        
+
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
@@ -275,7 +275,7 @@ class ReportGeneratorController extends Controller
             ->map(function ($product) use ($variants) {
                 $parts = explode('_', $product->product_code);
                 $variantCode = end($parts); // Get the last part after underscore
-    
+
                 $product->available_stocks = $product->stocks - $product->reserved;
                 $product->variant_name = $variants->get($variantCode)?->name ?? 'N/A';
                 return $product;
@@ -369,6 +369,7 @@ class ReportGeneratorController extends Controller
         $date = now()->toDateString();
         // formate date to MM DD, YYYY
         $date = Carbon::parse($date)->format('F d, Y');
+
         return view('report.pullout-replaced-form', compact('customer','equipmentStore', 'date'));
     }
 
@@ -392,28 +393,28 @@ class ReportGeneratorController extends Controller
             $distributor_name = 'JOFREN D. COMIA - TARLAC';
         }
 
-        $customerAddress = $equipmentStore->store->region . ', ' . $equipmentStore->store->province . ', ' . $equipmentStore->store->city . ', ' . $equipmentStore->store->brgy . ', ' . $equipmentStore->store->brgy . ' ' . $equipmentStore->store->subdivision;
+        $customerAddress = $equipmentStore->store->subdivision .  ' ' . $equipmentStore->store->brgy . ', ' . $equipmentStore->store->city . ', ' . $equipmentStore->store->province;
 
         $gatePassNo = Str::padLeft($equipmentStore->id, 5, '0');
 
         $data = [
             'store_id' => $equipmentStore->id,
             'customer_id' => $equipmentStore->customer_id,
-            'gatepass_no' => $gatePassNo, 
-            'date' => Carbon::now()->format('m/d/Y'), 
+            'gatepass_no' => $gatePassNo,
+            'date' => Carbon::now()->format('m/d/Y'),
             'customer_name' => Str::upper($equipmentStore->customer->fullName ?? ($equipmentStore->customer->fullName ?? 'N/A')),
-            'customer_address' => Str::upper($customerAddress), 
+            'customer_address' => Str::upper($customerAddress),
             'distributor_name' => $distributor_name,
-     
-            'model' => $equipmentStore->equipment->model_name ?? ($equipmentStore->equipment->model ?? ($equipmentStore->equipment->name ?? 'N/A')), 
-            'serial_no' => $equipmentStore->equipment->serial_no ?? ($equipmentStore->serial_number ?? 'N/A'), 
-            'degic_no' => $equipmentStore->equipment->code ?? 'N/A', 
 
-            'top_freezer_remarks' => $equipmentStore->top_freezer_remarks ?? '', 
-            'free_small_cup_note' => $equipmentStore->notes_free_small_cup ?? 'Free Small Cup', 
+            'model' => $equipmentStore->equipment->model_name ?? ($equipmentStore->equipment->model ?? ($equipmentStore->equipment->name ?? 'N/A')),
+            'serial_no' => $equipmentStore->equipment->serial_no ?? ($equipmentStore->serial_number ?? 'N/A'),
+            'degic_no' => $equipmentStore->equipment->code ?? 'N/A',
+
+            'top_freezer_remarks' => $equipmentStore->top_freezer_remarks ?? '',
+            'free_small_cup_note' => $equipmentStore->notes_free_small_cup ?? 'Free Small Cup',
             'checker_name' => $equipmentStore->checker_name ?? (auth()->check() ? auth()->user()->name : ''),
-            'loader_name' => $equipmentStore->loader_name ?? '', 
-            'remarks' => $equipmentStore->remarks_gatepass ?? ($equipmentStore->remarks ?? ''), 
+            'loader_name' => $equipmentStore->loader_name ?? '',
+            'remarks' => $equipmentStore->remarks_gatepass ?? ($equipmentStore->remarks ?? ''),
 
             'has_ice_scraper' => (bool)($equipmentStore->has_ice_scraper ?? false),
             'has_lock_and_key' => (bool)($equipmentStore->has_lock_and_key ?? false),
@@ -421,8 +422,8 @@ class ReportGeneratorController extends Controller
             'has_tarpaulin_logo' => (bool)($equipmentStore->has_tarpaulin_logo ?? false),
             'has_tarpaulin_pricelist' => (bool)($equipmentStore->has_tarpaulin_pricelist ?? false),
 
-            'issued_by' => auth()->check() ? auth()->user()->name : '', 
-            'received_by' => '', 
+            'issued_by' => auth()->check() ? auth()->user()->name : '',
+            'received_by' => '',
             'equipment_store_id' => $equipment_store_id,
         ];
 
@@ -437,7 +438,7 @@ class ReportGeneratorController extends Controller
 
         $sales_query = Inbound::whereBetween('order_date', [$date_from, $date_to])
             ->where('branch_code', session('branch_code'));
-            
+
         // Apply status filter
         if ($status_filter === 'all') {
             // All orders (Completed and Paid)
@@ -448,16 +449,16 @@ class ReportGeneratorController extends Controller
         } else {
             // Filter by specific status
             $sales_query->where('status', $status_filter);
-            
+
             // If status is not 'Cancelled' or 'Deleted', exclude FOC items
             if (!in_array($status_filter, ['Cancelled', 'Deleted'])) {
                 $sales_query->whereNull('is_foc');
             }
         }
-            
+
         // Get all inbounds that match the criteria
         $inbounds = $sales_query->get();
-        
+
         // Group by customer_name and calculate totals using the accessor method
         $sales_data = $inbounds->groupBy('customer_name')
             ->map(function ($customerInbounds) {
@@ -476,7 +477,7 @@ class ReportGeneratorController extends Controller
         // Format dates for the view
         $date_from = Carbon::parse($date_from)->format('m/d/Y');
         $date_to = Carbon::parse($date_to)->format('m/d/Y');
-        
+
         // Get status label for display
         $status_label = 'All Orders (Completed and Paid)';
         if ($status_filter === 'Free') {

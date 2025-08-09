@@ -39,7 +39,7 @@ class EquipmentStoreController extends Controller
 
         try {
             $equipmentStore = EquipmentStore::findOrFail($request->input('equipment_store_id'));
-            
+
             $equipmentStore->update([
                 'top_freezer_remarks' => $request->input('top_freezer_remarks'),
                 'notes_free_small_cup' => $request->input('notes_free_small_cup'),
@@ -308,8 +308,8 @@ class EquipmentStoreController extends Controller
         $pullOutForm->store_id = $equipmentStore->store_id;
         $pullOutForm->degic_no = $equipment->code;
         $pullOutForm->customer_name = $customerName;
-        $pullOutForm->address = $equipmentStore->storeinfo->subdivision . ', ' . 
-                               $equipmentStore->storeinfo->brgy . ', ' . 
+        $pullOutForm->address = $equipmentStore->storeinfo->subdivision . ', ' .
+                               $equipmentStore->storeinfo->brgy . ', ' .
                                $equipmentStore->storeinfo->city;
         $pullOutForm->sales_agent = auth()->user()->fullName;
         $pullOutForm->date = now();
@@ -339,12 +339,12 @@ class EquipmentStoreController extends Controller
                     'equipment_id' => $replaceEquipmentId
                 ];
             }
-            
+
             // Set the first replacement as the main replacement for backward compatibility
             $firstReplacement = $replacedEquipment[0];
             $pullOutForm->replaced_model_serial_no = $firstReplacement['model_serial_no'];
             $pullOutForm->replaced_degic_no = $firstReplacement['degic_no'];
-            
+
             // Store all replacements in JSON
             $pullOutForm->replaced_equipment_json = $replacedEquipment;
         }
@@ -361,7 +361,7 @@ class EquipmentStoreController extends Controller
         if (isset($newEquipmentStore)) {
             $equipmentStoreId = $newEquipmentStore->id;
         }
-        
+
         return redirect()->route('report.pullout-replaced-form', ['degic_no' => $equipment->code, 'customer_id' => $request->customer_id, 'equipment_store_id' => $equipmentStoreId])->with('success', $successMsg);
     }
 }
