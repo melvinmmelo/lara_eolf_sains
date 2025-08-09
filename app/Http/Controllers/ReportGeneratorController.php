@@ -81,7 +81,9 @@ class ReportGeneratorController extends Controller
         // Calculate totals
         $totals = [
             'count' => $allRecords->count(),
-            'grandTotal' => $allRecords->sum('grandTotal'),
+            'grandTotal' => $allRecords->sum(function ($record) {
+                return $record->getGrandTotalAttribute();
+            }),
             'completedCount' => $allRecords->whereIn('status', ['Completed', 'Paid'])->count(),
             'pendingCount' => $allRecords->whereNotIn('status', ['Completed', 'Delivered'])->count()
         ];
@@ -135,14 +137,16 @@ class ReportGeneratorController extends Controller
             $sheet->setCellValue('D' . $row, $sale->customer_name);
             $sheet->setCellValue('E' . $row, $sale->store_name);
             $sheet->setCellValue('F' . $row, $sale->status);
-            $sheet->setCellValue('G' . $row, number_format($sale->grandTotal, 2));
+            $sheet->setCellValue('G' . $row, number_format($sale->getGrandTotalAttribute(), 2));
             $row++;
         }
 
         // Add total row
         $totalRow = $row;
         $sheet->setCellValue('A' . $totalRow, 'Total');
-        $sheet->setCellValue('G' . $totalRow, number_format($sales->sum('grandTotal'), 2));
+        $sheet->setCellValue('G' . $totalRow, number_format($sales->sum(function ($sale) {
+            return $sale->getGrandTotalAttribute();
+        }), 2));
         $sheet->mergeCells('A' . $totalRow . ':F' . $totalRow);
         
         // Style total row
@@ -205,7 +209,9 @@ class ReportGeneratorController extends Controller
 
         $pagesData = $this->distributeInboundsToPages($inbounds);
         $totalPages = count($pagesData);
-        $grandTotal = $inbounds->sum('grandTotal');
+        $grandTotal = $inbounds->sum(function ($inbound) {
+            return $inbound->getGrandTotalAttribute();
+        });
 
 
         return view('report.orderSlip', compact('inbounds', 'code', 'orderSlip', 'grandTotal', 'totalInbounds', 'totalPages', 'pagesData'));
@@ -391,6 +397,8 @@ class ReportGeneratorController extends Controller
         $gatePassNo = Str::padLeft($equipmentStore->id, 5, '0');
 
         $data = [
+            'store_id' => $equipmentStore->id,
+            'customer_id' => $equipmentStore->customer_id,
             'gatepass_no' => $gatePassNo, 
             'date' => Carbon::now()->format('m/d/Y'), 
             'customer_name' => Str::upper($equipmentStore->customer->fullName ?? ($equipmentStore->customer->fullName ?? 'N/A')),
@@ -420,7 +428,67 @@ class ReportGeneratorController extends Controller
 
         return view('report.freezer-gatepass-form', $data);
     }
+
+    public function salesReportByCustomer(Request $request)
+    {
+        $date_from = $request->input('date_from', Carbon::now()->startOfDay());
+        $date_to = $request->input('date_to', Carbon::now()->endOfDay());
+        $status_filter = $request->input('status_filter', 'all');
+
+        $sales_query = Inbound::whereBetween('order_date', [$date_from, $date_to])
+            ->where('branch_code', session('branch_code'));
+            
+        // Apply status filter
+        if ($status_filter === 'all') {
+            // All orders (Completed and Paid)
+            $sales_query->whereIn('status', ['Completed', 'Paid']);
+        } elseif ($status_filter === 'Free') {
+            // Free orders
+            $sales_query->whereNotNull('is_foc');
+        } else {
+            // Filter by specific status
+            $sales_query->where('status', $status_filter);
+            
+            // If status is not 'Cancelled' or 'Deleted', exclude FOC items
+            if (!in_array($status_filter, ['Cancelled', 'Deleted'])) {
+                $sales_query->whereNull('is_foc');
+            }
+        }
+            
+        // Get all inbounds that match the criteria
+        $inbounds = $sales_query->get();
+        
+        // Group by customer_name and calculate totals using the accessor method
+        $sales_data = $inbounds->groupBy('customer_name')
+            ->map(function ($customerInbounds) {
+                return [
+                    'customer_name' =>  $customerInbounds->first()->degic_no . " - " . $customerInbounds->first()->customer_name,
+                    'total_sales' => $customerInbounds->sum(function ($inbound) {
+                        return $inbound->getGrandTotalAttribute();
+                    })
+                ];
+            })
+            ->sortByDesc('total_sales')
+            ->values();
+
+        $total_sales = $sales_data->sum('total_sales');
+
+        // Format dates for the view
+        $date_from = Carbon::parse($date_from)->format('m/d/Y');
+        $date_to = Carbon::parse($date_to)->format('m/d/Y');
+        
+        // Get status label for display
+        $status_label = 'All Orders (Completed and Paid)';
+        if ($status_filter === 'Free') {
+            $status_label = 'Free Orders';
+        } elseif ($status_filter !== 'all') {
+            $status_label = $status_filter . ' Orders';
+        }
+
+        if ($status_filter === 'Completed') {
+            $status_label = 'Unpaid Orders';
+        }
+
+        return view('report.sales-report', compact('sales_data', 'total_sales', 'date_from', 'date_to', 'status_label'));
+    }
 }
-
-
-

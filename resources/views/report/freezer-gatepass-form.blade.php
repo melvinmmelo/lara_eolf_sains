@@ -215,12 +215,10 @@
     
             <div class="flex justify-end space-x-1 mt-4 action-buttons">
                     <!-- Cancel Button -->
-                    <button 
-                    onclick="window.history.back()" 
-                    class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded shadow transition duration-200 mr-2"
-                    >
-                    Cancel
-                    </button>
+                    <a href="{{ route('equipment-store.index', ['store_id' => $customer_id, 'customer_id' => $customer_id]) }}"
+                        class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded shadow transition duration-200 mr-2">
+                        Cancel
+                    </a>
 
                     <!-- Add details Button -->
                     <button 

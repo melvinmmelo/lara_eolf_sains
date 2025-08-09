@@ -301,6 +301,13 @@
                                 <p>Sales Report</p>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('report.sales-by-customer') }}"
+                                class="nav-link {{ Route::currentRouteNamed('report.sales-by-customer')  ? 'active' : '' }}">
+                                <i class="fas fa-chart-pie nav-icon"></i>
+                                <p>Sales by Customer</p>
+                            </a>
+                        </li>
                         @endcan
                     </ul>
                 </li>

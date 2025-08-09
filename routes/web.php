@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/reports/sales', [ReportGeneratorController::class, 'salesReport'])->middleware('can:admin')->name('report.sales');
     Route::get('/reports/sales/export', [ReportGeneratorController::class, 'exportSalesReport'])->middleware('can:admin')->name('report.sales.export');
+    Route::get('/reports/sales-by-customer', [ReportGeneratorController::class, 'salesReportByCustomer'])->name('report.sales-by-customer');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

@@ -148,6 +148,9 @@ class EquipmentStoreController extends Controller
             }
         }
 
+        $customer->status = 'active';
+        $customer->save();
+
         activity('equipment-store')
             ->withProperties(['customer_id' => $customer_id, 'store_id' => $store_id, 'equipment_ids' => $equipment_ids, 'pull_statuses' => $pull_statuses])
             ->log('equipment added to store');
@@ -157,7 +160,7 @@ class EquipmentStoreController extends Controller
             return redirect()->back()->withErrors($errors);
         }
 
-        return redirect()->route('report.freezerGatepassForm', ['store_id' => $store_id, 'equipment_store_id' => $equipmentStore->id])->with('success', 'Equipment added successfully.');
+        return redirect()->route('report.freezerGatepassForm', ['store_id' => $store_id, 'equipment_store_id' => $equipmentStore->id, 'customer_id' => $customer_id])->with('success', 'Equipment added successfully.');
     }
 
 

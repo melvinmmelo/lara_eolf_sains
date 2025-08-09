@@ -206,12 +206,13 @@
                 </button>
 
                 <!-- Cancel Button -->
-                <button 
-                    onclick="window.history.back()" 
-                    class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
-                >
-                    Cancel
-                </button>
+                <a href="{{ route('equipment-store.index') }}">
+                    <button 
+                        class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded shadow transition duration-200"
+                    >
+                        Back
+                    </button>
+                </a>
             </div>
 
             <!-- Remarks Modal -->
