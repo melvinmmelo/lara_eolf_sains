@@ -39,7 +39,9 @@ class Inbound extends Model
         'vehicle_no',
         'order_slip_code',
         'order_slip_sno',
-        'order_date'
+        'order_date',
+        'bo_amount',
+        'discount'
     ];
 
     protected $grandTotal = 0, $netAmount = 0, $balance = 0;
@@ -186,7 +188,12 @@ class Inbound extends Model
         }
 
         $this->grandTotal = $total + ($this->is_with_sf ? 1000 : 0);
-        return $this->netAmount = ( $this->grandTotal ) - ($this->bo_amount + $this->discount );
+        
+        // Use bo_amount and discount from database, defaulting to 0 if null
+        $boAmount = $this->bo_amount ?? 0;
+        $discount = $this->discount ?? 0;
+        
+        return $this->netAmount = $this->grandTotal - ($boAmount + $discount);
     }
 
     public function getGrandTotalAttribute() // always call this first before getting the netAmount
@@ -199,7 +206,13 @@ class Inbound extends Model
 
     public function getTotalBalanceAttribute()
     {
-        return $this->balance =  $this->netAmount - $this->delivered_amount;
+        // Ensure total amount is calculated first to set netAmount
+        $this->getGrandTotalAttribute();
+        
+        // Use delivered_amount from database, defaulting to 0 if null
+        $deliveredAmount = $this->delivered_amount ?? 0;
+        
+        return $this->balance = $this->netAmount - $deliveredAmount;
     }
 
     public function scopeActiveOrdersv2($query)
