@@ -459,27 +459,79 @@ class ReportGeneratorController extends Controller
         // Get all inbounds that match the criteria
         $inbounds = $sales_query->get();
 
-        // Group by customer_name and calculate totals using the accessor method
+        // Separate FOC (Free Orders) and regular orders
+        $foc_inbounds = $inbounds->where('is_foc', 1);
+        $regular_inbounds = $inbounds->where('is_foc', '!=', 1);
+
+        // Group regular orders by payment_type first, then by customer_name
+        $payment_groups = $regular_inbounds->groupBy('payment_type')
+            ->map(function ($paymentInbounds, $paymentType) {
+                $customers = $paymentInbounds->groupBy('customer_name')
+                    ->map(function ($customerInbounds) {
+                        return [
+                            'customer_name' => $customerInbounds->first()->degic_no . " - " . $customerInbounds->first()->customer_name,
+                            'total_sales' => $customerInbounds->sum(function ($inbound) {
+                                return $inbound->getGrandTotalAttribute();
+                            }),
+                            'balance' => $customerInbounds->sum(function ($inbound) {
+                                return $inbound->totalBalance;
+                            }),
+                            'ref_no' => $customerInbounds->first()->ref_no,
+                        ];
+                    })
+                    ->sortByDesc('total_sales')
+                    ->values();
+
+                return [
+                    'customers' => $customers,
+                    'total_sales' => $customers->sum('total_sales'),
+                    'total_balance' => $customers->sum('balance'),
+                ];
+            });
+
+        // Group FOC orders by customer_name
+        $foc_customers = $foc_inbounds->groupBy('customer_name')
+            ->map(function ($customerInbounds) {
+                return [
+                    'customer_name' => $customerInbounds->first()->degic_no . " - " . $customerInbounds->first()->customer_name,
+                    'total_sales' => $customerInbounds->sum(function ($inbound) {
+                        return $inbound->getGrandTotalAttribute();
+                    }),
+                    'balance' => 0, // FOC orders typically have no balance
+                ];
+            })
+            ->sortByDesc('total_sales')
+            ->values();
+
+        $foc_total = $foc_customers->sum('total_sales');
+
+        // Calculate grand totals
+        $total_sales = $payment_groups->sum('total_sales');
+        $total_balance = $payment_groups->sum('total_balance');
+
+        // Legacy sales_data for backward compatibility
         $sales_data = $inbounds->groupBy('customer_name')
             ->map(function ($customerInbounds) {
                 return [
                     'customer_name' =>  $customerInbounds->first()->degic_no . " - " . $customerInbounds->first()->customer_name,
                     'total_sales' => $customerInbounds->sum(function ($inbound) {
                         return $inbound->getGrandTotalAttribute();
-                    })
+                    }),
+                    'balance' => $customerInbounds->sum(function ($inbound) {
+                        return $inbound->totalBalance;
+                    }),
                 ];
             })
             ->sortByDesc('total_sales')
             ->values();
 
-        $total_sales = $sales_data->sum('total_sales');
 
         // Format dates for the view
         $date_from = Carbon::parse($date_from)->format('m/d/Y');
         $date_to = Carbon::parse($date_to)->format('m/d/Y');
 
         // Get status label for display
-        $status_label = 'All Orders (Completed and Paid)';
+        $status_label = 'All Orders (Completed)';
         if ($status_filter === 'Free') {
             $status_label = 'Free Orders';
         } elseif ($status_filter !== 'all') {
@@ -490,6 +542,6 @@ class ReportGeneratorController extends Controller
             $status_label = 'Unpaid Orders';
         }
 
-        return view('report.sales-report', compact('sales_data', 'total_sales', 'date_from', 'date_to', 'status_label'));
+        return view('report.sales-report', compact('sales_data', 'payment_groups', 'foc_customers', 'foc_total', 'total_sales', 'total_balance', 'date_from', 'date_to', 'status_label'));
     }
 }
