@@ -17,7 +17,7 @@
         page[size="letter"] {
                 height: 100% !important;
         }
-        
+
         .fixed-bottom {
             position: fixed;
             bottom: 0;
@@ -32,7 +32,7 @@
             align-items: center;
             border-top: 1px solid #e2e8f0;
         }
-        
+
         .fixed-bottom form {
             display: flex;
             align-items: center;
@@ -40,11 +40,11 @@
             flex-wrap: wrap;
             justify-content: center;
         }
-        
+
         .fixed-bottom .print-btn {
             margin-left: 15px;
         }
-        
+
         body {
             padding-bottom: 80px; /* Add padding to prevent content from being hidden behind fixed bar */
         }
@@ -66,18 +66,99 @@
                 <p>{{ $date_to }}</p>
             </div>
 
-            <div class="border-t border-black pt-2">
-                @foreach($sales_data as $sale)
-                <div class="flex justify-between py-1">
-                    <span>{{ $sale['customer_name'] }}</span>
-                    <span>{{ number_format($sale['total_sales'], 2) }}</span>
-                </div>
-                @endforeach
-            </div>
+            @php
+                $paymentTypeLabels = [
+                    'Cash' => 'CASH',
+                    'Bank Transfer' => 'BANK TRANSFER',
+                    'Cheque' => 'CHECK'
+                ];
+            @endphp
 
-            <div class="flex justify-end border-t-2 border-black mt-4 pt-2">
-                <span class="font-bold">{{ number_format($total_sales, 2) }}</span>
-            </div>
+            <table class="w-full border-collapse text-sm">
+                @foreach($payment_groups as $paymentType => $group)
+                    @if($group['customers']->count() > 0)
+                        <thead>
+                            <tr>
+                                @if($paymentType === 'Cheque')
+                                    <th class="text-left py-2 px-2 font-bold">{{ strtoupper($paymentTypeLabels[$paymentType] ?? $paymentType) }}</th>
+                                    <th class="text-left py-2 px-2 font-bold">Reference No.</th>
+                                    <th class="text-right py-2 px-2 font-bold">AMOUNT</th>
+                                    <th class="text-right py-2 px-2 font-bold">BALANCE</th>
+                                @else
+                                    <th class="text-left py-2 px-2 font-bold" colspan="2">{{ strtoupper($paymentTypeLabels[$paymentType] ?? $paymentType) }}</th>
+                                    <th class="text-right py-2 px-2 font-bold">AMOUNT</th>
+                                    <th class="text-right py-2 px-2 font-bold">BALANCE</th>
+                                @endif
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($group['customers'] as $customer)
+                            <tr>
+                                @if($paymentType === 'Cheque')
+                                    <td class="py-1 px-2">{{ $customer['customer_name'] }}</td>
+                                    <td class="text-left py-1 px-2">{{ $customer['ref_no'] }}</td>
+                                    <td class="text-right py-1 px-2">{{ number_format($customer['total_sales'], 2) }}</td>
+                                    <td class="text-right py-1 px-2">{{ number_format($customer['balance'], 2) }}</td>
+                                @else
+                                    <td class="py-1 px-2" colspan="2">{{ $customer['customer_name'] }}</td>
+                                    <td class="text-right py-1 px-2">{{ number_format($customer['total_sales'], 2) }}</td>
+                                    <td class="text-right py-1 px-2">{{ number_format($customer['balance'], 2) }}</td>
+                                @endif
+                            </tr>
+                            @endforeach
+                            <tr>
+                                @if($paymentType === 'Cheque')
+                                    <td class="py-1 px-2 font-bold">Total</td>
+                                    <td class="text-center py-1 px-2"></td>
+                                    <td class="text-right py-1 px-2 font-bold">{{ number_format($group['total_sales'], 2) }}</td>
+                                    <td class="text-right py-1 px-2 font-bold">{{ number_format($group['total_balance'], 2) }}</td>
+                                @else
+                                    <td class="py-1 px-2 font-bold" colspan="2">Total</td>
+                                    <td class="text-right py-1 px-2 font-bold">{{ number_format($group['total_sales'], 2) }}</td>
+                                    <td class="text-right py-1 px-2 font-bold">{{ number_format($group['total_balance'], 2) }}</td>
+                                @endif
+                            </tr>
+                        </tbody>
+
+                        @if(!$loop->last)
+                            <tbody><tr><td colspan="4" class="py-2"></td></tr></tbody>
+                        @endif
+                    @endif
+                @endforeach
+
+                @if($foc_customers->count() > 0)
+                    <tbody><tr><td colspan="4" class="py-2"></td></tr></tbody>
+                    <thead>
+                        <tr>
+                            <th class="text-left py-2 px-2 font-bold" colspan="2">FREE ORDERS</th>
+                            <th class="text-right py-2 px-2 font-bold">AMOUNT</th>
+                            <th class="text-right py-2 px-2 font-bold">BALANCE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($foc_customers as $customer)
+                        <tr>
+                            <td class="py-1 px-2" colspan="2">{{ $customer['customer_name'] }}</td>
+                            <td class="text-right py-1 px-2">{{ number_format($customer['total_sales'], 2) }}</td>
+                            <td class="text-right py-1 px-2">{{ number_format($customer['balance'], 2) }}</td>
+                        </tr>
+                        @endforeach
+                        <tr>
+                            <td class="py-1 px-2 font-bold" colspan="2">Total</td>
+                            <td class="text-right py-1 px-2 font-bold">{{ number_format($foc_total, 2) }}</td>
+                            <td class="text-right py-1 px-2 font-bold">-</td>
+                        </tr>
+                    </tbody>
+                @endif
+
+                <tfoot>
+                    <tr class="border-t-2 border-black">
+                        <td class="py-2 px-2 font-bold" colspan="2">TOTAL PAYMENTS</td>
+                        <td class="text-right py-2 px-2 font-bold">{{ number_format($total_sales, 2) }}</td>
+                        <td class="text-right py-2 px-2 font-bold">{{ number_format($total_balance, 2) }}</td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
 
         <!-- Removed print button from here as it will be at the bottom -->
@@ -96,7 +177,7 @@
             <div>
                 <label for="status_filter" class="block text-sm font-medium text-gray-700">Status</label>
                 <select name="status_filter" id="status_filter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <option value="all" {{ request('status_filter') == 'all' ? 'selected' : '' }}>All Orders (Completed and Paid)</option>
+                    <option value="all" {{ request('status_filter') == 'all' ? 'selected' : '' }}>All Orders (Completed)</option>
                     <option value="Completed" {{ request('status_filter') == 'Completed' ? 'selected' : '' }}>Unpaid</option>
                     <option value="Paid" {{ request('status_filter') == 'Paid' ? 'selected' : '' }}>Paid</option>
                     <option value="Cancelled" {{ request('status_filter') == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>

@@ -163,17 +163,17 @@
                <tr>
                 <td class="font-bold border border-black text-center align-top">{{ $date ?? 'N/A' }}</td>
                 <td colspan="3" class="font-bold border border-black pl-3">
-<div class="font-bold">{{ $distributor_name ?? 'N/A' }}</div>
+<div class="font-bold mb-3">{{ $distributor_name ?? 'N/A' }}</div>
 @if($top_freezer_remarks)
 <div>{{ $top_freezer_remarks ?? '' }}</div>
 @endif
 <div class="font-bold">{{ $customer_name ?? 'N/A' }}</div>
 <div>{{ $customer_address ?? 'N/A' }}</div>
-<div class="mb-5"></div>
+<div class="mb-3"></div>
 
 <div class="font-bold">MODEL:  {{ $model ?? 'N/A' }}</div>
     <div class="font-bold">SERIAL NO: {{ $serial_no ?? 'N/A' }}</div>
-        <div class="font-bold">DEGIC NO: {{ $degic_no ?? 'N/A' }}</div>
+        <div class="font-bold mb-3">DEGIC NO: {{ $degic_no ?? 'N/A' }}</div>
             <div class="font-bold">{{ $free_small_cup_note ?? 'Free Small Cup' }}</div>
                 <div class="font-bold">Checker: {{ $checker_name ?? '' }}</div>
                     <div class="font-bold">Loader: {{ $loader_name ?? '' }}</div>
