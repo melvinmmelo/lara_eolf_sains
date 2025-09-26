@@ -37,8 +37,10 @@ class Inbound extends Model
         'store_name',
         'driver_name',
         'vehicle_no',
+        // if order slip has been generated this will have a value
         'order_slip_code',
         'order_slip_sno',
+        // end
         'order_date',
         'bo_amount',
         'discount'
@@ -188,11 +190,11 @@ class Inbound extends Model
         }
 
         $this->grandTotal = $total + ($this->is_with_sf ? 1000 : 0);
-        
+
         // Use bo_amount and discount from database, defaulting to 0 if null
         $boAmount = $this->bo_amount ?? 0;
         $discount = $this->discount ?? 0;
-        
+
         return $this->netAmount = $this->grandTotal - ($boAmount + $discount);
     }
 
@@ -208,10 +210,10 @@ class Inbound extends Model
     {
         // Ensure total amount is calculated first to set netAmount
         $this->getGrandTotalAttribute();
-        
+
         // Use delivered_amount from database, defaulting to 0 if null
         $deliveredAmount = $this->delivered_amount ?? 0;
-        
+
         return $this->balance = $this->netAmount - $deliveredAmount;
     }
 

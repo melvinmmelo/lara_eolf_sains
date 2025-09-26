@@ -88,6 +88,11 @@ class InboundController extends Controller
 
         $inbound = Inbound::findOrFail($request->ob_id);
 
+        // Check if order slip fields have values
+        if (empty($inbound->order_slip_code) || empty($inbound->order_slip_sno)) {
+            return redirect()->route('order.index')->withErrors('Payment cannot be added. Order slip must be generated first.');
+        }
+
         $total = $inbound->grandTotal;
 
         $totalDelivered = $inbound->delivered_amount + $request->delivered_amount;

@@ -151,10 +151,17 @@
                                             @else
 
                                                 {{-- add payment button --}}
-                                                <button type="button" class="btn btn-success"
-                                                    onclick="setObId(`{{ $inbound->id }}`, `{{ $inbound->totalBalance }}`)">
-                                                    <i class="fas fa-plus"></i>
-                                                </button>
+                                                @if (!empty($inbound->order_slip_code) && !empty($inbound->order_slip_sno))
+                                                    <button type="button" class="btn btn-success"
+                                                        onclick="setObId(`{{ $inbound->id }}`, `{{ $inbound->totalBalance }}`)">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                @else
+                                                    <button type="button" class="btn btn-secondary" disabled
+                                                        title="Order slip must be generated first">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                @endif
                                                 {{-- end --}}
 
                                                 @if ($inbound->delivery_receipt_id === null)
