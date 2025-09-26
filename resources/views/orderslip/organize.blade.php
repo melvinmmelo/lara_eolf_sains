@@ -1,39 +1,66 @@
 @extends('layouts.app')
 
 @section('custom_css')
-    <link rel="stylesheet" href="{{ asset('css/themes_base_jquery-ui.css') }}" />
 
     <style>
-        #sortable {
+        .order-list {
             list-style-type: none;
             margin: 0;
             padding: 0;
             width: 100%;
-
         }
 
-        #sortable li {
-            margin: 0 3px 3px 3px;
-            padding: 0.4em;
-            padding-left: 1.5em;
-            font-size: 1em;
+        .order-item {
+            margin: 10px 0;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        #sortable li span {
-            position: absolute;
-            margin-left: -1.3em;
+        .order-item:hover {
+            border-color: #51c3f0;
+            background-color: #f0f8ff;
         }
 
-        #sortable li.ui-state-default {
-            background-color: #f0f0f0;
-            /* Default background color */
+        .order-item.checked {
+            background-color: #e8f5e8;
+            border-color: #28a745;
+        }
+
+        .order-checkbox {
+            width: 20px;
+            height: 20px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
         }
 
-        #sortable li.ui-state-default:hover {
-            background-color: #51c3f0;
-            /* Background color on hover */
+        .order-number {
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .order-number.hidden {
+            visibility: hidden;
+        }
+
+        .order-content {
+            flex-grow: 1;
+        }
+
+        .reset-btn {
+            margin-bottom: 15px;
         }
     </style>
 @endsection
@@ -64,12 +91,21 @@
         <form>
             <div class="card">
                 <div class="card-body">
-                    <p>Drag and drop to reorder.</p>
-                    <ul id="sortable">
+                    <p>Check items in the order you want them organized.</p>
+                    <button type="button" class="btn btn-secondary btn-sm reset-btn" id="resetOrder">
+                        Reset All
+                    </button>
+                    <ul class="order-list">
                         @foreach ($inbounds as $inbound)
-                            <li style="margin: 10px; width: 100%; border-radius: 10px" id="item_{{ $inbound->id }}"
-                                class='ui-state-default'><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
-                                <h6>{{ $inbound->degic_no . ' ' . $inbound->customer_name }}</h6>
+                            <li class="order-item" data-id="{{ $inbound->id }}">
+                                <input type="checkbox" class="order-checkbox" id="checkbox_{{ $inbound->id }}"
+                                       data-inbound-id="{{ $inbound->id }}">
+                                <div class="order-number hidden" id="number_{{ $inbound->id }}"></div>
+                                <div class="order-content">
+                                    <label for="checkbox_{{ $inbound->id }}" style="cursor: pointer; margin: 0;">
+                                        <h6>{{ $inbound->degic_no . ' ' . $inbound->customer_name }}</h6>
+                                    </label>
+                                </div>
                             </li>
                         @endforeach
                     </ul>
@@ -92,41 +128,93 @@
 @endsection
 
 @section('custom_js')
-    {{-- <script src="https://code.jquery.com/jquery-3.7.1.js"></script> --}}
-    <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
 
 
     <script>
         $(document).ready(function() {
+            let orderCounter = 0;
+            let checkedItems = [];
+
             // open modal
             $('#modal-print').on('show.bs.modal', function(e) {
                 var deliveryPerson = $('#deliveryPerson').val();
                 $('#delivery_person').val(deliveryPerson);
             });
 
-            $(function() {
-                $("#sortable").sortable({
-                    placeholder: 'ui-state-highlight',
-                    stop: function(event, ui) {
-                        const sortedData = $("#sortable").sortable("serialize");
+            // Handle checkbox changes
+            $('.order-checkbox').on('change', function() {
+                const inboundId = $(this).data('inbound-id');
+                const isChecked = $(this).is(':checked');
+                const orderItem = $(this).closest('.order-item');
+                const orderNumber = $('#number_' + inboundId);
 
-                        $.ajax({
-                            type: "GET",
-                            url: "/organize-update",
-                            data: sortedData,
-                            success: function(response) {
-                                console.log("Sorting order updated successfully");
-                            },
-                            error: function(xhr, status, error) {
-                                console.error("Error updating sorting order:",
-                                    error);
-                                // Optionally revert the sorting if the server update fails
-                                // $("#sortable").sortable("cancel");
+                if (isChecked) {
+                    // Add to checked items
+                    orderCounter++;
+                    checkedItems.push({
+                        id: inboundId,
+                        order: orderCounter
+                    });
+
+                    // Update visual elements
+                    orderItem.addClass('checked');
+                    orderNumber.removeClass('hidden').text(orderCounter);
+                } else {
+                    // Remove from checked items
+                    const itemIndex = checkedItems.findIndex(item => item.id == inboundId);
+                    if (itemIndex > -1) {
+                        const removedOrder = checkedItems[itemIndex].order;
+                        checkedItems.splice(itemIndex, 1);
+
+                        // Update order numbers for remaining items
+                        checkedItems.forEach((item, index) => {
+                            if (item.order > removedOrder) {
+                                item.order--;
+                                $('#number_' + item.id).text(item.order);
                             }
                         });
+                        orderCounter--;
                     }
-                }).disableSelection();
+
+                    // Update visual elements
+                    orderItem.removeClass('checked');
+                    orderNumber.addClass('hidden').text('');
+                }
+
+                // Send update to server
+                updateOrder();
             });
+
+            // Reset all selections
+            $('#resetOrder').on('click', function() {
+                $('.order-checkbox').prop('checked', false);
+                $('.order-item').removeClass('checked');
+                $('.order-number').addClass('hidden').text('');
+                checkedItems = [];
+                orderCounter = 0;
+                updateOrder();
+            });
+
+            function updateOrder() {
+                // Sort checked items by order
+                const sortedItems = checkedItems.sort((a, b) => a.order - b.order);
+                const itemArray = sortedItems.map(item => item.id);
+
+                // Only send request if there are checked items
+                if (itemArray.length > 0) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/organize-update",
+                        data: { item: itemArray },
+                        success: function(response) {
+                            console.log("Order updated successfully");
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error updating order:", error);
+                        }
+                    });
+                }
+            }
         });
     </script>
 @endsection
