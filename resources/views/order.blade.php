@@ -51,6 +51,7 @@
                             </button></a>
 
                         @role('admin')
+                            {{-- update order status: --}}
                             <div class="float-right">
                                 <select name="new_status" class="form-control d-inline-block" style="width: 150px;">
                                     <option value="">Change Status</option>
@@ -59,6 +60,7 @@
                                 </select>
                                 <button type="submit" class="btn btn-outline-primary">Update Status</button>
                             </div>
+                            {{-- end --}}
                         @endrole
                     </div>
                     <div class="tbContainer">
@@ -147,9 +149,13 @@
 
                                             @if ($inbound->status === 'Paid' or $inbound->balance === 0)
                                             @else
-                                                <a href="#"
-                                                    onclick="setObId(`{{ $inbound->id }}`, `{{ $inbound->totalBalance }}`)"><button
-                                                        class="btn btn-success"><i class="fas fa-plus"></i></button></a>
+
+                                                {{-- add payment button --}}
+                                                <button type="button" class="btn btn-success"
+                                                    onclick="setObId(`{{ $inbound->id }}`, `{{ $inbound->totalBalance }}`)">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                                {{-- end --}}
 
                                                 @if ($inbound->delivery_receipt_id === null)
                                                     <a href="{{ route('order.edit', ['inboundId' => $inbound->id]) }}"
