@@ -38,6 +38,16 @@ class Product extends Model
         return $query->where('code', $pCode);
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function scopeArchived($query)
+    {
+        return $query->where('is_active', false);
+    }
+
     protected static function boot()
     {
         parent::boot();

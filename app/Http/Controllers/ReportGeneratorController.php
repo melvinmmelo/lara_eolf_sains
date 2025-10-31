@@ -544,4 +544,313 @@ class ReportGeneratorController extends Controller
 
         return view('report.sales-report', compact('sales_data', 'payment_groups', 'foc_customers', 'foc_total', 'total_sales', 'total_balance', 'date_from', 'date_to', 'status_label'));
     }
+
+    public function salesReportByCustomerDetailed(Request $request)
+    {
+        $date_from = $request->input('date_from', Carbon::now()->startOfDay());
+        $date_to = $request->input('date_to', Carbon::now()->endOfDay());
+        $status_filter = $request->input('status_filter', 'all');
+
+        // Get sales query with same filters as the report
+        $sales_query = Inbound::whereBetween('order_date', [$date_from, $date_to])
+            ->where('branch_code', session('branch_code'))
+            ->with(['customer', 'store', 'deliveryReceipt']);
+
+        // Apply status filter (same logic as salesReportByCustomer)
+        if ($status_filter === 'all') {
+            $sales_query->whereIn('status', ['Completed', 'Paid']);
+        } elseif ($status_filter === 'Free') {
+            $sales_query->whereNotNull('is_foc');
+        } else {
+            $sales_query->where('status', $status_filter);
+            if (!in_array($status_filter, ['Cancelled', 'Deleted'])) {
+                $sales_query->whereNull('is_foc');
+            }
+        }
+
+        $inbounds = $sales_query->orderBy('order_date', 'asc')->get();
+
+        // Process data for view
+        $reportData = [];
+        foreach ($inbounds as $inbound) {
+            // Get customer and store information
+            $customer = $inbound->customer;
+            $store = $inbound->store;
+
+            // Build address
+            $address = '';
+            if ($store) {
+                $addressParts = array_filter([
+                    $store->subdivision,
+                    $store->brgy,
+                    $store->city,
+                    $store->province
+                ]);
+                $address = implode(', ', $addressParts);
+            }
+
+            // Get TIN from customer
+            $tin = $customer ? $customer->tin : '';
+
+            // Get DR number from delivery receipt
+            $drNumber = $inbound->deliveryReceipt ? $inbound->deliveryReceipt->code : '';
+
+            // Calculate amounts
+            $grandTotal = $inbound->getGrandTotalAttribute();
+            $discount = $inbound->discount ?? 0;
+            $badOrder = $inbound->bo_amount ?? 0;
+            $amountCollected = $inbound->delivered_amount ?? 0;
+
+            // VAT Calculations (placeholder - will be updated with proper formula)
+            if ($inbound->with_invoice) {
+                $vatInclusive = $grandTotal;
+                $vatExclusive = $grandTotal / 1.12;
+                $vat = $vatInclusive - $vatExclusive;
+            } else {
+                $vatInclusive = $grandTotal;
+                $vatExclusive = $grandTotal;
+                $vat = 0;
+            }
+
+            // Tax Withheld - placeholder
+            $taxWithheld = 0;
+
+            // Sales Type
+            $salesType = $inbound->with_invoice ? 'Vatable' : 'Non-Vatable';
+
+            // Month
+            $month = $inbound->order_date ? $inbound->order_date->format('M') : '';
+
+            $reportData[] = [
+                'month' => $month,
+                'dr' => $drNumber,
+                'si_no' => '', // Placeholder
+                'tin' => $tin,
+                'customer' => $inbound->customer_name,
+                'address' => $address,
+                'sales_type' => $salesType,
+                'amount_collected' => $amountCollected,
+                'vat_inclusive' => $vatInclusive,
+                'vat_exclusive' => $vatExclusive,
+                'vat' => $vat,
+                'tax_withheld' => $taxWithheld,
+                'discount' => $discount,
+                'bad_order' => $badOrder,
+                'remarks' => $inbound->remarks ?? '',
+            ];
+        }
+
+        // Format dates for display
+        $date_from_display = Carbon::parse($date_from)->format('m/d/Y');
+        $date_to_display = Carbon::parse($date_to)->format('m/d/Y');
+
+        // Get status label
+        $status_label = 'All Orders (Completed)';
+        if ($status_filter === 'Free') {
+            $status_label = 'Free Orders';
+        } elseif ($status_filter !== 'all') {
+            $status_label = $status_filter . ' Orders';
+        }
+        if ($status_filter === 'Completed') {
+            $status_label = 'Unpaid Orders';
+        }
+
+        return view('report.sales-report-detailed', compact('reportData', 'date_from_display', 'date_to_display', 'status_label'));
+    }
+
+    public function exportSalesReportByCustomerDetailed(Request $request)
+    {
+        $date_from = $request->input('date_from', Carbon::now()->startOfDay());
+        $date_to = $request->input('date_to', Carbon::now()->endOfDay());
+        $status_filter = $request->input('status_filter', 'all');
+
+        // Get sales query with same filters as the report
+        $sales_query = Inbound::whereBetween('order_date', [$date_from, $date_to])
+            ->where('branch_code', session('branch_code'))
+            ->with(['customer', 'store', 'deliveryReceipt']);
+
+        // Apply status filter (same logic as salesReportByCustomer)
+        if ($status_filter === 'all') {
+            $sales_query->whereIn('status', ['Completed', 'Paid']);
+        } elseif ($status_filter === 'Free') {
+            $sales_query->whereNotNull('is_foc');
+        } else {
+            $sales_query->where('status', $status_filter);
+            if (!in_array($status_filter, ['Cancelled', 'Deleted'])) {
+                $sales_query->whereNull('is_foc');
+            }
+        }
+
+        $inbounds = $sales_query->orderBy('order_date', 'asc')->get();
+
+        // Create spreadsheet
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set column headers
+        $headers = [
+            'A1' => 'Month',
+            'B1' => 'DR',
+            'C1' => 'SI No',
+            'D1' => 'TIN (000-000-000)',
+            'E1' => 'Customer',
+            'F1' => 'Address',
+            'G1' => 'Sales Type',
+            'H1' => 'Amount Collected',
+            'I1' => 'Amount (VAT_Inclusive)',
+            'J1' => 'Amount (VAT_Exclusive)',
+            'K1' => 'VAT',
+            'L1' => 'Tax Withheld',
+            'M1' => 'Discount',
+            'N1' => 'Bad Order',
+            'O1' => 'Remarks'
+        ];
+
+        foreach ($headers as $cell => $value) {
+            $sheet->setCellValue($cell, $value);
+        }
+
+        // Style header row (pink/lavender background)
+        $headerStyle = [
+            'font' => [
+                'bold' => true,
+                'size' => 10
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['rgb' => '000000']
+                ],
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => 'E6B8E6'], // Pink/lavender
+            ],
+        ];
+        $sheet->getStyle('A1:O1')->applyFromArray($headerStyle);
+
+        // Set row height for header
+        $sheet->getRowDimension(1)->setRowHeight(25);
+
+        // Add data rows
+        $row = 2;
+        foreach ($inbounds as $inbound) {
+            // Get customer and store information
+            $customer = $inbound->customer;
+            $store = $inbound->store;
+
+            // Build address
+            $address = '';
+            if ($store) {
+                $addressParts = array_filter([
+                    $store->subdivision,
+                    $store->brgy,
+                    $store->city,
+                    $store->province
+                ]);
+                $address = implode(', ', $addressParts);
+            }
+
+            // Get TIN from customer
+            $tin = $customer ? $customer->tin : '';
+
+            // Get DR number from delivery receipt
+            $drNumber = $inbound->deliveryReceipt ? $inbound->deliveryReceipt->code : '';
+
+            // Calculate amounts
+            $grandTotal = $inbound->getGrandTotalAttribute();
+            $discount = $inbound->discount ?? 0;
+            $badOrder = $inbound->bo_amount ?? 0;
+            $amountCollected = $inbound->delivered_amount ?? 0;
+
+            // VAT Calculations (will be updated with proper formula later)
+            // For now, placeholder logic:
+            // If with_invoice, apply VAT calculations, otherwise VAT = 0
+            if ($inbound->with_invoice) {
+                // Placeholder: Assuming price is VAT-inclusive
+                // VAT_Inclusive = grandTotal
+                // VAT = grandTotal / 1.12 * 0.12
+                // VAT_Exclusive = grandTotal / 1.12
+                $vatInclusive = $grandTotal;
+                $vatExclusive = $grandTotal / 1.12;
+                $vat = $vatInclusive - $vatExclusive;
+            } else {
+                $vatInclusive = $grandTotal;
+                $vatExclusive = $grandTotal;
+                $vat = 0;
+            }
+
+            // Tax Withheld - placeholder (not in database yet)
+            $taxWithheld = 0;
+
+            // Sales Type
+            $salesType = $inbound->with_invoice ? 'Vatable' : 'Non-Vatable';
+
+            // Month
+            $month = $inbound->order_date ? $inbound->order_date->format('M') : '';
+
+            // Populate row
+            $sheet->setCellValue('A' . $row, $month);
+            $sheet->setCellValue('B' . $row, $drNumber);
+            $sheet->setCellValue('C' . $row, ''); // SI No - placeholder
+            $sheet->setCellValue('D' . $row, $tin);
+            $sheet->setCellValue('E' . $row, $inbound->customer_name);
+            $sheet->setCellValue('F' . $row, $address);
+            $sheet->setCellValue('G' . $row, $salesType);
+            $sheet->setCellValue('H' . $row, $amountCollected);
+            $sheet->setCellValue('I' . $row, $vatInclusive);
+            $sheet->setCellValue('J' . $row, $vatExclusive);
+            $sheet->setCellValue('K' . $row, $vat);
+            $sheet->setCellValue('L' . $row, $taxWithheld);
+            $sheet->setCellValue('M' . $row, $discount);
+            $sheet->setCellValue('N' . $row, $badOrder);
+            $sheet->setCellValue('O' . $row, $inbound->remarks ?? '');
+
+            // Apply borders to data row
+            $sheet->getStyle('A' . $row . ':O' . $row)->applyFromArray([
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => Border::BORDER_THIN,
+                        'color' => ['rgb' => '000000']
+                    ],
+                ],
+            ]);
+
+            // Format number columns
+            $sheet->getStyle('H' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
+            $sheet->getStyle('I' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
+            $sheet->getStyle('J' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
+            $sheet->getStyle('K' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
+            $sheet->getStyle('L' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
+            $sheet->getStyle('M' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
+            $sheet->getStyle('N' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
+
+            $row++;
+        }
+
+        // Auto-size columns
+        foreach (range('A', 'O') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Set minimum column widths for better readability
+        $sheet->getColumnDimension('E')->setWidth(25); // Customer
+        $sheet->getColumnDimension('F')->setWidth(35); // Address
+        $sheet->getColumnDimension('O')->setWidth(20); // Remarks
+
+        // Create the Excel file
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'sales_report_detailed_' . Carbon::now()->format('Y-m-d_His') . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit;
+    }
 }

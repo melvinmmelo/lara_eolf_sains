@@ -192,9 +192,14 @@
             </div>
         </form>
         <div class="print-btn">
-            <button onclick="window.print()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            <button onclick="window.print()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 mr-5 rounded">
                 Print Report
             </button>
+        </div>
+        <div>
+            <a href="{{ route('report.sales-by-customer.detailed', request()->all()) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block">
+                View Detailed Report
+            </a>
         </div>
     </div>
 </body>

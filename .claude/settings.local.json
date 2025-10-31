@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php artisan db:show --database=mysql)",
+      "Bash(php artisan db:table customers --database=mysql)",
+      "Bash(php artisan db:table inbounds --database=mysql)",
+      "Bash(php artisan db:table delivery_receipts --database=mysql)",
+      "Bash(php artisan route:list:*)",
+      "Bash(php artisan:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
