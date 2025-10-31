@@ -31,7 +31,13 @@
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-products">
                         Add New
                     </button>
+                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modal-archived-products">
+                        View Archived Products
+                    </button>
                 </div>
+
+                <!-- Active Products Table -->
+                <h5 class="mt-3">Active Products</h5>
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -53,6 +59,8 @@
                                 <td>
                                     <a href="#" class="btn btn-sm btn-success" data-toggle="modal"
                                         data-target="#modalEditPrice" onclick="setToUpdate('{{ $product->code }}')">Edit</a>
+                                    <button type="button" class="btn btn-sm btn-warning"
+                                        onclick="confirmArchive('{{ $product->code }}')">Archive</button>
                                 </td>
                             </tr>
                         @endforeach
@@ -178,6 +186,65 @@
 </div>
 </div>
 
+    <!-- Archived Products Modal -->
+    <div class="modal fade" id="modal-archived-products">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Archived Products</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Type</th>
+                                <th>Flavor</th>
+                                <th>Archived at</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($archivedProducts as $product)
+                                <tr>
+                                    <td>{{ $product->code }}</td>
+                                    <td>{{ $product->productType->name }}</td>
+                                    <td>{{ $product->productVariant->name }}</td>
+                                    <td>{{ $product->updated_at->format('m-d-Y h:i A') }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-info"
+                                            onclick="confirmRestore('{{ $product->code }}')">Restore</button>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center">No archived products</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden forms for archive/restore actions -->
+    <form id="archiveForm" method="POST" action="{{ route('product.archive') }}" style="display: none;">
+        @csrf
+        <input type="hidden" name="product_code" id="archive_product_code">
+    </form>
+
+    <form id="restoreForm" method="POST" action="{{ route('product.restore') }}" style="display: none;">
+        @csrf
+        <input type="hidden" name="product_code" id="restore_product_code">
+    </form>
+
     <!-- /.content -->
 @endsection
 
@@ -190,6 +257,20 @@
 
         function setToUpdate(code) {
             $('#product_code').val(code);
+        }
+
+        function confirmArchive(code) {
+            if (confirm("Are you sure you want to archive this product? It will be hidden from active products list.")) {
+                document.getElementById('archive_product_code').value = code;
+                document.getElementById('archiveForm').submit();
+            }
+        }
+
+        function confirmRestore(code) {
+            if (confirm("Are you sure you want to restore this product?")) {
+                document.getElementById('restore_product_code').value = code;
+                document.getElementById('restoreForm').submit();
+            }
         }
     </script>
 @endsection

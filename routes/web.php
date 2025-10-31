@@ -55,6 +55,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/sales', [ReportGeneratorController::class, 'salesReport'])->middleware('can:admin')->name('report.sales');
     Route::get('/reports/sales/export', [ReportGeneratorController::class, 'exportSalesReport'])->middleware('can:admin')->name('report.sales.export');
     Route::get('/reports/sales-by-customer', [ReportGeneratorController::class, 'salesReportByCustomer'])->name('report.sales-by-customer');
+    Route::get('/reports/sales-by-customer/detailed', [ReportGeneratorController::class, 'salesReportByCustomerDetailed'])->name('report.sales-by-customer.detailed');
+    Route::get('/reports/sales-by-customer/export-detailed', [ReportGeneratorController::class, 'exportSalesReportByCustomerDetailed'])->name('report.sales-by-customer.export-detailed');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -283,6 +285,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/product/update', [ProductController::class, 'update'])->name('product.update');
 
     Route::get('/product/{id}/toggle-status', [ProductController::class, 'toggleStatus'])->name('product.toggleStatus');
+    Route::post('/product/archive', [ProductController::class, 'archive'])->name('product.archive');
+    Route::post('/product/restore', [ProductController::class, 'restore'])->name('product.restore');
     Route::get('/product-type/{id}/toggle-status', [ProductTypeController::class, 'toggleStatus'])->name('productType.toggleStatus');
 
     Route::get('/orders', [InboundController::class, 'index'])->name('order.index');

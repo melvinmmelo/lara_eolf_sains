@@ -27,11 +27,12 @@ class ProductController extends Controller
     public function index()
     {
         //
-        $products = Product::with(['productType', 'productVariant'])->get()->sortBy('productType.sequence_no');
+        $products = Product::with(['productType', 'productVariant'])->where('is_active', true)->get()->sortBy('productType.sequence_no');
+        $archivedProducts = Product::with(['productType', 'productVariant'])->where('is_active', false)->get()->sortBy('productType.sequence_no');
         $types = ProductType::orderBy('sequence_no', 'asc')->get();
         $variants = ProductVariant::active()->get();
 
-        return view('products', compact('products', 'types', 'variants'));
+        return view('products', compact('products', 'archivedProducts', 'types', 'variants'));
     }
 
     /**
@@ -113,5 +114,55 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+    }
+
+    /**
+     * Archive a product (set is_active to false)
+     */
+    public function archive(Request $request)
+    {
+        $request->validate([
+            'product_code' => 'required|exists:products,code',
+        ]);
+
+        $product = Product::where('code', $request->product_code)->firstOrFail();
+        $product->is_active = false;
+        $product->save();
+
+        activity()
+            ->performedOn($product)
+            ->withProperties([
+                'product_code' => $product->code,
+                'product_name' => $product->product_name,
+                'action' => 'archived'
+            ])
+            ->log('Product archived: ' . $product->code);
+
+        return redirect()->back()->with('success', 'Product archived successfully!');
+    }
+
+    /**
+     * Restore an archived product (set is_active to true)
+     */
+    public function restore(Request $request)
+    {
+        $request->validate([
+            'product_code' => 'required|exists:products,code',
+        ]);
+
+        $product = Product::where('code', $request->product_code)->firstOrFail();
+        $product->is_active = true;
+        $product->save();
+
+        activity()
+            ->performedOn($product)
+            ->withProperties([
+                'product_code' => $product->code,
+                'product_name' => $product->product_name,
+                'action' => 'restored'
+            ])
+            ->log('Product restored: ' . $product->code);
+
+        return redirect()->back()->with('success', 'Product restored successfully!');
     }
 }
