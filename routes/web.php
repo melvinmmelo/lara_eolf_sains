@@ -337,6 +337,11 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/orders/update-status', [InboundController::class, 'updateStatus'])->name('order.updateStatus');
 
+    // Sales Invoice Management
+    Route::get('/sales-invoices', [InboundController::class, 'salesInvoices'])->name('sales-invoices.index');
+    Route::post('/sales-invoices/update', [InboundController::class, 'updateSalesInvoice'])->name('sales-invoices.update');
+    Route::post('/sales-invoices/bulk-update', [InboundController::class, 'bulkUpdateSalesInvoice'])->name('sales-invoices.bulkUpdate');
+
     Route::patch('/user/reset', [UsersController::class, 'reset'])->name('user.reset');
 
     Route::get('/update-stocks', [ItemMasterDataController::class, 'updateStocksPage'])->middleware('can:admin')->name('update.stocks.page');

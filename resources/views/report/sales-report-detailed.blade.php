@@ -86,6 +86,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>Date</th>
                             <th>Month</th>
                             <th>DR</th>
                             <th>SI No</th>
@@ -106,6 +107,7 @@
                     <tbody>
                         @forelse($reportData as $row)
                         <tr>
+                            <td class="text-center">{{ $row['order_date'] }}</td>
                             <td class="text-center">{{ $row['month'] }}</td>
                             <td>{{ $row['dr'] }}</td>
                             <td>{{ $row['si_no'] }}</td>

@@ -141,7 +141,7 @@
                 </li>
 
                 <li
-                    class="nav-item {{ Route::currentRouteNamed('order.index') || Route::currentRouteNamed('order.processTwo') || Route::currentRouteNamed('badOrders.index') || Route::currentRouteNamed('addbadorder.create') || Route::currentRouteNamed('order.create') || Route::currentRouteNamed('order.edit') || Route::currentRouteNamed('deliveryreceipt.index') || Route::currentRouteNamed('drprint') || Route::currentRouteNamed('generate-ticket') || Route::currentRouteNamed('print-ticket') || Route::currentRouteNamed('index-ticket') || Route::currentRouteNamed('inbounds-ticket') || Route::currentRouteNamed('generate-order-slip') || Route::currentRouteNamed('order-slips') || Route::currentRouteNamed('deliveryreceipt.indexDone') || Route::currentRouteNamed('report.orderSlip') || Route::currentRouteNamed('orderSlip.organize') || Route::currentRouteNamed('newbo.index')  || Route::currentRouteNamed('newbo.create') || Route::currentRouteNamed('newbo.deducted') || Route::currentRouteNamed('orders.free') || Route::currentRouteNamed('orders.paid') ? 'menu-is-opening menu-open' : '' }}">
+                    class="nav-item {{ Route::currentRouteNamed('order.index') || Route::currentRouteNamed('order.processTwo') || Route::currentRouteNamed('badOrders.index') || Route::currentRouteNamed('addbadorder.create') || Route::currentRouteNamed('order.create') || Route::currentRouteNamed('order.edit') || Route::currentRouteNamed('deliveryreceipt.index') || Route::currentRouteNamed('drprint') || Route::currentRouteNamed('generate-ticket') || Route::currentRouteNamed('print-ticket') || Route::currentRouteNamed('index-ticket') || Route::currentRouteNamed('inbounds-ticket') || Route::currentRouteNamed('generate-order-slip') || Route::currentRouteNamed('order-slips') || Route::currentRouteNamed('deliveryreceipt.indexDone') || Route::currentRouteNamed('report.orderSlip') || Route::currentRouteNamed('orderSlip.organize') || Route::currentRouteNamed('newbo.index')  || Route::currentRouteNamed('newbo.create') || Route::currentRouteNamed('newbo.deducted') || Route::currentRouteNamed('orders.free') || Route::currentRouteNamed('orders.paid') || Route::currentRouteNamed('sales-invoices.index') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-coins" style="color: #74C0FC;"></i>
                         <p>
@@ -188,6 +188,14 @@
                                 class="nav-link {{ Route::currentRouteNamed('deliveryreceipt.index') || Route::currentRouteNamed('drprint') || Route::currentRouteNamed('deliveryreceipt.indexDone') ? 'active' : '' }}">
                                 <i class="fas fa-print nav-icon"></i>
                                 <p>Delivery Receipt</p>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('sales-invoices.index') }}"
+                                class="nav-link {{ Route::currentRouteNamed('sales-invoices.index') ? 'active' : '' }}">
+                                <i class="fas fa-file-invoice nav-icon"></i>
+                                <p>Sales Invoice</p>
                             </a>
                         </li>
                     </ul>

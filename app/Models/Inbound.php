@@ -43,7 +43,8 @@ class Inbound extends Model
         // end
         'order_date',
         'bo_amount',
-        'discount'
+        'discount',
+        'sales_invoice_no'
     ];
 
     protected $grandTotal = 0, $netAmount = 0, $balance = 0;

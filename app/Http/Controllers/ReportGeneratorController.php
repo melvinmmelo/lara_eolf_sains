@@ -604,7 +604,7 @@ class ReportGeneratorController extends Controller
             // VAT Calculations (placeholder - will be updated with proper formula)
             if ($inbound->with_invoice) {
                 $vatInclusive = $grandTotal;
-                $vatExclusive = $grandTotal / 1.12;
+                $vatExclusive = $grandTotal / 1;
                 $vat = $vatInclusive - $vatExclusive;
             } else {
                 $vatInclusive = $grandTotal;
@@ -622,9 +622,10 @@ class ReportGeneratorController extends Controller
             $month = $inbound->order_date ? $inbound->order_date->format('M') : '';
 
             $reportData[] = [
+                'order_date' => $inbound->order_date->format('m/d/Y'),
                 'month' => $month,
                 'dr' => $drNumber,
-                'si_no' => '', // Placeholder
+                'si_no' => $inbound->sales_invoice_no,
                 'tin' => $tin,
                 'customer' => $inbound->customer_name,
                 'address' => $address,
@@ -689,21 +690,22 @@ class ReportGeneratorController extends Controller
 
         // Set column headers
         $headers = [
-            'A1' => 'Month',
-            'B1' => 'DR',
-            'C1' => 'SI No',
-            'D1' => 'TIN (000-000-000)',
-            'E1' => 'Customer',
-            'F1' => 'Address',
-            'G1' => 'Sales Type',
-            'H1' => 'Amount Collected',
-            'I1' => 'Amount (VAT_Inclusive)',
-            'J1' => 'Amount (VAT_Exclusive)',
-            'K1' => 'VAT',
-            'L1' => 'Tax Withheld',
-            'M1' => 'Discount',
-            'N1' => 'Bad Order',
-            'O1' => 'Remarks'
+            'A1' => 'Date',
+            'B1' => 'Month',
+            'C1' => 'DR',
+            'D1' => 'SI No',
+            'E1' => 'TIN (000-000-000)',
+            'F1' => 'Customer',
+            'G1' => 'Address',
+            'H1' => 'Sales Type',
+            'I1' => 'Amount Collected',
+            'J1' => 'Amount (VAT_Inclusive)',
+            'K1' => 'Amount (VAT_Exclusive)',
+            'L1' => 'VAT',
+            'M1' => 'Tax Withheld',
+            'N1' => 'Discount',
+            'O1' => 'Bad Order',
+            'P1' => 'Remarks'
         ];
 
         foreach ($headers as $cell => $value) {
@@ -731,7 +733,7 @@ class ReportGeneratorController extends Controller
                 'startColor' => ['rgb' => 'E6B8E6'], // Pink/lavender
             ],
         ];
-        $sheet->getStyle('A1:O1')->applyFromArray($headerStyle);
+        $sheet->getStyle('A1:Q1')->applyFromArray($headerStyle);
 
         // Set row height for header
         $sheet->getRowDimension(1)->setRowHeight(25);
@@ -774,9 +776,9 @@ class ReportGeneratorController extends Controller
                 // Placeholder: Assuming price is VAT-inclusive
                 // VAT_Inclusive = grandTotal
                 // VAT = grandTotal / 1.12 * 0.12
-                // VAT_Exclusive = grandTotal / 1.12
+                // VAT_Exclusive = grandTotal / 1
                 $vatInclusive = $grandTotal;
-                $vatExclusive = $grandTotal / 1.12;
+                $vatExclusive = $grandTotal / 1;
                 $vat = $vatInclusive - $vatExclusive;
             } else {
                 $vatInclusive = $grandTotal;
@@ -794,24 +796,25 @@ class ReportGeneratorController extends Controller
             $month = $inbound->order_date ? $inbound->order_date->format('M') : '';
 
             // Populate row
-            $sheet->setCellValue('A' . $row, $month);
-            $sheet->setCellValue('B' . $row, $drNumber);
-            $sheet->setCellValue('C' . $row, ''); // SI No - placeholder
-            $sheet->setCellValue('D' . $row, $tin);
-            $sheet->setCellValue('E' . $row, $inbound->customer_name);
-            $sheet->setCellValue('F' . $row, $address);
-            $sheet->setCellValue('G' . $row, $salesType);
-            $sheet->setCellValue('H' . $row, $amountCollected);
-            $sheet->setCellValue('I' . $row, $vatInclusive);
-            $sheet->setCellValue('J' . $row, $vatExclusive);
-            $sheet->setCellValue('K' . $row, $vat);
-            $sheet->setCellValue('L' . $row, $taxWithheld);
-            $sheet->setCellValue('M' . $row, $discount);
-            $sheet->setCellValue('N' . $row, $badOrder);
-            $sheet->setCellValue('O' . $row, $inbound->remarks ?? '');
+            $sheet->setCellValue('A' . $row, $inbound->order_date->format('m/d/Y'));
+            $sheet->setCellValue('B' . $row, $month);
+            $sheet->setCellValue('C' . $row, $inbound->degic_no);
+            $sheet->setCellValue('D' . $row, $inbound->sales_invoice_no);
+            $sheet->setCellValue('E' . $row, $tin);
+            $sheet->setCellValue('F' . $row, $inbound->customer_name);
+            $sheet->setCellValue('G' . $row, $address);
+            $sheet->setCellValue('H' . $row, $salesType);
+            $sheet->setCellValue('I' . $row, $amountCollected);
+            $sheet->setCellValue('J' . $row, $vatInclusive);
+            $sheet->setCellValue('K' . $row, $vatExclusive);
+            $sheet->setCellValue('L' . $row, $vat);
+            $sheet->setCellValue('M' . $row, $taxWithheld);
+            $sheet->setCellValue('N' . $row, $discount);
+            $sheet->setCellValue('O' . $row, $badOrder);
+            $sheet->setCellValue('P' . $row, $inbound->remarks ?? '');
 
             // Apply borders to data row
-            $sheet->getStyle('A' . $row . ':O' . $row)->applyFromArray([
+            $sheet->getStyle('A' . $row . ':P' . $row)->applyFromArray([
                 'borders' => [
                     'allBorders' => [
                         'borderStyle' => Border::BORDER_THIN,
@@ -821,25 +824,25 @@ class ReportGeneratorController extends Controller
             ]);
 
             // Format number columns
-            $sheet->getStyle('H' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
             $sheet->getStyle('I' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
             $sheet->getStyle('J' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
             $sheet->getStyle('K' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
             $sheet->getStyle('L' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
             $sheet->getStyle('M' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
             $sheet->getStyle('N' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
+            $sheet->getStyle('O' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
 
             $row++;
         }
 
         // Auto-size columns
-        foreach (range('A', 'O') as $col) {
+        foreach (range('A', 'P') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
         // Set minimum column widths for better readability
-        $sheet->getColumnDimension('E')->setWidth(25); // Customer
-        $sheet->getColumnDimension('F')->setWidth(35); // Address
+        $sheet->getColumnDimension('F')->setWidth(25); // Customer
+        $sheet->getColumnDimension('G')->setWidth(35); // Address
         $sheet->getColumnDimension('O')->setWidth(20); // Remarks
 
         // Create the Excel file

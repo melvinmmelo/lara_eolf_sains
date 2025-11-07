@@ -342,6 +342,12 @@
                                 <label for="withInvoice">With Invoice</label>
                             </div>
 
+                            <div id="salesInvoiceContainer" style="display: none; margin-left: 25px; margin-top: 10px; margin-bottom: 10px;">
+                                <label class="form-label" for="sales_invoice_no">Sales Invoice No.</label>
+                                <input type="text" class="form-control" id="sales_invoice_no"
+                                       name="sales_invoice_no" placeholder="Enter sales invoice number" maxlength="50" style="max-width: 300px;">
+                            </div>
+
                             <div class="form-checkbox">
                                 <input type="checkbox" id="isBadPricing" name="bad_order" value="on">
                                 <label for="isBadPricing">Bad order</label>
@@ -516,6 +522,17 @@
 
                 document.getElementById("bad_order_id").value = "";
                 document.getElementById("bo_amount").value = 0;
+            }
+        });
+
+        // Show/hide sales invoice number field based on "With Invoice" checkbox
+        document.getElementById("withInvoice").addEventListener('click', function() {
+            if (this.checked) {
+                document.getElementById("salesInvoiceContainer").style.display = "block";
+            } else {
+                document.getElementById("salesInvoiceContainer").style.display = "none";
+                // Clear the field when unchecked
+                document.getElementById("sales_invoice_no").value = "";
             }
         });
 

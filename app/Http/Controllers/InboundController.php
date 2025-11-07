@@ -313,7 +313,8 @@ class InboundController extends Controller
             'bad_order_id' => 'nullable',
             'bo_amount' => 'nullable',
             'order_date' => 'required|date',
-            'form_submit_token' => 'required|string|size:32'
+            'form_submit_token' => 'required|string|size:32',
+            'sales_invoice_no' => 'nullable|string|max:50'
         ]);
 
         // Store the token in cache for 1 hour to prevent reuse
@@ -358,6 +359,7 @@ class InboundController extends Controller
         $inbound->delivery_person = $deliveryPerson->name;
         $inbound->vehicle_no = $vehicles->plateno;
         $inbound->with_invoice = $request->with_invoice == 'on' ? 1 : NULL;
+        $inbound->sales_invoice_no = $request->with_invoice == 'on' ? $request->sales_invoice_no : NULL;
 
         $bad_order = $request->bad_order === 'on' ? 1 : 0;
         $is_foc = $request->foc === 'on' ? 1 : NULL;
@@ -748,6 +750,7 @@ class InboundController extends Controller
             'bad_order' => 'nullable',
             'is_foc' => 'nullable',
             'with_sf' => 'nullable',
+            'sales_invoice_no' => 'nullable|string|max:50',
         ]);
 
         $equipStore = EquipmentStore::findOrFail($request->equipment_id);
@@ -765,6 +768,7 @@ class InboundController extends Controller
             'customer_id' => $request->customer_id,
             'store_id' => $equipStore->store_id,
             'with_invoice' => $request->with_invoice == 'on' ? 1 : NULL,
+            'sales_invoice_no' => $request->with_invoice == 'on' ? $request->sales_invoice_no : NULL,
             'is_foc' => $request->is_foc == 'on' ? 1 : NULL,
             'driver_name' => Drivers::find($request->driver_id)->name,
             'delivery_person' => Drivers::find($request->delivery_person_id)->name,
@@ -966,5 +970,104 @@ class InboundController extends Controller
             ->paginate(15);
 
         return view('problematic-orders', compact('problematicOrders'));
+    }
+
+    /**
+     * Display sales invoices management page
+     */
+    public function salesInvoices(Request $request)
+    {
+        $branchCode = session('branch_code');
+
+        // Get date filters from request or use default (current month)
+        $dateFrom = $request->input('date_from', date('Y-m-01'));
+        $dateTo = $request->input('date_to', date('Y-m-d'));
+        $status = $request->input('status', '');
+
+        // Query inbounds with with_invoice = 1
+        $query = Inbound::where('branch_code', $branchCode)
+            ->where('with_invoice', 1)
+            ->whereBetween('order_date', [$dateFrom, $dateTo])
+            ->with(['customer', 'store']);
+
+        // Apply status filter if provided
+        if (!empty($status)) {
+            $query->where('status', $status);
+        }
+
+        $inbounds = $query->orderBy('order_date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('sales-invoices', compact('inbounds'));
+    }
+
+    /**
+     * Update single sales invoice number
+     */
+    public function updateSalesInvoice(Request $request)
+    {
+        $request->validate([
+            'inbound_id' => 'required|exists:inbounds,id',
+            'sales_invoice_no' => 'nullable|string|max:50'
+        ]);
+
+        $inbound = Inbound::findOrFail($request->inbound_id);
+
+        // Verify the inbound belongs to current branch
+        if ($inbound->branch_code !== session('branch_code')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access.'
+            ], 403);
+        }
+
+        $inbound->sales_invoice_no = $request->sales_invoice_no;
+        $inbound->save();
+
+        activity('sales-invoice')
+            ->performedOn($inbound)
+            ->log("Sales invoice number updated to '{$request->sales_invoice_no}' for order {$inbound->code} by " . auth()->user()->fullName);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Sales invoice number saved successfully.'
+        ]);
+    }
+
+    /**
+     * Bulk update sales invoice numbers
+     */
+    public function bulkUpdateSalesInvoice(Request $request)
+    {
+        $request->validate([
+            'updates' => 'required|array',
+            'updates.*.inbound_id' => 'required|exists:inbounds,id',
+            'updates.*.sales_invoice_no' => 'nullable|string|max:50'
+        ]);
+
+        $branchCode = session('branch_code');
+        $updated = 0;
+
+        foreach ($request->updates as $update) {
+            $inbound = Inbound::where('id', $update['inbound_id'])
+                ->where('branch_code', $branchCode)
+                ->first();
+
+            if ($inbound) {
+                $inbound->sales_invoice_no = $update['sales_invoice_no'];
+                $inbound->save();
+                $updated++;
+
+                activity('sales-invoice')
+                    ->performedOn($inbound)
+                    ->log("Sales invoice number bulk updated to '{$update['sales_invoice_no']}' for order {$inbound->code} by " . auth()->user()->fullName);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "{$updated} sales invoice number(s) updated successfully."
+        ]);
     }
 }
