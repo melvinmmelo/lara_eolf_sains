@@ -24,7 +24,7 @@ class Inbound extends Model
         'with_invoice',
         'bad_order',
         'is_foc',
-        'is_with_sf',
+        'is_with_sf', // is with delivery charge
         'status',
         'pricelevel_id',
         'payment_type',
@@ -52,7 +52,8 @@ class Inbound extends Model
     protected $appends = ['f_created_at', 'f_updated_at', 'code'];
 
     protected $casts = [
-        'order_date' => 'datetime'
+        'order_date' => 'datetime',
+        'is_with_sf' => 'boolean',
     ];
 
     /**

@@ -618,6 +618,13 @@ class ReportGeneratorController extends Controller
             // Sales Type
             $salesType = $inbound->with_invoice ? 'Vatable' : 'Non-Vatable';
 
+            // Remarks column (include delivery charge label when applicable)
+            $remarks = trim($inbound->remarks ?? '');
+            if ($inbound->is_with_sf) {
+                $deliveryChargeLabel = 'Freezer Delivery Charge';
+                $remarks = $remarks ? "{$remarks} | {$deliveryChargeLabel}" : $deliveryChargeLabel;
+            }
+
             // Month
             $month = $inbound->order_date ? $inbound->order_date->format('M') : '';
 
@@ -637,7 +644,7 @@ class ReportGeneratorController extends Controller
                 'tax_withheld' => $taxWithheld,
                 'discount' => $discount,
                 'bad_order' => $badOrder,
-                'remarks' => $inbound->remarks ?? '',
+                'remarks' => $remarks,
             ];
         }
 
