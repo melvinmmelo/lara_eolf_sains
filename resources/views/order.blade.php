@@ -129,7 +129,17 @@
                                                 class="label label-primary">{{ formatNumber($inbound->totalBalance) }}</span>
                                         </td>
                                         <td>{{ $inbound->status }}</td>
-                                        <td>{{ $inbound->with_invoice === 1 ? 'W/ SI' : '' }}</td>
+                                        <td>
+                                            @if ($inbound->with_invoice === 1)
+                                                <span class="sales-invoice-cell"
+                                                      data-inbound-id="{{ $inbound->id }}"
+                                                      data-invoice-no="{{ $inbound->sales_invoice_no }}"
+                                                      style="cursor: pointer; text-decoration: underline;"
+                                                      title="Click to edit">
+                                                    {{ $inbound->sales_invoice_no ?: '(Click to add)' }}
+                                                </span>
+                                            @endif
+                                        </td>
                                         <td>
                                             @if ($inbound->status == 'Completed')
                                                 {{ number_format($inbound->created_at->diffInDays(now()), 0) }}
@@ -269,6 +279,40 @@
             </div>
             <!-- /.modal -->
         </div>
+
+        <!-- Edit Sales Invoice Modal -->
+        <div class="modal fade" id="modal-edit-sales-invoice">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Edit Sales Invoice Number</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="salesInvoiceForm">
+                            @csrf
+                            <input type="hidden" id="edit_inbound_id" name="inbound_id">
+
+                            <div class="form-group">
+                                <label for="edit_sales_invoice_no">Sales Invoice Number</label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="edit_sales_invoice_no"
+                                       name="sales_invoice_no"
+                                       maxlength="50"
+                                       placeholder="Enter sales invoice number">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="saveSalesInvoice">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
     <!-- /.content -->
 
@@ -297,6 +341,52 @@
             $('#inbound_id').val(obId);
             $('#modal-delete').modal('show');
         }
+
+        // Sales Invoice Edit Functionality
+        $(document).on('click', '.sales-invoice-cell', function() {
+            const inboundId = $(this).data('inbound-id');
+            const invoiceNo = $(this).data('invoice-no');
+
+            $('#edit_inbound_id').val(inboundId);
+            $('#edit_sales_invoice_no').val(invoiceNo || '');
+
+            $('#modal-edit-sales-invoice').modal('show');
+        });
+
+        $('#saveSalesInvoice').on('click', function() {
+            const inboundId = $('#edit_inbound_id').val();
+            const salesInvoiceNo = $('#edit_sales_invoice_no').val();
+
+            $.ajax({
+                url: '{{ route("sales-invoices.update") }}',
+                type: 'POST',
+                data: {
+                    _token: $('input[name="_token"]').val(),
+                    inbound_id: inboundId,
+                    sales_invoice_no: salesInvoiceNo
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Update the cell display
+                        const cell = $(`.sales-invoice-cell[data-inbound-id="${inboundId}"]`);
+                        cell.data('invoice-no', salesInvoiceNo);
+                        cell.text(salesInvoiceNo || '(Click to add)');
+
+                        $('#modal-edit-sales-invoice').modal('hide');
+
+                        // Show success message
+                        alert(response.message || 'Sales invoice number updated successfully.');
+                    }
+                },
+                error: function(xhr) {
+                    let errorMessage = 'Error updating sales invoice number.';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                    alert(errorMessage);
+                }
+            });
+        });
 
         // Add checkbox functionality
         $(document).ready(function() {

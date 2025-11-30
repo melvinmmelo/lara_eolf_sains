@@ -104,7 +104,7 @@ class InboundController extends Controller
         // dd("$inbound->totalBalance, $request->delivered_amount, $inbound->status");
 
         if ($totalDelivered > $total) {
-            return redirect()->route('order.index')->withErrors('Delivered amount is greater than the total amount.');
+            return redirect()->route('order.index')->withErrors('Delivered amount is greater than the total amount. ' . $totalDelivered . ' > ' . $total);
         }
 
 
