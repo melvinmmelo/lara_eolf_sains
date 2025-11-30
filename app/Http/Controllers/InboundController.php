@@ -93,6 +93,7 @@ class InboundController extends Controller
             return redirect()->route('order.index')->withErrors('Payment cannot be added. Order slip must be generated first.');
         }
 
+        // Use totalAmount (net amount after deductions) instead of grandTotal
         $total = $inbound->grandTotal;
 
         $totalDelivered = $inbound->delivered_amount + $request->delivered_amount;
@@ -101,10 +102,9 @@ class InboundController extends Controller
             $inbound->status = "Paid";
         }
 
-        // dd("$inbound->totalBalance, $request->delivered_amount, $inbound->status");
-
-        if ($totalDelivered > $total) {
-            return redirect()->route('order.index')->withErrors('Delivered amount is greater than the total amount. ' . $totalDelivered . ' > ' . $total);
+        // Round to 2 decimal places to avoid floating-point precision errors
+        if (round($totalDelivered, 2) > round($total, 2)) {
+            return redirect()->route('order.index')->withErrors('Delivered amount is greater than the net amount. ' . number_format($totalDelivered, 2) . ' > ' . number_format($total, 2));
         }
 
 
