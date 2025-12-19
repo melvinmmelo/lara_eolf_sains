@@ -32,6 +32,9 @@ class StockReconciliationController extends Controller
                         ->where('branch_code', $branchCode)
                         ->where('product_code', 'like', "%$searchTerm%")
                         ->paginate(20);
+            if (count($items) == 1) {
+                return redirect()->route('stock-reconciliation.product', $items->first()->product_code);
+            }
         }
 
         return view('stock-reconciliation.index', compact('items', 'searchTerm'));
