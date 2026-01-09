@@ -711,9 +711,10 @@ class ReportGeneratorController extends Controller
             'K1' => 'Amount (VAT_Exclusive)',
             'L1' => 'VAT',
             'M1' => 'Tax Withheld',
-            'N1' => 'Discount',
-            'O1' => 'Bad Order',
-            'P1' => 'Remarks'
+            'N1' => 'Delivery Charge',
+            'O1' => 'Discount',
+            'P1' => 'Bad Order',
+            'Q1' => 'Remarks'
         ];
 
         foreach ($headers as $cell => $value) {
@@ -806,7 +807,7 @@ class ReportGeneratorController extends Controller
             // Populate row
             $sheet->setCellValue('A' . $row, $inbound->order_date->format('m/d/Y'));
             $sheet->setCellValue('B' . $row, $month);
-            $sheet->setCellValue('C' . $row, $inbound->degic_no);
+            $sheet->setCellValue('C' . $row, $drNumber);
             $sheet->setCellValue('D' . $row, $inbound->sales_invoice_no);
             $sheet->setCellValue('E' . $row, $tin);
             $sheet->setCellValue('F' . $row, $inbound->customer_name);
@@ -817,12 +818,13 @@ class ReportGeneratorController extends Controller
             $sheet->setCellValue('K' . $row, $vatExclusive);
             $sheet->setCellValue('L' . $row, $vat);
             $sheet->setCellValue('M' . $row, $taxWithheld);
-            $sheet->setCellValue('N' . $row, $discount);
-            $sheet->setCellValue('O' . $row, $badOrder);
-            $sheet->setCellValue('P' . $row, $inbound->remarks ?? '');
+            $sheet->setCellValue('N' . $row, $inbound->is_with_sf ? 1000 : 0);
+            $sheet->setCellValue('O' . $row, $discount);
+            $sheet->setCellValue('P' . $row, $badOrder);
+            $sheet->setCellValue('Q' . $row, $inbound->remarks ?? '');
 
             // Apply borders to data row
-            $sheet->getStyle('A' . $row . ':P' . $row)->applyFromArray([
+            $sheet->getStyle('A' . $row . ':Q' . $row)->applyFromArray([
                 'borders' => [
                     'allBorders' => [
                         'borderStyle' => Border::BORDER_THIN,
@@ -844,14 +846,14 @@ class ReportGeneratorController extends Controller
         }
 
         // Auto-size columns
-        foreach (range('A', 'P') as $col) {
+        foreach (range('A', 'Q') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
         // Set minimum column widths for better readability
         $sheet->getColumnDimension('F')->setWidth(25); // Customer
         $sheet->getColumnDimension('G')->setWidth(35); // Address
-        $sheet->getColumnDimension('O')->setWidth(20); // Remarks
+        $sheet->getColumnDimension('Q')->setWidth(20); // Remarks
 
         // Create the Excel file
         $writer = new Xlsx($spreadsheet);
