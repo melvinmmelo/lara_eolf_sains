@@ -593,7 +593,7 @@ class ReportGeneratorController extends Controller
             $tin = $customer ? $customer->tin : '';
 
             // Get DR number from delivery receipt
-            $drNumber = $inbound->deliveryReceipt ? $inbound->deliveryReceipt->code : '';
+            $drNumber = $inbound->degic_no;
 
             // Calculate amounts
             $grandTotal = $inbound->getGrandTotalAttribute();
@@ -604,7 +604,7 @@ class ReportGeneratorController extends Controller
             // VAT Calculations (placeholder - will be updated with proper formula)
             if ($inbound->with_invoice) {
                 $vatInclusive = $grandTotal;
-                $vatExclusive = $grandTotal / 1;
+                $vatExclusive = $grandTotal / 1.12;
                 $vat = $vatInclusive - $vatExclusive;
             } else {
                 $vatInclusive = $grandTotal;
@@ -613,10 +613,10 @@ class ReportGeneratorController extends Controller
             }
 
             // Tax Withheld - placeholder
-            $taxWithheld = 0;
-
-            // Sales Type
             $salesType = $inbound->with_invoice ? 'Vatable' : 'Non-Vatable';
+
+            $taxWithheld = 0;
+            // Sales Type
 
             // Remarks column (include delivery charge label when applicable)
             $remarks = trim($inbound->remarks ?? '');
@@ -642,6 +642,7 @@ class ReportGeneratorController extends Controller
                 'vat_exclusive' => $vatExclusive,
                 'vat' => $vat,
                 'tax_withheld' => $taxWithheld,
+                'delivery_charge' => $inbound->is_with_sf ? 1000 : 0,
                 'discount' => $discount,
                 'bad_order' => $badOrder,
                 'remarks' => $remarks,

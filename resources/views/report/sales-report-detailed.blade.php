@@ -99,6 +99,7 @@
                             <th>Amount (VAT_Exclusive)</th>
                             <th>VAT</th>
                             <th>Tax Withheld</th>
+                            <th>Delivery Charge</th>
                             <th>Discount</th>
                             <th>Bad Order</th>
                             <th>Remarks</th>
@@ -120,6 +121,7 @@
                             <td class="text-right">{{ number_format($row['vat_exclusive'], 2) }}</td>
                             <td class="text-right">{{ number_format($row['vat'], 2) }}</td>
                             <td class="text-right">{{ number_format($row['tax_withheld'], 2) }}</td>
+                            <td class="text-right">{{ number_format($row['delivery_charge'], 2) }}</td>
                             <td class="text-right">{{ number_format($row['discount'], 2) }}</td>
                             <td class="text-right">{{ number_format($row['bad_order'], 2) }}</td>
                             <td>{{ $row['remarks'] }}</td>
