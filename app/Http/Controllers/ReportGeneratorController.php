@@ -615,7 +615,7 @@ class ReportGeneratorController extends Controller
             // Tax Withheld - placeholder
             $salesType = $inbound->with_invoice ? 'Vatable' : 'Non-Vatable';
 
-            $taxWithheld = 0;
+            $taxWithheld = $vatExclusive * 0.01; // 1% tax withheld
             // Sales Type
 
             // Remarks column (include delivery charge label when applicable)
@@ -779,15 +779,9 @@ class ReportGeneratorController extends Controller
             $amountCollected = $inbound->delivered_amount ?? 0;
 
             // VAT Calculations (will be updated with proper formula later)
-            // For now, placeholder logic:
-            // If with_invoice, apply VAT calculations, otherwise VAT = 0
             if ($inbound->with_invoice) {
-                // Placeholder: Assuming price is VAT-inclusive
-                // VAT_Inclusive = grandTotal
-                // VAT = grandTotal / 1.12 * 0.12
-                // VAT_Exclusive = grandTotal / 1
                 $vatInclusive = $grandTotal;
-                $vatExclusive = $grandTotal / 1;
+                $vatExclusive = $grandTotal / 1.12;
                 $vat = $vatInclusive - $vatExclusive;
             } else {
                 $vatInclusive = $grandTotal;
@@ -796,7 +790,7 @@ class ReportGeneratorController extends Controller
             }
 
             // Tax Withheld - placeholder (not in database yet)
-            $taxWithheld = 0;
+            $taxWithheld = $vatExclusive * 0.01; // 1% tax withheld
 
             // Sales Type
             $salesType = $inbound->with_invoice ? 'Vatable' : 'Non-Vatable';
