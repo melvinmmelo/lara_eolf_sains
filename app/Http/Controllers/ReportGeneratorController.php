@@ -593,7 +593,7 @@ class ReportGeneratorController extends Controller
             $tin = $customer ? $customer->tin : '';
 
             // Get DR number from delivery receipt
-            $drNumber = $inbound->degic_no;
+            $drNumber = $inbound->deliveryReceipt ? $inbound->deliveryReceipt->code : 'N/A';
 
             // Calculate amounts
             $grandTotal = $inbound->getGrandTotalAttribute();
