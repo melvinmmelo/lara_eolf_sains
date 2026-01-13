@@ -40,26 +40,26 @@ class PricelevelsController extends Controller
 
         $status = 'ACTIVE';
 
-        switch($request->priceType){
-            case 'BAD PRICING':
-                $plName = 'BAD PRICING';
-                break;
-            case 'FACTORY PRICE':
-                $plName = 'FACTORY PRICE';
-                break;
-            default:
-                $plName = $request->name;
-        }
+        // switch($request->priceType){
+        //     case 'BAD PRICING':
+        //         $plName = 'BAD PRICING';
+        //         break;
+        //     case 'FACTORY PRICE':
+        //         $plName = 'FACTORY PRICE';
+        //         break;
+        //     default:
+        //         $plName = $request->name;
+        // }
 
         // check if there is a pricing level with the same name
-        $check = pricelevels::where('pl_name', $plName)->where('branch_code', $request->branch_code)->first();
+        $check = pricelevels::where('pl_name', $request->name)->where('branch_code', $request->branch_code)->first();
         if($check){
             return redirect('/pricing-level/')->with('error', 'Pricing Level already exists!');
         }
 
         pricelevels::create([
             'branch_code' => $request->branch_code,
-            'pl_name' => $plName,
+            'pl_name' => $request->name,
             'pl_desc' => $request->Description,
             'pl_status' => $status,
             'pl_type' => $request->priceType,

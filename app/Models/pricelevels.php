@@ -28,6 +28,12 @@ class pricelevels extends Model
         return $this->hasMany(prices::class);
     }
 
+    // Relationship to bad order prices
+    public function badOrderPrices()
+    {
+        return $this->hasMany(BadOrderPrice::class, 'price_level_id', 'id');
+    }
+
     protected $appends = ['date_created'];
 
     public function getDateCreatedAttribute()
@@ -38,7 +44,7 @@ class pricelevels extends Model
     // get all price levels by branch code that is not bad pricing and is active
     public static function getPriceLevels($branchCode)
     {
-        return pricelevels::branch($branchCode)->where('pl_name', '!=', 'BAD PRICING')->where('pl_status', 'Active')->get();
+        return pricelevels::branch($branchCode)->where('pl_type', '!=', 'BAD PRICING')->where('pl_status', 'Active')->get();
     }
 
 }

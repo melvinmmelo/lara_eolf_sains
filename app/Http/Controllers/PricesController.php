@@ -6,6 +6,7 @@ use App\Models\prices;
 use App\Models\pricelevels;
 use App\Models\Product;
 use App\Models\ProductType;
+use App\Models\BadOrderPrice;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 
@@ -56,22 +57,38 @@ class PricesController extends Controller
             return redirect('/pricing/')->withErrors('Pricing level not found!');
         }
 
-        if ($pricing->pl_name == 'BAD PRICING') {
+        if ($pricing->pl_type == 'BAD PRICING') {
 
             $request->validate([
                 'product_type' => 'required',
                 'price' => 'required',
             ]);
 
-            // check if pricelevel id and product type already exists
-            $price = prices::where('pricelevel_id', $request->pricing_id)
-                ->where('p_code', $request->product_type)
+            // Check if bad order price already exists for this product type and price level
+            $existingBadPrice = BadOrderPrice::where('price_level_id', $request->pricing_id)
+                ->where('ptype_code', $request->product_type)
                 ->first();
 
-            if ($price) {
-                return redirect('/pricing/')->withErrors('Price already exists!');
+            if ($existingBadPrice) {
+                return redirect('/pricing/')->withErrors('Bad order price already exists!');
             }
 
+            // Get product type name
+            $productType = ProductType::where('code', $request->product_type)->first();
+
+            if (!$productType) {
+                return redirect('/pricing/')->withErrors('Product type not found!');
+            }
+
+            // Save to bad_order_prices table
+            BadOrderPrice::create([
+                'ptype_code' => $request->product_type,
+                'ptype_name' => $productType->name,
+                'price_level_id' => $request->pricing_id,
+                'price' => $request->price,
+            ]);
+
+            // Also save to prices table for backward compatibility
             prices::create([
                 'pricelevel_id' => $request->pricing_id,
                 'p_code' => $request->product_type,

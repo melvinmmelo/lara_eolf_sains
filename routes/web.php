@@ -126,6 +126,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/bo-get-price/{pricelevel_id}/{p_code}', [NewBadOrderController::class, 'getPricing']);
 
+    Route::get('/bo-get-prices-by-level/{pricelevel_id}', [NewBadOrderController::class, 'getBadOrderPricesByLevel']);
+
     Route::get('/bad-orders', [NewBadOrderController::class, 'index'])->name('newbo.index');
 
     Route::get('/bo-deducted', [NewBadOrderController::class, 'badOrdersDeducted'])->name('newbo.deducted');

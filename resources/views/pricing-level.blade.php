@@ -282,7 +282,7 @@
             factoryPriceRadio.addEventListener('change', function() {
                 if (this.checked) {
                     branchCode.style.display = 'none';
-                    inputName.value = 'FACTORY PRICE';
+                    // inputName.value = 'FACTORY PRICE';
                     inputName.readOnly = true;
                 }
             });
@@ -290,7 +290,7 @@
             badPricingRadio.addEventListener('change', function() {
                 if (this.checked) {
                     branchCode.style.display = 'block';
-                    inputName.value = 'BAD PRICING';
+                    // inputName.value = 'BAD PRICING';
                     inputName.readOnly = true;
                 }
             });

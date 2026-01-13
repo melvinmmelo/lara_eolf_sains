@@ -124,7 +124,7 @@
                                 <select class="form-control" id="pricing_id" required>
                                     <option value="">--Select--</option>
                                     @foreach ($pricelevels as $pl)
-                                        <option value="{{ $pl->id }}">{{ $pl->pl_name }}</option>
+                                        <option value="{{ $pl->id }}" data-pl-type="{{ $pl->pl_type }}">{{ $pl->pl_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -313,23 +313,24 @@
 
                 var value = $(this).val();
 
-                // how to get the text of the selected option
-                var selectedPricingText = $("#pricing_id option:selected").text();
+                // Get the pl_type from the selected option's data attribute
+                var selectedPricingType = $("#pricing_id option:selected").data('pl-type');
 
-                console.log(selectedPricingText);
+                console.log('Selected pricing type:', selectedPricingType);
 
-                if (selectedPricingText != 'BAD PRICING') {
+                if (selectedPricingType == 'BAD PRICING') {
 
-                    $('#ifNotBadPricing').show();
-                    $('#ifBadPricing').hide();
-
-                    $('#nb_pricing_id').val(value);
-
-                } else {
-
+                    // Show bad pricing form (only product type and price)
                     $('#ifNotBadPricing').hide();
                     $('#ifBadPricing').show();
                     $('#b_pricing_id').val(value);
+
+                } else {
+
+                    // Show normal pricing form (product code, quantity, unit, price)
+                    $('#ifNotBadPricing').show();
+                    $('#ifBadPricing').hide();
+                    $('#nb_pricing_id').val(value);
 
                 }
             });
