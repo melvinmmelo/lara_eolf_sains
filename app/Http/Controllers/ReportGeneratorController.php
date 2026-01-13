@@ -599,7 +599,6 @@ class ReportGeneratorController extends Controller
             $grandTotal = $inbound->getGrandTotalAttribute();
             $discount = $inbound->discount ?? 0;
             $badOrder = $inbound->bo_amount ?? 0;
-            $amountCollected = $inbound->delivered_amount ?? 0;
 
             // VAT Calculations (placeholder - will be updated with proper formula)
             if ($inbound->with_invoice) {
@@ -612,11 +611,17 @@ class ReportGeneratorController extends Controller
                 $vat = 0;
             }
 
+
             // Tax Withheld - placeholder
             $salesType = $inbound->with_invoice ? 'Vatable' : 'Non-Vatable';
 
-            $taxWithheld = $vatExclusive * 0.01; // 1% tax withheld
-            // Sales Type
+            if($customer->id == 553 || $customer->id == 550 || $customer->id == 559) {
+                $taxWithheld = $vatExclusive * 0.01; // 1% tax withheld
+            } else {
+                $taxWithheld = 0;
+            }
+
+            $amountCollected = ($vatInclusive - $taxWithheld) ?? 0;
 
             // Remarks column (include delivery charge label when applicable)
             $remarks = trim($inbound->remarks ?? '');
@@ -776,7 +781,6 @@ class ReportGeneratorController extends Controller
             $grandTotal = $inbound->getGrandTotalAttribute();
             $discount = $inbound->discount ?? 0;
             $badOrder = $inbound->bo_amount ?? 0;
-            $amountCollected = $inbound->delivered_amount ?? 0;
 
             // VAT Calculations (will be updated with proper formula later)
             if ($inbound->with_invoice) {
@@ -790,7 +794,13 @@ class ReportGeneratorController extends Controller
             }
 
             // Tax Withheld - placeholder (not in database yet)
-            $taxWithheld = $vatExclusive * 0.01; // 1% tax withheld
+            if($customer->id == 553 || $customer->id == 550 || $customer->id == 559) {
+                $taxWithheld = $vatExclusive * 0.01; // 1% tax withheld
+            } else {
+                $taxWithheld = 0;
+            }
+
+            $amountCollected = ($vatInclusive - $taxWithheld) ?? 0;
 
             // Sales Type
             $salesType = $inbound->with_invoice ? 'Vatable' : 'Non-Vatable';
