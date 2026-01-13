@@ -11,6 +11,7 @@ use App\Models\pricelevels;
 use App\Models\prices;
 use App\Models\Product;
 use App\Models\ProductType;
+use App\Models\BadOrderPrice;
 use Illuminate\Http\Request;
 
 class NewBadOrderController extends Controller
@@ -47,13 +48,19 @@ class NewBadOrderController extends Controller
 
         $items = ProductType::where('is_active', 1)->orderBy("sequence_no")->get();
 
-        $pricingLevels = pricelevels::branch(session("branch_code"))->where('pl_name', 'BAD PRICING')->get();
+        $pricingLevels = pricelevels::branch(session("branch_code"))->where('pl_type', 'BAD PRICING')->get();
+
+        // Get bad order prices for the selected price level
+        $badOrderPrices = [];
+        if ($plId) {
+            $badOrderPrices = BadOrderPrice::where('price_level_id', $plId)->get();
+        }
 
         $boProducts = NewTempBadOrder::where('session_bo_id', $sessionBo)->get();
 
         $totalAmount = NewTempBadOrder::where('session_bo_id', $sessionBo)->sum(\DB::raw('price * quantity'));
 
-        return view('newaddbadorder', compact('customers', 'pricingLevels', 'items', 'sessionBo', 'boProducts', 'equipment', 'totalAmount', 'plId'));
+        return view('newaddbadorder', compact('customers', 'pricingLevels', 'items', 'sessionBo', 'boProducts', 'equipment', 'totalAmount', 'plId', 'badOrderPrices'));
     }
 
     public function edit($badOrderId = null)
@@ -65,7 +72,7 @@ class NewBadOrderController extends Controller
             return redirect()->route('newbo.index')->withErrors(['error' => 'Bad order has been added to inbound.']);
         }
 
-        $pricingLevels = pricelevels::branch(session("branch_code"))->where('pl_name', 'BAD PRICING')->get();
+        $pricingLevels = pricelevels::branch(session("branch_code"))->where('pl_type', 'BAD PRICING')->get();
 
         $boProducts = NewTempBadOrder::where('new_bad_order_id', $badOrderId)->get();
 
@@ -73,7 +80,10 @@ class NewBadOrderController extends Controller
 
         $items = ProductType::where('is_active', 1)->orderBy("sequence_no")->get();
 
-        return view('neweditbadorder', compact('badOrder', 'pricingLevels', 'items', 'boProducts', 'totalAmount'));
+        // Initialize empty bad order prices (will be loaded via AJAX when price level is selected)
+        $badOrderPrices = [];
+
+        return view('neweditbadorder', compact('badOrder', 'pricingLevels', 'items', 'boProducts', 'totalAmount', 'badOrderPrices'));
     }
 
     public function addItemToBO(Request $request)
@@ -115,8 +125,34 @@ class NewBadOrderController extends Controller
 
     public function getPricing($plId, $pCode)
     {
+        // Check if the price level is "BAD PRICING"
+        $priceLevel = pricelevels::find($plId);
+
+        if ($priceLevel && $priceLevel->pl_type == 'BAD PRICING') {
+            // Fetch from bad_order_prices table
+            $badOrderPrice = BadOrderPrice::where('price_level_id', $plId)
+                ->where('ptype_code', $pCode)
+                ->first();
+
+            if ($badOrderPrice) {
+                return response()->json([
+                    'p_price' => $badOrderPrice->price,
+                    'p_code' => $badOrderPrice->ptype_code
+                ]);
+            }
+
+            return response()->json(['p_price' => null, 'p_code' => null]);
+        }
+
+        // Otherwise, fetch from prices table
         $price = prices::getPricePerPriceLevelAndPCode($plId, $pCode);
         return response()->json($price);
+    }
+
+    public function getBadOrderPricesByLevel($plId)
+    {
+        $badOrderPrices = BadOrderPrice::where('price_level_id', $plId)->get();
+        return response()->json($badOrderPrices);
     }
 
     public function store(Request $request)

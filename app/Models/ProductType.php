@@ -22,6 +22,13 @@ class ProductType extends Model
     {
         return $query->where('code', $code);
     }
+
+    // Relationship to bad order prices
+    public function badOrderPrices()
+    {
+        return $this->hasMany(BadOrderPrice::class, 'ptype_code', 'code');
+    }
+
     protected $appends = ['date_created'];
 
     public function getDateCreatedAttribute()

@@ -26,8 +26,12 @@
             <div class="card-body">
                 @include('layouts.errors')
                 <div class="pb-2">
-                    <a href="{{ route('newbo.deducted') }}"><button type="button" class="btn btn-primary">
+                    <a href="{{ route('newbo.deducted') }}"><button type="button" class="btn btn-default">
                             Deducted BOs
+                        </button></a>
+
+                        <a href="{{ route('newbo.create') }}"><button type="button" class="btn btn-primary">
+                            Add New
                         </button></a>
                 </div>
 

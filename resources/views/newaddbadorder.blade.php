@@ -44,13 +44,22 @@
                         <div class="col-sm-4">
                             <label class="form-label" for="item"><i style="color:red">*</i>Item</label>
                             <select class="form-control select2bs4" id="item" name="item">
-                                <option>-- Select Item --</option>
-                                @foreach ($items as $item)
-                                    <option value="{{ $item->code }}" data-ptype-code="{{ $item->code }}"
-                                        data-price="{{ $item->p_price }}">
-                                        {{ $item->name }}
-                                    </option>
-                                @endforeach
+                                <option value="">-- Select Item --</option>
+                                @if($plId && count($badOrderPrices) > 0)
+                                    @foreach ($badOrderPrices as $badPrice)
+                                        <option value="{{ $badPrice->ptype_code }}" data-ptype-code="{{ $badPrice->ptype_code }}"
+                                            data-price="{{ $badPrice->price }}">
+                                            {{ $badPrice->ptype_name . ' (' . $badPrice->ptype_code . ')' . ' - ' . number_format($badPrice->price, 2) }}
+                                        </option>
+                                    @endforeach
+                                @else
+                                    @foreach ($items as $item)
+                                        <option value="{{ $item->code }}" data-ptype-code="{{ $item->code }}"
+                                            data-price="0">
+                                            {{ $item->name . ' (' . $item->code . ')' }}
+                                        </option>
+                                    @endforeach
+                                @endif
                             </select>
                         </div>
 
@@ -169,18 +178,69 @@
         const itemSelect = $('#item');
         const priceInput = $('#price');
         const quantityInput = $('#quantity');
+        const priceLevelSelect = $('#priceLevel');
 
+        // Event listener for price level change - load items via AJAX
+        priceLevelSelect.on('change', function() {
+            const selectedPriceLevel = $(this).val();
+
+            if (!selectedPriceLevel) {
+                // Clear item dropdown
+                itemSelect.empty();
+                itemSelect.append('<option value="">-- Select Item --</option>');
+                priceInput.val('');
+                return;
+            }
+
+            // Fetch bad order prices for the selected price level
+            fetch(`/bo-get-prices-by-level/${selectedPriceLevel}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Bad order prices:', data);
+
+                    // Clear and populate item dropdown
+                    itemSelect.empty();
+                    itemSelect.append('<option value="">-- Select Item --</option>');
+
+                    if (data && data.length > 0) {
+                        data.forEach(function(badPrice) {
+                            const optionText = `${badPrice.ptype_name} (${badPrice.ptype_code}) - ${parseFloat(badPrice.price).toFixed(2)}`;
+                            const option = $('<option>', {
+                                value: badPrice.ptype_code,
+                                'data-ptype-code': badPrice.ptype_code,
+                                'data-price': badPrice.price,
+                                text: optionText
+                            });
+                            itemSelect.append(option);
+                        });
+                    } else {
+                        itemSelect.append('<option value="">No prices found for this level</option>');
+                    }
+
+                    // Reinitialize select2 if used
+                    if (itemSelect.hasClass('select2bs4')) {
+                        itemSelect.select2('destroy');
+                        itemSelect.select2({
+                            theme: 'bootstrap4'
+                        });
+                    }
+
+                    priceInput.val('');
+                })
+                .catch(error => {
+                    console.log('Error fetching bad order prices:', error);
+                    alert('Error loading items for selected price level.');
+                });
+        });
 
         // Event listener for item selection
         itemSelect.on('change', function() {
             const selectedOption = $(this).find(':selected');
             const price = selectedOption.data('price');
-            const quantity = selectedOption.data('quantity');
             priceInput.val(price);
 
             // focus on quantity input
             quantityInput.focus();
-
         });
 
         // convert deleteItem function to ajax request
@@ -203,16 +263,26 @@
         function getPricing() {
 
             let item = itemSelect.val();
-            let priceLevel = $('#priceLevel').val();
+            let priceLevel = priceLevelSelect.val();
+
+            if (!item || !priceLevel) {
+                return;
+            }
 
             fetch(`/bo-get-price/${priceLevel}/${item}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
-                    priceInput.val(data.p_price);
+                    console.log('Price data:', data);
+                    if (data.p_price) {
+                        priceInput.val(data.p_price);
+                    } else {
+                        priceInput.val('0');
+                        alert('Price not found for selected item and price level.');
+                    }
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.log('Error fetching price:', error);
+                    priceInput.val('0');
                 });
         }
 
