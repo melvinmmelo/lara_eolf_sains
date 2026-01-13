@@ -44,6 +44,7 @@ class Inbound extends Model
         'order_date',
         'bo_amount',
         'discount',
+        'discount_details',
         'sales_invoice_no'
     ];
 
