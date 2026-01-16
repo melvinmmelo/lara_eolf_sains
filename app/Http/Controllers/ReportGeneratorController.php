@@ -621,7 +621,13 @@ class ReportGeneratorController extends Controller
                 $taxWithheld = 0;
             }
 
-            $amountCollected = ($vatInclusive - $taxWithheld) ?? 0;
+
+
+            if($inbound->is_foc) {
+                $amountCollected = 0;
+            }else{
+                $amountCollected = ($vatInclusive - $taxWithheld) ?? 0;
+            }
 
             // Remarks column (include delivery charge label when applicable)
             $remarks = trim($inbound->remarks ?? '');
@@ -800,7 +806,11 @@ class ReportGeneratorController extends Controller
                 $taxWithheld = 0;
             }
 
-            $amountCollected = ($vatInclusive - $taxWithheld) ?? 0;
+            if ($inbound->is_foc) {
+                $amountCollected = 0;
+            }else{
+                $amountCollected = ($vatInclusive - $taxWithheld) ?? 0;
+            }
 
             // Sales Type
             $salesType = $inbound->with_invoice ? 'Vatable' : 'Non-Vatable';
