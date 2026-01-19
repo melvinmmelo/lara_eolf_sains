@@ -621,8 +621,6 @@ class ReportGeneratorController extends Controller
                 $taxWithheld = 0;
             }
 
-
-
             if($inbound->is_foc) {
                 $amountCollected = 0;
             }else{
