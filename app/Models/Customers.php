@@ -13,7 +13,7 @@ class Customers extends Model
 
     public function getFullNameAttribute()
     {
-        return "{$this->firstname} {$this->lastname}";
+        return "{$this->firstname} {$this->middlename} {$this->lastname}";
     }
 
     public function stores()

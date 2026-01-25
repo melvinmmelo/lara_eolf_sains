@@ -128,10 +128,26 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="15" class="text-center py-4">No data available for the selected period</td>
+                            <td colspan="17" class="text-center py-4">No data available for the selected period</td>
                         </tr>
                         @endforelse
                     </tbody>
+                    @if(count($reportData) > 0)
+                    <tfoot>
+                        <tr style="background-color: #FFFF99; font-weight: bold;">
+                            <td colspan="8" class="text-center" style="font-weight: bold;">TOTAL</td>
+                            <td class="text-right">{{ number_format($totals['amount_collected'], 2) }}</td>
+                            <td class="text-right">{{ number_format($totals['vat_inclusive'], 2) }}</td>
+                            <td class="text-right">{{ number_format($totals['vat_exclusive'], 2) }}</td>
+                            <td class="text-right">{{ number_format($totals['vat'], 2) }}</td>
+                            <td class="text-right">{{ number_format($totals['tax_withheld'], 2) }}</td>
+                            <td class="text-right">{{ number_format($totals['delivery_charge'], 2) }}</td>
+                            <td class="text-right">{{ number_format($totals['discount'], 2) }}</td>
+                            <td class="text-right">{{ number_format($totals['bad_order'], 2) }}</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                    @endif
                 </table>
             </div>
         </div>

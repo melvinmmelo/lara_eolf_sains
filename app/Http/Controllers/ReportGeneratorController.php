@@ -471,7 +471,7 @@ class ReportGeneratorController extends Controller
                         return [
                             'customer_name' => $customerInbounds->first()->degic_no . " - " . $customerInbounds->first()->customer_name,
                             'total_sales' => $customerInbounds->sum(function ($inbound) {
-                                return $inbound->getGrandTotalAttribute();
+                                return $inbound->totalAmount;
                             }),
                             'balance' => $customerInbounds->sum(function ($inbound) {
                                 return $inbound->totalBalance;
@@ -495,7 +495,7 @@ class ReportGeneratorController extends Controller
                 return [
                     'customer_name' => $customerInbounds->first()->degic_no . " - " . $customerInbounds->first()->customer_name,
                     'total_sales' => $customerInbounds->sum(function ($inbound) {
-                        return $inbound->getGrandTotalAttribute();
+                        return $inbound->totalAmount;
                     }),
                     'balance' => 0, // FOC orders typically have no balance
                 ];
@@ -596,7 +596,7 @@ class ReportGeneratorController extends Controller
             $drNumber = $inbound->deliveryReceipt ? $inbound->deliveryReceipt->code : 'N/A';
 
             // Calculate amounts
-            $grandTotal = $inbound->getGrandTotalAttribute();
+            $grandTotal = $inbound->totalAmount;
             $discount = $inbound->discount ?? 0;
             $badOrder = $inbound->bo_amount ?? 0;
 
@@ -658,6 +658,18 @@ class ReportGeneratorController extends Controller
             ];
         }
 
+        // Calculate totals
+        $totals = [
+            'amount_collected' => array_sum(array_column($reportData, 'amount_collected')),
+            'vat_inclusive' => array_sum(array_column($reportData, 'vat_inclusive')),
+            'vat_exclusive' => array_sum(array_column($reportData, 'vat_exclusive')),
+            'vat' => array_sum(array_column($reportData, 'vat')),
+            'tax_withheld' => array_sum(array_column($reportData, 'tax_withheld')),
+            'delivery_charge' => array_sum(array_column($reportData, 'delivery_charge')),
+            'discount' => array_sum(array_column($reportData, 'discount')),
+            'bad_order' => array_sum(array_column($reportData, 'bad_order')),
+        ];
+
         // Format dates for display
         $date_from_display = Carbon::parse($date_from)->format('m/d/Y');
         $date_to_display = Carbon::parse($date_to)->format('m/d/Y');
@@ -673,7 +685,7 @@ class ReportGeneratorController extends Controller
             $status_label = 'Unpaid Orders';
         }
 
-        return view('report.sales-report-detailed', compact('reportData', 'date_from_display', 'date_to_display', 'status_label'));
+        return view('report.sales-report-detailed', compact('reportData', 'totals', 'date_from_display', 'date_to_display', 'status_label'));
     }
 
     public function exportSalesReportByCustomerDetailed(Request $request)
@@ -782,7 +794,7 @@ class ReportGeneratorController extends Controller
             $drNumber = $inbound->deliveryReceipt ? $inbound->deliveryReceipt->code : '';
 
             // Calculate amounts
-            $grandTotal = $inbound->getGrandTotalAttribute();
+            $grandTotal = $inbound->totalAmount;
             $discount = $inbound->discount ?? 0;
             $badOrder = $inbound->bo_amount ?? 0;
 
@@ -856,6 +868,67 @@ class ReportGeneratorController extends Controller
 
             $row++;
         }
+
+        // Add total row
+        $totalRow = $row;
+        $sheet->setCellValue('A' . $totalRow, 'TOTAL');
+        $sheet->mergeCells('A' . $totalRow . ':H' . $totalRow);
+
+        // Calculate totals using Excel formulas
+        $dataStartRow = 2;
+        $dataEndRow = $totalRow - 1;
+
+        if ($dataEndRow >= $dataStartRow) {
+            $sheet->setCellValue('I' . $totalRow, '=SUM(I' . $dataStartRow . ':I' . $dataEndRow . ')');
+            $sheet->setCellValue('J' . $totalRow, '=SUM(J' . $dataStartRow . ':J' . $dataEndRow . ')');
+            $sheet->setCellValue('K' . $totalRow, '=SUM(K' . $dataStartRow . ':K' . $dataEndRow . ')');
+            $sheet->setCellValue('L' . $totalRow, '=SUM(L' . $dataStartRow . ':L' . $dataEndRow . ')');
+            $sheet->setCellValue('M' . $totalRow, '=SUM(M' . $dataStartRow . ':M' . $dataEndRow . ')');
+            $sheet->setCellValue('N' . $totalRow, '=SUM(N' . $dataStartRow . ':N' . $dataEndRow . ')');
+            $sheet->setCellValue('O' . $totalRow, '=SUM(O' . $dataStartRow . ':O' . $dataEndRow . ')');
+            $sheet->setCellValue('P' . $totalRow, '=SUM(P' . $dataStartRow . ':P' . $dataEndRow . ')');
+        }
+
+        // Style total row
+        $totalStyle = [
+            'font' => [
+                'bold' => true,
+                'size' => 10
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['rgb' => '000000']
+                ],
+                'top' => [
+                    'borderStyle' => Border::BORDER_MEDIUM,
+                    'color' => ['rgb' => '000000']
+                ],
+                'bottom' => [
+                    'borderStyle' => Border::BORDER_DOUBLE,
+                    'color' => ['rgb' => '000000']
+                ],
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => 'FFFF99'], // Light yellow
+            ],
+        ];
+        $sheet->getStyle('A' . $totalRow . ':Q' . $totalRow)->applyFromArray($totalStyle);
+
+        // Format number columns in total row
+        $sheet->getStyle('I' . $totalRow)->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->getStyle('J' . $totalRow)->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->getStyle('K' . $totalRow)->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->getStyle('L' . $totalRow)->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->getStyle('M' . $totalRow)->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->getStyle('N' . $totalRow)->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->getStyle('O' . $totalRow)->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->getStyle('P' . $totalRow)->getNumberFormat()->setFormatCode('#,##0.00');
 
         // Auto-size columns
         foreach (range('A', 'Q') as $col) {
