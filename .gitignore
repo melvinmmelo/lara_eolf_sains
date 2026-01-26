@@ -30,3 +30,4 @@ yarn-error.log
 
 # windsurf rules
 .windsurfrules
+/database/eolf.sql
