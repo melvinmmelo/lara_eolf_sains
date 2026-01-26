@@ -137,12 +137,12 @@
                                 </div>
                                 <div class="form-group">
 
-                                    <label class="form-label" for="price_code"><i style="color:red">*</i>Product
-                                        Code</label>
-                                    <select class="form-control select2bs4" id="price_code" name="price_code">
-                                        @foreach ($products as $product)
-                                            <option value="{{ $product->code }}">
-                                                {{ $product->code . ' ' . $product->productName }}
+                                    <label class="form-label" for="product_type"><i style="color:red">*</i>Product
+                                        Type</label>
+                                    <select class="form-control select2bs4" id="product_type" name="product_type">
+                                        @foreach ($productTypes as $pType)
+                                            <option value="{{ $pType->code }}">
+                                                {{ $pType->code . ' ' . $pType->name }}
                                             </option>
                                         @endforeach
                                     </select>

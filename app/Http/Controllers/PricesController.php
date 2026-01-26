@@ -98,7 +98,7 @@ class PricesController extends Controller
         } else {
 
             $request->validate([
-                'price_code' => 'required',
+                'product_type' => 'required',
                 'price_unit' => 'required',
                 'quant' => 'required',
                 'price' => 'required',
@@ -109,12 +109,12 @@ class PricesController extends Controller
                 ->first();
 
             if ($price) {
-                return redirect('/pricing/')->withErrors('Price already exists!');
+                return redirect('/pricing/')->withErrors('Price already exists for this product type!');
             }
 
             prices::create([
                 'pricelevel_id' => $request->pricing_id,
-                'p_code' => $request->price_code,
+                'p_code' => $request->product_type,
                 'p_unit' => $request->price_unit,
                 'p_quant' => $request->quant,
                 'p_price' => $request->price,

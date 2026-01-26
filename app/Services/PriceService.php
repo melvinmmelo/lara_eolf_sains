@@ -13,7 +13,8 @@ class PriceService extends Model
 
     public static function getPrice($productCode)
     {
-        $price = prices::where('p_code', $productCode)->orderBy('created_at', 'desc')->first();
+        $productTypeCode = prices::extractProductTypeCode($productCode);
+        $price = prices::where('p_code', $productTypeCode)->orderBy('created_at', 'desc')->first();
         return $price;
     }
 
