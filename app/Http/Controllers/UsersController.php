@@ -25,7 +25,7 @@ class UsersController extends Controller
 
     public function index()
     {
-        $users = User::all();
+        $users = User::whereIn('status', ['active', 'Active'])->get();
         $roles = ModelsRole::all();
 
         return view('users', compact('users', 'roles'));

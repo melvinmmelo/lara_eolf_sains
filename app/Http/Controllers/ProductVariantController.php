@@ -12,7 +12,7 @@ class ProductVariantController extends Controller
      */
     public function index()
     {
-        $productVariants = ProductVariant::all();
+        $productVariants = ProductVariant::where('is_active', '1')->get();
         return view('product-variants', compact('productVariants'));
     }
 

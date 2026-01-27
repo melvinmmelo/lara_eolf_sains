@@ -10,7 +10,7 @@ class VehiclesController extends Controller
 
     public function index()
     {
-        $vehicles = Vehicle::all();
+        $vehicles = Vehicle::where('status', 'active')->get();
         return view('vehicles', compact('vehicles'));
     }
 

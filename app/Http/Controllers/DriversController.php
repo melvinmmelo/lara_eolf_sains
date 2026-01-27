@@ -21,7 +21,7 @@ class DriversController extends Controller
     public function index()
     {
 
-        $drivers = Drivers::with('priceLevel')->get();
+        $drivers = Drivers::with('priceLevel')->where('status', 'active')->get();
 
         $priceLevels = pricelevels::getPriceLevels(session('branch_code'));
 

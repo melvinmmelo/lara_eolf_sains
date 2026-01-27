@@ -13,7 +13,7 @@ class PricelevelsController extends Controller
      */
     public function index()
     {
-        $pricelevels = pricelevels::branch(session('branch_code'))->get();
+        $pricelevels = pricelevels::branch(session('branch_code'))->where('pl_status', 'active')->get();
         return view('pricing-level', compact('pricelevels'));
     }
 
