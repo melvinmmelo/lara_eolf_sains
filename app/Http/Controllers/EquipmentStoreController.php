@@ -200,6 +200,7 @@ class EquipmentStoreController extends Controller
             'pull_equipment_id' => 'required|exists:equipment,id',
             'replace_equipment_id.*' => 'required|exists:equipment,id',
             'remarks' => 'required|string|max:255', // Validate the remarks field
+            'remarks_others' => 'required_if:remarks,Others|string|max:255',
             'customer_id' => 'required|exists:customers,id',
             'store_id' => 'required|exists:storeinfo,id',
         ]);
@@ -326,6 +327,7 @@ class EquipmentStoreController extends Controller
         $pullOutForm->system_leak = $remarks === 'SYSTEM LEAK';
         $pullOutForm->condemned = $remarks === 'CONDEMNED';
         $pullOutForm->return_to_supplier = $remarks === 'RETURN TO SUPPLIER';
+        $remarks = $request->input('remarks_others') ? $request->input('remarks_others') : $remarks;
         $pullOutForm->remarks = $remarks;
 
         // If there are replacement equipment

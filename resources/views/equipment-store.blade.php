@@ -239,7 +239,7 @@
                                         <div class="form-group">
                                             <label class="form-label" for="status">Remarks</label>
                                             <!-- <input type="text" name="remarks" class="form-control"> -->
-                                            <select class="form-control" name="remarks" required>
+                                            <select class="form-control" id="remarks-select" name="remarks" required>
                                                 <option value="UPGRADE">UPGRADE</option>
                                                 <option value="DEFFECTIVE COMPRESSOR">DEFFECTIVE COMPRESSOR</option>
                                                 <option value="NOT COOLING">NOT COOLING</option>
@@ -247,7 +247,12 @@
                                                 <option value="SYSTEM LEAK">SYSTEM LEAK</option>
                                                 <option value="CONDEMNED">CONDEMNED</option>
                                                 <option value="RETURN TO SUPPLIER">RETURN TO SUPPLIER</option>
+                                                <option value="Others">Others</option>
                                             </select>
+                                        </div>
+                                        <div class="form-group" id="remarks-others-input" style="display: none;">
+                                            <label class="form-label" for="remarks-others">Specify Remarks</label>
+                                            <input type="text" name="remarks_others" id="remarks-others" class="form-control" placeholder="Enter remarks">
                                         </div>
                                     </div>
                                 </div>
@@ -407,6 +412,22 @@
                     document.getElementById('modal-serial').value = serial;
                     document.getElementById('modal-equipment-id').value = equipmentId;
                 });
+            });
+
+            // Handle remarks "Others" option
+            var remarksSelect = document.getElementById('remarks-select');
+            var remarksOthersInput = document.getElementById('remarks-others-input');
+            var remarksOthersField = document.getElementById('remarks-others');
+
+            remarksSelect.addEventListener('change', function() {
+                if (this.value === 'Others') {
+                    remarksOthersInput.style.display = 'block';
+                    remarksOthersField.setAttribute('required', 'required');
+                } else {
+                    remarksOthersInput.style.display = 'none';
+                    remarksOthersField.removeAttribute('required');
+                    remarksOthersField.value = '';
+                }
             });
         });
 
