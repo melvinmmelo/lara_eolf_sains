@@ -40,7 +40,6 @@
                                     <th>Pricing Level</th>
                                     <th>Product</th>
                                     <th>Unit</th>
-                                    <th>Quantity</th>
                                     <th>Price</th>
                                     <th>Created at</th>
                                     <th></th>
@@ -52,7 +51,6 @@
                                         <td>{{ $price->pricelevel->pl_name }}</td>
                                         <td>{{ $price->product->productName ?? $price->productType->name }}</td>
                                         <td>{{ $price->p_unit }}</td>
-                                        <td>{{ $price->p_quant }}</td>
                                         <td>{{ $price->p_price }}</td>
                                         <td>{{ $price->date_created }}</td>
                                         <td>
@@ -67,7 +65,6 @@
                                 <tr>
                                     <th>Pricing Level</th>
                                     <th>Product Code</th>
-                                    <th>Quantity</th>
                                     <th>Unit</th>
                                     <th>Price</th>
                                     <th>Created at</th>
@@ -150,11 +147,7 @@
                                 <div class="form-group">
                                     <div class="row mb-2">
 
-                                        <div class="col-sm-6">
-                                            <label class="form-label" for="quant"><i
-                                                    style="color:red">*</i>Quantity</label>
-                                            <input type="number" class="form-control" id="quant" name="quant">
-                                        </div>
+                                        <input type="hidden" class="form-control" id="quant" name="quant" value="1">
 
                                         <div class="col-sm-6">
                                             <label class="form-label" for="price_unit"><i
@@ -165,15 +158,12 @@
                                                 <option value="Pc/s">Pc/s</option>
                                             </select>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="row mb-2">
+
                                         <div class="col-sm-6">
                                             <label class="form-label" for="price"><i
                                                     style="color:red">*</i>Price</label>
                                             <input type="number" step=".01" class="form-control" id="price"
-                                                name="price">
+                                                name="price" autofocus>
                                         </div>
                                     </div>
                                 </div>
@@ -243,10 +233,8 @@
                         <div class="form-group">
                             <div class="row mb-2">
 
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="e_quant">Quantity</label>
-                                    <input type="number" class="form-control" id="e_quant" name="e_quant">
-                                </div>
+
+                                    <input type="hidden" class="form-control" id="e_quant" name="e_quant" value="1">
 
                                 <div class="col-sm-6">
                                     <label class="form-label" for="e_price_unit">Unit</label>
@@ -256,14 +244,13 @@
                                         <option value="Pc/s">Pc/s</option>
                                     </select>
                                 </div>
+
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="e_price">Price</label>
+                                    <input type="numeric" step=".01" class="form-control" id="e_price" name="e_price" autofocus>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="e_price_unit"><i style="color:red">*</i>Price</label>
-                            <input type="numeric" step=".01" class="form-control" id="e_price" name="e_price">
-                        </div>
-
 
                     </div>
 
