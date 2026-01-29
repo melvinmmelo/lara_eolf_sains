@@ -236,7 +236,8 @@ class InboundController extends Controller
         $summary = [];
 
         $product = Product::where('code', $code)->first();
-        $price = prices::where('p_code', $code)->where('pricelevel_id', $pid)->first();
+        $productTypeCode = prices::extractProductTypeCode($code);
+        $price = prices::where('p_code', $productTypeCode)->where('pricelevel_id', $pid)->first();
         if ($price == null) {
             return response()->json(['error' => 'Price not found.']);
         }

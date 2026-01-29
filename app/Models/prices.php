@@ -32,9 +32,35 @@ class prices extends Model
         return $this->belongsTo(ProductType::class, 'p_code', 'code');
     }
 
+    /**
+     * Extract product type code from full product code
+     * Examples: "SC_RR" → "SC", "N3.6L_VNL" → "N3.6L", "SC" → "SC"
+     *
+     * @param string|null $code Full product code or product type code
+     * @return string|null Product type code
+     */
+    public static function extractProductTypeCode($code)
+    {
+        if (empty($code)) {
+            return null;
+        }
+
+        // If code contains underscore, extract everything before last underscore
+        // This handles cases like N3.6L_VNL correctly
+        $lastUnderscorePos = strrpos($code, '_');
+        if ($lastUnderscorePos !== false) {
+            return substr($code, 0, $lastUnderscorePos);
+        }
+
+        // Already a product type code
+        return $code;
+    }
+
     public static function getPrice($productCode, $branchCode, $priceType)
     {
-        $price = prices::where('p_code', $productCode)->whereHas('pricelevel', function ($query) use ($branchCode, $priceType) {
+        $productTypeCode = self::extractProductTypeCode($productCode);
+
+        $price = prices::where('p_code', $productTypeCode)->whereHas('pricelevel', function ($query) use ($branchCode, $priceType) {
             $query->where('branch_code', $branchCode)->where('pl_type', $priceType);
         })->first();
 
@@ -43,13 +69,17 @@ class prices extends Model
 
     public static function getPricePerPriceLevelAndPCode($pricelevelId, $productCode)
     {
-        $price = prices::where('p_code', $productCode)->where('pricelevel_id', $pricelevelId)->first();
+        $productTypeCode = self::extractProductTypeCode($productCode);
+
+        $price = prices::where('p_code', $productTypeCode)->where('pricelevel_id', $pricelevelId)->first();
         return ($price) ? $price : null;
     }
 
     public static function getFactoryPrice($productCode, $priceType = 'FACTORY PRICE')
     {
-        $price = prices::where('p_code', $productCode)->whereHas('pricelevel', function ($query) use ($priceType) {
+        $productTypeCode = self::extractProductTypeCode($productCode);
+
+        $price = prices::where('p_code', $productTypeCode)->whereHas('pricelevel', function ($query) use ($priceType) {
             $query->where('pl_type', $priceType);
         })->first();
 
