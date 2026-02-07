@@ -53,7 +53,7 @@
                                 <td>
                                     <a href="#" data-toggle="modal" data-target="#modalEdit"
                                         class="btn btn-primary btn-sm"
-                                        onclick="setToUpdate('{{ $pl->id }}','{{ $pl->pl_name }}','{{ $pl->pl_desc }}','{{ $pl->status }}')">Edit</a>
+                                        onclick="setToUpdate('{{ $pl->id }}','{{ $pl->pl_name }}','{{ $pl->pl_desc }}','{{ $pl->pl_status }}','{{ $pl->pl_type }}')">Edit</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -307,7 +307,7 @@
             e_forCustomerRadio.addEventListener('change', function() {
                 if (this.checked) {
                     branchCode.style.display = 'block';
-                    e_inputName.readOnly = false;
+                    // e_inputName.readOnly = false;
                 }
             });
 
@@ -315,15 +315,14 @@
                 if (this.checked) {
                     branchCode.style.display = 'none';
                     e_inputName.value = 'FACTORY PRICE';
-                    e_inputName.readOnly = true;
+                    // e_inputName.readOnly = true;
                 }
             });
 
             e_badPricingRadio.addEventListener('change', function() {
                 if (this.checked) {
                     branchCode.style.display = 'block';
-                    e_inputName.value = 'BAD PRICING';
-                    e_inputName.readOnly = true;
+                    // e_inputName.readOnly = true;
                 }
             });
 
@@ -333,39 +332,31 @@
 
         }
 
-        function setToUpdate(id, name, description, status) {
+        function setToUpdate(id, name, description, status, priceType) {
             var inputId = document.querySelector('input[name="e_pricelevel_id"]');
             var inputName = document.querySelector('input[name="e_name"]');
             var inputDescription = document.querySelector('textarea[name="e_description"]');
             var inputStatus = document.querySelector('input[name="e_status"]');
 
-            if (name == 'FACTORY PRICE') {
-                // disable input name
-                inputName.readOnly = true;
-                inputName.value = "FACTORY PRICE";
+            inputId.value = id;
+            inputName.value = name;
+            inputDescription.value = description;
+            $(inputStatus).bootstrapSwitch('state', status == 'Active');
+
+            // Set the price type radio button based on pl_type
+            if (priceType == 'FACTORY PRICE') {
                 document.getElementById('e_isFactoryPrice').checked = true;
                 document.getElementById('e_isBadPricing').checked = false;
                 document.getElementById('e_isForCustomer').checked = false;
-
-            } else if (name == 'BAD PRICING') {
-                // disable input name
-                inputName.readOnly = true;
-                inputName.value = name;
+            } else if (priceType == 'BAD PRICING') {
                 document.getElementById('e_isFactoryPrice').checked = false;
                 document.getElementById('e_isBadPricing').checked = true;
                 document.getElementById('e_isForCustomer').checked = false;
             } else {
-                // enable input name
-                inputName.readOnly = false;
-                inputName.value = name;
                 document.getElementById('e_isFactoryPrice').checked = false;
                 document.getElementById('e_isBadPricing').checked = false;
                 document.getElementById('e_isForCustomer').checked = true;
             }
-
-            inputId.value = id;
-            inputDescription.value = description;
-            inputStatus.checked = status == 'ACTIVE' ? true : false;
         }
     </script>
 @endsection

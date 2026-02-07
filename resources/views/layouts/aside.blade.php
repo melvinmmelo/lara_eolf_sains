@@ -201,7 +201,7 @@
                     </ul>
                 </li>
 
-                <li class="nav-item {{ Route::currentRouteNamed('delivery-purchase-receipts.index') || Route::currentRouteNamed('itemdata.index') || Route::currentRouteNamed('drp.products') || Route::currentRouteNamed('materialsInventory.index') || Route::currentRouteNamed('materialsInventory.history') || Route::currentRouteNamed('update.stocks.page') || Route::currentRouteNamed('bulk.update.stocks.page') || Route::currentRouteNamed('stock-reconciliation.index') || Route::currentRouteNamed('inventory.bad-orders') || Route::currentRouteNamed('inventory.bad-orders.product') ? 'menu-is-opening menu-open' : '' }}">
+                <li class="nav-item {{ Route::currentRouteNamed('delivery-purchase-receipts.index') || Route::currentRouteNamed('itemdata.index') || Route::currentRouteNamed('drp.products') || Route::currentRouteNamed('materialsInventory.index') || Route::currentRouteNamed('material-withdrawals.index') || Route::currentRouteNamed('materialsInventory.history') || Route::currentRouteNamed('update.stocks.page') || Route::currentRouteNamed('bulk.update.stocks.page') || Route::currentRouteNamed('stock-reconciliation.index') || Route::currentRouteNamed('inventory.bad-orders') || Route::currentRouteNamed('inventory.bad-orders.product') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-warehouse" style="color: #74C0FC;"></i>
                         <p>
@@ -237,17 +237,17 @@
 
                         <li>
                             <a href="{{ route('materialsInventory.index') }}"
-                                class="nav-link {{ Route::currentRouteNamed('materialsInventory.index') || Route::currentRouteNamed('materialsInventory.history') ? 'active' : '' }}">
+                                class="nav-link {{ Route::currentRouteNamed('materialsInventory.index') || Route::currentRouteNamed('materialsInventory.history') || Route::currentRouteNamed('material-withdrawals.index') ? 'active' : '' }}">
                                 <i class="fas fa-arrow-right nav-icon"></i>
                                 <p>Materials Inventory</p>
                             </a>
                         </li>
 
-                      
+
                         @can('admin')
 
                         <li>
-                            <a href="{{ route('stock-reconciliation.index') }}" 
+                            <a href="{{ route('stock-reconciliation.index') }}"
                                class="nav-link {{ Route::currentRouteNamed('stock-reconciliation.index') ? 'active' : '' }}">
                                 <i class="fas fa-arrow-right nav-icon" style="color: #74C0FC;"></i>
                                 <p>Stock Reconciliation</p>

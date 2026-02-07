@@ -252,7 +252,7 @@
                                         </div>
                                         <div class="form-group" id="remarks-others-input" style="display: none;">
                                             <label class="form-label" for="remarks-others">Specify Remarks</label>
-                                            <input type="text" name="remarks_others" id="remarks-others" class="form-control" placeholder="Enter remarks">
+                                            <input type="text" name="remarks_others" id="remarks-others" class="form-control" placeholder="Enter remarks" value="{{ old('remarks_others') ?? '' }}">
                                         </div>
                                     </div>
                                 </div>
