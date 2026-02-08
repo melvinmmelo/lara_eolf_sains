@@ -36,10 +36,9 @@ class MaterialsInventoryController extends Controller
         $material->amount = $request->amount;
         $material->remarks = $request->remarks;
         $material->modified_by = auth()->user()->fullName;
-        $material->save();
 
-        activity('general-inventory')
-            ->log("Added $material->name to inventory");
+        // Save - LogsActivity trait will automatically log the creation
+        $material->save();
 
         return back()->with('success', 'Data saved.');
     }
@@ -59,13 +58,7 @@ class MaterialsInventoryController extends Controller
 
         $material = MaterialsInventory::find($request->inv_id);
 
-        $old = $material->getOriginal();
-
-        activity('general-inventory')
-            ->performedOn($material)
-            ->withProperties($old)
-            ->log("Updated $material->name details");
-
+        // Update the material fields
         $material->name = $request->e_name;
         $material->unit = $request->e_unit;
         $material->quantity = $request->e_quantity;
@@ -73,10 +66,9 @@ class MaterialsInventoryController extends Controller
         $material->location = $request->e_location;
         $material->remarks = $request->e_remarks;
         $material->modified_by = auth()->user()->fullName;
-        $material->save();
 
-        activity('general-inventory')
-            ->log("Updated $material->name details");
+        // Save - LogsActivity trait will automatically log the changes
+        $material->save();
 
         return back()->with('success', 'Data has been saved.');
     }
@@ -87,6 +79,7 @@ class MaterialsInventoryController extends Controller
 
         $activityLogs = ModelsActivity::where('subject_id', $id)
             ->where('subject_type', 'App\Models\MaterialsInventory')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         return view('materials-inventory.history', compact('material', 'activityLogs'));
@@ -103,9 +96,7 @@ class MaterialsInventoryController extends Controller
         $materials = MaterialsInventory::whereIn('id', $ids)->get();
 
         foreach ($materials as $material) {
-            activity('general-inventory')
-                ->performedOn($material)
-                ->log("Deleted $material->name from inventory");
+            // Delete - LogsActivity trait will automatically log the deletion
             $material->delete();
         }
 
@@ -137,11 +128,9 @@ class MaterialsInventoryController extends Controller
 
         foreach ($materials as $material) {
             $material->withdrawal_id = $materialItemsWithdrawal->id;
-            $material->save();
 
-            activity('general-inventory')
-                ->performedOn($material)
-                ->log("Withdrawn $material->name from inventory");
+            // Save - LogsActivity trait will automatically log the change
+            $material->save();
         }
 
         return back()->with('success', 'Selected items have been withdrawn.');

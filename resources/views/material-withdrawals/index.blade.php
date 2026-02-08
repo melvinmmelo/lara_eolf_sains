@@ -45,13 +45,20 @@
                     </ol>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="{{ route('material-withdrawals.list') }}" class="btn btn-info btn-sm">
+                        <i class="fas fa-list"></i> View Withdrawal History
+                    </a>
+                </div>
+            </div>
         </div>
     </section>
 
     <section class="content">
         @include('layouts.errors')
 
-        <form id="withdrawalForm" action="{{ route('material-withdrawals.store') }}" method="POST">
+        <form id="withdrawalForm" action="{{ route('material-withdrawals.review') }}" method="POST">
             @csrf
             <div class="row">
 
@@ -107,12 +114,14 @@
                         </div>
 
                         <div class="text-right m-2">
-                            <button type="submit" class="btn btn-primary" id="submitBtn"> <i class="fas fa-save"></i> Save</button>
+                            <button type="submit" class="btn btn-primary" id="reviewBtn">
+                                <i class="fas fa-arrow-right"></i> Review & Continue
+                            </button>
                         </div>
 
 
                     </div>
-                    
+
                 </div>
             </div>
 
@@ -146,7 +155,7 @@ $(document).ready(function() {
     $('#searchInput').on('input', function() {
         clearTimeout(searchTimeout);
         let query = $(this).val();
-        
+
         if (query.length < 2) {
             $('#searchResults').empty();
             hideLoading();
@@ -172,9 +181,9 @@ $(document).ready(function() {
                     let html = '';
                     if (data && data.length > 0) {
                         html += `<h5 class="card-header text-blue">Search Results <small> Click Plus Icon to Add</small></h5>`;
-                        
+
                         html += `<div class="row g-2 p-2">`;
-                        
+
                         data.forEach(function(item) {
                             if (!selectedItems.has(item.id)) {
                                 html += `
@@ -186,7 +195,7 @@ $(document).ready(function() {
                                                         <h6 class="mb-1">${item.name}</h6>
                                                         <p class="mb-0">Available: ${item.quantity} ${item.unit || ''}</p>
                                                     </div>
-                                                    <button type="button" class="btn btn-sm btn-primary add-item" 
+                                                    <button type="button" class="btn btn-sm btn-primary add-item"
                                                         data-id="${item.id}"
                                                         data-name="${item.name}"
                                                         data-unit="${item.unit || ''}"
@@ -199,7 +208,7 @@ $(document).ready(function() {
                                     </div>`;
                             }
                         });
-                        
+
                         html += `</div>`;
                     } else {
                         html = '<p class="text-muted p-2">No items found</p>';
@@ -235,7 +244,7 @@ $(document).ready(function() {
 
     function updateSelectedItemsView() {
         let html = '';
-        
+
         if (selectedItems.size > 0) {
             html += `
                 <table class="table table-bordered table-hover m-2">
@@ -248,14 +257,14 @@ $(document).ready(function() {
                         </tr>
                     </thead>
                     <tbody>`;
-            
+
             selectedItems.forEach((item, id) => {
                 html += `
                     <tr>
                         <td>${item.name}</td>
                         <td>${item.available} ${item.unit}</td>
                         <td>
-                            <input type="number" class="form-control form-control-sm" 
+                            <input type="number" class="form-control form-control-sm"
                                 style="width: 100px"
                                 name="items[${id}][quantity]"
                                 min="1"
@@ -264,6 +273,9 @@ $(document).ready(function() {
                                 placeholder="Qty"
                                 value="1">
                             <input type="hidden" name="items[${id}][id]" value="${id}">
+                            <input type="hidden" name="items[${id}][name]" value="${item.name}">
+                            <input type="hidden" name="items[${id}][unit]" value="${item.unit}">
+                            <input type="hidden" name="items[${id}][available]" value="${item.available}">
                         </td>
                         <td>
                             <button type="button" class="btn btn-sm btn-danger remove-item" data-id="${id}">
@@ -272,14 +284,14 @@ $(document).ready(function() {
                         </td>
                     </tr>`;
             });
-            
+
             html += `
                     </tbody>
                 </table>`;
         } else {
             html = '<p class="text-muted p-2 m-2">No items selected</p>';
         }
-        
+
         $('#selectedItems').html(html);
     }
 
@@ -290,10 +302,10 @@ $(document).ready(function() {
     });
 
     $('#withdrawalForm').on('submit', function(e) {
-        e.preventDefault();
         if (selectedItems.size === 0) {
+            e.preventDefault();
             alert('Please select at least one item');
-            return;
+            return false;
         }
 
         let valid = true;
@@ -308,32 +320,13 @@ $(document).ready(function() {
         });
 
         if (!valid) {
+            e.preventDefault();
             alert('Please check the quantities entered');
-            return;
+            return false;
         }
 
-        if (confirm('Are you sure you want to process this withdrawal?')) {
-            const submitBtn = $(this).find('button[type="submit"]');
-            submitBtn.prop('disabled', true)
-                    .html('<i class="fas fa-spinner fa-spin"></i> Processing...');
-
-            $.ajax({
-                url: $(this).attr('action'),
-                method: 'POST',
-                data: $(this).serialize(),
-                success: function(response) {
-                    window.location.reload();
-                },
-                error: function(xhr) {
-                    submitBtn.prop('disabled', false).text('Submit Withdrawal');
-                    let errorMessage = 'An error occurred while processing the withdrawal';
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    }
-                    alert(errorMessage);
-                }
-            });
-        }
+        // Form will submit normally to review page
+        return true;
     });
 });
 </script>

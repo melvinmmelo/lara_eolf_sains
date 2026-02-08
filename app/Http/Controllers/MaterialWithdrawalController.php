@@ -13,6 +13,48 @@ class MaterialWithdrawalController extends Controller
         return view('material-withdrawals.index');
     }
 
+    public function list()
+    {
+        $withdrawals = MaterialItemsWithdrawals::with('materials')
+            ->orderBy('withdrawal_date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('material-withdrawals.list', compact('withdrawals'));
+    }
+
+    public function review(Request $request)
+    {
+        $request->validate([
+            'items' => 'required|array',
+            'items.*.id' => 'required|exists:materials_inventories,id',
+            'items.*.quantity' => 'required|numeric|min:1',
+            'items.*.name' => 'required|string',
+            'items.*.unit' => 'nullable|string',
+            'items.*.available' => 'required|numeric',
+            'requested_by' => 'required',
+            'issued_by' => 'required',
+            'withdrawal_date' => 'required|date',
+        ]);
+
+        $items = [];
+        foreach ($request->items as $id => $item) {
+            $items[$id] = [
+                'name' => $item['name'],
+                'quantity' => $item['quantity'],
+                'unit' => $item['unit'] ?? '',
+                'available' => $item['available'],
+            ];
+        }
+
+        return view('material-withdrawals.review', [
+            'items' => $items,
+            'requested_by' => $request->requested_by,
+            'issued_by' => $request->issued_by,
+            'withdrawal_date' => $request->withdrawal_date,
+        ]);
+    }
+
     public function search(Request $request)
     {
         $query = $request->get('query');
@@ -47,7 +89,7 @@ class MaterialWithdrawalController extends Controller
 
         foreach ($request->items as $item) {
             $material = MaterialsInventory::find($item['id']);
-            
+
             // Create a copy of the material for withdrawal
             $withdrawnMaterial = $material->replicate();
             $withdrawnMaterial->quantity = $item['quantity'];
@@ -61,11 +103,18 @@ class MaterialWithdrawalController extends Controller
             }
             $material->save();
 
-            activity('general-inventory')
+            // Log withdrawal activity with user information
+            activity()
+                ->causedBy(auth()->user())
                 ->performedOn($material)
-                ->log("Withdrawn {$item['quantity']} units of $material->name from inventory");
+                ->withProperties([
+                    'withdrawal_code' => $withdrawal_code,
+                    'withdrawn_quantity' => $item['quantity'],
+                    'remaining_quantity' => $material->quantity,
+                ])
+                ->log("Withdrawn {$item['quantity']} {$material->unit} from inventory");
         }
 
-        return back()->with('success', 'Items have been withdrawn successfully.');
+        return redirect()->route('material-withdrawals.list')->with('success', 'Items have been withdrawn successfully. Withdrawal Code: ' . $withdrawal_code);
     }
 }

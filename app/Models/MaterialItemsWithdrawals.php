@@ -13,5 +13,15 @@ class MaterialItemsWithdrawals extends Model
         'code',
         'requested_by',
         'issued_by',
+        'withdrawal_date',
     ];
+
+    protected $casts = [
+        'withdrawal_date' => 'date',
+    ];
+
+    public function materials()
+    {
+        return $this->hasMany(MaterialsInventory::class, 'withdrawal_id');
+    }
 }

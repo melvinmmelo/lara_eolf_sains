@@ -353,7 +353,9 @@ Route::middleware('auth')->group(function () {
 
     // Material Withdrawals
     Route::get('/material-withdrawals', [MaterialWithdrawalController::class, 'index'])->name('material-withdrawals.index');
+    Route::get('/material-withdrawals/list', [MaterialWithdrawalController::class, 'list'])->name('material-withdrawals.list');
     Route::get('/material-withdrawals/search', [MaterialWithdrawalController::class, 'search'])->name('material-withdrawals.search');
+    Route::post('/material-withdrawals/review', [MaterialWithdrawalController::class, 'review'])->name('material-withdrawals.review');
     Route::post('/material-withdrawals', [MaterialWithdrawalController::class, 'store'])->name('material-withdrawals.store');
 
     Route::get('/inventory/bad-orders', [InventoryBadOrderController::class, 'index'])->name('inventory.bad-orders');
