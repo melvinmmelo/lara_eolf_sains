@@ -160,7 +160,7 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label class="form-label" for="amount">Unit price</label>
-                                        <input type="number" class="form-control" name="amount" id="amount"
+                                        <input type="text" class="form-control" name="amount" id="amount"
                                             value="" required>
                                     </div>
                                 </div>
@@ -277,7 +277,7 @@
                 $('#e_amount').val(tr.find('td:eq(4)').text().replace(/[^0-9.-]+/g, ''));
                 $('#e_remarks').val(tr.find('td:eq(6)').text());
                 $('#e_location').val(tr.find('td:eq(7)').text());
-                
+
                 $('#modal-edit').modal('show');
             });
         });
