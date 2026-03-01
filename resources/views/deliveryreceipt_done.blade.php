@@ -75,6 +75,7 @@
                             $grandTotalAmtPaid = [];
                             $grandBOTotal = [];
                             $grandTotalAmtDue = [];
+                            $grandTotalBalance = [];
                             @endphp
                         @foreach ($deliveryReceipts as $receipt)
                             @php
@@ -82,7 +83,7 @@
                                     $grandBOTotal[] = $receipt->inbound->bo_amount;
                                     $grandTotalDiscount[] = $receipt->inbound->discount;
                                     $grandTotalAmtPaid[] = $receipt->inbound->delivered_amount;
-                                    $grandTotalBalance[] = $receipt->inbound->totalBalance;
+                                    $grandTotalBalance[] = $receipt->inbound->total_balance;
                             @endphp
                             <tr>
                                 <td>{{ $receipt->fCreatedAt }}</td>
@@ -92,7 +93,7 @@
                                 <td>{{ formatNumber($receipt->inbound->discount) }}</td>
                                 <td>{{ formatNumber($receipt->inbound->bo_amount) }}</td>
                                 <td>{{ formatNumber($receipt->inbound->delivered_amount) }}</td>
-                                <td>{{ formatNumber($receipt->inbound->totalBalance) }}</td>
+                                <td>{{ formatNumber($receipt->inbound->total_balance) }}</td>
                                 <td>{{ $receipt->generated_by }}</td>
                                 <td>
                                 @if ($receipt->inbound->status === 'Deleted' or $receipt->inbound->status === 'Cancelled')
