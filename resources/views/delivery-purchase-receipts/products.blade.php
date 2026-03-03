@@ -116,6 +116,13 @@
 
 
                         @if ($deliveryPurchaseReceipt->status == 'Encoding')
+                            @can('admin')
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-dpr">
+                                    <i class="fas fa-trash"></i> Delete DPR
+                                </button>
+                            </div>
+                            @endcan
                             <form action="{{ route('dpr-product.store') }}" method="POST">
                                 @csrf
                                 <div class="row">
@@ -166,6 +173,16 @@
                                         {{ $productSummary['code'] . ': ' . $productSummary['quantity'] }}</div>
                                 @endforeach
                             </div>
+                            @can('admin')
+                            <div class="mb-3 d-flex gap-2">
+                                <button type="button" class="btn btn-warning mr-2" data-toggle="modal" data-target="#modal-move-branch">
+                                    <i class="fas fa-exchange-alt"></i> Move to Another Branch
+                                </button>
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete-dpr">
+                                    <i class="fas fa-trash"></i> Delete DPR
+                                </button>
+                            </div>
+                            @endcan
                         @endif
                         <div class="row">
                             <div class="col-sm-12">
@@ -307,6 +324,99 @@
         <!-- /.modal -->
     </div>
     <!-- /.content -->
+
+    @can('admin')
+    <div class="modal fade" id="modal-move-branch">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Move DPR to Another Branch</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-warning"><strong>Note:</strong> This will reverse inventory on the current branch and apply it to the target branch.</p>
+
+                    <form action="{{ route('dpr.moveBranch', $deliveryPurchaseReceipt->id) }}" method="POST">
+                        @csrf
+
+                        <div class="form-group">
+                            <label for="target_branch_code">Target Branch <span class="text-danger">*</span></label>
+                            <select class="form-control" name="target_branch_code" id="target_branch_code" required>
+                                <option value="">-- Select Branch --</option>
+                                @foreach ($gbranches as $gbranch)
+                                    @if ($gbranch->code !== $deliveryPurchaseReceipt->branch_code)
+                                        <option value="{{ $gbranch->code }}">{{ $gbranch->code }} — {{ $gbranch->name }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="move_reason">Reason <span class="text-danger">*</span></label>
+                            <textarea class="form-control" name="reason" id="move_reason" rows="3" required placeholder="Enter reason for moving..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="move_password">Admin Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" name="password" id="move_password" required placeholder="Enter your password to confirm">
+                        </div>
+
+                        <div class="modal-footer px-0 pb-0">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-warning"><i class="fas fa-exchange-alt"></i> Move</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endcan
+
+    @can('admin')
+    <div class="modal fade" id="modal-delete-dpr">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete DPR</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-danger"><strong>Warning:</strong> This will permanently delete this DPR.
+                        @if ($deliveryPurchaseReceipt->status === 'Completed')
+                            Inventory stocks will be reversed.
+                        @endif
+                        This action cannot be undone.
+                    </p>
+
+                    <form action="{{ route('dpr.destroyDPR', $deliveryPurchaseReceipt->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+
+                        <div class="form-group">
+                            <label for="delete_reason">Reason <span class="text-danger">*</span></label>
+                            <textarea class="form-control" name="reason" id="delete_reason" rows="3" required placeholder="Enter reason for deleting..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="delete_password">Admin Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" name="password" id="delete_password" required placeholder="Enter your password to confirm">
+                        </div>
+
+                        <div class="modal-footer px-0 pb-0">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endcan
+
 @endsection
 
 @section('custom_js')

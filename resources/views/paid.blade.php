@@ -123,6 +123,11 @@
                         </tfoot>
                     </table>
                 </div>
+                <div class="mt-3">
+                    <div class="d-flex justify-content-center">
+                        {{ $inbounds->links('pagination::bootstrap-4') }}
+                    </div>
+                </div>
             </div>
             <!-- /.card-body -->
             <div class="card-footer">

@@ -130,6 +130,9 @@ class InboundController extends Controller
         $products = NewInboundProduct::where("inbound_id", $inboundId)->where('branch_code', session('branch_code'))->whereNull('status')->get();
         if($inboundId != 0){
             $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where("code", $pcode)->where('branch_code', session('branch_code'))->whereNull('status')->first();
+            if (!$newInboundProduct) {
+                return back()->with('error', 'Product not found.');
+            }
             $newInboundProduct->status = "Deleted";
             $newInboundProduct->save();
 
@@ -929,7 +932,12 @@ class InboundController extends Controller
 
     public function paidOrders()
     {
-        $inbounds = Inbound::with('driver', 'vehicle')->branch(session('branch_code'))->paidOrders()->get();
+        $inbounds = Inbound::with('driver', 'vehicle')
+            ->branch(session('branch_code'))
+            ->paidOrders()
+            ->orderBy('created_at', 'desc')
+            ->paginate(50)
+            ->withQueryString();
         return view('paid', compact('inbounds'));
     }
 

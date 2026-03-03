@@ -152,9 +152,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dpr-save/{id}', [DeliveryPurchaseReceiptController::class, 'saveAndInventoryProduct'])->name('dpr.save');
 
+    Route::post('/delivery-purchase-receipts/{dprId}/move-branch', [DeliveryPurchaseReceiptController::class, 'moveToBranch'])->middleware('can:admin')->name('dpr.moveBranch');
+
     Route::get('/dpr-delete/{drid}/{pcode}', [DeliveryPurchaseReceiptController::class, 'delete'])->name('dpr.delete');
 
     Route::post('/dpr-hold', [DeliveryPurchaseReceiptController::class, 'holdProduct'])->name('dpr.holdProduct');
+
+    Route::delete('/dpr/{dprId}/destroy', [DeliveryPurchaseReceiptController::class, 'destroyDPR'])->middleware('can:admin')->name('dpr.destroyDPR');
 
     // Stock Reconciliation Tool Routes
     Route::prefix('stock-reconciliation')->name('stock-reconciliation.')->middleware(['auth'])->group(function () {

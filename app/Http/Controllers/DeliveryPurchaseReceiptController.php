@@ -12,6 +12,7 @@ use App\Models\ProductType;
 use App\Services\DPRService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DeliveryPurchaseReceiptController extends Controller
 {
@@ -36,6 +37,92 @@ class DeliveryPurchaseReceiptController extends Controller
 
 
         return redirect()->route('delivery-purchase-receipts.index')->with('success', 'Delivery Receipt saved successfully.');
+    }
+
+    public function moveToBranch(Request $request, int $dprId)
+    {
+        $request->validate([
+            'target_branch_code' => 'required|exists:branches,code',
+            'password'           => 'required',
+            'reason'             => 'required|max:500',
+        ]);
+
+        if (!Hash::check($request->password, auth()->user()->password)) {
+            return redirect()->back()->withErrors('Incorrect password. Operation aborted.');
+        }
+
+        $dpr = DeliveryPurchaseReceipt::findOrFail($dprId);
+
+        if ($dpr->status !== 'Completed') {
+            return redirect()->back()->withErrors('Only completed DPRs can be moved to another branch.');
+        }
+
+        $sourceBranch = $dpr->branch_code;
+        $targetBranch = $request->target_branch_code;
+
+        if ($sourceBranch === $targetBranch) {
+            return redirect()->back()->withErrors('Target branch must be different from the current branch.');
+        }
+
+        $products = json_decode($dpr->products, true);
+
+        if (!$products) {
+            return redirect()->back()->withErrors('No products found in this DPR.');
+        }
+
+        DB::transaction(function () use ($dpr, $products, $sourceBranch, $targetBranch, $request) {
+            foreach ($products as $product) {
+                $qty     = max(0, ($product['quantity'] ?? 0) - ($product['hold'] ?? 0));
+                $holdQty = $product['hold'] ?? 0;
+
+                // Reverse stocks on source branch
+                $sourceItem = ItemMasterData::branch($sourceBranch)
+                    ->productCode($product['code'])
+                    ->first();
+
+                if ($sourceItem) {
+                    $sourceItem->stocks        -= $qty;
+                    $sourceItem->hold_quantity -= $holdQty;
+                    $sourceItem->save();
+                }
+
+                // Apply stocks on target branch
+                $targetItem = ItemMasterData::branch($targetBranch)
+                    ->productCode($product['code'])
+                    ->first();
+
+                if (!$targetItem) {
+                    $targetItem                      = new ItemMasterData();
+                    $targetItem->branch_code         = $targetBranch;
+                    $targetItem->product_code        = $product['code'];
+                    $targetItem->product_description = $product['description'];
+                    $targetItem->stocks              = $qty;
+                    $targetItem->hold_quantity       = $holdQty;
+                    $targetItem->unit                = $product['unit'];
+                    $targetItem->save();
+                } else {
+                    $targetItem->stocks        += $qty;
+                    $targetItem->hold_quantity += $holdQty;
+                    $targetItem->save();
+                }
+            }
+
+            $dpr->branch_code = $targetBranch;
+            $dpr->save();
+
+            activity()
+                ->performedOn($dpr)
+                ->withProperties([
+                    'moved_by'    => auth()->user()->fullName,
+                    'from_branch' => $sourceBranch,
+                    'to_branch'   => $targetBranch,
+                    'reason'      => $request->reason,
+                ])
+                ->log("DPR {$dpr->dr_no} moved from {$sourceBranch} to {$targetBranch} by " . auth()->user()->fullName . ". Reason: {$request->reason}");
+        });
+
+        return redirect()->route('delivery-purchase-receipts.index')
+            ->with('success', "DPR {$dpr->dr_no} has been moved to {$targetBranch} successfully.");
     }
 
     public function storeProduct(Request $request)
@@ -360,6 +447,67 @@ class DeliveryPurchaseReceiptController extends Controller
             ->log("$dpr->dr_no deleted by " . auth()->user()->fullName);
 
         return redirect()->back()->with('success', 'Item deleted successfully.');
+    }
+
+    public function destroyDPR(Request $request, int $dprId)
+    {
+        $request->validate([
+            'password' => 'required',
+            'reason'   => 'required|max:500',
+        ]);
+
+        if (!Hash::check($request->password, auth()->user()->password)) {
+            return redirect()->back()->withErrors('Incorrect password. Operation aborted.');
+        }
+
+        $dpr = DeliveryPurchaseReceipt::findOrFail($dprId);
+
+        if (!in_array($dpr->status, ['Encoding', 'Completed'])) {
+            return redirect()->back()->withErrors('This DPR cannot be deleted.');
+        }
+
+        if ($dpr->status === 'Completed') {
+            $products = json_decode($dpr->products, true);
+
+            DB::transaction(function () use ($dpr, $products, $request) {
+                foreach ($products ?? [] as $product) {
+                    $qty     = max(0, ($product['quantity'] ?? 0) - ($product['hold'] ?? 0));
+                    $holdQty = $product['hold'] ?? 0;
+
+                    $item = ItemMasterData::branch($dpr->branch_code)
+                        ->productCode($product['code'])
+                        ->first();
+
+                    if ($item) {
+                        $item->stocks        -= $qty;
+                        $item->hold_quantity -= $holdQty;
+                        $item->save();
+                    }
+                }
+
+                activity()
+                    ->performedOn($dpr)
+                    ->withProperties([
+                        'deleted_by' => auth()->user()->fullName,
+                        'reason'     => $request->reason,
+                    ])
+                    ->log("DPR {$dpr->dr_no} deleted by " . auth()->user()->fullName . ". Stock reversed. Reason: {$request->reason}");
+
+                $dpr->delete();
+            });
+        } else {
+            activity()
+                ->performedOn($dpr)
+                ->withProperties([
+                    'deleted_by' => auth()->user()->fullName,
+                    'reason'     => $request->reason,
+                ])
+                ->log("DPR {$dpr->dr_no} deleted by " . auth()->user()->fullName . ". Reason: {$request->reason}");
+
+            $dpr->delete();
+        }
+
+        return redirect()->route('delivery-purchase-receipts.index')->with('success', 'DPR deleted successfully.');
     }
 
     public function holdProduct(Request $request)
