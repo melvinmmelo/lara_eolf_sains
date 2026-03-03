@@ -27,7 +27,7 @@ jobs:
         ssh ${{ secrets.SSH_USER }}@${{ secrets.HOST }} "cd ${{ secrets.DEPLOY_PATH }} && \
         git pull origin main && \
         composer install --no-dev --optimize-autoloader && \
-        php artisan migrate && \
+        php artisan migrate --force && \
         php artisan optimize:clear && \
         php artisan config:cache && \
         php artisan route:cache && \
