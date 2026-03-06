@@ -380,6 +380,10 @@ class InboundController extends Controller
             $inbound->status = 'Paid';
         }
 
+        $inbound->order_date = $request->order_date;
+
+        $inbound->save();
+
         if ($bad_order == 1) {
 
             $badOrder = NewBadOrder::find($request->bad_order_id);
@@ -395,12 +399,10 @@ class InboundController extends Controller
                 if($inbound->bo_amount == $inbound->grandTotal){
                     $inbound->status = 'Paid';
                 }
+
+                $inbound->save();
             }
         }
-
-        $inbound->order_date = $request->order_date;
-
-        $inbound->save();
 
         $updatingData = [];
 
@@ -761,7 +763,7 @@ class InboundController extends Controller
         $inbound = Inbound::findOrFail($request->inbound_id);
 
         $products = NewInboundProduct::where('inbound_id', $request->inbound_id)->get();
-        $customer = Customers::find($request->customer_id);
+        $customer = Customers::findOrFail($request->customer_id);
 
         $inbound->fill([
             'equipment_id' => $equipStore->equipment->id,
