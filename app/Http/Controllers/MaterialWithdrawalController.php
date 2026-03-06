@@ -55,6 +55,12 @@ class MaterialWithdrawalController extends Controller
         ]);
     }
 
+    public function print($id)
+    {
+        $withdrawal = MaterialItemsWithdrawals::with('materials')->findOrFail($id);
+        return view('material-withdrawals.print', compact('withdrawal'));
+    }
+
     public function search(Request $request)
     {
         $query = $request->get('query');

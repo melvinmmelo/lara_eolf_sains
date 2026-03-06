@@ -103,6 +103,52 @@ class MaterialsInventoryController extends Controller
         return back()->with('success', 'Selected items have been deleted.');
     }
 
+    public function receive()
+    {
+        $materials = MaterialsInventory::branch(session('branch_code'))->activeItems()->get();
+        return view('materials-inventory.receive', compact('materials'));
+    }
+
+    public function bulkReceive(Request $request)
+    {
+        $request->validate([
+            'existing'             => 'nullable|array',
+            'existing.*.id'        => 'required|exists:materials_inventories,id',
+            'existing.*.add_qty'   => 'required|numeric|min:0',
+            'new'                  => 'nullable|array',
+            'new.*.name'           => 'required|string',
+            'new.*.unit'           => 'nullable|string',
+            'new.*.quantity'       => 'required|numeric|min:1',
+            'new.*.amount'         => 'required|numeric|min:0',
+        ]);
+
+        $modifiedBy = auth()->user()->fullName;
+
+        // Update existing materials
+        foreach ($request->input('existing', []) as $item) {
+            if ($item['add_qty'] > 0) {
+                $material = MaterialsInventory::find($item['id']);
+                $material->quantity += $item['add_qty'];
+                $material->modified_by = $modifiedBy;
+                $material->save();
+            }
+        }
+
+        // Create new materials
+        foreach ($request->input('new', []) as $item) {
+            MaterialsInventory::create([
+                'branch_code' => session('branch_code'),
+                'name'        => $item['name'],
+                'unit'        => $item['unit'] ?? null,
+                'quantity'    => $item['quantity'],
+                'amount'      => $item['amount'],
+                'modified_by' => $modifiedBy,
+            ]);
+        }
+
+        return redirect()->route('materialsInventory.index')->with('success', 'Delivery received and inventory updated.');
+    }
+
     public function withdraw(Request $request)
     {
         $request->validate([

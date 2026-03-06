@@ -79,6 +79,12 @@
                                             title="View Details">
                                         <i class="fas fa-eye"></i> View
                                     </button>
+                                    <a href="{{ route('material-withdrawals.print', $withdrawal->id) }}"
+                                       target="_blank"
+                                       class="btn btn-sm btn-secondary"
+                                       title="Reprint">
+                                        <i class="fas fa-print"></i> Reprint
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach

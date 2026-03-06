@@ -43,6 +43,11 @@
                                 <a href="{{ route('material-withdrawals.index') }}" class="btn btn-warning">
                                     Material Withdrawal
                                 </a>
+                                @can('admin')
+                                <a href="{{ route('materialsInventory.receive') }}" class="btn btn-success">
+                                    <i class="fas fa-truck"></i> Receive Delivery
+                                </a>
+                                @endcan
                             </div>
                             <div class="table-responsive">
                                 <table id="example1" class="table table-bordered table-striped">

@@ -340,6 +340,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/materials-inventory', [MaterialsInventoryController::class, 'update'])->name('materialsInventory.update');
     Route::delete('/materials-inventory', [MaterialsInventoryController::class, 'destroy'])->name('materialsInventory.destroy');
     Route::get('/materials-inventory/{id}/history', [MaterialsInventoryController::class, 'history'])->name('materialsInventory.history');
+    Route::get('/materials-inventory/receive', [MaterialsInventoryController::class, 'receive'])->name('materialsInventory.receive');
+    Route::post('/materials-inventory/bulk-receive', [MaterialsInventoryController::class, 'bulkReceive'])->name('materialsInventory.bulkReceive');
 
     Route::post('/orders/update-status', [InboundController::class, 'updateStatus'])->name('order.updateStatus');
 
@@ -360,6 +362,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/material-withdrawals/list', [MaterialWithdrawalController::class, 'list'])->name('material-withdrawals.list');
     Route::get('/material-withdrawals/search', [MaterialWithdrawalController::class, 'search'])->name('material-withdrawals.search');
     Route::post('/material-withdrawals/review', [MaterialWithdrawalController::class, 'review'])->name('material-withdrawals.review');
+    Route::get('/material-withdrawals/{id}/print', [MaterialWithdrawalController::class, 'print'])->name('material-withdrawals.print');
     Route::post('/material-withdrawals', [MaterialWithdrawalController::class, 'store'])->name('material-withdrawals.store');
 
     Route::get('/inventory/bad-orders', [InventoryBadOrderController::class, 'index'])->name('inventory.bad-orders');
