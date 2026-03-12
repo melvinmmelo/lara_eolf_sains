@@ -205,8 +205,8 @@
                                             <option value="EFL-6005">EFL-6005</option>
                                             <option value="Others">Others</option>
                                         </select>
-                                    </div>
-                                </div>
+                                        <input type="text" class="form-control mt-2" id="other_model" name="other_model" placeholder="Please specify other model" style="display: none;">
+                                        </div>                                </div>
                             </div>
                             <div class="form-group">
                                 <div class="row mb-2">
@@ -333,8 +333,8 @@
                                         <option value="EFL-6005">EFL-6005</option>
                                         <option value="Others">Others</option>
                                     </select>
-                                </div>
-                            </div>
+                                    <input type="text" class="form-control mt-2" id="e_other_model" name="e_other_model" placeholder="Please specify other model" style="display: none;">
+                                    </div>                            </div>
                         </div>
 
                         <div class="form-group">
@@ -421,6 +421,26 @@
                     input.removeClass('is-invalid');
                 }
             });
+
+            $('#model').on('change', function() {
+                if ($(this).val() === 'Others') {
+                    $('#other_model').show();
+                    $('#other_model').prop('required', true);
+                } else {
+                    $('#other_model').hide();
+                    $('#other_model').prop('required', false);
+                }
+            });
+
+            $('#e_model').on('change', function() {
+                if ($(this).val() === 'Others') {
+                    $('#e_other_model').show();
+                    $('#e_other_model').prop('required', true);
+                } else {
+                    $('#e_other_model').hide();
+                    $('#e_other_model').prop('required', false);
+                }
+            });
         });
 
         function setToUpdateEquipment(id, ownership, type, brand, price, serial_no, model, code, date_delivered,
@@ -431,7 +451,19 @@
             document.getElementById("edit-brand").value = brand;
             document.getElementById("edit-price").value = price;
             document.getElementById("edit-serial_no").value = serial_no;
-            document.getElementById("e_model").value = model;
+
+            var e_model_select = document.getElementById("e_model");
+            var e_other_model_input = document.getElementById("e_other_model");
+            var isOption = Array.from(e_model_select.options).some(option => option.value === model);
+
+            if (isOption) {
+                e_model_select.value = model;
+                $(e_other_model_input).hide().prop('required', false);
+            } else {
+                e_model_select.value = 'Others';
+                e_other_model_input.value = model;
+                $(e_other_model_input).show().prop('required', true);
+            }
 
             document.getElementById("edit-code").value = code;
             document.getElementById("edit-date_delivered").value = date_delivered;

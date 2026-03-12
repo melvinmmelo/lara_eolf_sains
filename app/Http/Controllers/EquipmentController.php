@@ -56,6 +56,14 @@ class EquipmentController extends Controller
             'date_purchased' => 'nullable|date',
         ]);
 
+        $modelValue = $request->input('model');
+        if ($modelValue === 'Others') {
+            $request->validate([
+                'other_model' => 'required|string|max:255',
+            ]);
+            $modelValue = $request->input('other_model');
+        }
+
         // Create a new equipment instance
         $equipment = new Equipment();
         $equipment->branch_code = $request->branch_code;
@@ -64,7 +72,7 @@ class EquipmentController extends Controller
         $equipment->brand = $request->brand;
         $equipment->price = $request->price;
         $equipment->serial_no = $request->serial_no;
-        $equipment->model = $request->model;
+        $equipment->model = $modelValue;
         $equipment->code = $request->code;
         $equipment->distributor = $request->distributor;
         $equipment->date_delivered = $request->date_delivered;
@@ -100,13 +108,21 @@ class EquipmentController extends Controller
             'date_purchased' => 'nullable|date',
         ]);
 
+        $modelValue = $request->input('e_model');
+        if ($modelValue === 'Others') {
+            $request->validate([
+                'e_other_model' => 'required|string|max:255',
+            ]);
+            $modelValue = $request->input('e_other_model');
+        }
+
         $equipment->update([
             'ownership' => $request->ownership,
             'type' => $request->type,
             'brand' => $request->brand,
             'price' => $request->price,
             'serial_no' => $request->serial_no,
-            'model' => $request->e_model,
+            'model' => $modelValue,
             'code' => $request->code,
             'distributor' => $request->distributor,
             'date_delivered' => $request->date_delivered,
