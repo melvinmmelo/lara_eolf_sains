@@ -231,7 +231,7 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label class="form-label" for="e_amount">Amount</label>
-                                        <input type="number" class="form-control" name="e_amount" id="e_amount"
+                                        <input type="text" class="form-control" name="e_amount" id="e_amount"
                                             value="" required>
                                     </div>
                                 </div>

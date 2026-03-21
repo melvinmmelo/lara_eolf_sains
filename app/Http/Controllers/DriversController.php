@@ -51,11 +51,11 @@ class DriversController extends Controller
             'designation' => 'required',
         ]);
 
-        $status = 'NOT AVAILABLE';
+        $status = 'Inactive';
 
          // Check if the request data is 'on'
          if ($request->status === 'on') {
-             $status = 'AVAILABLE';
+             $status = 'Active';
          }
 
         Drivers::create([
