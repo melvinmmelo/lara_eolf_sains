@@ -212,6 +212,69 @@
                                                 </table>
                                             @endif
 
+                                            <table class="table table-bordered table-striped mt-3">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="2">Payment Summary</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Status</td>
+                                                        <td>{{ $inbound->status }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Total Paid</td>
+                                                        <td>{{ formatNumber($inbound->ledger_delivered_amount) }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Balance</td>
+                                                        <td>{{ formatNumber($inbound->totalBalance) }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Latest Method</td>
+                                                        <td>{{ $inbound->payment_type ?: '-' }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Latest Ref. No.</td>
+                                                        <td>{{ $inbound->ref_no ?: '-' }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <table class="table table-bordered table-striped mt-3">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="4">Payment Ledger</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Method</th>
+                                                        <th>Ref No.</th>
+                                                        <th>Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @forelse($inbound->payments as $payment)
+                                                        <tr>
+                                                            <td>{{ optional($payment->payment_date)->format('Y-m-d') }}</td>
+                                                            <td>{{ $payment->payment_method ?: '-' }}</td>
+                                                            <td>{{ $payment->reference_no ?: '-' }}</td>
+                                                            <td>{{ formatNumber($payment->amount) }}</td>
+                                                        </tr>
+                                                        @if($payment->remarks)
+                                                            <tr>
+                                                                <td colspan="4"><strong>Remarks:</strong> {{ $payment->remarks }}</td>
+                                                            </tr>
+                                                        @endif
+                                                    @empty
+                                                        <tr>
+                                                            <td colspan="4" class="text-center">No payment entries yet.</td>
+                                                        </tr>
+                                                    @endforelse
+                                                </tbody>
+                                            </table>
+
                                         </div>
                                     </div>
                                 </div>

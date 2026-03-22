@@ -26,17 +26,27 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="ref_no"><i style="color:red">*</i>Reference No.</label>
-                        <input type="text" class="form-control" name="ref_no" id="ref_no" value="" required>
+                        <label class="form-label" for="payment_date"><i style="color:red">*</i>Payment Date</label>
+                        <input type="date" class="form-control" name="payment_date" id="payment_date" value="{{ now()->format('Y-m-d') }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="ref_no">Reference No.</label>
+                        <input type="text" class="form-control" name="ref_no" id="ref_no" value="">
                     </div>
 
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-12">
                                 <label class="form-label" for="delivered_amount"><i style="color:red">*</i>Amount</label>
-                                <input type="text" class="form-control" name="delivered_amount" id="delivered_amount" required>
+                                <input type="number" step="0.01" min="0.01" class="form-control" name="delivered_amount" id="delivered_amount" required>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="remarks">Remarks</label>
+                        <textarea class="form-control" name="remarks" id="remarks" rows="2" placeholder="Optional notes"></textarea>
                     </div>
 
                     {{-- <div class="form-group">

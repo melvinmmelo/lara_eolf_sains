@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Inbound extends Model
 {
@@ -52,6 +53,8 @@ class Inbound extends Model
 
     protected $appends = ['f_created_at', 'f_updated_at', 'code'];
 
+    protected ?float $ledgerDeliveredAmount = null;
+
     protected $casts = [
         'order_date' => 'datetime',
         'is_with_sf' => 'boolean',
@@ -66,8 +69,7 @@ class Inbound extends Model
     public static function getNextOrderNo($branchCode)
     {
         $lastOrder = self::where('branch_code', $branchCode)
-            ->orderBy('order_no', 'desc')
-            ->count();
+            ->max('order_no');
 
         return $lastOrder ? $lastOrder + 1 : 1;
     }
@@ -105,6 +107,16 @@ class Inbound extends Model
     public function deliveryReceipt(): BelongsTo
     {
         return $this->belongsTo(DeliveryReceipt::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(InboundPayment::class)->orderBy('payment_date')->orderBy('id');
+    }
+
+    public function latestPayment(): HasMany
+    {
+        return $this->hasMany(InboundPayment::class)->orderByDesc('payment_date')->orderByDesc('id');
     }
 
     public function getfCreatedAtAttribute()
@@ -209,13 +221,45 @@ class Inbound extends Model
         return $this->grandTotal;
     }
 
+    public function getLedgerDeliveredAmountAttribute(): float
+    {
+        if ($this->ledgerDeliveredAmount !== null) {
+            return $this->ledgerDeliveredAmount;
+        }
+
+        if ($this->relationLoaded('payments')) {
+            return $this->ledgerDeliveredAmount = (float) $this->payments->sum('amount');
+        }
+
+        return $this->ledgerDeliveredAmount = (float) ($this->payments()->sum('amount') ?? ($this->delivered_amount ?? 0));
+    }
+
+    public function syncPaymentAggregates(): void
+    {
+        $totalPaid = round($this->payments()->sum('amount'), 2);
+        $latestPayment = $this->payments()->latest('payment_date')->latest('id')->first();
+        $netAmount = round($this->totalAmount, 2);
+
+        $this->delivered_amount = $totalPaid;
+        $this->payment_type = $latestPayment?->payment_method;
+        $this->ref_no = $latestPayment?->reference_no;
+
+        if ($this->is_foc) {
+            $this->status = 'Paid';
+        } elseif ($totalPaid > 0 && $totalPaid >= $netAmount) {
+            $this->status = 'Paid';
+        } elseif (in_array($this->status, ['Paid', 'Unpaid'])) {
+            $this->status = 'Completed';
+        }
+
+        $this->save();
+        $this->ledgerDeliveredAmount = $totalPaid;
+    }
+
     public function getTotalBalanceAttribute()
     {
-        // Ensure total amount is calculated first to set netAmount
         $this->getGrandTotalAttribute();
-
-        // Use delivered_amount from database, defaulting to 0 if null
-        $deliveredAmount = $this->delivered_amount ?? 0;
+        $deliveredAmount = $this->ledger_delivered_amount;
 
         return $this->balance = $this->netAmount - $deliveredAmount;
     }

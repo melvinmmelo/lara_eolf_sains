@@ -82,12 +82,10 @@
                                 @if($paymentType === 'Cheque')
                                     <th class="text-left py-2 px-2 font-bold">{{ strtoupper($paymentTypeLabels[$paymentType] ?? $paymentType) }}</th>
                                     <th class="text-left py-2 px-2 font-bold">Reference No.</th>
-                                    <th class="text-right py-2 px-2 font-bold">AMOUNT</th>
-                                    <th class="text-right py-2 px-2 font-bold">BALANCE</th>
+                                    <th class="text-right py-2 px-2 font-bold" colspan="2">AMOUNT</th>
                                 @else
                                     <th class="text-left py-2 px-2 font-bold" colspan="2">{{ strtoupper($paymentTypeLabels[$paymentType] ?? $paymentType) }}</th>
-                                    <th class="text-right py-2 px-2 font-bold">AMOUNT</th>
-                                    <th class="text-right py-2 px-2 font-bold">BALANCE</th>
+                                    <th class="text-right py-2 px-2 font-bold" colspan="2">AMOUNT</th>
                                 @endif
                             </tr>
                         </thead>
@@ -97,12 +95,10 @@
                                 @if($paymentType === 'Cheque')
                                     <td class="py-1 px-2">{{ $customer['customer_name'] }}</td>
                                     <td class="text-left py-1 px-2">{{ $customer['ref_no'] }}</td>
-                                    <td class="text-right py-1 px-2">{{ number_format($customer['total_sales'], 2) }}</td>
-                                    <td class="text-right py-1 px-2">{{ number_format($customer['balance'], 2) }}</td>
+                                    <td class="text-right py-1 px-2" colspan="2">{{ number_format($customer['total_sales'], 2) }}</td>
                                 @else
                                     <td class="py-1 px-2" colspan="2">{{ $customer['customer_name'] }}</td>
-                                    <td class="text-right py-1 px-2">{{ number_format($customer['total_sales'], 2) }}</td>
-                                    <td class="text-right py-1 px-2">{{ number_format($customer['balance'], 2) }}</td>
+                                    <td class="text-right py-1 px-2" colspan="2">{{ number_format($customer['total_sales'], 2) }}</td>
                                 @endif
                             </tr>
                             @endforeach
@@ -110,12 +106,10 @@
                                 @if($paymentType === 'Cheque')
                                     <td class="py-1 px-2 font-bold">Total</td>
                                     <td class="text-center py-1 px-2"></td>
-                                    <td class="text-right py-1 px-2 font-bold">{{ number_format($group['total_sales'], 2) }}</td>
-                                    <td class="text-right py-1 px-2 font-bold">{{ number_format($group['total_balance'], 2) }}</td>
+                                    <td class="text-right py-1 px-2 font-bold" colspan="2">{{ number_format($group['total_sales'], 2) }}</td>
                                 @else
                                     <td class="py-1 px-2 font-bold" colspan="2">Total</td>
-                                    <td class="text-right py-1 px-2 font-bold">{{ number_format($group['total_sales'], 2) }}</td>
-                                    <td class="text-right py-1 px-2 font-bold">{{ number_format($group['total_balance'], 2) }}</td>
+                                    <td class="text-right py-1 px-2 font-bold" colspan="2">{{ number_format($group['total_sales'], 2) }}</td>
                                 @endif
                             </tr>
                         </tbody>
@@ -125,6 +119,31 @@
                         @endif
                     @endif
                 @endforeach
+
+                @if($sales_data->count() > 0)
+                    <tbody><tr><td colspan="4" class="py-2"></td></tr></tbody>
+                    <thead>
+                        <tr>
+                            <th class="text-left py-2 px-2 font-bold" colspan="2">CUSTOMER BALANCES</th>
+                            <th class="text-right py-2 px-2 font-bold">PAYMENTS</th>
+                            <th class="text-right py-2 px-2 font-bold">BALANCE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($sales_data as $customer)
+                        <tr>
+                            <td class="py-1 px-2" colspan="2">{{ $customer['customer_name'] }}</td>
+                            <td class="text-right py-1 px-2">{{ number_format($customer['total_sales'], 2) }}</td>
+                            <td class="text-right py-1 px-2">{{ number_format($customer['balance'], 2) }}</td>
+                        </tr>
+                        @endforeach
+                        <tr>
+                            <td class="py-1 px-2 font-bold" colspan="2">Total</td>
+                            <td class="text-right py-1 px-2 font-bold">{{ number_format($sales_data->sum('total_sales'), 2) }}</td>
+                            <td class="text-right py-1 px-2 font-bold">{{ number_format($total_balance, 2) }}</td>
+                        </tr>
+                    </tbody>
+                @endif
 
                 @if($foc_customers->count() > 0)
                     <tbody><tr><td colspan="4" class="py-2"></td></tr></tbody>

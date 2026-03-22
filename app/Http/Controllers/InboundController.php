@@ -11,6 +11,7 @@ use App\Models\Drivers;
 use App\Models\Equipment;
 use App\Models\EquipmentStore;
 use App\Models\ItemMasterData;
+use App\Models\InboundPayment;
 use App\Models\NewBadOrder;
 use App\Models\pricelevels;
 use App\Models\prices;
@@ -80,48 +81,72 @@ class InboundController extends Controller
     {
         $request->validate([
             'ob_id' => 'required|exists:inbounds,id',
-            'payment_type' => 'required',
-            'ref_no' => 'required|max:30',
-            'delivered_amount' => 'numeric|required',
+            'payment_type' => 'required|max:50',
+            'ref_no' => 'nullable|max:191',
+            'delivered_amount' => 'numeric|required|min:0.01',
+            'payment_date' => 'required|date',
+            'remarks' => 'nullable|max:1000',
             'status' => 'nullable',
         ]);
 
-        $inbound = Inbound::findOrFail($request->ob_id);
+        $paymentAmount = round((float) $request->delivered_amount, 2);
 
-        // Check if order slip fields have values
-        if (empty($inbound->order_slip_code) || empty($inbound->order_slip_sno)) {
-            return redirect()->route('order.index')->withErrors('Payment cannot be added. Order slip must be generated first.');
+        try {
+            $inbound = DB::transaction(function () use ($request, $paymentAmount) {
+                $inbound = Inbound::where('id', $request->ob_id)
+                    ->where('branch_code', session('branch_code'))
+                    ->lockForUpdate()
+                    ->firstOrFail();
+
+                if (empty($inbound->order_slip_code) || empty($inbound->order_slip_sno)) {
+                    throw new \RuntimeException('Payment cannot be added. Order slip must be generated first.');
+                }
+
+                $currentPaid = round((float) $inbound->payments()->sum('amount'), 2);
+                $totalDelivered = round($currentPaid + $paymentAmount, 2);
+                $total = round($inbound->totalAmount, 2);
+
+                if ($totalDelivered > $total) {
+                    throw new \RuntimeException('Delivered amount is greater than the net amount. ' . number_format($totalDelivered, 2) . ' > ' . number_format($total, 2));
+                }
+
+                InboundPayment::create([
+                    'inbound_id' => $inbound->id,
+                    'branch_code' => $inbound->branch_code,
+                    'customer_id' => $inbound->customer_id,
+                    'store_id' => $inbound->store_id,
+                    'payment_date' => $request->payment_date,
+                    'amount' => $paymentAmount,
+                    'payment_method' => $request->payment_type,
+                    'reference_no' => $request->ref_no,
+                    'remarks' => $request->remarks,
+                    'created_by' => auth()->id(),
+                    'updated_by' => auth()->id(),
+                ]);
+
+                $inbound->syncPaymentAggregates();
+
+                return $inbound;
+            });
+
+            $changes = [
+                'payment_type' => $request->payment_type,
+                'ref_no' => $request->ref_no,
+                'delivered_amount' => $request->delivered_amount,
+                'payment_date' => $request->payment_date,
+                'remarks' => $request->remarks,
+                'status' => $request->status,
+            ];
+
+            activity('outbound')
+                ->performedOn($inbound->fresh())
+                ->withProperties($changes)
+                ->log("Payment added to outbound $inbound->id amounting $request->delivered_amount by " . auth()->user()->fullName);
+
+            return redirect()->route('order.index')->with('success', 'Payment has been added.');
+        } catch (\RuntimeException $e) {
+            return redirect()->route('order.index')->withErrors($e->getMessage());
         }
-
-        // Use totalAmount (net amount after deductions) instead of grandTotal
-        $total = $inbound->grandTotal;
-
-        $totalDelivered = $inbound->delivered_amount + $request->delivered_amount;
-
-        if ($inbound->totalBalance == $request->delivered_amount) {
-            $inbound->status = "Paid";
-        }
-
-        // Round to 2 decimal places to avoid floating-point precision errors
-        if (round($totalDelivered, 2) > round($total, 2)) {
-            return redirect()->route('order.index')->withErrors('Delivered amount is greater than the net amount. ' . number_format($totalDelivered, 2) . ' > ' . number_format($total, 2));
-        }
-
-
-        $inbound->payment_type = $request->payment_type;
-        $inbound->ref_no = $request->ref_no;
-        $inbound->delivered_amount = $totalDelivered;
-
-        $inbound->save();
-
-        $changes = ['payment_type' => $request->payment_type, 'ref_no' => $request->ref_no, 'delivered_amount' => $request->delivered_amount, 'status' => $request->status];
-
-        activity('outbound')
-            ->performedOn($inbound)
-            ->withProperties($changes)
-            ->log("Payment added to outbound $inbound->id amounting $request->delivered_amount by " . auth()->user()->fullName);
-
-        return redirect()->route('order.index')->with('success', 'Payment has been added.');
     }
 
     public function deleteAInbound($pcode, $inboundId = 0)
@@ -180,7 +205,7 @@ class InboundController extends Controller
 
         $vehicles = Vehicles::active()->get();
 
-        $inbounds = Inbound::with('driver', 'vehicle')->branch(session('branch_code'))->activeOrders()->get();
+        $inbounds = Inbound::with('driver', 'vehicle', 'customer', 'payments')->branch(session('branch_code'))->activeOrders()->get();
 
         $equipment = EquipmentStore::all();
 
@@ -637,7 +662,7 @@ class InboundController extends Controller
             return back()->withErrors('This order is already delivered.');
         }
 
-        if ($inbound->balance === 0) {
+        if ($inbound->total_balance <= 0) {
             return back()->withErrors('This order is already paid.');
         }
 
@@ -705,7 +730,7 @@ class InboundController extends Controller
 
         session()->put('inboundId', $inboundId);
 
-        $inbound = Inbound::find($inboundId);
+        $inbound = Inbound::with('payments')->find($inboundId);
 
         $priceLevel = pricelevels::find($inbound->pricelevel_id);
 
@@ -934,7 +959,7 @@ class InboundController extends Controller
 
     public function paidOrders()
     {
-        $inbounds = Inbound::with('driver', 'vehicle')
+        $inbounds = Inbound::with('driver', 'vehicle', 'customer', 'payments')
             ->branch(session('branch_code'))
             ->paidOrders()
             ->orderBy('created_at', 'desc')

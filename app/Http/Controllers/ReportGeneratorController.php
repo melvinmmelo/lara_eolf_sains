@@ -437,100 +437,89 @@ class ReportGeneratorController extends Controller
         $status_filter = $request->input('status_filter', 'all');
 
         $sales_query = Inbound::whereBetween('order_date', [$date_from, $date_to])
-            ->where('branch_code', session('branch_code'));
+            ->where('branch_code', session('branch_code'))
+            ->with('payments');
 
-        // Apply status filter
         if ($status_filter === 'all') {
-            // All orders (Completed and Paid)
             $sales_query->whereIn('status', ['Completed', 'Paid']);
         } elseif ($status_filter === 'Free') {
-            // Free orders
             $sales_query->whereNotNull('is_foc');
         } else {
-            // Filter by specific status
             $sales_query->where('status', $status_filter);
-
-            // If status is not 'Cancelled' or 'Deleted', exclude FOC items
             if (!in_array($status_filter, ['Cancelled', 'Deleted'])) {
                 $sales_query->whereNull('is_foc');
             }
         }
 
-        // Get all inbounds that match the criteria
         $inbounds = $sales_query->get();
-
-        // Separate FOC (Free Orders) and regular orders
         $foc_inbounds = $inbounds->where('is_foc', 1);
         $regular_inbounds = $inbounds->where('is_foc', '!=', 1);
 
-        // Group regular orders by payment_type first, then by customer_name
-        $payment_groups = $regular_inbounds->groupBy('payment_type')
-            ->map(function ($paymentInbounds, $paymentType) {
-                $customers = $paymentInbounds->groupBy('customer_name')
-                    ->map(function ($customerInbounds) {
-                        return [
-                            'customer_name' => $customerInbounds->first()->degic_no . " - " . $customerInbounds->first()->customer_name,
-                            'total_sales' => $customerInbounds->sum(function ($inbound) {
-                                return $inbound->totalAmount;
-                            }),
-                            'balance' => $customerInbounds->sum(function ($inbound) {
-                                return $inbound->totalBalance;
-                            }),
-                            'ref_no' => $customerInbounds->first()->ref_no,
-                        ];
-                    })
-                    ->sortByDesc('total_sales')
-                    ->values();
+        $customerBalances = $regular_inbounds->groupBy('customer_name')->map(function ($customerInbounds) {
+            return [
+                'customer_name' => $customerInbounds->first()->degic_no . ' - ' . $customerInbounds->first()->customer_name,
+                'balance' => $customerInbounds->sum(fn($inbound) => $inbound->totalBalance),
+            ];
+        });
 
+        $paymentEntries = $regular_inbounds->flatMap(function ($inbound) {
+            return $inbound->payments->map(function ($payment) use ($inbound) {
                 return [
-                    'customers' => $customers,
-                    'total_sales' => $customers->sum('total_sales'),
-                    'total_balance' => $customers->sum('balance'),
+                    'payment_type' => $payment->payment_method ?: 'Unspecified',
+                    'customer_key' => $inbound->customer_name,
+                    'customer_name' => $inbound->degic_no . ' - ' . $inbound->customer_name,
+                    'amount' => (float) $payment->amount,
+                    'ref_no' => $payment->reference_no,
                 ];
             });
+        });
 
-        // Group FOC orders by customer_name
+        $payment_groups = $paymentEntries->groupBy('payment_type')->map(function ($entries) {
+            $customers = $entries->groupBy('customer_key')->map(function ($customerEntries) {
+                $refs = $customerEntries->pluck('ref_no')->filter()->unique()->values()->implode(', ');
+
+                return [
+                    'customer_name' => $customerEntries->first()['customer_name'],
+                    'total_sales' => $customerEntries->sum('amount'),
+                    'ref_no' => $refs,
+                ];
+            })->sortByDesc('total_sales')->values();
+
+            return [
+                'customers' => $customers,
+                'total_sales' => $customers->sum('total_sales'),
+            ];
+        });
+
         $foc_customers = $foc_inbounds->groupBy('customer_name')
             ->map(function ($customerInbounds) {
                 return [
-                    'customer_name' => $customerInbounds->first()->degic_no . " - " . $customerInbounds->first()->customer_name,
-                    'total_sales' => $customerInbounds->sum(function ($inbound) {
-                        return $inbound->totalAmount;
-                    }),
-                    'balance' => 0, // FOC orders typically have no balance
+                    'customer_name' => $customerInbounds->first()->degic_no . ' - ' . $customerInbounds->first()->customer_name,
+                    'total_sales' => $customerInbounds->sum(fn($inbound) => $inbound->totalAmount),
+                    'balance' => 0,
                 ];
             })
             ->sortByDesc('total_sales')
             ->values();
 
         $foc_total = $foc_customers->sum('total_sales');
-
-        // Calculate grand totals
         $total_sales = $payment_groups->sum('total_sales');
-        $total_balance = $payment_groups->sum('total_balance');
+        $total_balance = $customerBalances->sum('balance');
 
-        // Legacy sales_data for backward compatibility
-        $sales_data = $inbounds->groupBy('customer_name')
+        $sales_data = $regular_inbounds->groupBy('customer_name')
             ->map(function ($customerInbounds) {
                 return [
-                    'customer_name' =>  $customerInbounds->first()->degic_no . " - " . $customerInbounds->first()->customer_name,
-                    'total_sales' => $customerInbounds->sum(function ($inbound) {
-                        return $inbound->getGrandTotalAttribute();
-                    }),
-                    'balance' => $customerInbounds->sum(function ($inbound) {
-                        return $inbound->totalBalance;
-                    }),
+                    'customer_name' => $customerInbounds->first()->degic_no . ' - ' . $customerInbounds->first()->customer_name,
+                    'total_sales' => $customerInbounds->sum(fn($inbound) => $inbound->ledger_delivered_amount),
+                    'balance' => $customerInbounds->sum(fn($inbound) => $inbound->totalBalance),
                 ];
             })
             ->sortByDesc('total_sales')
             ->values();
 
-
-        // Format dates for the view
         $date_from = Carbon::parse($date_from)->format('m/d/Y');
         $date_to = Carbon::parse($date_to)->format('m/d/Y');
 
-        // Get status label for display
         $status_label = 'All Orders (Completed)';
         if ($status_filter === 'Free') {
             $status_label = 'Free Orders';
@@ -539,7 +528,7 @@ class ReportGeneratorController extends Controller
         }
 
         if ($status_filter === 'Completed') {
-            $status_label = 'Unpaid Orders';
+            $status_label = 'Unpaid / Partially Paid Orders';
         }
 
         return view('report.sales-report', compact('sales_data', 'payment_groups', 'foc_customers', 'foc_total', 'total_sales', 'total_balance', 'date_from', 'date_to', 'status_label'));
@@ -554,7 +543,7 @@ class ReportGeneratorController extends Controller
         // Get sales query with same filters as the report
         $sales_query = Inbound::whereBetween('order_date', [$date_from, $date_to])
             ->where('branch_code', session('branch_code'))
-            ->with(['customer', 'store', 'deliveryReceipt']);
+            ->with(['customer', 'store', 'deliveryReceipt', 'payments']);
 
         // Apply status filter (same logic as salesReportByCustomer)
         if ($status_filter === 'all') {
@@ -624,7 +613,7 @@ class ReportGeneratorController extends Controller
             if($inbound->is_foc) {
                 $amountCollected = 0;
             }else{
-                $amountCollected = ($vatInclusive - $taxWithheld) ?? 0;
+                $amountCollected = $inbound->ledger_delivered_amount;
             }
 
             // Remarks column (include delivery charge label when applicable)
@@ -632,6 +621,13 @@ class ReportGeneratorController extends Controller
             if ($inbound->is_with_sf) {
                 $deliveryChargeLabel = 'Freezer Delivery Charge';
                 $remarks = $remarks ? "{$remarks} | {$deliveryChargeLabel}" : $deliveryChargeLabel;
+            }
+
+            if ($inbound->payments->count() > 0) {
+                $paymentRefs = $inbound->payments
+                    ->map(fn($payment) => trim(($payment->payment_method ?: 'Payment') . ($payment->reference_no ? ' #' . $payment->reference_no : '') . ' ' . number_format($payment->amount, 2)))
+                    ->implode('; ');
+                $remarks = $remarks ? "{$remarks} | {$paymentRefs}" : $paymentRefs;
             }
 
             // Month
@@ -697,7 +693,7 @@ class ReportGeneratorController extends Controller
         // Get sales query with same filters as the report
         $sales_query = Inbound::whereBetween('order_date', [$date_from, $date_to])
             ->where('branch_code', session('branch_code'))
-            ->with(['customer', 'store', 'deliveryReceipt']);
+            ->with(['customer', 'store', 'deliveryReceipt', 'payments']);
 
         // Apply status filter (same logic as salesReportByCustomer)
         if ($status_filter === 'all') {
@@ -819,11 +815,19 @@ class ReportGeneratorController extends Controller
             if ($inbound->is_foc) {
                 $amountCollected = 0;
             }else{
-                $amountCollected = ($vatInclusive - $taxWithheld) ?? 0;
+                $amountCollected = $inbound->ledger_delivered_amount;
             }
 
             // Sales Type
             $salesType = $inbound->with_invoice ? 'Vatable' : 'Non-Vatable';
+
+            $remarks = trim($inbound->remarks ?? '');
+            if ($inbound->payments->count() > 0) {
+                $paymentRefs = $inbound->payments
+                    ->map(fn($payment) => trim(($payment->payment_method ?: 'Payment') . ($payment->reference_no ? ' #' . $payment->reference_no : '') . ' ' . number_format($payment->amount, 2)))
+                    ->implode('; ');
+                $remarks = $remarks ? "{$remarks} | {$paymentRefs}" : $paymentRefs;
+            }
 
             // Month
             $month = $inbound->order_date ? $inbound->order_date->format('M') : '';
@@ -845,7 +849,7 @@ class ReportGeneratorController extends Controller
             $sheet->setCellValue('N' . $row, $inbound->is_with_sf ? 1000 : 0);
             $sheet->setCellValue('O' . $row, $discount);
             $sheet->setCellValue('P' . $row, $badOrder);
-            $sheet->setCellValue('Q' . $row, $inbound->remarks ?? '');
+            $sheet->setCellValue('Q' . $row, $remarks);
 
             // Apply borders to data row
             $sheet->getStyle('A' . $row . ':Q' . $row)->applyFromArray([
