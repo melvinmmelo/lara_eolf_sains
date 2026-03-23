@@ -372,6 +372,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/inventory/bad-orders', [InventoryBadOrderController::class, 'store'])->name('inventory.bad-orders.store');
     Route::post('/inventory/bad-orders/{badOrder}/rollback', [InventoryBadOrderController::class, 'rollback'])->name('inventory.bad-orders.rollback');
     Route::get('/report/pullout-replaced-form/{degic_no}/{customer_id}', [PullOutFormController::class, 'show'])->name('report.pullout-replaced-form');
+
+    // Expenses
+    Route::resource('expenses', App\Http\Controllers\ExpenseController::class);
 });
 
 require __DIR__ . '/auth.php';
