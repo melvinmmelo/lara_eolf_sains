@@ -79,28 +79,23 @@ class DeliveryReceiptController extends Controller
 
     public function indexDone(Request $request)
     {
-        $outbounds = Inbound::branch(session('branch_code'))->withProducts()->get();
+        $fromDate = $request->filled('from_date') ? $request->from_date : now()->startOfMonth()->toDateString();
+        $toDate   = $request->filled('to_date')   ? $request->to_date   : now()->toDateString();
 
-        $query = DeliveryReceipt::query();
-
-        if ($request->filled('from_date') && $request->filled('to_date')) {
-            $fromDate = $request->from_date;
-            $toDate = $request->to_date;
-            $query->whereBetween('date', [$fromDate, $toDate])
-                ->whereNotNull('printed_date')
-                ->whereHas('inbound', function ($query) {
-                    $query->where('branch_code', session('branch_code'));
-                });
-        } else {
-            $query->whereNotNull('printed_date')->whereHas('inbound', function ($query) {
-                $query->where('branch_code', session('branch_code'));
+        $query = DeliveryReceipt::query()
+            ->whereNotNull('printed_date')
+            ->whereBetween('date', [$fromDate, $toDate])
+            ->whereHas('inbound', function ($q) {
+                $q->where('branch_code', session('branch_code'));
             });
+
+        if ($request->filled('customer_name')) {
+            $query->where('customer_name', 'like', '%' . $request->customer_name . '%');
         }
 
         $deliveryReceipts = $query->get();
 
-
-        return view('deliveryreceipt_done', compact('deliveryReceipts', 'outbounds'));
+        return view('deliveryreceipt_done', compact('deliveryReceipts', 'fromDate', 'toDate'));
     }
 
 

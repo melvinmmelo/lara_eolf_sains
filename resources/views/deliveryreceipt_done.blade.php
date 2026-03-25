@@ -35,16 +35,22 @@
                             <div class="col-md-3">
                                 <label class="form-label" for="from_date">From</label>
                                 <input type="date" class="form-control" name="from_date" required
-                                    value="{{ request('from_date') }}">
+                                    value="{{ $fromDate }}">
                             </div>
 
                             <div class="col-md-3">
                                 <label class="form-label" for="to_date">To</label>
                                 <input type="date" class="form-control" name="to_date" required
-                                    value="{{ request('to_date') }}">
+                                    value="{{ $toDate }}">
                             </div>
 
-                            <div class="col-md-2 mt-4">
+                            <div class="col-md-3">
+                                <label class="form-label" for="customer_name">Customer Name</label>
+                                <input type="text" class="form-control" name="customer_name" placeholder="Search customer..."
+                                    value="{{ request('customer_name') }}">
+                            </div>
+
+                            <div class="col-md-1 mt-4">
                                 <button type="submit" class="btn btn-primary">Filter</button>
                             </div>
                         </div>
