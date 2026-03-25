@@ -26,6 +26,33 @@
 
         @include('layouts.errors')
 
+        <!-- Search Section -->
+        <div class="card">
+            <div class="card-body py-3">
+                <form action="{{ route('orders.paid') }}" method="GET">
+                    <div class="row align-items-end">
+                        <div class="col-md-4">
+                            <div class="form-group mb-0">
+                                <label for="search">Search by Customer Name</label>
+                                <input type="text" class="form-control" id="search" name="search"
+                                       placeholder="Enter customer name..."
+                                       value="{{ $search ?? '' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-3 mt-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                            @if(!empty($search))
+                                <a href="{{ route('orders.paid') }}" class="btn btn-secondary ml-1">
+                                    <i class="fas fa-times"></i> Clear
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <!-- Default box -->
         <div class="card">
@@ -37,7 +64,7 @@
                         </button></a>
                 </div>
                 <div class="tbContainer">
-                    <table id="example3" class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th>Date</th>

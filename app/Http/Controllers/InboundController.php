@@ -932,15 +932,26 @@ class InboundController extends Controller
         return view('free', compact('inbounds'));
     }
 
-    public function paidOrders()
+    public function paidOrders(Request $request)
     {
-        $inbounds = Inbound::with('driver', 'vehicle')
+        $search = $request->input('search', '');
+
+        $query = Inbound::with('driver', 'vehicle', 'customer', 'payments')
             ->branch(session('branch_code'))
             ->paidOrders()
-            ->orderBy('created_at', 'desc')
-            ->paginate(50)
-            ->withQueryString();
-        return view('paid', compact('inbounds'));
+            ->orderBy('created_at', 'desc');
+
+        if (!empty($search)) {
+            $query->whereHas('customer', function ($q) use ($search) {
+                $q->where('firstname', 'like', "%{$search}%")
+                  ->orWhere('middlename', 'like', "%{$search}%")
+                  ->orWhere('lastname', 'like', "%{$search}%");
+            });
+        }
+
+        $inbounds = $query->paginate(50)->withQueryString();
+
+        return view('paid', compact('inbounds', 'search'));
     }
 
     public function updateStatus(Request $request)
