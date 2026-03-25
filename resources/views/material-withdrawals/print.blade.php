@@ -212,6 +212,8 @@
         <div class="meta">
             <p><span>Request Date:</span> {{ $withdrawal->created_at->format('M d, Y') }}</p>
             <p><span>Withdrawal Date:</span> {{ $withdrawal->withdrawal_date ? $withdrawal->withdrawal_date->format('M d, Y') : '' }}</p>
+            <p><span>Requested By:</span> {{ $withdrawal->requested_by }}</p>
+            <p><span>Issued By:</span> {{ $withdrawal->issued_by }}</p>
         </div>
 
         <!-- Items Table -->
@@ -246,11 +248,15 @@
 
         <!-- Signatures -->
         <div class="signatures">
-            <div class="sig-issued">ISSUED BY:</div>
+            <div class="sig-issued">
+                ISSUED BY:
+                <div class="sig-line" style="border-bottom:1px solid #000;height:24px;margin-top:4px;margin-bottom:2px;min-width:160px;"></div>
+                <div style="font-size:11px;font-weight:normal;text-align:center;color:#555;">{{ $withdrawal->issued_by }}</div>
+            </div>
             <div class="sig-received">
                 RECEIVED BY:
                 <div class="sig-line"></div>
-                <div class="sig-label">Customer Name &amp; Signature</div>
+                <div class="sig-label">{{ $withdrawal->requested_by }}</div>
             </div>
         </div>
 
