@@ -936,7 +936,7 @@ class InboundController extends Controller
     {
         $search = $request->input('search', '');
 
-        $query = Inbound::with('driver', 'vehicle', 'customer', 'payments')
+        $query = Inbound::with('driver', 'vehicle', 'customer')
             ->branch(session('branch_code'))
             ->paidOrders()
             ->orderBy('created_at', 'desc');
