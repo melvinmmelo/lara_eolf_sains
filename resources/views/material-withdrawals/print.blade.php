@@ -50,6 +50,8 @@
         /* Meta info */
         .meta {
             margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
         }
 
         .meta p {
@@ -210,10 +212,13 @@
 
         <!-- Meta Info -->
         <div class="meta">
-            <p><span>Request Date:</span> {{ $withdrawal->created_at->format('M d, Y') }}</p>
-            <p><span>Withdrawal Date:</span> {{ $withdrawal->withdrawal_date ? $withdrawal->withdrawal_date->format('M d, Y') : '' }}</p>
-            <p><span>Requested By:</span> {{ $withdrawal->requested_by }}</p>
-            <p><span>Issued By:</span> {{ $withdrawal->issued_by }}</p>
+            <div class="meta-left">
+                <p><span>Request Date:</span> {{ $withdrawal->created_at->format('M d, Y') }}</p>
+                <p><span>Withdrawal Date:</span> {{ $withdrawal->withdrawal_date ? $withdrawal->withdrawal_date->format('M d, Y') : '' }}</p>
+            </div>
+            <div class="meta-right">
+                <p><span>Requested By:</span> {{ $withdrawal->requested_by }}</p>
+            </div>
         </div>
 
         <!-- Items Table -->
