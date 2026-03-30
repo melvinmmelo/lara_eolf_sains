@@ -29,7 +29,7 @@
                     <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>{{ \App\Models\Product::count() }}</h3>
+                            <h3>{{ number_format($products_count) }}</h3>
                             <p>Total Products</p>
                         </div>
                         <div class="icon">
@@ -108,45 +108,6 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Customers with no sales in the last 2 months</h3>
-
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    Total: {{ $inactive_customers->count() }}
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-body table-responsive p-0" style="height: 300px;">
-                            <table class="table table-head-fixed text-nowrap">
-                                <thead>
-                                    <tr>
-                                        <th>Customer</th>
-                                        <th>Store Name</th>
-                                        <th>Contact No.</th>
-                                        <th>Created at</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($inactive_customers as $customer)
-                                    <tr>
-                                        <td>{{ $customer->full_name }}</td>
-                                        <td>{{ $customer->companyname }}</td>
-                                        <td>{{ $customer->contact_no }}</td>
-                                        <td>{{ $customer->created_at->format('M d, Y') }}</td>
-                                    </tr>
-                                    @empty
-                                    <tr>
-                                        <td colspan="4" class="text-center">No inactive customers found</td>
-                                    </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
                             <h3 class="card-title">Recent Orders</h3>
                         </div>
                         <div class="card-body table-responsive p-0" style="height: 300px;">
@@ -179,51 +140,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Low Stock Items -->
-<div class="row">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Low Stock Items</h3>
-            </div>
-            <div class="card-body table-responsive p-0" style="height: 300px;">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Branch</th>
-                            <th>Stock</th>
-                            <th>Reserved</th>
-                            <th>Available</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($low_stock_items as $item)
-                        <tr>
-                            <td>{{ $item['product_name'] }}</td>
-                            <td>{{ $item['branch_code'] }}</td>
-                            <td>{{ $item['stocks'] }}</td>
-                            <td>{{ $item['reserved'] }}</td>
-                            <td>
-                                <span class="badge badge-{{ $item['available'] <= 5 ? 'danger' : 'warning' }}">
-                                    {{ $item['available'] }}
-                                </span>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="5" class="text-center">No low stock items found</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-      <!-- Activity Log -->
-      <div class="col-md-6">
+                <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Recent Activities</h3>
@@ -239,12 +156,7 @@
                                 <tbody>
                                     @forelse($recent_activities as $activity)
                                     <tr>
-                                       
-                                        <td>
-
-                                            {{ $activity->description }}
-                                           
-                                        </td>
+                                        <td>{{ $activity->description }}</td>
                                         <td>{{ $activity->created_at->diffForHumans() }}</td>
                                     </tr>
                                     @empty
@@ -257,9 +169,33 @@
                         </div>
                     </div>
                 </div>
-</div>@endcan
+            </div>
 
-          
+            <!-- Sales Volume Charts -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Sales Volume by Product Type</h3>
+                        </div>
+                        <div class="card-body" style="overflow-y: auto; max-height: 500px;">
+                            <canvas id="salesByTypeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Sales Volume by Flavor</h3>
+                        </div>
+                        <div class="card-body" style="overflow-y: auto; max-height: 500px;">
+                            <canvas id="salesByFlavorChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>@endcan
+
+
         </div>
     </section>
 @endsection
@@ -271,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Monthly Sales Chart
     var ctx = document.getElementById('salesChart').getContext('2d');
     var salesData = @json($monthly_sales);
-    
+
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -318,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Yearly Sales Chart
     var yearlyCtx = document.getElementById('yearlyChart').getContext('2d');
     var yearlyData = @json($yearly_sales);
-    
+
     new Chart(yearlyCtx, {
         type: 'bar',
         data: {
@@ -360,6 +296,98 @@ document.addEventListener('DOMContentLoaded', function() {
                     callbacks: {
                         label: function(context) {
                             return 'Sales: ₱' + new Intl.NumberFormat().format(context.raw);
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Sales Volume by Product Type (horizontal bar)
+    var typeCtx = document.getElementById('salesByTypeChart').getContext('2d');
+    var typeData = @json($sales_volume_by_type);
+    var typeHeight = Math.max(300, typeData.length * 35);
+    document.getElementById('salesByTypeChart').height = typeHeight;
+
+    new Chart(typeCtx, {
+        type: 'bar',
+        data: {
+            labels: typeData.map(item => item.name),
+            datasets: [{
+                label: 'Units Sold',
+                data: typeData.map(item => item.quantity),
+                backgroundColor: 'rgba(40, 167, 69, 0.75)',
+                borderColor: 'rgba(40, 167, 69, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return new Intl.NumberFormat().format(value) + ' units';
+                        }
+                    },
+                    title: { display: true, text: 'Units Sold', font: { weight: 'bold' } }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return new Intl.NumberFormat().format(context.raw) + ' units';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Sales Volume by Flavor (horizontal bar)
+    var flavorCtx = document.getElementById('salesByFlavorChart').getContext('2d');
+    var flavorData = @json($sales_volume_by_flavor);
+    var flavorHeight = Math.max(300, flavorData.length * 35);
+    document.getElementById('salesByFlavorChart').height = flavorHeight;
+
+    new Chart(flavorCtx, {
+        type: 'bar',
+        data: {
+            labels: flavorData.map(item => item.name),
+            datasets: [{
+                label: 'Units Sold',
+                data: flavorData.map(item => item.quantity),
+                backgroundColor: 'rgba(230, 97, 59, 0.8)',
+                borderColor: 'rgba(230, 97, 59, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return new Intl.NumberFormat().format(value) + ' units';
+                        }
+                    },
+                    title: { display: true, text: 'Units Sold', font: { weight: 'bold' } }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return new Intl.NumberFormat().format(context.raw) + ' units';
                         }
                     }
                 }
