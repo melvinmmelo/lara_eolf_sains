@@ -127,7 +127,6 @@ class InboundController extends Controller
     public function deleteAInbound($pcode, $inboundId = 0)
     {
 
-        $products = NewInboundProduct::where("inbound_id", $inboundId)->where('branch_code', session('branch_code'))->whereNull('status')->get();
         if($inboundId != 0){
             $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where("code", $pcode)->where('branch_code', session('branch_code'))->whereNull('status')->first();
             if (!$newInboundProduct) {
@@ -145,8 +144,8 @@ class InboundController extends Controller
 
         $summary = [];
 
-        // sort by order
-        $products = $products->sortBy('order');
+        // Re-fetch after deletion so the service works with current active products only
+        $products = NewInboundProduct::where("inbound_id", $inboundId)->where('branch_code', session('branch_code'))->whereNull('status')->orderBy('order')->get();
 
         $inboundService = new InboundProductsService($products);
 
@@ -759,6 +758,8 @@ class InboundController extends Controller
             'sales_invoice_no' => 'nullable|string|max:50',
         ]);
 
+        $errors = [];
+
         $equipStore = EquipmentStore::findOrFail($request->equipment_id);
         $inbound = Inbound::findOrFail($request->inbound_id);
 
@@ -804,46 +805,50 @@ class InboundController extends Controller
             $inbound->bo_amount = 0;
         }
 
-        foreach ($products as $product) {
-            $itemData = ItemMasterData::branch($branchCode)->productCode($product->code)->first();
-            if ($itemData) {
+        DB::transaction(function () use ($products, $inbound, $branchCode, $customer, &$errors) {
+            foreach ($products as $product) {
+                $itemData = ItemMasterData::branch($branchCode)->productCode($product->code)->first();
+                if ($itemData) {
 
-                if($inbound->delivery_receipt_id !== NULL){
-                    $newStocks = ($itemData->stocks + $product->old_quantity) - $product->quantity;
+                    if($inbound->delivery_receipt_id !== NULL){
+                        $newStocks = ($itemData->stocks + $product->old_quantity) - $product->quantity;
 
-                    if($product->status === 'Deleted'){
-                        $newStocks = $itemData->stocks + $product->old_quantity;
+                        if($product->status === 'Deleted'){
+                            $newStocks = $itemData->stocks + $product->old_quantity;
+                        }
+
+                        $itemData->stocks = $newStocks;
+                    }else{
+                        $newReserved = ($itemData->reserved - $product->old_quantity) + $product->quantity;
+
+                        if ($product->status === 'Deleted') {
+                            $newReserved = $itemData->reserved - $product->old_quantity;
+                        }
+                        $itemData->reserved = $newReserved;
                     }
 
-                    $itemData->stocks = $newStocks;
-                }else{
-                    $newReserved = ($itemData->reserved - $product->old_quantity) + $product->quantity;
-
-                    if ($product->status === 'Deleted') {
-                        $newReserved = $itemData->reserved - $product->old_quantity;
-                    }
-                    $itemData->reserved = $newReserved;
+                    $itemData->save();
+                } else {
+                    $errors[] = "Product {$product->code} not found in inventory. Update may be incomplete.";
                 }
-
-                $itemData->save();
             }
-        }
 
-        $activeProducts = array_filter($products->toArray(), function ($product) {
-            return $product['status'] !== 'Deleted';
+            $activeProducts = array_filter($products->toArray(), function ($product) {
+                return $product['status'] !== 'Deleted';
+            });
+
+            $inbound->products = json_encode(array_values($activeProducts));
+            $inbound->customer_name = $customer->fullName;
+            $inbound->save();
+
+            NewInboundProduct::where('inbound_id', $inbound->id)->delete();
         });
-
-        $inbound->products = $activeProducts;
-        $inbound->customer_name = $customer->fullName;
-        $inbound->save();
 
         session()->forget(['inboundId', 'products']);
 
         activity('outbound')
             ->performedOn($inbound)
             ->log("Outbound $inbound->id updated by " . auth()->user()->fullName);
-
-        NewInboundProduct::where('inbound_id', $inbound->id)->delete();
 
         if (!empty($errors)) {
             return back()->withErrors($errors);
