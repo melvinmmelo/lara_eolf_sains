@@ -152,6 +152,26 @@ class NewBadOrderController extends Controller
     public function getBadOrderPricesByLevel($plId)
     {
         $badOrderPrices = BadOrderPrice::where('price_level_id', $plId)->get();
+
+        // Fallback: if no bad_order_prices entries exist, read from prices table and auto-populate
+        if ($badOrderPrices->isEmpty()) {
+            $pricesFromTable = prices::where('pricelevel_id', $plId)->get();
+
+            foreach ($pricesFromTable as $p) {
+                $productType = ProductType::where('code', $p->p_code)->first();
+                if ($productType) {
+                    BadOrderPrice::create([
+                        'price_level_id' => $plId,
+                        'ptype_code' => $p->p_code,
+                        'ptype_name' => $productType->name,
+                        'price' => $p->p_price,
+                    ]);
+                }
+            }
+
+            $badOrderPrices = BadOrderPrice::where('price_level_id', $plId)->get();
+        }
+
         return response()->json($badOrderPrices);
     }
 

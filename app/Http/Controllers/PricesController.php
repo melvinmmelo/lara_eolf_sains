@@ -158,7 +158,7 @@ class PricesController extends Controller
 
         $pricing = prices::find($request->price_id);
 
-        if ($pricing->priceLevel->pl_name == 'BAD PRICING') {
+        if ($pricing->priceLevel->pl_type == 'BAD PRICING') {
 
             $request->validate([
                 'e_price' => 'required|numeric',
@@ -167,6 +167,11 @@ class PricesController extends Controller
             $pricing->p_unit = 'Pc/s';
             $pricing->p_price = $request->e_price;
             $pricing->save();
+
+            // Keep bad_order_prices in sync
+            BadOrderPrice::where('price_level_id', $pricing->pricelevel_id)
+                ->where('ptype_code', $pricing->p_code)
+                ->update(['price' => $request->e_price]);
         } else {
 
             $request->validate([

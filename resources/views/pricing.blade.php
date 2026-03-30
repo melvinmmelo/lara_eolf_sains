@@ -56,7 +56,7 @@
                                         <td>
                                             <a href="#" class="btn btn-sm btn-success" data-toggle="modal"
                                                 data-target="#modalEditPrice"
-                                                onclick="setToUpdatePrice('{{ $price->id }}', '{{ $price->p_quant }}', '{{ $price->p_unit }}', '{{ $price->p_price }}')">Edit</a>
+                                                onclick="setToUpdatePrice('{{ $price->id }}', '{{ $price->p_quant }}', '{{ $price->p_unit }}', '{{ $price->p_price }}', '{{ $price->pricelevel->pl_type }}')">Edit</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -180,9 +180,9 @@
 
                                 <div class="form-group">
 
-                                    <label class="form-label" for="product_type"><i style="color:red">*</i>Product
+                                    <label class="form-label" for="b_product_type"><i style="color:red">*</i>Product
                                         Type</label>
-                                    <select class="form-control select2bs4" id="product_type" name="product_type">
+                                    <select class="form-control select2bs4" id="b_product_type" name="product_type">
                                         @foreach ($productTypes as $pType)
                                             <option value="{{ $pType->code }}">
                                                 {{ $pType->code . ' ' . $pType->name }}
@@ -194,9 +194,9 @@
                                 <div class="form-group">
                                     <div class="row mb-2">
                                         <div class="col-sm-6">
-                                            <label class="form-label" for="price"><i
+                                            <label class="form-label" for="b_price"><i
                                                     style="color:red">*</i>Price</label>
-                                            <input type="number" step=".01" class="form-control" id="price"
+                                            <input type="number" step=".01" class="form-control" id="b_price"
                                                 name="price">
                                         </div>
                                     </div>
@@ -236,7 +236,7 @@
 
                                     <input type="hidden" class="form-control" id="e_quant" name="e_quant" value="1">
 
-                                <div class="col-sm-6">
+                                <div class="col-sm-6" id="e_price_unit_wrap">
                                     <label class="form-label" for="e_price_unit">Unit</label>
                                     <select class="form-control" id="e_price_unit" name="e_price_unit">
                                         <option value="Bag/s">Bag/s</option>
@@ -247,7 +247,7 @@
 
                                 <div class="col-sm-6">
                                     <label class="form-label" for="e_price">Price</label>
-                                    <input type="numeric" step=".01" class="form-control" id="e_price" name="e_price" autofocus>
+                                    <input type="number" step=".01" class="form-control" id="e_price" name="e_price" autofocus>
                                 </div>
                             </div>
                         </div>
@@ -268,11 +268,18 @@
 
 @section('custom_js')
     <script>
-        function setToUpdatePrice(price_id, qty, unit, price) {
+        function setToUpdatePrice(price_id, qty, unit, price, plType) {
             $('#e_quant').val(qty);
             $('#e_price_unit').val(unit);
             $('#price_id').val(price_id);
             $('#e_price').val(price);
+
+            if (plType === 'BAD PRICING') {
+                $('#e_price_unit_wrap').hide();
+                $('#e_price_unit').val('Pc/s');
+            } else {
+                $('#e_price_unit_wrap').show();
+            }
         }
 
         // create a js function that populate datatable example1 search input when select option is changed
