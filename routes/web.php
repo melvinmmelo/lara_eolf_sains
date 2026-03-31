@@ -372,6 +372,22 @@ Route::middleware('auth')->group(function () {
     Route::post('/inventory/bad-orders', [InventoryBadOrderController::class, 'store'])->name('inventory.bad-orders.store');
     Route::post('/inventory/bad-orders/{badOrder}/rollback', [InventoryBadOrderController::class, 'rollback'])->name('inventory.bad-orders.rollback');
     Route::get('/report/pullout-replaced-form/{degic_no}/{customer_id}', [PullOutFormController::class, 'show'])->name('report.pullout-replaced-form');
+
+    // Expenses
+    Route::resource('expenses', App\Http\Controllers\ExpenseController::class);
+
+    // Reports
+    Route::prefix('reports')->group(function () {
+        Route::get('/', [App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
+        Route::get('/payment-report', [App\Http\Controllers\ReportController::class, 'paymentReport'])->name('reports.payment-report');
+        Route::get('/sales-by-product-type', [App\Http\Controllers\ReportController::class, 'salesByProductType'])->name('reports.sales-by-product-type');
+        Route::get('/inbound-summary-per-flavor', [App\Http\Controllers\ReportController::class, 'inboundSummaryPerFlavor'])->name('reports.inbound-summary-per-flavor');
+        Route::get('/expenses-report', [App\Http\Controllers\ReportController::class, 'expensesReport'])->name('reports.expenses-report');
+        Route::get('/sales-by-freezer', [App\Http\Controllers\ReportController::class, 'salesByFreezer'])->name('reports.sales-by-freezer');
+        Route::get('/bad-order-report', [App\Http\Controllers\ReportController::class, 'badOrderReport'])->name('reports.bad-order-report');
+        Route::get('/delivery-receipt-report', [App\Http\Controllers\ReportController::class, 'deliveryReceiptReport'])->name('reports.delivery-receipt-report');
+        Route::get('/sales-by-flavor', [App\Http\Controllers\ReportController::class, 'salesByFlavor'])->name('reports.sales-by-flavor');
+    });
 });
 
 require __DIR__ . '/auth.php';
