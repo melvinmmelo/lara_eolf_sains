@@ -315,6 +315,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/delete-inboundin/{pcode}/{inboundId?}', [InboundController::class, 'deleteAInbound'])->name('inbound.deleteAInbound');
 
+    Route::get('/delete-all-inboundin/{inboundId}', [InboundController::class, 'deleteAllAInbound'])->name('inbound.deleteAllAInbound');
+
     Route::post('/inbound', [InboundController::class, 'store'])->name('inbound.store');
 
     Route::patch('/inbound/add-payment', [InboundController::class, 'addPayment'])->name('inbound.addPayment');

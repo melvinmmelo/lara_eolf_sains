@@ -181,6 +181,34 @@ class InboundController extends Controller
         return view('inboundList', compact('uiProducts', 'summary'));
     }
 
+    // Soft-deletes every active NewInboundProduct row for the given inbound
+    // by setting status='Deleted'. updateInbound() iterates over ALL rows
+    // (including Deleted ones) and uses status==='Deleted' to release the
+    // previously reserved stock — so this matches the per-row delete pattern
+    // in deleteAInbound() and stays consistent with how the form submit unwinds
+    // inventory. Returns the inboundList partial with empty data so the XHR
+    // caller can drop it straight into #inboundList.innerHTML.
+    public function deleteAllAInbound($inboundId)
+    {
+        $branchCode = session('branch_code');
+
+        NewInboundProduct::where('inbound_id', $inboundId)
+            ->where('branch_code', $branchCode)
+            ->whereNull('status')
+            ->update(['status' => 'Deleted']);
+
+        $inbound = Inbound::find($inboundId);
+        $inboundDesc = $inbound ? $inbound->code : "inbound $inboundId";
+
+        activity('outbound')
+            ->log("All products were deleted by " . auth()->user()->fullName . " in $inboundDesc");
+
+        $uiProducts = collect();
+        $summary = [];
+
+        return view('inboundList', compact('uiProducts', 'summary'));
+    }
+
     /**
      * Display a listing of the resource.
      */

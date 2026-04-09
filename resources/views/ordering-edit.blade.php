@@ -244,6 +244,12 @@
 
                         <div class="col-sm-9">
                             <div>
+                                <div class="d-flex justify-content-end mb-2">
+                                    <button type="button" class="btn btn-danger btn-sm"
+                                        onclick="deleteAllProducts()">
+                                        <i class="fas fa-trash"></i> Delete All
+                                    </button>
+                                </div>
                                 <div id="inboundList">
                                     <div class="row">
                                         <div class="col-sm-8">
@@ -546,6 +552,21 @@
                 xmlhttp.open("GET", "/delete-inboundin/" + pcode + "/" + {{ $inbound->id }}, true);
                 xmlhttp.send();
             }
+        }
+
+        function deleteAllProducts() {
+            if (!confirm("Are you sure you want to delete ALL items from this order?")) {
+                return;
+            }
+
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("inboundList").innerHTML = this.responseText;
+                }
+            };
+            xmlhttp.open("GET", "/delete-all-inboundin/" + {{ $inbound->id }}, true);
+            xmlhttp.send();
         }
 
         function setQty(qty) {
