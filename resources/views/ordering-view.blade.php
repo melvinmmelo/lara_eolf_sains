@@ -193,25 +193,26 @@
                                         </div>
 
                                         <div class="col-sm-4">
-                                            @if (count($summary))
-                                                @include('orderProductSum')
-                                            @else
-                                                <table class="table table-bordered table-striped">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Product Type</th>
-                                                            <th>Quantity</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td colspan="2" class="text-center">No data available</td>
-                                                        </tr>
-                                                    </tbody>
+                                            <div id="orderProductSum">
+                                                @if (count($summary))
+                                                    @include('orderProductSum')
+                                                @else
+                                                    <table class="table table-bordered table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Product Type</th>
+                                                                <th>Quantity</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td colspan="2" class="text-center">No data available</td>
+                                                            </tr>
+                                                        </tbody>
 
-                                                </table>
-                                            @endif
-
+                                                    </table>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

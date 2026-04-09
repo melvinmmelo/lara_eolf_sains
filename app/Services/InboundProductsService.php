@@ -115,7 +115,7 @@ class InboundProductsService extends Model
 
         // order summary by order
         usort($summary, function($a, $b) {
-            return $a['order'] - $b['order'];
+            return (int)$a['order'] - (int)$b['order'];
         });
 
         $this->summary = $summary;

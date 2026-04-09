@@ -93,6 +93,8 @@
     </div>
 
     <div class="col-sm-4">
-        @include('orderProductSum')
+        <div id="orderProductSum">
+            @include('orderProductSum')
+        </div>
     </div>
 </div>

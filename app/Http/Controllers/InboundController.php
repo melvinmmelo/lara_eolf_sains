@@ -130,7 +130,19 @@ class InboundController extends Controller
         if($inboundId != 0){
             $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where("code", $pcode)->where('branch_code', session('branch_code'))->whereNull('status')->first();
             if (!$newInboundProduct) {
-                return back()->with('error', 'Product not found.');
+                // Product already deleted or not found — re-render the
+                // current list as-is instead of returning a back() redirect
+                // (the XHR assigns responseText to #inboundList.innerHTML,
+                // so a redirect HTML page would visually break the form).
+                $products = NewInboundProduct::where("inbound_id", $inboundId)->where('branch_code', session('branch_code'))->whereNull('status')->orderByRaw('CAST(`order` AS UNSIGNED)')->orderBy('id')->get();
+                $uiProducts = $products;
+                $summary = [];
+                if ($products->count()) {
+                    $inboundService = new InboundProductsService(json_encode($products));
+                    $summary = $inboundService->summary();
+                    $summary = $inboundService->addSppbinSummary();
+                }
+                return view('inboundList', compact('uiProducts', 'summary'));
             }
             $newInboundProduct->status = "Deleted";
             $newInboundProduct->save();
@@ -145,7 +157,7 @@ class InboundController extends Controller
         $summary = [];
 
         // Re-fetch after deletion so the service works with current active products only
-        $products = NewInboundProduct::where("inbound_id", $inboundId)->where('branch_code', session('branch_code'))->whereNull('status')->orderBy('order')->get();
+        $products = NewInboundProduct::where("inbound_id", $inboundId)->where('branch_code', session('branch_code'))->whereNull('status')->orderByRaw('CAST(`order` AS UNSIGNED)')->orderBy('id')->get();
 
         $inboundService = new InboundProductsService($products);
 
@@ -254,7 +266,21 @@ class InboundController extends Controller
         $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where('code', $code)->where('branch_code', session('branch_code'))->first();
 
         if($newInboundProduct){
-            $newInboundProduct->quantity += $qty;
+            // If the row was previously soft-deleted in this edit session,
+            // resurrect it: clear the Deleted status and replace (don't bump)
+            // the quantity. Without this, re-adding a deleted product would
+            // bump the hidden row's quantity but leave status='Deleted', and
+            // the list view (which filters whereNull('status')) would show
+            // nothing — making it look like the add button stopped working.
+            // old_quantity stays untouched so updateInbound's reserved-delta
+            // calculation ((reserved - old_quantity) + quantity) still nets
+            // out correctly against what's currently reserved in inventory.
+            if ($newInboundProduct->status === 'Deleted') {
+                $newInboundProduct->status = null;
+                $newInboundProduct->quantity = $qty;
+            } else {
+                $newInboundProduct->quantity += $qty;
+            }
 
         }else{
 
@@ -278,12 +304,13 @@ class InboundController extends Controller
         }
 
         $newInboundProduct->save();
-        $products = NewInboundProduct::where("inbound_id", $inboundId)->whereNull("status")->where('branch_code', session('branch_code'))->orderBy('order')->get();
+        // orderBy('id') is the tiebreaker — multiple products of the same
+        // type share the same `order` value (it's the type's sequence_no),
+        // so without a secondary sort MySQL returns them in arbitrary order
+        // and the rendered list looks "disorganized" after each ajax call.
+        $products = NewInboundProduct::where("inbound_id", $inboundId)->whereNull("status")->where('branch_code', session('branch_code'))->orderByRaw('CAST(`order` AS UNSIGNED)')->orderBy('id')->get();
 
         $uiProducts = $products;
-
-        // sort by #uiProducts
-        $uiProducts = $uiProducts->sortBy('order');
 
         $newProdService = new InboundProductsService(json_encode($products));
 
@@ -444,7 +471,7 @@ class InboundController extends Controller
 
         if($inboundId == 0){
 
-            $newInboundProduct = NewInboundProduct::where("inbound_id", 0)->where("code", $code)->where('branch_code', session('branch_code'))->first();
+            $newInboundProduct = NewInboundProduct::where("inbound_id", 0)->where("code", $code)->where('branch_code', session('branch_code'))->whereNull('status')->first();
             if ($action === 'add') {
                 $newInboundProduct->quantity += 1;
             } else {
@@ -454,7 +481,7 @@ class InboundController extends Controller
 
         }else{
 
-            $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where('code', $code)->where('branch_code', session('branch_code'))->first();
+            $newInboundProduct = NewInboundProduct::where("inbound_id", $inboundId)->where('code', $code)->where('branch_code', session('branch_code'))->whereNull('status')->first();
             if($action === 'add'){
                 $newInboundProduct->quantity += 1;
             }else{
@@ -464,10 +491,10 @@ class InboundController extends Controller
 
         }
 
-        if (NewInboundProduct::where('inbound_id', $inboundId)->where('branch_code', session('branch_code'))->exists()) {
-            $products = NewInboundProduct::where('inbound_id', $inboundId)->where('branch_code', session('branch_code'))->get();
+        if (NewInboundProduct::where('inbound_id', $inboundId)->where('branch_code', session('branch_code'))->whereNull('status')->exists()) {
+            $products = NewInboundProduct::where('inbound_id', $inboundId)->where('branch_code', session('branch_code'))->whereNull('status')->get();
         } else {
-            $products = NewInboundProduct::where("inbound_id", 0)->where('branch_code', session('branch_code'))->get();
+            $products = NewInboundProduct::where("inbound_id", 0)->where('branch_code', session('branch_code'))->whereNull('status')->get();
         }
 
 
@@ -517,7 +544,7 @@ class InboundController extends Controller
 
         if (!$products === null) {
             usort($products, function ($a, $b) {
-                return $a['order'] <=> $b['order'];
+                return (int)$a['order'] <=> (int)$b['order'];
             });
         }
 
@@ -629,8 +656,20 @@ class InboundController extends Controller
 
         $inbound = Inbound::find($inboundId);
 
-        // delete all new inbound products
+        // Clear scratch rows for this order so we start fresh.
         NewInboundProduct::where('inbound_id', $inboundId)->delete();
+
+        // Also clear stale scratch rows left behind by *other* edit sessions
+        // this user abandoned (opened an order, made changes, navigated away
+        // without saving). Without this, leftover rows from a previous order
+        // can interfere with the current edit (incorrect inventory deltas,
+        // status='Deleted' rows resurfacing, etc.) and made the second edit
+        // in a row "not work well".
+        NewInboundProduct::where('user_id', auth()->id())
+            ->where('branch_code', session('branch_code'))
+            ->where('inbound_id', '!=', $inboundId)
+            ->where('inbound_id', '!=', 0) // keep new-order scratch (inbound_id = 0)
+            ->delete();
 
         if ($inbound->delivery_receipt_id !== NULL and !auth()->user()->hasRole(['admin'])) {
             return back()->withErrors('This order is already delivered.');
@@ -691,7 +730,7 @@ class InboundController extends Controller
         }
 
         usort($inboundList, function ($a, $b) {
-            return $a['order'] <=> $b['order'];
+            return (int)$a['order'] <=> (int)$b['order'];
         });
 
         $equipmentStore = EquipmentStore::where('customer_id', $inbound->customer_id)->where('equipment_id', $inbound->equipment_id)->where('store_id', $inbound->store_id)->first();
@@ -731,7 +770,7 @@ class InboundController extends Controller
         }
 
         usort($inboundList, function ($a, $b) {
-            return $a['order'] <=> $b['order'];
+            return (int)$a['order'] <=> (int)$b['order'];
         });
 
         return view('ordering-view', compact('inbound', 'inboundId', 'drivers', 'inboundList', 'summary', 'priceLevel'));
@@ -763,7 +802,7 @@ class InboundController extends Controller
         $equipStore = EquipmentStore::findOrFail($request->equipment_id);
         $inbound = Inbound::findOrFail($request->inbound_id);
 
-        $products = NewInboundProduct::where('inbound_id', $request->inbound_id)->get();
+        $products = NewInboundProduct::where('inbound_id', $request->inbound_id)->orderByRaw('CAST(`order` AS UNSIGNED)')->orderBy('id')->get();
         $customer = Customers::findOrFail($request->customer_id);
 
         $inbound->fill([
@@ -835,6 +874,12 @@ class InboundController extends Controller
 
             $activeProducts = array_filter($products->toArray(), function ($product) {
                 return $product['status'] !== 'Deleted';
+            });
+
+            // Sort by order (product type sequence) then id for a
+            // deterministic product list when the order is re-opened.
+            usort($activeProducts, function ($a, $b) {
+                return ((int)$a['order'] <=> (int)$b['order']) ?: ($a['id'] <=> $b['id']);
             });
 
             $inbound->products = json_encode(array_values($activeProducts));

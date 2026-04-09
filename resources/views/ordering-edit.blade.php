@@ -373,25 +373,26 @@
                                         </div>
 
                                         <div class="col-sm-4">
-                                            @if (count($summary))
-                                                @include('orderProductSum')
-                                            @else
-                                                <table class="table table-bordered table-striped">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Product Type</th>
-                                                            <th>Quantity</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td colspan="2" class="text-center">No data available</td>
-                                                        </tr>
-                                                    </tbody>
+                                            <div id="orderProductSum">
+                                                @if (count($summary))
+                                                    @include('orderProductSum')
+                                                @else
+                                                    <table class="table table-bordered table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Product Type</th>
+                                                                <th>Quantity</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td colspan="2" class="text-center">No data available</td>
+                                                            </tr>
+                                                        </tbody>
 
-                                                </table>
-                                            @endif
-
+                                                    </table>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -448,19 +449,33 @@
 
     <script>
 
-        // page on load show modalReminder
+        // Pre-populate the form fields after select2 has initialized.
+        // The layout's $(document).ready initializes .select2bs4, so we run
+        // *after* it (callbacks fire in registration order) and use
+        // .val(...).trigger('change') so the select2 widget actually updates.
+        // Setting .value directly on the underlying <select> can leave the
+        // visible select2 widget out of sync (this is what caused the second
+        // edit to look "broken" after navigating back from a previous edit).
         $(document).ready(function() {
             // $('#modalReminder').modal('show');
-        });
 
-        // set value on document load
-        document.getElementById('pricelevel_id').value = "{{ $inbound->pricelevel_id ?? '' }}";
-        document.getElementById('deliveryPerson').value = "{{ $inbound->delivery_person_id ?? '' }}";
-        document.getElementById('driver_id').value = "{{ $inbound->driver_id ?? '' }}";
-        document.getElementById('vehicle').value = "{{ $inbound->vehicle_id ?? '' }}";
-        document.getElementById('equipment').value = "{{ $equipmentStore->id ?? '' }}";
-        document.getElementById('customer_id').value = "{{ $inbound->customer_id ?? '' }}";
-        document.getElementById('customer').value = "{{ $inbound->customer->fullName ?? '' }}";
+            // Hidden / plain text inputs — set directly first so they're
+            // available before any change handlers fire.
+            document.getElementById('customer_id').value = "{{ $inbound->customer_id ?? '' }}";
+            document.getElementById('customer').value = "{{ $inbound->customer->fullName ?? '' }}";
+
+            // Select2-wrapped <select>s need val().trigger('change') so the
+            // visible widget reflects the underlying value.
+            $('#pricelevel_id').val("{{ $inbound->pricelevel_id ?? '' }}").trigger('change');
+            $('#deliveryPerson').val("{{ $inbound->delivery_person_id ?? '' }}").trigger('change');
+            $('#driver_id').val("{{ $inbound->driver_id ?? '' }}").trigger('change');
+            $('#vehicle').val("{{ $inbound->vehicle_id ?? '' }}").trigger('change');
+
+            // Equipment fires setCustomerName() onchange which would overwrite
+            // the customer fields we just set. Use a no-AJAX path: set the
+            // underlying value, then ask select2 to refresh its display.
+            $('#equipment').val("{{ $equipmentStore->id ?? '' }}").trigger('change.select2');
+        });
 
         @if($inbound->is_with_sf)
             document.getElementById('withSF').checked = true;

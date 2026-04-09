@@ -1,5 +1,3 @@
-        <div id="orderProductSum">
-
             <div class="product-list">
                 <table class="table table-bordered table-striped">
                     <thead>
@@ -46,11 +44,11 @@
                                 @endphp
                                 <tr>
                                     <td>
-                                        <input type="text" name="total" id="total" class="label-input"
+                                        <input type="text" class="label-input"
                                             value="{{ $summ['ptype_code'] }}" readonly>
                                     </td>
                                     <td>
-                                        <input type="text" name="total" id="total" class="label-input"
+                                        <input type="text" class="label-input"
                                             value="{{ $summ['total'] }}" readonly>
                                     </td>
                                 </tr>
@@ -73,4 +71,3 @@
                         value="{{ number_format(array_sum($totalSpCountSet)) }}" readonly>
                 </div>
             @endif
-        </div>
