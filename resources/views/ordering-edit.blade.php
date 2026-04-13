@@ -481,6 +481,52 @@
             // the customer fields we just set. Use a no-AJAX path: set the
             // underlying value, then ask select2 to refresh its display.
             $('#equipment').val("{{ $equipmentStore->id ?? '' }}").trigger('change.select2');
+
+            // Re-price-on-change handler. Registered AFTER the initial
+            // .trigger('change') above so the page-load value-set doesn't
+            // accidentally fire it. Reverts via 'change.select2' (namespaced)
+            // which only refreshes the widget — it does NOT re-fire the
+            // generic 'change' handler, so the revert can't loop.
+            let prevPriceLevel = "{{ $inbound->pricelevel_id ?? '' }}";
+            $('#pricelevel_id').on('change', function() {
+                const newLevel = $(this).val();
+                if (!newLevel || newLevel === prevPriceLevel) return;
+
+                if (!confirm("Changing the price level will re-price all items in the cart. Continue?")) {
+                    $(this).val(prevPriceLevel).trigger('change.select2');
+                    return;
+                }
+
+                fetch(`/inbound-reprice/{{ $inbound->id }}/${newLevel}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                            $('#pricelevel_id').val(prevPriceLevel).trigger('change.select2');
+                            return;
+                        }
+
+                        document.getElementById('inboundList').innerHTML = data.html;
+
+                        const warnings = [];
+                        if (data.noPrice && data.noPrice.length) {
+                            warnings.push("No price at this level for:\n  - " + data.noPrice.join('\n  - '));
+                        }
+                        if (data.noStock && data.noStock.length) {
+                            warnings.push("Insufficient stocks for:\n  - " + data.noStock.join('\n  - '));
+                        }
+                        if (document.getElementById('isBadPricing').checked) {
+                            warnings.push("Bad order is checked. Please uncheck and recheck it to recompute the BO amount.");
+                        }
+                        if (warnings.length) alert(warnings.join('\n\n'));
+
+                        prevPriceLevel = newLevel;
+                    })
+                    .catch(err => {
+                        alert("Error re-pricing items.");
+                        $('#pricelevel_id').val(prevPriceLevel).trigger('change.select2');
+                    });
+            });
         });
 
         @if($inbound->is_with_sf)

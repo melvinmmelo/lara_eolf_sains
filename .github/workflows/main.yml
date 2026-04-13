@@ -28,6 +28,7 @@ jobs:
         git fetch origin main && \
         git reset --hard origin/main && \
         composer install --no-dev --optimize-autoloader && \
+        php artisan db:backup && \
         php artisan migrate --force && \
         php artisan optimize:clear && \
         php artisan config:cache && \

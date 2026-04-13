@@ -209,6 +209,71 @@ class InboundController extends Controller
         return view('inboundList', compact('uiProducts', 'summary'));
     }
 
+    // Re-price every active NewInboundProduct row of an inbound at a different
+    // price level. Items missing a price at the target level are left at their
+    // current price and reported back so the user can decide what to do; items
+    // whose current quantity exceeds inventory are also reported (informational
+    // — the actual stock validation still happens on form submit). Returns
+    // JSON with the rendered inboundList partial plus the two warning lists.
+    // Bad-order amount is intentionally NOT recalculated — the user must
+    // re-tick the bad-order checkbox after a re-price.
+    public function repriceInbound($inboundId, $pricelevelId)
+    {
+        $branchCode = session('branch_code');
+
+        $rows = NewInboundProduct::where('inbound_id', $inboundId)
+            ->where('branch_code', $branchCode)
+            ->whereNull('status')
+            ->get();
+
+        $noPrice = [];
+        $noStock = [];
+
+        foreach ($rows as $row) {
+            $price = prices::getPricePerPriceLevelAndPCode($pricelevelId, $row->code);
+            if ($price) {
+                $row->price = $price->p_price;
+                $row->unit  = $price->p_unit;
+                $row->save();
+            } else {
+                $noPrice[] = $row->code;
+            }
+
+            // Inventory check: would this row's current qty fit if we ignored
+            // its own existing reservation? old_quantity is already inside
+            // item->reserved, so subtract it back out before comparing.
+            $item = ItemMasterData::branch($branchCode)->productCode($row->code)->first();
+            if ($item) {
+                $effectiveAvailable = $item->stocks - ($item->reserved - $row->old_quantity);
+                if ($row->quantity > $effectiveAvailable) {
+                    $noStock[] = $row->code;
+                }
+            }
+        }
+
+        activity('outbound')
+            ->log("Inbound $inboundId re-priced to pricelevel $pricelevelId by " . auth()->user()->fullName);
+
+        $products = NewInboundProduct::where('inbound_id', $inboundId)
+            ->where('branch_code', $branchCode)
+            ->whereNull('status')
+            ->orderByRaw('CAST(`order` AS UNSIGNED)')->orderBy('id')->get();
+
+        $uiProducts = $products;
+
+        $svc = new InboundProductsService(json_encode($products));
+        $summary = $svc->summary();
+        $summary = $svc->addSppbinSummary();
+
+        $html = view('inboundList', compact('uiProducts', 'summary'))->render();
+
+        return response()->json([
+            'html'    => $html,
+            'noPrice' => $noPrice,
+            'noStock' => $noStock,
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      */
