@@ -84,7 +84,7 @@
     <section class="content">
         @include('layouts.errors')
         <div class="card">
-            <form action="{{ route('order.updateInbound') }}" method="POST">
+            <form action="{{ route('order.updateInbound') }}" method="POST" onsubmit="return validateOrderItems();">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="inbound_id" id="inboundId" class="label-input" value="{{ $inbound->id }}"
@@ -617,6 +617,15 @@
 
         function setQty(qty) {
             document.getElementById("qty_toadd").value = qty;
+        }
+
+        function validateOrderItems() {
+            const itemCount = document.querySelectorAll('#inboundList input[name="quantity"]').length;
+            if (itemCount === 0) {
+                alert("Cannot save an order with no items. Please add at least one product.");
+                return false;
+            }
+            return true;
         }
 
 

@@ -896,6 +896,11 @@ class InboundController extends Controller
         $inbound = Inbound::findOrFail($request->inbound_id);
 
         $products = NewInboundProduct::where('inbound_id', $request->inbound_id)->orderByRaw('CAST(`order` AS UNSIGNED)')->orderBy('id')->get();
+
+        if ($products->where('status', '!=', 'Deleted')->isEmpty()) {
+            return back()->withErrors(['products' => 'Cannot save an order with no items. Please add at least one product.'])->withInput();
+        }
+
         $customer = Customers::findOrFail($request->customer_id);
 
         $inbound->fill([
