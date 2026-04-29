@@ -81,8 +81,13 @@ class DashboardController extends Controller
                 });
 
             $salesVolumeByType = collect($salesByProductType)
-                ->map(fn($qty, $code) => ['name' => isset($productTypeNames[$code]) ? $productTypeNames[$code]->name : $code, 'quantity' => (int)$qty])
-                ->sortByDesc('quantity')
+                ->map(fn($qty, $code) => [
+                    'name' => isset($productTypeNames[$code]) ? $productTypeNames[$code]->name : $code,
+                    'quantity' => (int)$qty,
+                    'sequence_no' => $productTypeNames[$code]->sequence_no ?? PHP_INT_MAX,
+                ])
+                ->sortBy('sequence_no')
+                ->map(fn($row) => ['name' => $row['name'], 'quantity' => $row['quantity']])
                 ->values();
 
             $salesVolumeByFlavor = collect($salesByVariant)
