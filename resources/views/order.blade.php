@@ -50,6 +50,10 @@
                                 Deleted Orders
                             </button></a>
 
+                        <a href="{{ route('orders.print-today') }}" target="_blank"><button type="button" class="btn btn-info">
+                                <i class="fas fa-print"></i> Print Today's Orders
+                            </button></a>
+
                         @role('admin')
                             {{-- update order status: --}}
                             <div class="float-right">

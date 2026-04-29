@@ -293,6 +293,49 @@ class InboundController extends Controller
         return view('order', compact('equipment', 'drivers', 'vehicles', 'inbounds', 'pricing'));
     }
 
+    public function printTodayOrders()
+    {
+        $today = now()->toDateString();
+        $branchCode = session('branch_code');
+
+        $orders = Inbound::with('customer')
+            ->branch($branchCode)
+            ->whereNotIn('status', ['Cancelled', 'Rejected', 'Deleted'])
+            ->whereDate('order_date', $today)
+            ->orderBy('order_slip_sno')
+            ->orderBy('id')
+            ->get();
+
+        $sppbByCode = ProductType::pluck('spoon_pcs_per_bag', 'code');
+
+        $rows = $orders->map(function ($order) use ($sppbByCode) {
+            $products = json_decode($order->products, true) ?: [];
+            $spoons = 0;
+            foreach ($products as $product) {
+                $code = $product['ptype_code'] ?? null;
+                $qty = (float)($product['quantity'] ?? 0);
+                $sppb = (int)($sppbByCode[$code] ?? 0);
+                $spoons += $qty * $sppb;
+            }
+
+            $customerName = $order->customer
+                ? trim($order->customer->lastname . ', ' . $order->customer->firstname . ' ' . ($order->customer->middlename ?? ''))
+                : ($order->customer_name ?? '');
+
+            return [
+                'customer_name' => $customerName,
+                'order_date' => $order->order_date,
+                'spoons' => (int)$spoons,
+            ];
+        });
+
+        return view('report.today-orders-print', [
+            'rows' => $rows,
+            'today' => $today,
+            'branchCode' => $branchCode,
+        ]);
+    }
+
     // ajax products list
     public function ajaxProductList($code)
     {

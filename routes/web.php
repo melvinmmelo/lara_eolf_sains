@@ -299,6 +299,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/orders', [InboundController::class, 'index'])->name('order.index');
 
+    Route::get('/orders/print-today', [InboundController::class, 'printTodayOrders'])->name('orders.print-today');
+
     Route::get('/order/create', [InboundController::class, 'create'])->name('order.create');
 
     Route::get('/order/{inboundId}/edit/{vm?}', [InboundController::class, 'edit'])->name('order.edit');
