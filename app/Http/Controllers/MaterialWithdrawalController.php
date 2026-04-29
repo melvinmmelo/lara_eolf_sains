@@ -15,7 +15,14 @@ class MaterialWithdrawalController extends Controller
 
     public function list()
     {
-        $withdrawals = MaterialItemsWithdrawals::with('materials')
+        $branchCode = session('branch_code');
+
+        $withdrawals = MaterialItemsWithdrawals::with(['materials' => function ($q) use ($branchCode) {
+                $q->where('branch_code', $branchCode);
+            }])
+            ->whereHas('materials', function ($q) use ($branchCode) {
+                $q->where('branch_code', $branchCode);
+            })
             ->orderBy('withdrawal_date', 'desc')
             ->orderBy('created_at', 'desc')
             ->get();
