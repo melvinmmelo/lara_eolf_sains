@@ -217,6 +217,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit-branch/{id}', [BranchesController::class, 'edit'])->name('branch.edit');
 
     Route::get('/customers', [CustomersController::class, 'index'])->name('customers');
+    Route::get('/customers/stop-selling', [CustomersController::class, 'stopSelling'])->middleware('can:admin')->name('customers.stop-selling');
+    Route::patch('/customers/{id}/reactivate', [CustomersController::class, 'reactivate'])->middleware('can:admin')->name('customer.reactivate');
     Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customer.edit');
     Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
     Route::post('/customers/store', [CustomersController::class, 'store'])->name('customers.store');

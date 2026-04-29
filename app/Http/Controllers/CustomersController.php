@@ -16,6 +16,25 @@ class CustomersController extends Controller
         return view('customersinfo', compact('customers'));
     }
 
+    public function stopSelling()
+    {
+        $customers = Customer::with(['stores.equipmentStores'])
+            ->branch(session('branch_code'))
+            ->whereRaw('LOWER(status) = ?', ['stop selling'])
+            ->get();
+
+        return view('stop-selling-customers', compact('customers'));
+    }
+
+    public function reactivate($id)
+    {
+        $customer = Customer::findOrFail($id);
+        $customer->status = 'active';
+        $customer->save();
+
+        return redirect()->route('customers.stop-selling')->with('success', 'Customer reactivated successfully!');
+    }
+
     public function create()
     {
         return view('create-customer', compact('customers'));

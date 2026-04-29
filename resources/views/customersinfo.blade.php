@@ -25,6 +25,11 @@
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-customer">
                         Add New
                     </button>
+                    @can('admin')
+                        <a href="{{ route('customers.stop-selling') }}" class="btn btn-danger">
+                            <i class="fas fa-ban"></i> View Stop Selling Customers
+                        </a>
+                    @endcan
                 </div>
                 <table id="customer_tb" class="table table-bordered table-striped">
                     <thead>
