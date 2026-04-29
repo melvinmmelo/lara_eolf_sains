@@ -70,11 +70,34 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="requested_by">Requested By</label>
-                                <input type="text" class="form-control" name="requested_by" id="requested_by" value="{{ auth()->user()->fullName }}" required>
+                                <select class="form-control select2bs4" name="requested_by" id="requested_by" required>
+                                    <option value="">-- Select Customer --</option>
+                                    @foreach ($customers as $customer)
+                                        <option value="{{ $customer->lastname }}, {{ $customer->firstname }} {{ $customer->middlename }}">
+                                            {{ $customer->lastname }}, {{ $customer->firstname }} {{ $customer->middlename }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="issued_by">Issued By</label>
-                                <input type="text" class="form-control" name="issued_by" id="issued_by" value="{{ auth()->user()->fullName }}" required>
+                                <select class="form-control select2bs4" name="issued_by" id="issued_by" required>
+                                    <option value="">-- Select Issuer --</option>
+                                    @if ($employees->isNotEmpty())
+                                        <optgroup label="Employees">
+                                            @foreach ($employees as $employee)
+                                                <option value="{{ $employee->fullName }}">{{ $employee->fullName }}</option>
+                                            @endforeach
+                                        </optgroup>
+                                    @endif
+                                    @if ($drivers->isNotEmpty())
+                                        <optgroup label="Drivers">
+                                            @foreach ($drivers as $driver)
+                                                <option value="{{ $driver->name }}">{{ $driver->name }}</option>
+                                            @endforeach
+                                        </optgroup>
+                                    @endif
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="withdrawal_date">Withdrawal Date</label>
@@ -309,19 +332,26 @@ $(document).ready(function() {
         }
 
         let valid = true;
-        $(this).find('input[type="number"]').each(function() {
+        let errorMsg = 'Please check the quantities entered';
+        $(this).find('input[name$="[quantity]"]').each(function() {
+            const qty = parseFloat($(this).val());
+            if (isNaN(qty) || qty < 1) {
+                valid = false;
+                errorMsg = 'Quantity must be at least 1.';
+                $(this).addClass('is-invalid');
+                return false;
+            }
             if (!this.checkValidity()) {
                 valid = false;
                 $(this).addClass('is-invalid');
                 return false;
-            } else {
-                $(this).removeClass('is-invalid');
             }
+            $(this).removeClass('is-invalid');
         });
 
         if (!valid) {
             e.preventDefault();
-            alert('Please check the quantities entered');
+            alert(errorMsg);
             return false;
         }
 

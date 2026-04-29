@@ -4,13 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\MaterialsInventory;
 use App\Models\MaterialItemsWithdrawals;
+use App\Models\Drivers;
+use App\Models\Customers;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class MaterialWithdrawalController extends Controller
 {
     public function index()
     {
-        return view('material-withdrawals.index');
+        $drivers = Drivers::active()->orderBy('name')->get();
+        $employees = User::whereIn('status', ['active', 'Active'])
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->get();
+        $customers = Customers::branch(session('branch_code'))
+            ->where('status', 'active')
+            ->orderBy('lastname')
+            ->orderBy('firstname')
+            ->get();
+
+        return view('material-withdrawals.index', compact('drivers', 'employees', 'customers'));
     }
 
     public function list()
