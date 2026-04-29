@@ -53,8 +53,11 @@ php artisan migrate
 # Rollback last migration
 php artisan migrate:rollback
 
-# Refresh database (drops all tables and re-runs migrations)
+# Rollback all migrations then re-run them
 php artisan migrate:refresh
+
+# Drop all tables and re-run migrations from scratch
+php artisan migrate:fresh
 
 # View database info
 php artisan db:show --database=mysql
@@ -107,7 +110,7 @@ The application supports multiple branches with branch-specific data isolation:
 - **ItemMasterData** - Branch-specific stock levels (stocks, reserved, available_stocks)
 - **Inbound.products** - JSON field containing `[{ptype_code, quantity, price, order}]`
 - **BadOrder** / **InventoryBadOrder** - Damaged/returned product tracking
-- **StockReconciliation** - Inventory adjustment tracking
+- Stock reconciliation: controller-only feature (`StockReconciliationController`) — adjusts `ItemMasterData` directly, no dedicated model
 
 **Customer & Pricing:**
 - **Customers** - Has multiple stores, linked to equipment, inbounds, bad orders
@@ -119,6 +122,19 @@ The application supports multiple branches with branch-specific data isolation:
 - **Equipment** / **EquipmentStore** - Track customer equipment (freezers, coolers)
 - **Vehicles** / **Drivers** - Delivery logistics
 - **PullOutForm** - Equipment removal/replacement tracking
+
+**Materials (consumables, separate from products):**
+- **MaterialsInventory** - Branch-scoped stock for packaging/supplies; supports bulk-receive
+- **MaterialItemsWithdrawals** - Withdrawal records, branch-scoped, with a zero-quantity guard at the controller layer
+- Routes under `/materials-inventory` and `/material-withdrawals`
+
+**Customer Lifecycle:**
+- `customers.status` - `active` vs stop-selling (any non-`active` value)
+- Stop-selling list at `/customers/stop-selling` (admin-only) with a reactivate action
+- `Customers::scopeActive()` filters by `status='active'`
+
+**Dashboard:**
+- `DashboardController` renders sales-by-product-type, ordered by the configured product type sequence (not alphabetical)
 
 ### Key Code Patterns
 
@@ -210,6 +226,13 @@ Example routes:
 ### Environment Specific
 - Production forces HTTPS: `AppServiceProvider::boot()`
 - Schema default string length: 191 (for MySQL compatibility)
+- **Local DB:** uses the shared MySQL stack (`shared_mysql` container on `shared_db_net`). `.env` should set `DB_HOST=shared_mysql`, not `127.0.0.1`. phpMyAdmin at http://localhost/phpmyadmin/
+
+### Gotchas
+- **Model class names break Laravel conventions:** `Customers`, `pricelevels`, `prices` (plural / lowercase). Don't autocomplete-guess `Customer::` or `PriceLevel::`.
+- **`Inbound::getNextOrderNo` counts rows**, not `MAX(order_no)+1`. Safe today because orders are soft-deleted via `status='Deleted'`, never hard-deleted — if that ever changes, this collides.
+- **Two "active orders" scopes on Inbound:** `scopeActiveOrders` (Completed, excludes `is_foc`) vs `scopeActiveOrdersv2` (Completed/Paid/Free). Pick deliberately.
+- **Branch filtering is not automatic** — every query touching multi-branch data must call `->branch(session('branch_code'))` explicitly.
 
 ### Common Tasks
 
