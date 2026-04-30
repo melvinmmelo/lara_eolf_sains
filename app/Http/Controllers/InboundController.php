@@ -440,6 +440,14 @@ class InboundController extends Controller
         }
 
         $newInboundProduct->save();
+
+        $inboundDesc = $inboundId == 0
+            ? 'new order'
+            : (Inbound::find($inboundId)?->code ?? "inbound $inboundId");
+
+        activity('outbound')
+            ->log("Product $code (qty $qty) was added by " . auth()->user()->fullName . " in $inboundDesc");
+
         // orderBy('id') is the tiebreaker — multiple products of the same
         // type share the same `order` value (it's the type's sequence_no),
         // so without a secondary sort MySQL returns them in arbitrary order
@@ -626,6 +634,14 @@ class InboundController extends Controller
             $newInboundProduct->save();
 
         }
+
+        $inboundDesc = $inboundId == 0
+            ? 'new order'
+            : (Inbound::find($inboundId)?->code ?? "inbound $inboundId");
+        $delta = $action === 'add' ? '+1' : '-1';
+
+        activity('outbound')
+            ->log("Product $code qty $delta (now {$newInboundProduct->quantity}) by " . auth()->user()->fullName . " in $inboundDesc");
 
         if (NewInboundProduct::where('inbound_id', $inboundId)->where('branch_code', session('branch_code'))->whereNull('status')->exists()) {
             $products = NewInboundProduct::where('inbound_id', $inboundId)->where('branch_code', session('branch_code'))->whereNull('status')->get();

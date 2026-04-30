@@ -35,6 +35,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StockReconciliationController;
 use App\Http\Controllers\InventoryBadOrderController;
 use App\Http\Controllers\PullOutFormController;
+use App\Http\Controllers\ActivityLogController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -211,6 +212,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/users', [UsersController::class, 'index'])->name('users');
     Route::patch('/users', [UsersController::class, 'update'])->name('user.update');
     Route::get('/user/{id}', [UsersController::class, 'delete'])->name('user.delete');
+
+    Route::get('/activity-log', [ActivityLogController::class, 'index'])->middleware('can:admin')->name('activity-log.index');
 
     Route::get('/branch', [BranchesController::class, 'index'])->name('branch');
     Route::post('/branch/store', [BranchesController::class, 'store']);

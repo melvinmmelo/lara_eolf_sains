@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\AutoLogsChanges;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Drivers extends Model
 {
-    use HasFactory;
+    use HasFactory, AutoLogsChanges;
     protected $fillable = [
         'name',
         'address',

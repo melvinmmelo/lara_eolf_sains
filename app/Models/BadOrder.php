@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\AutoLogsChanges;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BadOrder extends Model
 {
-    use HasFactory;
+    use HasFactory, AutoLogsChanges;
 
     protected $table = 'bad_orders';
 

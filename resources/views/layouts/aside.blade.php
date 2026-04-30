@@ -63,6 +63,16 @@
                             </a>
                         </li>
 
+                        @can('admin')
+                            <li>
+                                <a href="{{ route('activity-log.index') }}"
+                                    class="nav-link {{ Route::currentRouteNamed('activity-log.index') ? 'active' : '' }}">
+                                    <i class="fas fa-history nav-icon"></i>
+                                    <p>Activity Log</p>
+                                </a>
+                            </li>
+                        @endcan
+
                         <li>
                             <a href="/vehicles"
                                 class="nav-link {{ Route::currentRouteNamed('vehicles') ? 'active' : '' }}">

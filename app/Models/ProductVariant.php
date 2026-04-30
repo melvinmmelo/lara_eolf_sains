@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\AutoLogsChanges;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductVariant extends Model
 {
-    use HasFactory;
+    use HasFactory, AutoLogsChanges;
 
     protected $primaryKey = 'code';
 
