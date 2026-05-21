@@ -28,7 +28,7 @@ class PricesController extends Controller
 
         $products = Product::all();
 
-        $productTypes = ProductType::all()->sortBy('sequence_no');
+        $productTypes = ProductType::where('is_active', 1)->orderBy('sequence_no')->get();
 
         return view('pricing', compact('pricing', 'pricelevels', 'products', 'productTypes'));
     }

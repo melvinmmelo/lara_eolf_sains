@@ -298,7 +298,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/product/{id}/toggle-status', [ProductController::class, 'toggleStatus'])->name('product.toggleStatus');
     Route::post('/product/archive', [ProductController::class, 'archive'])->name('product.archive');
     Route::post('/product/restore', [ProductController::class, 'restore'])->name('product.restore');
-    Route::get('/product-type/{id}/toggle-status', [ProductTypeController::class, 'toggleStatus'])->name('productType.toggleStatus');
 
     Route::get('/orders', [InboundController::class, 'index'])->name('order.index');
 

@@ -41,7 +41,7 @@
                             <th>Volume</th>
                             <th>Spoon PCS/BAG</th>
                             <th>Created at</th>
-                            {{-- <th>Active</th> --}}
+                            <th>Active</th>
                             <th></th>
 
                         </tr>
@@ -55,15 +55,11 @@
                                 <td>{{ $productType->volume }}</td>
                                 <td>{{ $productType->spoon_pcs_per_bag }}</td>
                                 <td>{{ $productType->date_created }}</td>
-                                {{-- <td>{{ $productType->is_active == 1 ? 'Yes' : 'No' }}</td> --}}
+                                <td>{!! statusBadge($productType->is_active ? 'Active' : 'Inactive') !!}</td>
                                 <td>
                                     <a href="#" data-toggle="modal" data-target="#modalEditPType"
-                                        onclick="setToUpdateProduct('{{ $productType->code }}','{{ $productType->name }}','{{ $productType->volume }}','{{ $productType->spoon_pcs_per_bag }}','{{ $productType->is_active }}')"><button
-                                            type="submit" class="btn btn-sm btn-primary">Edit</button></a>
-
-                                    {{-- <a href="{{ route('productType.toggleStatus', ['id' => $productType->code]) }}"
-                                        onclick="return confirmSetInactive();"><button type="submit"
-                                            class="btn btn-sm {{ $productType->is_active ? 'btn-danger' : 'btn-success' }}">{{ $productType->is_active ? 'Deactive' : 'Activate' }}</button></a> --}}
+                                        onclick="setToUpdateProduct('{{ $productType->code }}','{{ $productType->name }}','{{ $productType->volume }}','{{ $productType->spoon_pcs_per_bag }}',{{ $productType->is_active }})"><button
+                                            type="button" class="btn btn-sm btn-primary">Edit</button></a>
                                 </td>
                             </tr>
                         @endforeach
@@ -77,7 +73,7 @@
                             <th>Volume</th>
                             <th>Spoon PCS/BAG</th>
                             <th>Created at</th>
-                            {{-- <th>Active</th> --}}
+                            <th>Active</th>
                             <th></th>
 
                         </tr>
@@ -209,15 +205,15 @@
                                             value="{{ old('spoon_pcs_per_bag') }} ?? 0" required>
                                     </div>
 
-                                    {{-- <div class="col-sm-3">
-                                        <label class="form-label" for="status">Active</label>
+                                    <div class="col-sm-3">
+                                        <label class="form-label" for="e_is_active">Active</label>
                                         <br>
-                                        <input type="checkbox" name="e_is_active" id="mySwitch" data-bootstrap-switch
-                                            data-on-text="Yes" data-off-text="No" data-on-color="success"
-                                            data-off-color="danger">
+                                        <input type="checkbox" name="e_is_active" id="eIsActiveSwitch"
+                                            data-bootstrap-switch data-on-text="Yes" data-off-text="No"
+                                            data-on-color="success" data-off-color="danger">
 
                                         <div style="margin-bottom: 20px"></div>
-                                    </div> --}}
+                                    </div>
                                 </div>
                             </div>
 
@@ -243,16 +239,14 @@
 
 @section('custom_js')
     <script>
-        function confirmSetInactive() {
-            return confirm("Are you sure you want to update the product status?")
-        }
-
         function setToUpdateProduct(code, name, volume, spoon_pcs_per_bag, is_active) {
             document.querySelector('input[name="e_code"]').value = code;
             document.querySelector('input[name="e_name"]').value = name;
             document.querySelector('input[name="e_volume"]').value = volume;
             document.querySelector('input[name="e_spoon_pcs_per_bag"]').value = spoon_pcs_per_bag;
-            document.querySelector('input[name="e_is_active"]').checked = is_active;
+
+            // Reflect the saved status on the Bootstrap Switch
+            $('input[name="e_is_active"]').bootstrapSwitch('state', is_active == 1);
         }
     </script>
 @endsection

@@ -54,15 +54,6 @@ class ProductTypeController extends Controller
         return redirect()->back()->with('success', 'Data saved!');
     }
 
-    public function toggleStatus(string $id)
-    {
-        $productType = ProductType::find($id)->first();
-        $productType->is_active = !$productType->is_active;
-        $productType->save();
-
-        return redirect()->back()->with('success', 'Data saved!');
-    }
-
     /**
      * Display the specified resource.
      */
@@ -99,7 +90,7 @@ class ProductTypeController extends Controller
         $productType->name = $request->e_name;
         $productType->volume = $request->e_volume;
         $productType->spoon_pcs_per_bag = $request->e_spoon_pcs_per_bag;
-        $productType->is_active = !$request->e_is_active;
+        $productType->is_active = $request->e_is_active == 'on' ? 1 : 0;
         $productType->save();
 
         $changes = $productType->getChanges();
