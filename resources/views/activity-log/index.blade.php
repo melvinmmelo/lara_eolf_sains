@@ -118,7 +118,7 @@
                     </table>
                 </div>
 
-                {{ $logs->links() }}
+                {{ $logs->withQueryString()->links('pagination::bootstrap-4') }}
             </div>
         </div>
     </section>
