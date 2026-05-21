@@ -58,7 +58,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center text-gray-500">No orders for today.</td>
+                            <td colspan="8" class="text-center text-gray-500">No orders for the selected date.</td>
                         </tr>
                     @endforelse
                 </tbody>

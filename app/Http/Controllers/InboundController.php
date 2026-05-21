@@ -293,15 +293,21 @@ class InboundController extends Controller
         return view('order', compact('equipment', 'drivers', 'vehicles', 'inbounds', 'pricing'));
     }
 
-    public function printTodayOrders()
+    public function printTodayOrders(Request $request)
     {
-        $today = now()->toDateString();
+        $validated = $request->validate([
+            'date' => ['nullable', 'date'],
+        ]);
+
+        $date = !empty($validated['date'])
+            ? \Carbon\Carbon::parse($validated['date'])->toDateString()
+            : now()->toDateString();
         $branchCode = session('branch_code');
 
         $orders = Inbound::with('customer')
             ->branch($branchCode)
             ->whereNotIn('status', ['Cancelled', 'Rejected', 'Deleted'])
-            ->whereDate('order_date', $today)
+            ->whereDate('order_date', $date)
             ->orderBy('order_slip_sno')
             ->orderBy('id')
             ->get();
@@ -331,7 +337,7 @@ class InboundController extends Controller
 
         return view('report.today-orders-print', [
             'rows' => $rows,
-            'today' => $today,
+            'today' => $date,
             'branchCode' => $branchCode,
         ]);
     }

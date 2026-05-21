@@ -50,9 +50,13 @@
                                 Deleted Orders
                             </button></a>
 
-                        <a href="{{ route('orders.print-today') }}" target="_blank"><button type="button" class="btn btn-info">
-                                <i class="fas fa-print"></i> Print Today's Orders
-                            </button></a>
+                        <span class="d-inline-block">
+                            <input type="date" id="printOrdersDate" value="{{ now()->toDateString() }}"
+                                class="form-control d-inline-block" style="width: 160px;">
+                            <button type="button" class="btn btn-info" onclick="printOrdersForDate()">
+                                <i class="fas fa-print"></i> Print Orders
+                            </button>
+                        </span>
 
                         @role('admin')
                             {{-- update order status: --}}
@@ -326,6 +330,15 @@
 
 @section('custom_js')
     <script>
+        function printOrdersForDate() {
+            const date = document.getElementById('printOrdersDate').value;
+            let url = '{{ route('orders.print-today') }}';
+            if (date) {
+                url += '?date=' + encodeURIComponent(date);
+            }
+            window.open(url, '_blank');
+        }
+
         function setObId(obId, totalAmount) {
             if (totalAmount == 0) {
 
