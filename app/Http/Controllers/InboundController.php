@@ -1228,6 +1228,7 @@ class InboundController extends Controller
         $dateFrom = $request->input('date_from', date('Y-m-01'));
         $dateTo = $request->input('date_to', date('Y-m-d'));
         $status = $request->input('status', '');
+        $search = trim($request->input('search', ''));
 
         // Query inbounds with with_invoice = 1
         $query = Inbound::where('branch_code', $branchCode)
@@ -1238,6 +1239,16 @@ class InboundController extends Controller
         // Apply status filter if provided
         if (!empty($status)) {
             $query->where('status', $status);
+        }
+
+        // Apply customer/store name search if provided
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('customer', function ($c) use ($search) {
+                    $c->whereRaw("CONCAT_WS(' ', firstname, middlename, lastname) LIKE ?", ["%{$search}%"]);
+                })
+                ->orWhere('store_name', 'LIKE', "%{$search}%");
+            });
         }
 
         $inbounds = $query->orderBy('order_date', 'desc')

@@ -80,6 +80,14 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
+                                <label for="search">Search Name</label>
+                                <input type="text" class="form-control" id="search" name="search"
+                                       value="{{ request('search') }}"
+                                       placeholder="Customer or store name">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
                                 <label>&nbsp;</label>
                                 <div>
                                     <button type="submit" class="btn btn-primary btn-block">
@@ -88,6 +96,18 @@
                                 </div>
                             </div>
                         </div>
+                        @if(request('search'))
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <div>
+                                        <a href="{{ route('sales-invoices.index', request()->except('search')) }}" class="btn btn-outline-secondary btn-block">
+                                            <i class="fas fa-times"></i> Clear Search
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </form>
             </div>
