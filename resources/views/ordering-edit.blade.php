@@ -183,6 +183,16 @@
                                     </select>
                                 </div>
                             </div>
+
+                            @role('admin')
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label class="form-label" for="order_date"><i style="color:red">*</i>Order Date</label>
+                                        <input type="date" class="form-control" name="order_date" id="order_date"
+                                            value="{{ optional($inbound->order_date)->format('Y-m-d') }}" required>
+                                    </div>
+                                </div>
+                            @endrole
                         </div>
                     </div>
 

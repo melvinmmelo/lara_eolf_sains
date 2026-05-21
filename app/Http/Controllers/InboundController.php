@@ -939,6 +939,10 @@ class InboundController extends Controller
 
         $branchCode = session('branch_code');
 
+        // Only admins may edit the order date — backdating reclassifies the
+        // order across sales reports / dashboard periods, so it stays gated.
+        $isAdmin = auth()->user()->can('admin');
+
         $request->validate([
             'inbound_id' => 'required|exists:inbounds,id',
             'pricelevel_id' => 'required',
@@ -953,6 +957,7 @@ class InboundController extends Controller
             'is_foc' => 'nullable',
             'with_sf' => 'nullable',
             'sales_invoice_no' => 'nullable|string|max:50',
+            'order_date' => [$isAdmin ? 'required' : 'nullable', 'date'],
         ]);
 
         $errors = [];
@@ -984,6 +989,11 @@ class InboundController extends Controller
             'vehicle_no' => Vehicles::find($request->vehicle_id)->plateno,
             'is_with_sf' => $request->with_sf == 'on' ? 1 : NULL,
         ]);
+
+        // Non-admins never see the field, so their order_date is left untouched.
+        if ($isAdmin && $request->filled('order_date')) {
+            $inbound->order_date = $request->order_date;
+        }
 
         $bad_order = $request->bad_order === 'on' ? 1 : 0;
 
