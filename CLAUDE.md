@@ -23,8 +23,13 @@ composer install
 npm install
 cp .env.example .env
 php artisan key:generate
-php artisan migrate
-php artisan db:seed
+
+# IMPORTANT: migrations do NOT build the full schema (only 2 patch migrations exist).
+# Import the canonical 54-table schema first. database/eolf.sql is a ~67MB phpMyAdmin
+# dump, gitignored and kept locally only:
+mysql -h 127.0.0.1 -u <user> -p <database> < database/eolf.sql
+php artisan migrate   # applies the 2 incremental patches (inbounds index, users.last_active_at)
+# php artisan db:seed # only for a truly EMPTY schema — eolf.sql already contains data
 ```
 
 ### Daily Development
@@ -112,6 +117,12 @@ The application supports multiple branches with branch-specific data isolation:
 - **BadOrder** / **InventoryBadOrder** - Damaged/returned product tracking
 - Stock reconciliation: controller-only feature (`StockReconciliationController`) — adjusts `ItemMasterData` directly, no dedicated model
 
+**Bad Orders (multiple overlapping systems — pick the right one):**
+- **Sales-side bad orders (CANONICAL):** `NewBadOrderController` + `NewBadOrder` (header) → `NewTempBadOrder` (line items, `hasMany`). Routes named `newbo.*` under `/bad-orders`, `/bad-order/create|edit`. Pricing via the `BadOrderPrice` lookup (by ProductType + price level).
+- **Helpers for that flow (not standalone features):** `addbadorderController` (AJAX item/product fetch: `/fetch-items`, `/get-products/...`) and `TempBadOrderController` (session scratch save/clear).
+- **Legacy:** `BadOrderController` + `BadOrder` model — kept only for utility lookups (e.g. `/lastBadOrderOfCustomer/...`). Don't build new sales-side BO features here.
+- **Inventory-side bad orders (SEPARATE system):** `InventoryBadOrderController` + `InventoryBadOrder` under `/inventory/bad-orders` — deducts `ItemMasterData` stock directly and supports a `rollback` action. Unrelated to the sales-side BO above.
+
 **Customer & Pricing:**
 - **Customers** - Has multiple stores, linked to equipment, inbounds, bad orders
 - **StoreInfo** - Customer store locations
@@ -120,6 +131,7 @@ The application supports multiple branches with branch-specific data isolation:
 
 **Equipment & Logistics:**
 - **Equipment** / **EquipmentStore** - Track customer equipment (freezers, coolers)
+- **EquipmentHistory** - Audit trail of equipment assignment / pull-out events (serial, customer, dates, users, reason)
 - **Vehicles** / **Drivers** - Delivery logistics
 - **PullOutForm** - Equipment removal/replacement tracking
 
@@ -127,6 +139,12 @@ The application supports multiple branches with branch-specific data isolation:
 - **MaterialsInventory** - Branch-scoped stock for packaging/supplies; supports bulk-receive
 - **MaterialItemsWithdrawals** - Withdrawal records, branch-scoped, with a zero-quantity guard at the controller layer
 - Routes under `/materials-inventory` and `/material-withdrawals`
+
+**Other entities:**
+- **DeliveryPurchaseReceipt** - Incoming stock receipts from suppliers (NOT customer orders); `/dpr-*` routes, `products` array, supports per-product hold/rollback
+- **Delivery** - Delivery-personnel registry (branch-scoped, `scopeActive`); distinct from `DeliveryReceipt` (the proof-of-delivery document)
+- **CompanyDetails** - Single-row company info (seeded `name='EOLF'`)
+- **Expenses** - Empty stub model (no fillables) — WIP/unused
 
 **Customer Lifecycle:**
 - `customers.status` - `active` vs stop-selling (any non-`active` value)
@@ -177,11 +195,21 @@ Helper functions in `app/Helpers/helpers.php`:
 - `getTotalOfProducts($products)` - Calculate total amount
 - `getSummaryOfProducts($products)` - Group by product type
 
+**Order-edit cart (`NewInboundProduct` / `new_inbound_products` table):**
+The order **edit** screen does not mutate `inbounds.products` JSON in place while editing — it stages line items in the relational `new_inbound_products` table (model `NewInboundProduct`), scoped by `inbound_id` + `branch_code`, soft-deleted via a `status` column (active rows are `whereNull('status')`), ordered by a string `order` column cast to UNSIGNED. See `InboundController` for re-pricing on price-level change, delete-item, and delete-all. The canonical `inbounds.products` JSON remains the source of truth for saved orders.
+
 ### Permissions & Authorization
 - Uses Spatie Laravel Permission package
 - Gate defined for admin role: `Gate::define('admin', ...)`
 - Middleware: `->middleware('can:admin')` restricts routes
 - Activity logging with Spatie ActivityLog on model changes
+
+### Global Middleware & Activity Tracking
+Registered in `bootstrap/app.php` on the `web` group — these run on **every** web request:
+- **`CheckSessionBranch`** - enforces branch selection; redirects to `branch-select` when `session('branch_code')` is unset.
+- **`LogUserActivity`** - on `terminate()` (after the response is sent): writes a Spatie activity entry (log name `page-visit`: method, url, route, IP, UA, branch, status) and throttle-updates `users.last_active_at` via `saveQuietly()` (60s cache cooldown). Skips HEAD/OPTIONS and asset/health paths.
+- **Model audit trail:** changes are logged via the `App\Models\Concerns\AutoLogsChanges` trait (Spatie `LogsActivity`, dirty attrs only), applied broadly — Inbound, Customers, Product, ProductType, ProductVariant, OrderSlip, LoadingTicket, DeliveryReceipt, Equipment, Vehicles, Drivers, BadOrder, MaterialItemsWithdrawals, etc.
+- **Admin viewer:** `ActivityLogController` at `/activity-log` (admin-only) — filter by user / log name / date / search, paginated; filters are preserved across pagination.
 
 ### Views & Frontend
 - Layout: AdminLTE 3 (`resources/views/layouts/app.blade.php`)
@@ -213,6 +241,7 @@ Example routes:
 ## Important Notes
 
 ### Database Considerations
+- **Schema is NOT migration-managed.** Only 2 files exist in `database/migrations/`, both incremental patches. The full 54-table schema lives in `database/eolf.sql` (~67MB phpMyAdmin dump, **gitignored**, present locally only). `migrate:fresh` will NOT rebuild the app — import the dump first. `database/changes.sql` holds ad-hoc DDL tweaks layered on top.
 - JSON columns used for flexible product data in orders
 - Model accessors heavily used for computed values (always call in correct order)
 - Scopes used extensively for branch filtering and status queries
@@ -233,6 +262,8 @@ Example routes:
 - **`Inbound::getNextOrderNo` counts rows**, not `MAX(order_no)+1`. Safe today because orders are soft-deleted via `status='Deleted'`, never hard-deleted — if that ever changes, this collides.
 - **Two "active orders" scopes on Inbound:** `scopeActiveOrders` (Completed, excludes `is_foc`) vs `scopeActiveOrdersv2` (Completed/Paid/Free). Pick deliberately.
 - **Branch filtering is not automatic** — every query touching multi-branch data must call `->branch(session('branch_code'))` explicitly.
+- **Bad orders have two unrelated systems** — sales-side (`NewBadOrderController`, canonical) vs inventory-side (`InventoryBadOrderController`). Several legacy BO controllers/models still exist; see *Bad Orders* under Core Business Entities before touching them.
+- **`app/Http/Controllers/php_errors.log`** is a committed stray PHP error-log file, not code — ignore it (don't read it as a controller or `require` it).
 
 ### Common Tasks
 
