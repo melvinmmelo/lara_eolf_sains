@@ -36,6 +36,7 @@ use App\Http\Controllers\StockReconciliationController;
 use App\Http\Controllers\InventoryBadOrderController;
 use App\Http\Controllers\PullOutFormController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\ExpensesController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -382,6 +383,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/inventory/bad-orders', [InventoryBadOrderController::class, 'store'])->name('inventory.bad-orders.store');
     Route::post('/inventory/bad-orders/{badOrder}/rollback', [InventoryBadOrderController::class, 'rollback'])->name('inventory.bad-orders.rollback');
     Route::get('/report/pullout-replaced-form/{degic_no}/{customer_id}', [PullOutFormController::class, 'show'])->name('report.pullout-replaced-form');
+
+    // Expenses (admin only)
+    Route::middleware('can:admin')->group(function () {
+        Route::get('/expenses', [ExpensesController::class, 'index'])->name('expenses.index');
+        Route::get('/expenses/export', [ExpensesController::class, 'export'])->name('expenses.export');
+        Route::post('/expenses', [ExpensesController::class, 'store'])->name('expenses.store');
+        Route::get('/expenses/{id}/edit', [ExpensesController::class, 'edit'])->name('expenses.edit');
+        Route::put('/expenses/{id}', [ExpensesController::class, 'update'])->name('expenses.update');
+        Route::delete('/expenses/{id}', [ExpensesController::class, 'destroy'])->name('expenses.destroy');
+    });
 });
 
 require __DIR__ . '/auth.php';

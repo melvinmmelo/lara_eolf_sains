@@ -269,6 +269,16 @@
                     </ul>
                 </li>
 
+                @can('admin')
+                    <li class="nav-item">
+                        <a href="{{ route('expenses.index') }}"
+                            class="nav-link {{ Route::currentRouteNamed('expenses.index') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-wallet" style="color: #74C0FC;"></i>
+                            <p>Expenses</p>
+                        </a>
+                    </li>
+                @endcan
+
                 <li class="nav-item {{ Route::currentRouteNamed('report.productsSummary') || Route::currentRouteNamed('report.deliveryPurchaseReceiptSummary') || Route::currentRouteNamed('report.availableStocks') || Route::currentRouteNamed('report.sales') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-folder-open" style="color: #74C0FC;"></i>
