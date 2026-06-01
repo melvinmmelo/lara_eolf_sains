@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Customers as Customer;
 use App\Models\PhAddr;
 use App\Models\StoreInfo;
 use App\Models\Equipment;
+use App\Models\Inbound;
+use App\Models\DeliveryReceipt;
+use App\Models\PullOutForm;
+use App\Models\EquipmentHistory;
 
 class CustomersController extends Controller
 {
@@ -157,6 +162,43 @@ class CustomersController extends Controller
         $storeInfo->remarks = $request->remarks;
 
         $storeInfo->save();
+
+        // Optionally propagate the new name to the denormalized customer_name snapshots
+        // that the reports read from. Admin-gated on the server too, not just in the UI.
+        if ($request->boolean('update_reports') && $request->user()?->can('admin')) {
+            $newName = $customer->fullName; // matches how customer_name is set at creation everywhere
+            $customerId = $customer->id;
+
+            $counts = DB::transaction(function () use ($customerId, $newName) {
+                $inboundIds = Inbound::where('customer_id', $customerId)->pluck('id');
+
+                return [
+                    'inbounds' => Inbound::where('customer_id', $customerId)
+                        ->update(['customer_name' => $newName]),
+                    // delivery_receipts has no customer_id; reach it through the customer's inbounds
+                    'delivery_receipts' => $inboundIds->isEmpty() ? 0 : DeliveryReceipt::whereIn('inbound_id', $inboundIds)
+                        ->update(['customer_name' => $newName]),
+                    'pull_out_forms' => PullOutForm::where('customer_id', $customerId)
+                        ->update(['customer_name' => $newName]),
+                    'equipment_history' => EquipmentHistory::where('customer_id', $customerId)
+                        ->update(['customer_name' => $newName]),
+                ];
+            });
+
+            activity()
+                ->performedOn($customer)
+                ->withProperties(array_merge(['new_name' => $newName], $counts))
+                ->log('Customer name propagated to reports');
+
+            $total = array_sum($counts);
+
+            return redirect('/customers/')->with(
+                'success',
+                "Customer updated. Name propagated to {$total} record(s): "
+                    . "{$counts['inbounds']} order(s), {$counts['delivery_receipts']} delivery receipt(s), "
+                    . "{$counts['pull_out_forms']} pull-out form(s), {$counts['equipment_history']} equipment history record(s)."
+            );
+        }
 
         return redirect('/customers/')->with('success', 'Customer updated successfully!');
     }

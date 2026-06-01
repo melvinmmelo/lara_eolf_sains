@@ -485,7 +485,7 @@
         <div class="modal fade custom-modal" id="editModal">
             <div class="modal-dialog modal-xl">
 
-                <form method="POST" action="{{ route('customer.update') }}">
+                <form id="editCustomerForm" method="POST" action="{{ route('customer.update') }}">
                     @csrf
                     @method('PATCH')
 
@@ -788,6 +788,18 @@
                             </div>
                         </div>
                         <div class="modal-footer">
+                            @can('admin')
+                                <div class="custom-control custom-checkbox mr-auto text-left">
+                                    <input type="checkbox" class="custom-control-input" id="update_reports"
+                                        name="update_reports" value="1">
+                                    <label class="custom-control-label" for="update_reports">
+                                        Also update this customer's name on existing reports
+                                        <small class="d-block text-muted">Rewrites the saved name on all of this
+                                            customer's orders, delivery receipts, pull-out forms &amp; equipment
+                                            history.</small>
+                                    </label>
+                                </div>
+                            @endcan
                             <button type="submit" class="btn btn-success">Save changes</button>
                         </div>
                     </div>
@@ -958,7 +970,55 @@
             document.getElementById("listype2").value = listype;
             document.getElementById("length_stay2").value = length_stay;
             document.getElementById("remarks2").value = remarks;
+
+            // Always start unchecked so the cascade is a deliberate, per-edit choice (admin-only field).
+            var updateReports = document.getElementById("update_reports");
+            if (updateReports) {
+                updateReports.checked = false;
+            }
         }
+
+        // Confirm before propagating the customer's new name across historical reports.
+        // Only intervenes when the admin ticked "update_reports"; normal saves submit directly.
+        (function() {
+            var editForm = document.getElementById("editCustomerForm");
+            if (!editForm) return;
+
+            editForm.addEventListener("submit", function(e) {
+                var updateReports = document.getElementById("update_reports");
+                if (!updateReports || !updateReports.checked) {
+                    return; // plain update — no confirmation needed
+                }
+
+                e.preventDefault();
+
+                var newName = [
+                    document.getElementById("firstname").value,
+                    document.getElementById("middlename").value,
+                    document.getElementById("lastname").value
+                ].map(function(v) {
+                    return (v || "").trim();
+                }).filter(Boolean).join(" ");
+
+                Swal.fire({
+                    title: "Update name on all reports?",
+                    html: "This rewrites the customer name to <b>" + (newName || "(blank)") +
+                        "</b> on <b>all</b> of this customer's existing orders, delivery receipts, " +
+                        "pull-out forms and equipment history.<br><br>" +
+                        "This affects historical reports and cannot be undone.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#28a745",
+                    cancelButtonColor: "#6c757d",
+                    confirmButtonText: "Yes, update everywhere",
+                    cancelButtonText: "Cancel"
+                }).then(function(result) {
+                    if (result.isConfirmed) {
+                        editForm.submit(); // native submit bypasses this listener — no loop
+                    }
+                });
+            });
+        })();
 
         $('#modal-equipment').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
