@@ -173,7 +173,13 @@ class DeliveryPurchaseReceiptController extends Controller
     {
         $deliveryPurchaseReceipt = DeliveryPurchaseReceipt::findOrFail($dprId);
 
-        $originalProducts = Product::all();
+        // Only offer items that are active end-to-end: the product itself, its
+        // product type, and its product variant must all have is_active = 1.
+        // Archived/inactive entries are hidden from the item selection.
+        $originalProducts = Product::active()
+            ->whereHas('productType', fn ($q) => $q->where('is_active', 1))
+            ->whereHas('productVariant', fn ($q) => $q->where('is_active', 1))
+            ->get();
         $originalProducts = $originalProducts->sortBy(function ($product) {
             return ProductType::code($product->product_type_code)->pluck('sequence_no')->first();
         });
@@ -218,7 +224,13 @@ class DeliveryPurchaseReceiptController extends Controller
     {
         $deliveryPurchaseReceipt = DeliveryPurchaseReceipt::findOrFail($dprId);
 
-        $originalProducts = Product::all();
+        // Only offer items that are active end-to-end: the product itself, its
+        // product type, and its product variant must all have is_active = 1.
+        // Archived/inactive entries are hidden from the item selection.
+        $originalProducts = Product::active()
+            ->whereHas('productType', fn ($q) => $q->where('is_active', 1))
+            ->whereHas('productVariant', fn ($q) => $q->where('is_active', 1))
+            ->get();
         $originalProducts = $originalProducts->sortBy(function ($product) {
             return ProductType::code($product->product_type_code)->pluck('sequence_no')->first();
         });
