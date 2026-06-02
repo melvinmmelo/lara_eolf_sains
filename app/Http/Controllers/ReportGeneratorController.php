@@ -280,6 +280,10 @@ class ReportGeneratorController extends Controller
                 $product->variant_name = $variants->get($variantCode)?->name ?? 'N/A';
                 return $product;
             })
+            ->filter(function ($product) {
+                // Exclude items whose product type is archived/inactive
+                return (bool) ($product->product?->productType?->is_active ?? false);
+            })
             ->groupBy(function ($product) {
                 return $product->product->productType->name;
             })
