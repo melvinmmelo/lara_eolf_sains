@@ -42,6 +42,7 @@
                             <thead>
                                 <tr>
                                     <th>Group Ticket No</th>
+                                    <th>Date</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -49,6 +50,7 @@
                                 @foreach ($loadingTickets as $loadingTicket)
                                     <tr>
                                         <td>{{ $loadingTicket->ticket_no }}</td>
+                                        <td>{{ optional($loadingTicket->created_at)->format('M d, Y h:i A') }}</td>
                                         <td>
                                             <a href="{{ route('inbounds-ticket', ['grp' => $loadingTicket->ticket_no]) }}"
                                                 class="btn btn-primary">Show</a>
@@ -59,6 +61,7 @@
                             <tfoot>
                                 <tr>
                                     <th>Group Ticket No</th>
+                                    <th>Date</th>
                                     <th></th>
                                 </tr>
                             </tfoot>
