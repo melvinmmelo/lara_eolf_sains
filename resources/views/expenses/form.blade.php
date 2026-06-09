@@ -6,7 +6,7 @@
             value="{{ $prefix === '' ? date('Y-m-d') : '' }}" required>
     </div>
     <div class="col-sm-6">
-        <label><i style="color:red">*</i> Category</label>
+        <label><i style="color:red">*</i> Expenses Account</label>
         <select class="form-control" name="category" id="{{ $prefix }}category" required>
             <option value="">-- Select --</option>
             @foreach (\App\Models\Expenses::CATEGORIES as $cat)
@@ -50,6 +50,28 @@
 
 <div class="form-group row">
     <div class="col-sm-6">
+        <label>Payee Address</label>
+        <input type="text" class="form-control" name="payee_address" id="{{ $prefix }}payee_address"
+            placeholder="Payee's registered address">
+    </div>
+    <div class="col-sm-3">
+        <label>TIN</label>
+        <input type="text" class="form-control" name="tin" id="{{ $prefix }}tin"
+            placeholder="000-000-000-0000" maxlength="191">
+    </div>
+    <div class="col-sm-3">
+        <label>Taxpayer Type</label>
+        <select class="form-control" name="taxpayer_type" id="{{ $prefix }}taxpayer_type">
+            <option value="">-- Select --</option>
+            @foreach (\App\Models\Expenses::TAXPAYER_TYPES as $t)
+                <option value="{{ $t }}">{{ $t }}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-sm-4">
         <label>Payment Method</label>
         <select class="form-control" name="payment_method" id="{{ $prefix }}payment_method">
             <option value="">-- Select --</option>
@@ -58,10 +80,15 @@
             @endforeach
         </select>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-4">
         <label>Reference No.</label>
         <input type="text" class="form-control" name="reference_no" id="{{ $prefix }}reference_no"
             placeholder="OR / Check / Txn no.">
+    </div>
+    <div class="col-sm-4">
+        <label>Petty Cash No.</label>
+        <input type="text" class="form-control" name="petty_cash_no" id="{{ $prefix }}petty_cash_no"
+            placeholder="PCV no.">
     </div>
 </div>
 

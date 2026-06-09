@@ -144,7 +144,7 @@ The application supports multiple branches with branch-specific data isolation:
 - **DeliveryPurchaseReceipt** - Incoming stock receipts from suppliers (NOT customer orders); `/dpr-*` routes, `products` array, supports per-product hold/rollback
 - **Delivery** - Delivery-personnel registry (branch-scoped, `scopeActive`); distinct from `DeliveryReceipt` (the proof-of-delivery document)
 - **CompanyDetails** - Single-row company info (seeded `name='EOLF'`)
-- **Expenses** - Empty stub model (no fillables) — WIP/unused
+- **Expenses** - Admin-only, branch-scoped expense ledger; routes named `expenses.*` under `/expenses` (CRUD + `/expenses/export` Excel via PHPSpreadsheet). Records BIR petty-cash fields alongside the basics: `taxpayer_type` (VAT/Non-VAT), `tin`, `payee_address`, `petty_cash_no`. Picklists are model constants (`CATEGORIES`, `PAYMENT_METHODS`, `TAXPAYER_TYPES`). Schema is added via migrations (`*_add_fields_to_expenses_table`, `*_add_tax_fields_to_expenses_table`), not `eolf.sql`.
 
 **Customer Lifecycle:**
 - `customers.status` - `active` vs stop-selling (any non-`active` value)

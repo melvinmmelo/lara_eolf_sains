@@ -53,7 +53,7 @@ class ExpensesController extends Controller
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Expenses');
 
-        $headers = ['Date', 'Category', 'Particulars', 'Payee', 'Amount', 'Payment Method', 'Ref No.', 'Remarks', 'Recorded By'];
+        $headers = ['Date', 'Expenses Account', 'Particulars', 'Payee', 'Payee Address', 'TIN', 'Taxpayer Type', 'Amount', 'Payment Method', 'Ref No.', 'Petty Cash No.', 'Remarks', 'Recorded By'];
         $sheet->fromArray($headers, null, 'A1');
 
         $headerStyle = [
@@ -65,7 +65,7 @@ class ExpensesController extends Controller
                 'startColor' => ['rgb' => 'E2E8F0'],
             ],
         ];
-        $sheet->getStyle('A1:I1')->applyFromArray($headerStyle);
+        $sheet->getStyle('A1:M1')->applyFromArray($headerStyle);
 
         $row = 2;
         foreach ($expenses as $expense) {
@@ -73,23 +73,28 @@ class ExpensesController extends Controller
             $sheet->setCellValue('B' . $row, $expense->category);
             $sheet->setCellValue('C' . $row, $expense->particulars);
             $sheet->setCellValue('D' . $row, $expense->payee);
-            $sheet->setCellValueExplicit('E' . $row, $expense->amount, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
-            $sheet->setCellValue('F' . $row, $expense->payment_method);
-            $sheet->setCellValue('G' . $row, $expense->reference_no);
-            $sheet->setCellValue('H' . $row, $expense->remarks);
-            $sheet->setCellValue('I' . $row, optional($expense->creator)->fullName);
+            $sheet->setCellValue('E' . $row, $expense->payee_address);
+            // TIN may be all-digits with leading zeros — keep it textual so Excel doesn't mangle it.
+            $sheet->setCellValueExplicit('F' . $row, (string) $expense->tin, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+            $sheet->setCellValue('G' . $row, $expense->taxpayer_type);
+            $sheet->setCellValueExplicit('H' . $row, $expense->amount, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('I' . $row, $expense->payment_method);
+            $sheet->setCellValue('J' . $row, $expense->reference_no);
+            $sheet->setCellValueExplicit('K' . $row, (string) $expense->petty_cash_no, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+            $sheet->setCellValue('L' . $row, $expense->remarks);
+            $sheet->setCellValue('M' . $row, optional($expense->creator)->fullName);
             $row++;
         }
 
-        $sheet->getStyle('E2:E' . ($row - 1))->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->getStyle('H2:H' . ($row - 1))->getNumberFormat()->setFormatCode('#,##0.00');
 
         // Total row
         $totalRow = $row;
         $sheet->setCellValue('A' . $totalRow, 'Total');
-        $sheet->mergeCells('A' . $totalRow . ':D' . $totalRow);
-        $sheet->setCellValueExplicit('E' . $totalRow, $expenses->sum('amount'), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
-        $sheet->getStyle('E' . $totalRow)->getNumberFormat()->setFormatCode('#,##0.00');
-        $sheet->getStyle('A' . $totalRow . ':I' . $totalRow)->applyFromArray([
+        $sheet->mergeCells('A' . $totalRow . ':G' . $totalRow);
+        $sheet->setCellValueExplicit('H' . $totalRow, $expenses->sum('amount'), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
+        $sheet->getStyle('H' . $totalRow)->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->getStyle('A' . $totalRow . ':M' . $totalRow)->applyFromArray([
             'font' => ['bold' => true],
             'borders' => [
                 'top' => ['borderStyle' => Border::BORDER_THIN],
@@ -97,7 +102,7 @@ class ExpensesController extends Controller
             ],
         ]);
 
-        foreach (range('A', 'I') as $col) {
+        foreach (range('A', 'M') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
@@ -170,7 +175,9 @@ class ExpensesController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('particulars', 'like', "%{$search}%")
                     ->orWhere('payee', 'like', "%{$search}%")
-                    ->orWhere('reference_no', 'like', "%{$search}%");
+                    ->orWhere('reference_no', 'like', "%{$search}%")
+                    ->orWhere('petty_cash_no', 'like', "%{$search}%")
+                    ->orWhere('tin', 'like', "%{$search}%");
             });
         }
 
@@ -184,9 +191,13 @@ class ExpensesController extends Controller
             'category' => 'required|string|max:191',
             'particulars' => 'required|string|max:191',
             'payee' => 'nullable|string|max:191',
+            'payee_address' => 'nullable|string|max:191',
+            'taxpayer_type' => 'nullable|in:' . implode(',', Expenses::TAXPAYER_TYPES),
+            'tin' => 'nullable|string|max:191',
             'amount' => 'required|numeric|min:0.01',
             'payment_method' => 'nullable|string|max:191',
             'reference_no' => 'nullable|string|max:191',
+            'petty_cash_no' => 'nullable|string|max:191',
             'remarks' => 'nullable|string',
         ]);
     }

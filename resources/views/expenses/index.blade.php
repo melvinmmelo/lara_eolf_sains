@@ -67,8 +67,8 @@
             <div class="card-body">
                 <form method="GET" action="{{ route('expenses.index') }}" class="row">
                     <div class="col-md-3 mb-2">
-                        <label>Category</label>
-                        <select name="category" class="form-control">
+                        <label>Expenses Account</label>
+                        <select name="category" class="form-control select2bs4">
                             <option value="">All</option>
                             @foreach ($categories as $cat)
                                 <option value="{{ $cat }}" {{ request('category') == $cat ? 'selected' : '' }}>{{ $cat }}</option>
@@ -85,7 +85,7 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <label>Search</label>
-                        <input type="text" name="search" class="form-control" placeholder="Particulars / payee / ref no."
+                        <input type="text" name="search" class="form-control" placeholder="Particulars / payee / ref / PCV / TIN"
                             value="{{ request('search') }}">
                     </div>
                     <div class="col-md-2 mb-2 d-flex align-items-end">
@@ -100,16 +100,20 @@
         <!-- Default box -->
         <div class="card">
             <div class="card-body">
+                <div class="table-responsive">
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>Date</th>
-                            <th>Category</th>
+                            <th>Expenses Account</th>
                             <th>Particulars</th>
                             <th>Payee</th>
+                            <th>TIN</th>
+                            <th>Taxpayer</th>
                             <th class="text-right">Amount</th>
                             <th>Payment</th>
                             <th>Ref No.</th>
+                            <th>Petty Cash No.</th>
                             <th>Recorded By</th>
                             <th></th>
                         </tr>
@@ -120,10 +124,22 @@
                                 <td>{{ optional($expense->expense_date)->format('m-d-Y') }}</td>
                                 <td>{{ $expense->category }}</td>
                                 <td>{{ $expense->particulars }}</td>
-                                <td>{{ $expense->payee }}</td>
+                                <td>
+                                    {{ $expense->payee }}
+                                    @if ($expense->payee_address)
+                                        <br><small class="text-muted">{{ $expense->payee_address }}</small>
+                                    @endif
+                                </td>
+                                <td>{{ $expense->tin }}</td>
+                                <td>
+                                    @if ($expense->taxpayer_type)
+                                        <span class="badge {{ $expense->taxpayer_type === 'VAT' ? 'badge-info' : 'badge-secondary' }}">{{ $expense->taxpayer_type }}</span>
+                                    @endif
+                                </td>
                                 <td class="text-right">₱{{ formatNumber($expense->amount) }}</td>
                                 <td>{{ $expense->payment_method }}</td>
                                 <td>{{ $expense->reference_no }}</td>
+                                <td>{{ $expense->petty_cash_no }}</td>
                                 <td>{{ optional($expense->creator)->fullName ?? '—' }}</td>
                                 <td class="text-nowrap">
                                     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editExpense"
@@ -138,11 +154,12 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="text-center text-muted">No expenses found.</td>
+                                <td colspan="12" class="text-center text-muted">No expenses found.</td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
+                </div>
 
                 {{ $expenses->links() }}
             </div>
@@ -159,7 +176,7 @@
 
         <!-- Add Expense Modal -->
         <div class="modal fade" id="modal-expense">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <form method="POST" action="{{ route('expenses.store') }}">
                     @csrf
                     <div class="modal-content">
@@ -182,7 +199,7 @@
 
         <!-- Edit Expense Modal -->
         <div class="modal fade" id="editExpense" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <form id="editExpenseForm" method="POST" action="">
                     @csrf
                     @method('PUT')
@@ -248,13 +265,33 @@
             const form = document.getElementById('editExpenseForm');
             form.action = '{{ url('expenses') }}/' + expense.id;
             document.getElementById('e_expense_date').value = expense.expense_date ? expense.expense_date.substring(0, 10) : '';
-            document.getElementById('e_category').value = expense.category || '';
+            $('#e_category').val(expense.category || '').trigger('change');
             document.getElementById('e_particulars').value = expense.particulars || '';
             setPayee('e_', expense.payee);
+            document.getElementById('e_payee_address').value = expense.payee_address || '';
+            document.getElementById('e_tin').value = expense.tin || '';
+            document.getElementById('e_taxpayer_type').value = expense.taxpayer_type || '';
             document.getElementById('e_amount').value = expense.amount || '';
             document.getElementById('e_payment_method').value = expense.payment_method || '';
             document.getElementById('e_reference_no').value = expense.reference_no || '';
+            document.getElementById('e_petty_cash_no').value = expense.petty_cash_no || '';
             document.getElementById('e_remarks').value = expense.remarks || '';
         }
+
+        // Make the Expenses Account selects searchable. dropdownParent must point at
+        // each modal, otherwise Select2's search box can't receive focus inside a
+        // Bootstrap modal (the modal's focus-trap steals it back).
+        $(function () {
+            $('#category').select2({
+                theme: 'bootstrap4',
+                width: '100%',
+                dropdownParent: $('#modal-expense')
+            });
+            $('#e_category').select2({
+                theme: 'bootstrap4',
+                width: '100%',
+                dropdownParent: $('#editExpense')
+            });
+        });
     </script>
 @endsection
