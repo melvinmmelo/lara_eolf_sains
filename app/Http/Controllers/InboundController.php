@@ -806,7 +806,11 @@ class InboundController extends Controller
 
         $pricing = pricelevels::getPriceLevels(session('branch_code'));
 
-        return view('ordering', compact('equipment', 'drivers', 'vehicles', 'inbounds', 'pricing', 'productTypes', 'nextDay', 'deliveryPersons'));
+        // Branch's configured default customer price level — pre-selected on a
+        // fresh order (overridden when a customer/delivery person is picked).
+        $defaultPriceLevelId = pricelevels::defaultIdForBranch(session('branch_code'));
+
+        return view('ordering', compact('equipment', 'drivers', 'vehicles', 'inbounds', 'pricing', 'productTypes', 'nextDay', 'deliveryPersons', 'defaultPriceLevelId'));
     }
 
     public function edit($inboundId)

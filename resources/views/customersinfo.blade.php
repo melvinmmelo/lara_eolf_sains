@@ -116,7 +116,7 @@
                                             </div>
                                             <a href="#" class="dropdown-item" data-toggle="modal"
                                                     data-target="#editModal"
-                                                    onclick="setToUpdatecustomer(`{{ $customer->id }}`,`{{ $customer->branch_code }}`,`{{ $customer->lastname }}`,`{{ $customer->firstname }}`,`{{ $customer->middlename }}`,`{{ $customer->contact_no }}`,`{{ $customer->companyname }}`,`{{ $customer->tin }}`,`{{ $customer->longitude }}`,`{{ $customer->latitude }}`,`{{ $customer->region }}`,`{{ $customer->province }}`,`{{ $customer->city }}`,`{{ $customer->brgy }}`,`{{ $customer->subdivision }}`,'{{ $store->id }}',`{{ $store->storename }}`,'{{ $store->contactno }}','{{ $store->region }}','{{ $store->province }}','{{ $store->city }}','{{ $store->brgy }}','{{ $store->subdivision }}',`{{ $store->latitude }}`,`{{ $store->longitude }}`,`{{ $store->listype }}`,`{{ $store->length_stay }}`,`{{ $store->remarks }}`)"><i class="fa fa-edit"></i></a>
+                                                    onclick="setToUpdatecustomer(`{{ $customer->id }}`,`{{ $customer->branch_code }}`,`{{ $customer->lastname }}`,`{{ $customer->firstname }}`,`{{ $customer->middlename }}`,`{{ $customer->contact_no }}`,`{{ $customer->companyname }}`,`{{ $customer->tin }}`,`{{ $customer->longitude }}`,`{{ $customer->latitude }}`,`{{ $customer->region }}`,`{{ $customer->province }}`,`{{ $customer->city }}`,`{{ $customer->brgy }}`,`{{ $customer->subdivision }}`,'{{ $store->id }}',`{{ $store->storename }}`,'{{ $store->contactno }}','{{ $store->region }}','{{ $store->province }}','{{ $store->city }}','{{ $store->brgy }}','{{ $store->subdivision }}',`{{ $store->latitude }}`,`{{ $store->longitude }}`,`{{ $store->listype }}`,`{{ $store->length_stay }}`,`{{ $store->remarks }}`,`{{ $customer->pricelevel_id }}`)"><i class="fa fa-edit"></i></a>
 
                                             <a href="{{ route('report.customerUpdateForm', $customer->id) }}" class="dropdown-item"><i class="fa fa-print"></i></a>
                                                 </div>
@@ -238,6 +238,23 @@
                                                         <label class="form-label" for="cust_tin">TIN:</label>
                                                         <input type="text" class="form-control" id="cust_tin"
                                                             name="tin">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row mb-1">
+                                                    <div class="col-sm-12">
+                                                        <label class="form-label" for="cust_pricelevel">Price Level</label>
+                                                        <select class="form-control" id="cust_pricelevel"
+                                                            name="pricelevel_id">
+                                                            <option value="">-- Use branch default --</option>
+                                                            @foreach ($pricelevels as $pl)
+                                                                <option value="{{ $pl->id }}">{{ $pl->pl_name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <small class="form-text text-muted">Leave blank to use this
+                                                            branch's default customer price level on new orders.</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -560,6 +577,23 @@
                                                         <label class="form-label" for="cust_tin">TIN:</label>
                                                         <input type="text" class="form-control" id="tin"
                                                             name="tin">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row mb-1">
+                                                    <div class="col-sm-12">
+                                                        <label class="form-label" for="e_pricelevel_id">Price Level</label>
+                                                        <select class="form-control" id="e_pricelevel_id"
+                                                            name="pricelevel_id">
+                                                            <option value="">-- Use branch default --</option>
+                                                            @foreach ($pricelevels as $pl)
+                                                                <option value="{{ $pl->id }}">{{ $pl->pl_name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <small class="form-text text-muted">Leave blank to use this
+                                                            branch's default customer price level on new orders.</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -933,7 +967,8 @@
         //     storename, contactno, reg2, prov2, city2, brgy2, subv2, lat2, long2, listype, length_stay, remarks) {
         // Populate customer information fields
         function setToUpdatecustomer(uid, ebcode, ln, fn, mn, con, cm, tin, long, lat, reg, prov, city, brgy, subv,
-            store_id, storename, contactno, reg2, prov2, city2, brgy2, subv2, lat2, long2, listype, length_stay, remarks) {
+            store_id, storename, contactno, reg2, prov2, city2, brgy2, subv2, lat2, long2, listype, length_stay, remarks,
+            pricelevel_id) {
             //             console.log('subdivision2:', subv2);
             // console.log('latitude2:', lat2);
             // console.log('longitude2:', long2);
@@ -947,6 +982,8 @@
             document.getElementById("contact_no").value = con;
             document.getElementById("companyname").value = cm;
             document.getElementById("tin").value = tin;
+            // Empty string selects the "-- Use branch default --" option.
+            document.getElementById("e_pricelevel_id").value = pricelevel_id || "";
             document.getElementById("e_region").value = reg;
             document.getElementById("e_province").value = prov;
             document.getElementById("e_city").value = city;

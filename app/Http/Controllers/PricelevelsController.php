@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\pricelevels;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PricelevelsController extends Controller
 {
@@ -57,14 +58,28 @@ class PricelevelsController extends Controller
             return redirect('/pricing-level/')->with('error', 'Pricing Level already exists!');
         }
 
-        pricelevels::create([
-            'branch_code' => $request->branch_code,
-            'pl_name' => $request->name,
-            'pl_desc' => $request->Description,
-            'pl_status' => $status,
-            'pl_type' => $request->priceType,
-            // Add more fields as needed
-        ]);
+        // "Branch default" only applies to customer pricing. Ignore the flag for
+        // factory/bad-pricing types.
+        $isDefault = $request->boolean('is_default') && $request->priceType === 'CUSTOMER';
+
+        DB::transaction(function () use ($request, $status, $isDefault) {
+            $pl = pricelevels::create([
+                'branch_code' => $request->branch_code,
+                'pl_name' => $request->name,
+                'pl_desc' => $request->Description,
+                'pl_status' => $status,
+                'pl_type' => $request->priceType,
+                'is_default' => $isDefault,
+                // Add more fields as needed
+            ]);
+
+            // Enforce a single default per branch.
+            if ($isDefault) {
+                pricelevels::branch($request->branch_code)
+                    ->where('id', '!=', $pl->id)
+                    ->update(['is_default' => 0]);
+            }
+        });
 
         activity()
             ->performedOn(new pricelevels())
@@ -106,12 +121,27 @@ class PricelevelsController extends Controller
             'e_status' => 'nullable',
         ]);
 
-        $pl = pricelevels::find($request->e_pricelevel_id);
-        $pl->pl_name = $request->e_name;
-        $pl->pl_desc = $request->e_description;
-        $pl->pl_status = ($request->e_status) ? 'Active' : 'Inactive';
-        $pl->pl_type = $request->e_priceType;
-        $pl->save();
+        // "Branch default" only applies to customer pricing.
+        $isDefault = $request->boolean('e_is_default') && $request->e_priceType === 'CUSTOMER';
+
+        $pl = DB::transaction(function () use ($request, $isDefault) {
+            $pl = pricelevels::find($request->e_pricelevel_id);
+            $pl->pl_name = $request->e_name;
+            $pl->pl_desc = $request->e_description;
+            $pl->pl_status = ($request->e_status) ? 'Active' : 'Inactive';
+            $pl->pl_type = $request->e_priceType;
+            $pl->is_default = $isDefault;
+            $pl->save();
+
+            // Enforce a single default per branch.
+            if ($isDefault) {
+                pricelevels::branch($pl->branch_code)
+                    ->where('id', '!=', $pl->id)
+                    ->update(['is_default' => 0]);
+            }
+
+            return $pl;
+        });
 
         activity()
             ->performedOn($pl)

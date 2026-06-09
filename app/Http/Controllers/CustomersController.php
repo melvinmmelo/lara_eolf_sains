@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Customers as Customer;
+use App\Models\pricelevels;
 use App\Models\PhAddr;
 use App\Models\StoreInfo;
 use App\Models\Equipment;
@@ -18,7 +19,8 @@ class CustomersController extends Controller
     public function index()
     {
         $customers = Customer::with(['stores.equipmentStores'])->branch(session('branch_code'))->where('status', 'active')->get();
-        return view('customersinfo', compact('customers'));
+        $pricelevels = pricelevels::getCustomerPriceLevels(session('branch_code'));
+        return view('customersinfo', compact('customers', 'pricelevels'));
     }
 
     public function stopSelling()
@@ -55,6 +57,7 @@ class CustomersController extends Controller
             'companyname' => 'required',
             'middlename' => 'nullable',
             'storename' => 'required',
+            'pricelevel_id' => 'nullable|exists:pricelevels,id',
         ]);
 
         $regionName = PhAddr::where('code', $request->region)->value('name');
@@ -70,6 +73,7 @@ class CustomersController extends Controller
 
         $customer = Customer::create([
             'branch_code' => $request->branch_code,
+            'pricelevel_id' => $request->pricelevel_id ?: null,
             'distributor' => $request->distributor,
             'lastname' => $request->lastname,
             'firstname' => $request->firstname,
@@ -127,9 +131,11 @@ class CustomersController extends Controller
             'firstname' => 'required',
             'companyname' => 'required',
             'status' => 'required',
+            'pricelevel_id' => 'nullable|exists:pricelevels,id',
         ]);
 
         $customer->update([
+            'pricelevel_id' => $request->pricelevel_id ?: null,
             'distributor' => $request->distributor,
             'lastname' => $request->lastname,
             'firstname' => $request->firstname,

@@ -47,13 +47,16 @@
                         @foreach ($pricelevels as $pl)
                             <tr>
                                 {{-- <td>{{ $pl->branch_code }}</td> --}}
-                                <td>{{ $pl->pl_name }}</td>
+                                <td>{{ $pl->pl_name }}@if ($pl->is_default)
+                                        <i class="fas fa-check-circle text-success ml-1"
+                                            title="Branch default customer price level"></i>
+                                    @endif</td>
                                 <td>{{ $pl->pl_desc }}</td>
                                 <td>{!! statusBadge($pl->pl_status) !!}</td>
                                 <td>
                                     <a href="#" data-toggle="modal" data-target="#modalEdit"
                                         class="btn btn-primary btn-sm"
-                                        onclick="setToUpdate('{{ $pl->id }}','{{ $pl->pl_name }}','{{ $pl->pl_desc }}','{{ $pl->pl_status }}','{{ $pl->pl_type }}')">Edit</a>
+                                        onclick="setToUpdate('{{ $pl->id }}','{{ $pl->pl_name }}','{{ $pl->pl_desc }}','{{ $pl->pl_status }}','{{ $pl->pl_type }}','{{ (int) $pl->is_default }}')">Edit</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -143,6 +146,15 @@
                                 </div>
                             </div>
 
+                            <div id="isDefaultCon" class="form-group">
+                                <div class="icheck-primary d-inline">
+                                    <input type="checkbox" id="isDefault" name="is_default" value="1">
+                                    <label for="isDefault">Set as this branch's default customer price level</label>
+                                </div>
+                                <small class="form-text text-muted">Used for new orders when a customer has no price
+                                    level assigned. Only one default per branch.</small>
+                            </div>
+
                             {{-- <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
@@ -228,6 +240,15 @@
                                 </div>
                             </div>
 
+                            <div id="e_isDefaultCon" class="form-group">
+                                <div class="icheck-primary d-inline">
+                                    <input type="checkbox" id="e_isDefault" name="e_is_default" value="1">
+                                    <label for="e_isDefault">Set as this branch's default customer price level</label>
+                                </div>
+                                <small class="form-text text-muted">Used for new orders when a customer has no price
+                                    level assigned. Only one default per branch.</small>
+                            </div>
+
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
@@ -270,6 +291,19 @@
             var factoryPriceRadio = document.getElementById('isFactoryPrice');
             var badPricingRadio = document.getElementById('isBadPricing');
             var inputName = document.querySelector('input[name="name"]');
+            var isDefaultCon = document.getElementById('isDefaultCon');
+            var isDefault = document.getElementById('isDefault');
+
+            // "Branch default" only makes sense for customer pricing — hide and
+            // clear it for the other types.
+            function syncIsDefaultVisibility() {
+                if (forCustomerRadio.checked) {
+                    isDefaultCon.style.display = 'block';
+                } else {
+                    isDefaultCon.style.display = 'none';
+                    isDefault.checked = false;
+                }
+            }
 
             forCustomerRadio.addEventListener('change', function() {
                 if (this.checked) {
@@ -277,6 +311,7 @@
                     inputName.value = '';
                     inputName.readOnly = false;
                 }
+                syncIsDefaultVisibility();
             });
 
             factoryPriceRadio.addEventListener('change', function() {
@@ -285,6 +320,7 @@
                     // inputName.value = 'FACTORY PRICE';
                     inputName.readOnly = true;
                 }
+                syncIsDefaultVisibility();
             });
 
             badPricingRadio.addEventListener('change', function() {
@@ -293,7 +329,10 @@
                     // inputName.value = 'BAD PRICING';
                     inputName.readOnly = true;
                 }
+                syncIsDefaultVisibility();
             });
+
+            syncIsDefaultVisibility();
 
 
             // ! FOR EDITING
@@ -302,13 +341,25 @@
             var e_factoryPriceRadio = document.getElementById('e_isFactoryPrice');
             var e_badPricingRadio = document.getElementById('e_isBadPricing');
             var e_inputName = document.querySelector('input[name="e_name"]');
+            var e_isDefaultCon = document.getElementById('e_isDefaultCon');
+            var e_isDefault = document.getElementById('e_isDefault');
 
+            // Expose so setToUpdate() can re-sync visibility for the opened row.
+            window.syncEditIsDefaultVisibility = function() {
+                if (e_forCustomerRadio.checked) {
+                    e_isDefaultCon.style.display = 'block';
+                } else {
+                    e_isDefaultCon.style.display = 'none';
+                    e_isDefault.checked = false;
+                }
+            };
 
             e_forCustomerRadio.addEventListener('change', function() {
                 if (this.checked) {
                     branchCode.style.display = 'block';
                     // e_inputName.readOnly = false;
                 }
+                window.syncEditIsDefaultVisibility();
             });
 
             e_factoryPriceRadio.addEventListener('change', function() {
@@ -317,6 +368,7 @@
                     e_inputName.value = 'FACTORY PRICE';
                     // e_inputName.readOnly = true;
                 }
+                window.syncEditIsDefaultVisibility();
             });
 
             e_badPricingRadio.addEventListener('change', function() {
@@ -324,6 +376,7 @@
                     branchCode.style.display = 'block';
                     // e_inputName.readOnly = true;
                 }
+                window.syncEditIsDefaultVisibility();
             });
 
             // END FOR EDITING
@@ -332,7 +385,7 @@
 
         }
 
-        function setToUpdate(id, name, description, status, priceType) {
+        function setToUpdate(id, name, description, status, priceType, isDefault) {
             var inputId = document.querySelector('input[name="e_pricelevel_id"]');
             var inputName = document.querySelector('input[name="e_name"]');
             var inputDescription = document.querySelector('textarea[name="e_description"]');
@@ -356,6 +409,12 @@
                 document.getElementById('e_isFactoryPrice').checked = false;
                 document.getElementById('e_isBadPricing').checked = false;
                 document.getElementById('e_isForCustomer').checked = true;
+            }
+
+            // Branch-default flag (customer pricing only) + reflect visibility.
+            document.getElementById('e_isDefault').checked = (isDefault == '1' || isDefault === 1 || isDefault === true);
+            if (typeof window.syncEditIsDefaultVisibility === 'function') {
+                window.syncEditIsDefaultVisibility();
             }
         }
     </script>

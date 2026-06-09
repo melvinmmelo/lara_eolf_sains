@@ -398,6 +398,17 @@
 
         let totalBadOrder = 0;
 
+        // Tracks the last-applied price level so the reprice-on-change handler can
+        // revert on cancel/error, and so programmatic sets (customer/driver
+        // defaults, branch default) aren't mistaken for a user change. Always set
+        // the dropdown through applyPriceLevel() to keep this in sync.
+        let prevPriceLevel = '';
+        function applyPriceLevel(id) {
+            if (!id) return;
+            document.getElementById('pricelevel_id').value = id;
+            prevPriceLevel = String(id);
+        }
+
         function setCustomerName(str) {
             $.ajax({
                 type: "GET",
@@ -406,6 +417,10 @@
                     // console.log(response);
                     document.getElementById('customer_id').value = response.customer_id;
                     document.getElementById('customer').value = response.customer_name;
+                    // Auto-fill the price level from the customer's assigned level
+                    // (or the branch default). Null means "no default" — leave the
+                    // current selection untouched.
+                    applyPriceLevel(response.pricelevel_id);
                 }
             });
         }
@@ -418,7 +433,7 @@
                     type: "GET",
                     url: "/dp-details/" + driver,
                     success: function(response) {
-                        document.getElementById('pricelevel_id').value = response.default_price_level;
+                        applyPriceLevel(response.default_price_level);
                     }
                 });
             });
@@ -564,14 +579,73 @@
                 }
             });
 
+            // Pre-select the branch's configured default customer price level on a
+            // fresh order. Falls back to the legacy EFTO-CAG default (4) only when
+            // no branch default has been flagged on the Price Levels page.
             try {
-                var branch_code = $('#branch_code').val();
-                if (branch_code == 'EFTO-CAG') {
-                    $('#pricelevel_id').val(4);
-                }
+                @if (!empty($defaultPriceLevelId))
+                    applyPriceLevel({{ $defaultPriceLevelId }});
+                @else
+                    if ($('#branch_code').val() == 'EFTO-CAG') {
+                        applyPriceLevel(4);
+                    }
+                @endif
             } catch (error) {
-                console.log("Error Line 552" . error);
+                console.log("Error setting default price level", error);
             }
+
+            // Re-price staged cart items when the price level changes.
+            // New-order line items are staged under inbound_id = 0, so we reprice
+            // against that sentinel (same backend as the edit screen). prevPriceLevel
+            // is kept in sync via applyPriceLevel() (branch/customer/driver defaults),
+            // so the page-load set can't spuriously fire this. An empty cart just
+            // updates silently — the next added product already picks up the current
+            // level via addProduct().
+            $('#pricelevel_id').on('change', function() {
+                const newLevel = $(this).val();
+                if (!newLevel || newLevel === prevPriceLevel) return;
+
+                const hasItems = document.querySelectorAll('#inboundList input[name="pcodeprice"]').length > 0;
+                if (!hasItems) {
+                    prevPriceLevel = newLevel;
+                    return;
+                }
+
+                if (!confirm("Changing the price level will re-price all items in the cart. Continue?")) {
+                    $(this).val(prevPriceLevel);
+                    return;
+                }
+
+                fetch(`/inbound-reprice/0/${newLevel}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                            $('#pricelevel_id').val(prevPriceLevel);
+                            return;
+                        }
+
+                        document.getElementById('inboundList').innerHTML = data.html;
+
+                        const warnings = [];
+                        if (data.noPrice && data.noPrice.length) {
+                            warnings.push("No price at this level for:\n  - " + data.noPrice.join('\n  - '));
+                        }
+                        if (data.noStock && data.noStock.length) {
+                            warnings.push("Insufficient stocks for:\n  - " + data.noStock.join('\n  - '));
+                        }
+                        if (document.getElementById('isBadPricing').checked) {
+                            warnings.push("Bad order is checked. Please uncheck and recheck it to recompute the BO amount.");
+                        }
+                        if (warnings.length) alert(warnings.join('\n\n'));
+
+                        prevPriceLevel = newLevel;
+                    })
+                    .catch(err => {
+                        alert("Error re-pricing items.");
+                        $('#pricelevel_id').val(prevPriceLevel);
+                    });
+            });
 
         });
 
@@ -686,22 +760,8 @@
 
 
 
-        // on select pricelevel_id change
-        // document.getElementById('pricelevel_id').addEventListener('change', function() {
-        //     var pricelevel_id = document.getElementById('pricelevel_id').value;
-        //     $.ajax({
-        //         type: "GET",
-        //         url: "/set-priceLevelId/" + pricelevel_id,
-        //         success: function(response) {
-        //             // console.log(response);
-        //             if (response.error) {
-        //                 alert("Error fetching price level.");
-        //                 return;
-        //             }
-        //             console.log("Price level set to ");
-        //         }
-        //     });
-        // });
+        // Price-level change re-pricing is handled inside $(document).ready above
+        // (registered after the EFTO-CAG default so it starts in sync).
     </script>
 
     <script>

@@ -13,8 +13,13 @@ class pricelevels extends Model
         'pl_name',
         'pl_desc',
         'pl_status',
-        'pl_type'
+        'pl_type',
+        'is_default',
         // Add other fillable attributes here if any
+    ];
+
+    protected $casts = [
+        'is_default' => 'boolean',
     ];
 
     public function scopeBranch($query, $branch_code)
@@ -45,6 +50,29 @@ class pricelevels extends Model
     public static function getPriceLevels($branchCode)
     {
         return pricelevels::branch($branchCode)->where('pl_type', '!=', 'BAD PRICING')->where('pl_status', 'Active')->get();
+    }
+
+    // Active "for customers" (CUSTOMER type) price levels for a branch — the set
+    // a customer can be assigned to.
+    public static function getCustomerPriceLevels($branchCode)
+    {
+        return pricelevels::branch($branchCode)
+            ->where('pl_type', 'CUSTOMER')
+            ->where('pl_status', 'Active')
+            ->orderBy('pl_name')
+            ->get();
+    }
+
+    // The branch's designated default CUSTOMER price level id (or null if none
+    // is flagged). Used as the fallback when a customer has no explicit level.
+    public static function defaultIdForBranch($branchCode)
+    {
+        return optional(
+            pricelevels::branch($branchCode)
+                ->where('is_default', 1)
+                ->where('pl_status', 'Active')
+                ->first()
+        )->id;
     }
 
 }
