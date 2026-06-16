@@ -279,7 +279,7 @@
                     </li>
                 @endcan
 
-                <li class="nav-item {{ Route::currentRouteNamed('report.productsSummary') || Route::currentRouteNamed('report.deliveryPurchaseReceiptSummary') || Route::currentRouteNamed('report.availableStocks') || Route::currentRouteNamed('report.sales') ? 'menu-is-opening menu-open' : '' }}">
+                <li class="nav-item {{ Route::currentRouteNamed('report.productsSummary') || Route::currentRouteNamed('report.deliveryPurchaseReceiptSummary') || Route::currentRouteNamed('report.availableStocks') || Route::currentRouteNamed('report.sales') || Route::currentRouteNamed('report.payments') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-folder-open" style="color: #74C0FC;"></i>
                         <p>
@@ -334,6 +334,13 @@
                                 class="nav-link {{ Route::currentRouteNamed('report.sales-by-customer')  ? 'active' : '' }}">
                                 <i class="fas fa-chart-pie nav-icon"></i>
                                 <p>Sales by Customer</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('report.payments') }}"
+                                class="nav-link {{ Route::currentRouteNamed('report.payments')  ? 'active' : '' }}">
+                                <i class="fas fa-money-bill-wave nav-icon"></i>
+                                <p>Payment Report</p>
                             </a>
                         </li>
                         @endcan

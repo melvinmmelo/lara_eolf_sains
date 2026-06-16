@@ -955,4 +955,201 @@ class ReportGeneratorController extends Controller
         $writer->save('php://output');
         exit;
     }
+
+    /**
+     * Payment Report (Issue #31)
+     *
+     * Summary of payments received, grouped by customer, with a date range and
+     * optional payment-type filter. "Amount Paid" is the cumulative
+     * delivered_amount recorded against each order (see InboundController@addPayment).
+     * Filtering is by order_date — there is no separate payment-date column.
+     */
+    private function getPaymentRecords(Request $request)
+    {
+        $branchCode = session('branch_code');
+
+        $dateFrom = $request->input('date_from', Carbon::now()->startOfMonth()->format('Y-m-d'));
+        $dateTo   = $request->input('date_to', Carbon::now()->endOfMonth()->format('Y-m-d'));
+
+        $query = Inbound::query()
+            ->whereBetween('order_date', [
+                Carbon::parse($dateFrom)->startOfDay(),
+                Carbon::parse($dateTo)->endOfDay(),
+            ])
+            ->whereNotIn('status', ['Cancelled', 'Deleted'])
+            ->whereNull('is_foc')                 // exclude free-of-charge orders
+            ->where('delivered_amount', '>', 0);  // only orders with payments received
+
+        if ($branchCode) {
+            $query->where('branch_code', $branchCode);
+        }
+
+        if ($request->filled('payment_type')) {
+            $query->where('payment_type', $request->input('payment_type'));
+        }
+
+        return $query->orderBy('order_date')->get();
+    }
+
+    /**
+     * Group the filtered payment records by customer and compute per-customer
+     * and grand totals. Net amount / balance use the model accessors (computed
+     * from the products JSON), so the grouping is done in PHP, not SQL.
+     */
+    private function buildPaymentSummary($inbounds)
+    {
+        $customers = $inbounds->groupBy(function ($inbound) {
+                return $inbound->customer_id . '|' . $inbound->customer_name;
+            })
+            ->map(function ($group) {
+                $first = $group->first();
+
+                return [
+                    'degic_no'      => $first->degic_no,
+                    'customer_name' => $first->customer_name,
+                    'payments'      => $group->count(),
+                    'payment_types' => $group->pluck('payment_type')->filter()->unique()->sort()->implode(', '),
+                    'net_amount'    => $group->sum(function ($inbound) {
+                        return $inbound->totalAmount;
+                    }),
+                    'amount_paid'   => $group->sum(function ($inbound) {
+                        return $inbound->delivered_amount ?? 0;
+                    }),
+                    'balance'       => $group->sum(function ($inbound) {
+                        return $inbound->totalBalance;
+                    }),
+                ];
+            })
+            ->sortByDesc('amount_paid')
+            ->values();
+
+        $totals = [
+            'customers'   => $customers->count(),
+            'payments'    => $customers->sum('payments'),
+            'net_amount'  => $customers->sum('net_amount'),
+            'amount_paid' => $customers->sum('amount_paid'),
+            'balance'     => $customers->sum('balance'),
+        ];
+
+        return [$customers, $totals];
+    }
+
+    public function paymentReport(Request $request)
+    {
+        $inbounds = $this->getPaymentRecords($request);
+        [$customers, $totals] = $this->buildPaymentSummary($inbounds);
+
+        $paymentTypes = Inbound::where('branch_code', session('branch_code'))
+            ->whereNotNull('payment_type')
+            ->where('payment_type', '!=', '')
+            ->distinct()
+            ->orderBy('payment_type')
+            ->pluck('payment_type');
+
+        $dateFrom = $request->input('date_from', Carbon::now()->startOfMonth()->format('Y-m-d'));
+        $dateTo   = $request->input('date_to', Carbon::now()->endOfMonth()->format('Y-m-d'));
+
+        return view('report.payments', compact('customers', 'totals', 'paymentTypes', 'dateFrom', 'dateTo'));
+    }
+
+    public function exportPaymentReport(Request $request)
+    {
+        $inbounds = $this->getPaymentRecords($request);
+        [$customers, $totals] = $this->buildPaymentSummary($inbounds);
+
+        $dateFrom = $request->input('date_from', Carbon::now()->startOfMonth()->format('Y-m-d'));
+        $dateTo   = $request->input('date_to', Carbon::now()->endOfMonth()->format('Y-m-d'));
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Title + date range
+        $sheet->setCellValue('A1', 'Payment Report');
+        $sheet->mergeCells('A1:G1');
+        $sheet->getStyle('A1')->applyFromArray([
+            'font' => ['bold' => true, 'size' => 14],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
+        ]);
+        $sheet->setCellValue('A2', 'Period: ' . Carbon::parse($dateFrom)->format('m/d/Y') . ' - ' . Carbon::parse($dateTo)->format('m/d/Y'));
+        $sheet->mergeCells('A2:G2');
+        $sheet->getStyle('A2')->applyFromArray([
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
+        ]);
+
+        // Column headers
+        $headerRow = 4;
+        $sheet->setCellValue('A' . $headerRow, 'DEGIC No');
+        $sheet->setCellValue('B' . $headerRow, 'Customer');
+        $sheet->setCellValue('C' . $headerRow, 'Payments');
+        $sheet->setCellValue('D' . $headerRow, 'Payment Type(s)');
+        $sheet->setCellValue('E' . $headerRow, 'Net Amount');
+        $sheet->setCellValue('F' . $headerRow, 'Amount Paid');
+        $sheet->setCellValue('G' . $headerRow, 'Balance');
+
+        $headerStyle = [
+            'font' => ['bold' => true],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
+            'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => 'E2E8F0'],
+            ],
+        ];
+        $sheet->getStyle('A' . $headerRow . ':G' . $headerRow)->applyFromArray($headerStyle);
+
+        // Data rows
+        $row = $headerRow + 1;
+        foreach ($customers as $customer) {
+            $sheet->setCellValue('A' . $row, $customer['degic_no'] ?: 'N/A');
+            $sheet->setCellValue('B' . $row, $customer['customer_name']);
+            $sheet->setCellValue('C' . $row, $customer['payments']);
+            $sheet->setCellValue('D' . $row, $customer['payment_types']);
+            $sheet->setCellValue('E' . $row, $customer['net_amount']);
+            $sheet->setCellValue('F' . $row, $customer['amount_paid']);
+            $sheet->setCellValue('G' . $row, $customer['balance']);
+
+            $sheet->getStyle('E' . $row . ':G' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
+            $sheet->getStyle('A' . $row . ':G' . $row)->applyFromArray([
+                'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
+            ]);
+            $row++;
+        }
+
+        // Total row
+        $totalRow = $row;
+        $sheet->setCellValue('A' . $totalRow, 'TOTAL');
+        $sheet->mergeCells('A' . $totalRow . ':B' . $totalRow);
+        $sheet->setCellValue('C' . $totalRow, $totals['payments']);
+        $sheet->setCellValue('E' . $totalRow, $totals['net_amount']);
+        $sheet->setCellValue('F' . $totalRow, $totals['amount_paid']);
+        $sheet->setCellValue('G' . $totalRow, $totals['balance']);
+        $sheet->getStyle('E' . $totalRow . ':G' . $totalRow)->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->getStyle('A' . $totalRow . ':G' . $totalRow)->applyFromArray([
+            'font' => ['bold' => true],
+            'borders' => [
+                'allBorders' => ['borderStyle' => Border::BORDER_THIN],
+                'top' => ['borderStyle' => Border::BORDER_MEDIUM],
+                'bottom' => ['borderStyle' => Border::BORDER_DOUBLE],
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => 'FFFF99'],
+            ],
+        ]);
+
+        // Auto-size columns
+        foreach (range('A', 'G') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'payment_report_' . Carbon::now()->format('Y-m-d_His') . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit;
+    }
 }
