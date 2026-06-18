@@ -61,6 +61,7 @@ class Expenses extends Model
         'Philhealth',
         'Pag ibig Contribution',
         'SSS Loan',
+        'Pag ibig Loan',
         'Office Supplies',
         'Incentive (Freezer, Advertisement)',
         'Employee Benefits (Rice, Drinking Water)',
