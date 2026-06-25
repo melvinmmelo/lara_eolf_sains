@@ -37,5 +37,6 @@ yarn-error.log
 .claude/scheduled_tasks.lock
 /.playwright-mcp
 
-# production DB dumps — real customer data, must never be committed
+# production DB dumps and pre-migration safety snapshots — real customer data,
+# must never be committed
 /storage/db-snapshots
