@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Models\Concerns\AutoLogsChanges;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customers extends Model
 {
-    use HasFactory, AutoLogsChanges;
+    use AutoLogsChanges, HasFactory, SoftDeletes;
 
     protected $guarded = [];
 
