@@ -3,13 +3,36 @@
 namespace App\Models;
 
 use App\Models\Concerns\AutoLogsChanges;
+use App\Services\InboundLineProjector;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Log;
 
 class Inbound extends Model
 {
-    use HasFactory, AutoLogsChanges;
+    use AutoLogsChanges, HasFactory;
+
+    /**
+     * Keep the inbound_lines projection in sync whenever the products JSON
+     * changes through Eloquent. Isolated in try/catch so a projection failure
+     * can never break an order save — inbound_lines is a derived mirror and can
+     * always be rebuilt with `php artisan inbound:project-lines`.
+     */
+    protected static function booted(): void
+    {
+        static::saved(function (self $inbound) {
+            if (! $inbound->wasChanged('products') && ! $inbound->wasRecentlyCreated) {
+                return;
+            }
+            try {
+                app(InboundLineProjector::class)->project($inbound);
+            } catch (\Throwable $e) {
+                Log::warning("inbound_lines projection failed for inbound {$inbound->id}: {$e->getMessage()}");
+            }
+        });
+    }
 
     protected $fillable = [
         'user_id',
@@ -46,10 +69,14 @@ class Inbound extends Model
         'bo_amount',
         'discount',
         'discount_details',
-        'sales_invoice_no'
+        'sales_invoice_no',
     ];
 
-    protected $grandTotal = 0, $netAmount = 0, $balance = 0;
+    protected $grandTotal = 0;
+
+    protected $netAmount = 0;
+
+    protected $balance = 0;
 
     protected $appends = ['f_created_at', 'f_updated_at', 'code'];
 
@@ -61,7 +88,7 @@ class Inbound extends Model
     /**
      * Get the next order number for the given branch code.
      *
-     * @param string $branchCode
+     * @param  string  $branchCode
      * @return int
      */
     public static function getNextOrderNo($branchCode)
@@ -120,7 +147,7 @@ class Inbound extends Model
 
     public function getCodeAttribute()
     {
-        if (!$this->created_at) {
+        if (! $this->created_at) {
             return null;
         }
 
@@ -132,7 +159,7 @@ class Inbound extends Model
             $prefix = 'N';
         }
 
-        return $this->created_at->format('y') . "-" . $prefix  . str_pad($this->order_no, 5, "0", STR_PAD_LEFT);
+        return $this->created_at->format('y').'-'.$prefix.str_pad($this->order_no, 5, '0', STR_PAD_LEFT);
     }
 
     public function scopeBranch($query, $branch_code)
@@ -207,6 +234,7 @@ class Inbound extends Model
         if ($this->grandTotal === 0) {
             $this->getTotalAmountAttribute();
         }
+
         return $this->grandTotal;
     }
 
@@ -224,5 +252,14 @@ class Inbound extends Model
     public function scopeActiveOrdersv2($query)
     {
         return $query->whereIn('status', ['Completed', 'Paid', 'Free']);
+    }
+
+    /**
+     * Relational projection of this order's products JSON (Phase 4).
+     * Derived/rebuildable; the products blob remains the source of truth.
+     */
+    public function lines(): HasMany
+    {
+        return $this->hasMany(InboundLine::class, 'inbound_id');
     }
 }
