@@ -24,12 +24,13 @@ npm install
 cp .env.example .env
 php artisan key:generate
 
-# IMPORTANT: migrations do NOT build the full schema (only 2 patch migrations exist).
-# Import the canonical 54-table schema first. database/eolf.sql is a ~67MB phpMyAdmin
-# dump, gitignored and kept locally only:
-mysql -h 127.0.0.1 -u <user> -p <database> < database/eolf.sql
-php artisan migrate   # applies the 2 incremental patches (inbounds index, users.last_active_at)
-# php artisan db:seed # only for a truly EMPTY schema — eolf.sql already contains data
+# The schema is now baseline-managed. database/schema/mysql-schema.sql captures the
+# full structure; `migrate` loads it on an empty DB, then applies the incremental
+# migrations on top. So a fresh setup is just:
+php artisan migrate          # loads the baseline schema, then runs pending migrations
+# (No structural data is included in the baseline. To get production DATA locally,
+#  use the /eolf-restore-backup skill, or import the gitignored database/eolf.sql dump.)
+# php artisan db:seed        # only for a truly EMPTY schema
 ```
 
 ### Daily Development
@@ -241,7 +242,12 @@ Example routes:
 ## Important Notes
 
 ### Database Considerations
-- **Schema is NOT migration-managed.** Only 2 files exist in `database/migrations/`, both incremental patches. The full 54-table schema lives in `database/eolf.sql` (~67MB phpMyAdmin dump, **gitignored**, present locally only). `migrate:fresh` will NOT rebuild the app — import the dump first. `database/changes.sql` holds ad-hoc DDL tweaks layered on top.
+- **Schema is now baseline-managed (as of 2026-06).** `database/schema/mysql-schema.sql` is the committed baseline (full structure + the `migrations` table contents). `php artisan migrate` on an empty DB loads it, then runs the incremental migrations in `database/migrations/` on top, so `migrate`/`migrate:fresh` reproduce the schema. `database/eolf.sql` (~67MB, **gitignored**) is now only a source of production DATA, not the authoritative structure. Route all future DDL through migrations, not ad-hoc SQL. Regenerate the baseline only from a known-good DB via the MySQL client (the app image ships the MariaDB client; `php artisan schema:dump` fails on it — its mysqldump rejects MySQL-only flags).
+- **Local MySQL client TLS:** the app container's MariaDB client would reject the self-signed cert of the shared MySQL 8 server; `docker/mysql/client-ssl-off.cnf` (mounted via docker-compose) disables client TLS so `migrate` can load the baseline. PDO is unaffected.
+- **Money columns are DECIMAL(15,2)** on the sales path (inbounds, order_slips, prices, new_inbound_products, materials_inventories, bad_orders, new_temp_bad_orders) — not float. Eloquent returns them as strings; existing accessors coerce fine in arithmetic.
+- **Enforced FKs exist only on relational/config tables** (e.g. `prices`→pricelevels/product_types, `customers.pricelevel_id`→pricelevels with ON DELETE SET NULL, `inbound_lines`→inbounds CASCADE). Document/snapshot tables (inbounds.*_id, etc.) deliberately have NO FKs — their refs are immutable point-in-time snapshots.
+- **`inbound_lines`** is a relational projection of `inbounds.products` JSON (one row per line), kept in sync by the Inbound `saved` observer and rebuildable via `php artisan inbound:project-lines`. The JSON blob remains the source of truth; use inbound_lines for SQL reporting. NOTE: `products` is sometimes a JSON object (`{"0":{…}}`) rather than an array — decode with PHP/foreach, not `JSON_TABLE('$[*]')`, which silently skips object-encoded rows.
+- **Maintenance commands:** `db:audit-money` (pre/post money-conversion drift), `customers:normalize-pricelevel`, `db:audit-stub-tables`, `activitylog:archive [--prune]` (no-data-loss retention), `inbound:project-lines [--fresh|--verify]`.
 - JSON columns used for flexible product data in orders
 - Model accessors heavily used for computed values (always call in correct order)
 - Scopes used extensively for branch filtering and status queries
