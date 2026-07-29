@@ -1,6 +1,6 @@
 # Spec 001 — Sales by Product Type
 
-**Status:** Draft
+**Status:** Implemented (commit `028872c`, branch `feat/001-sales-by-product-type`)
 **Issue:** [#32](https://github.com/melvinmmelo/lara_eolf_sains/issues/32) (label: `reports`)
 **Date:** 2026-07-29
 
@@ -92,12 +92,29 @@ Tests use plain `get()` (not `getJson()`) since these are Blade pages.
 
 ## Progress
 
-- [ ] Service + unit-level aggregation correct
-- [ ] Controller + routes + authz
-- [ ] Blade view + sidebar link
-- [ ] Excel export
-- [ ] Feature tests green
+- [x] Service + unit-level aggregation correct
+- [x] Controller + routes + authz
+- [x] Blade view + sidebar link
+- [x] Excel export
+- [x] Feature tests green — 10 passed, 19 assertions
 - [ ] Review passed, merged
+
+**Verification evidence (2026-07-29)**
+
+- Feature tests: 10/10 green. The `can:admin` test is mutation-tested — gate
+  removed → red (200 instead of 403), restored → green.
+- Real-data reconciliation against the restored production copy, cross-checked
+  with the pre-existing independent `getTotalOfProducts()` helper:
+  - EFTO-CAG, June 2026: 576 orders → **₱4,848,456.00**, exact match.
+  - The 103 object-encoded-JSON orders (EFTO-TAR): **₱849,967.00**, exact match.
+- Rendered browser walk (Playwright, logged in as admin, EFTO-CAG, custom range
+  2026-06-01..06-30): table renders 12 type rows in `sequence_no` order with
+  totals **19,895 / ₱4,848,456.00** — identical to the computed figures.
+
+**Note on the branch:** this branch also carries `1793f2e`, a cherry-pick of the
+schema baseline (Phase 0) from `db/preventive-cleanup-phases`, because `main`
+has no full schema in migrations and `RefreshDatabase` could not otherwise build
+a test database. That commit is behaviour-free (a schema dump + gitignore line).
 
 ## Out of scope
 
