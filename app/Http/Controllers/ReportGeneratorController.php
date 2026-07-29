@@ -11,6 +11,7 @@ use App\Models\OrderSlip;
 use App\Models\ProductVariant;
 use App\Models\StoreInfo as Store;
 use App\Services\InboundService;
+use App\Services\SalesByProductTypeService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -173,6 +174,102 @@ class ReportGeneratorController extends Controller
 
         $writer->save('php://output');
         exit;
+    }
+
+    /**
+     * Sales grouped by product type for the filtered period (issue #32).
+     *
+     * Reuses getSalesQuery() so the date/branch/status semantics stay identical
+     * to the other sales reports.
+     */
+    public function salesByProductType(Request $request)
+    {
+        $summary = SalesByProductTypeService::summarize(
+            $this->getSalesQuery($request)->get()
+        );
+
+        return view('report.sales-by-product-type', [
+            'rows' => $summary['rows'],
+            'totals' => $summary['totals'],
+            'periodLabel' => $this->salesPeriodLabel($request),
+        ]);
+    }
+
+    public function exportSalesByProductType(Request $request)
+    {
+        $summary = SalesByProductTypeService::summarize(
+            $this->getSalesQuery($request)->get()
+        );
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->setCellValue('A1', 'Product Type');
+        $sheet->setCellValue('B1', 'Code');
+        $sheet->setCellValue('C1', 'Quantity');
+        $sheet->setCellValue('D1', 'Amount');
+
+        $sheet->getStyle('A1:D1')->applyFromArray([
+            'font' => ['bold' => true],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
+            'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => 'E2E8F0'],
+            ],
+        ]);
+
+        $row = 2;
+        foreach ($summary['rows'] as $line) {
+            $sheet->setCellValue('A'.$row, $line['name']);
+            $sheet->setCellValue('B'.$row, $line['ptype_code']);
+            $sheet->setCellValue('C'.$row, $line['quantity']);
+            $sheet->setCellValue('D'.$row, round($line['amount'], 2));
+            $row++;
+        }
+
+        $sheet->setCellValue('A'.$row, 'Total');
+        $sheet->setCellValue('C'.$row, $summary['totals']['quantity']);
+        $sheet->setCellValue('D'.$row, round($summary['totals']['amount'], 2));
+        $sheet->mergeCells('A'.$row.':B'.$row);
+        $sheet->getStyle('A'.$row.':D'.$row)->applyFromArray([
+            'font' => ['bold' => true],
+            'borders' => [
+                'top' => ['borderStyle' => Border::BORDER_THIN],
+                'bottom' => ['borderStyle' => Border::BORDER_DOUBLE],
+            ],
+        ]);
+
+        foreach (range('A', 'D') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        $filename = 'sales_by_product_type_'.Carbon::now()->format('Y-m-d_His').'.xlsx';
+
+        // streamDownload (not header()+exit like exportSalesReport) so the
+        // response is a real testable Response object.
+        return response()->streamDownload(function () use ($spreadsheet) {
+            (new Xlsx($spreadsheet))->save('php://output');
+        }, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Cache-Control' => 'max-age=0',
+        ]);
+    }
+
+    /**
+     * Human-readable label for the period getSalesQuery() just filtered on.
+     */
+    private function salesPeriodLabel(Request $request): string
+    {
+        $reportType = $request->get('report_type', 'daily');
+
+        if ($reportType === 'custom') {
+            return $request->filled(['start_date', 'end_date'])
+                ? 'From '.$request->start_date.' to '.$request->end_date
+                : 'All dates';
+        }
+
+        return ucfirst($reportType);
     }
 
     public function productsSummaryv2()
