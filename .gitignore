@@ -32,3 +32,10 @@ yarn-error.log
 # windsurf rules
 .windsurfrules
 /database/eolf.sql
+
+# agent session artifacts (skills under .claude/ are committed on purpose)
+.claude/scheduled_tasks.lock
+/.playwright-mcp
+
+# production DB dumps — real customer data, must never be committed
+/storage/db-snapshots
