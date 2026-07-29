@@ -17,15 +17,6 @@ doc it points to. Updated at every phase boundary and session end.
 
 ## PARKED
 
-- **`AppServiceProvider:48` dereferences a null branch.** The global `view()->composer('*')`
-  does `$branch = Branches::where('code', session('branch_code'))->first();
-  $branchName = $branch->name;` with no null guard. Any session holding a
-  `branch_code` that no longer exists in `branches` → `Attempt to read property
-  "name" on null` → **500 on every page**, unrecoverable without clearing the
-  session. Found 2026-07-29 while writing spec 001 tests (it 500s the 403 error
-  page too, masking authorization failures as server errors). One-line fix
-  (`$branch?->name ?? ''`), but out of scope for spec 001.
-
 - **Model factories are missing for everything except `User`.** `InboundControllerTest`
   calls `Product::factory()`, `ProductType::factory()`, `ItemMasterData::factory()`
   etc., none of which exist, so that suite cannot pass. Pre-existing on `main`.
@@ -51,6 +42,16 @@ doc it points to. Updated at every phase boundary and session end.
   `config/auth.php` + migration + proposal doc) and the db-cleanup deploy
   runbook. `git stash list`. The `Customers.php` one is based on
   `db/preventive-cleanup-phases` — pop it there, not on `main`.
+
+## RESOLVED
+
+- **2026-07-29 — `AppServiceProvider` null branch (was PARKED).** The global
+  `view()->composer('*')` dereferenced `$branch->name` unguarded, so any session
+  holding a `branch_code` with no matching `branches` row threw on every render
+  — a 500 on **every page**, including error pages, which masked 403s as 500s.
+  Fixed with `$branch?->name ?? ''` and covered by
+  `tests/Feature/BranchViewComposerTest.php` (mutation-tested: restoring the
+  unguarded line turns 2 of the 3 tests red).
 
 ## DECISION LOG
 
