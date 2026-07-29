@@ -42,10 +42,13 @@ class AppServiceProvider extends ServiceProvider
 
             $branchName = '';
 
-            if(Session::has('branch_code')) {
+            if (Session::has('branch_code')) {
 
+                // Null-safe: a session can outlive the branch it points at (row
+                // renamed or removed). Dereferencing null here threw on EVERY
+                // page — including the error pages, turning 403s into 500s.
                 $branch = Branches::where('code', '=', trim(Session::get('branch_code')))->first();
-                $branchName = $branch->name;
+                $branchName = $branch?->name ?? '';
             }
 
             $view->with('gbranches', $gbranches)->with('branch_name', $branchName);

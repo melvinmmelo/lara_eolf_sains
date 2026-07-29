@@ -22,8 +22,18 @@
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_STORE" value="array"/>
-        <!-- <env name="DB_CONNECTION" value="sqlite"/> -->
-        <!-- <env name="DB_DATABASE" value=":memory:"/> -->
+        <!-- NEVER re-comment these. Tests use RefreshDatabase, which runs
+             migrate:fresh — without these overrides the suite drops every table
+             in the .env database. That destroyed the local eolf_prod copy on
+             2026-07-29. force=true keeps them winning over any .env value.
+             MySQL (not sqlite) because the baseline `migrate` loads,
+             database/schema/mysql-schema.sql, is MySQL-specific. One-time setup:
+               docker exec -i -e MYSQL_PWD=<root-pw> shared_mysql mysql -uroot \
+                 -e "CREATE DATABASE eolf_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+                     GRANT ALL ON eolf_test.* TO '<db-user>'@'%';" -->
+        <env name="DB_CONNECTION" value="mysql" force="true"/>
+        <env name="DB_HOST" value="shared_mysql" force="true"/>
+        <env name="DB_DATABASE" value="eolf_test" force="true"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
