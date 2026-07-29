@@ -184,8 +184,10 @@ class ReportGeneratorController extends Controller
      */
     public function salesByProductType(Request $request)
     {
+        $this->validateSalesFilter($request);
+
         $summary = SalesByProductTypeService::summarize(
-            $this->getSalesQuery($request)->get()
+            $this->productTypeSalesQuery($request)->get()
         );
 
         return view('report.sales-by-product-type', [
@@ -197,8 +199,10 @@ class ReportGeneratorController extends Controller
 
     public function exportSalesByProductType(Request $request)
     {
+        $this->validateSalesFilter($request);
+
         $summary = SalesByProductTypeService::summarize(
-            $this->getSalesQuery($request)->get()
+            $this->productTypeSalesQuery($request)->get()
         );
 
         $spreadsheet = new Spreadsheet();
@@ -253,6 +257,32 @@ class ReportGeneratorController extends Controller
         }, $filename, [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'Cache-Control' => 'max-age=0',
+        ]);
+    }
+
+    /**
+     * getSalesQuery() eager-loads customer + store for the row-listing reports.
+     * This report only aggregates order lines and never touches those relations,
+     * so loading them hydrates ~2 unused models per order (575 customers for a
+     * single month of one branch). Drop them.
+     */
+    private function productTypeSalesQuery(Request $request)
+    {
+        return $this->getSalesQuery($request)->without(['customer', 'store']);
+    }
+
+    /**
+     * getSalesQuery() feeds start_date/end_date straight into Carbon::parse(),
+     * which throws on garbage input — a 500 rather than a validation error.
+     * Validate before it gets there. Scoped to this report; the older sales
+     * reports still carry the unguarded behaviour (see docs/STATE.md).
+     */
+    private function validateSalesFilter(Request $request): void
+    {
+        $request->validate([
+            'report_type' => 'nullable|in:daily,weekly,monthly,yearly,custom',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
         ]);
     }
 

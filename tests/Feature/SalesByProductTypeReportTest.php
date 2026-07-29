@@ -213,6 +213,56 @@ class SalesByProductTypeReportTest extends TestCase
         $this->assertStringContainsString('sales_by_product_type_', $response->headers->get('content-disposition'));
     }
 
+    /**
+     * getSalesQuery() passes start_date/end_date to Carbon::parse(), which
+     * throws on garbage — this must be a validation error, not a 500.
+     */
+    public function test_it_rejects_an_invalid_custom_date_instead_of_erroring(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('report.sales-by-product-type', [
+            'report_type' => 'custom',
+            'start_date' => 'not-a-date',
+            'end_date' => 'also-not-a-date',
+        ]));
+
+        $response->assertRedirect();
+        $response->assertSessionHasErrors(['start_date', 'end_date']);
+    }
+
+    public function test_it_rejects_an_end_date_before_the_start_date(): void
+    {
+        $this->actingAs($this->admin)
+            ->get(route('report.sales-by-product-type', [
+                'report_type' => 'custom',
+                'start_date' => '2026-06-30',
+                'end_date' => '2026-06-01',
+            ]))
+            ->assertSessionHasErrors('end_date');
+    }
+
+    /**
+     * This report aggregates order lines only, so it must not pay for
+     * getSalesQuery()'s customer/store eager loads.
+     */
+    public function test_it_does_not_eager_load_unused_relations(): void
+    {
+        $this->makeInbound([$this->line('TUBE', 1, 1.00)]);
+
+        \DB::enableQueryLog();
+        $this->actingAs($this->admin)->get(route('report.sales-by-product-type'))->assertOk();
+        $queries = collect(\DB::getQueryLog())->pluck('query');
+        \DB::disableQueryLog();
+
+        $this->assertTrue(
+            $queries->filter(fn ($q) => str_contains($q, 'from `customers`'))->isEmpty(),
+            'customers were eager-loaded but this report never uses them'
+        );
+        $this->assertTrue(
+            $queries->filter(fn ($q) => str_contains($q, 'from `store_infos`'))->isEmpty(),
+            'stores were eager-loaded but this report never uses them'
+        );
+    }
+
     public function test_non_admin_is_denied_the_export(): void
     {
         $user = User::factory()->create();
