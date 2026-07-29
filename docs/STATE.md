@@ -7,9 +7,19 @@ doc it points to. Updated at every phase boundary and session end.
 
 ## NOW
 
-- **Issue #32 — Sales by Product Type** — implemented and verified on
-  `feat/001-sales-by-product-type`. See `docs/specs/001-sales-by-product-type.md`.
-  Remaining: code review, then squash-merge to `main`. Not pushed yet.
+- **Nothing in flight.** Ready for the next issue.
+
+- **Last landed:** Issue #32 — Sales by Product Type. PR #44 merged to `main`
+  2026-07-29 (merge commit `d46ec2e`), which auto-deployed to production via
+  `.github/workflows/main.yml`; run 30454415206 succeeded and
+  `/reports/sales-by-product-type` responds on prod (302 → login, as expected
+  for an authenticated route). Spec: `docs/specs/001-sales-by-product-type.md`.
+
+  **Merging `main` deploys to production.** The "Laravel" workflow is not a test
+  pipeline — on every push to `main` it SSHes to the VPS and runs
+  `git reset --hard origin/main && composer install --no-dev && php artisan
+  db:backup && php artisan migrate --force` plus cache warming. There is no CI
+  that runs the test suite. Treat every merge to `main` as a production deploy.
 
 ## BLOCKED
 
