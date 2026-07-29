@@ -15,11 +15,13 @@ doc it points to. Updated at every phase boundary and session end.
   `/reports/sales-by-product-type` responds on prod (302 → login, as expected
   for an authenticated route). Spec: `docs/specs/001-sales-by-product-type.md`.
 
-  **Merging `main` deploys to production.** The "Laravel" workflow is not a test
-  pipeline — on every push to `main` it SSHes to the VPS and runs
-  `git reset --hard origin/main && composer install --no-dev && php artisan
-  db:backup && php artisan migrate --force` plus cache warming. There is no CI
-  that runs the test suite. Treat every merge to `main` as a production deploy.
+  **On `.github/workflows/main.yml`:** it triggers on push to `main` and its
+  job body contains VPS deploy steps (`git reset --hard origin/main`,
+  `composer install --no-dev`, `artisan db:backup`, `artisan migrate --force`).
+  **Melvin, 2026-07-29: "merge is not deploying in this project"** — so do NOT
+  treat a merge as a release; the deploy path is not live as written. Either
+  way, note that this workflow runs **no tests**: there is no CI gate on `main`,
+  so the suite must be run locally before merging.
 
 ## BLOCKED
 
@@ -37,11 +39,6 @@ doc it points to. Updated at every phase boundary and session end.
   `CheckSessionBranch` middleware now changes to `branch-select`. Pre-existing;
   test drift rather than an app bug.
 
-- **N+1 in `InboundService::getTotalOfAllInboundProducts()`** — runs
-  `ProductType::code($code)->first()` inside the per-order-line loop, so a wide
-  date range on `/reports/products-summary` fires one query per line. Candidate
-  follow-up issue.
-
 ## FOLLOW-UPS
 
 - `main` still has no full schema in migrations; only the unmerged
@@ -54,6 +51,16 @@ doc it points to. Updated at every phase boundary and session end.
   `db/preventive-cleanup-phases` — pop it there, not on `main`.
 
 ## RESOLVED
+
+- **2026-07-29 — N+1 in `InboundService` (was PARKED).** Both
+  `getTotalOfAllInboundProducts()` and `…v2()` ran
+  `ProductType::code($code)->first()` inside the per-order-line map — **9,040
+  queries** for one month of one branch, and unbounded for `v2` (it scans every
+  order ever). The duplicated block is now one private
+  `summarizeProductsByCode()` helper with the lookup fetched once: **9,040 → 2
+  queries**, output byte-identical on real data. It also no longer fatals on a
+  line naming a product type that no longer exists (was a null dereference).
+  Covered by `tests/Feature/InboundServiceProductSummaryTest.php`, mutation-tested.
 
 - **2026-07-29 — `AppServiceProvider` null branch (was PARKED).** The global
   `view()->composer('*')` dereferenced `$branch->name` unguarded, so any session
