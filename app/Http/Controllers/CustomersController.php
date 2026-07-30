@@ -213,6 +213,16 @@ class CustomersController extends Controller
     {
         $store = Storeinfo::findOrFail($storeId);
 
+        // Same rule as customers, one level down: a store that owns records is
+        // not deletable. Deleting one used to orphan its orders silently, and
+        // unlike a customer there was no activity log to recover it from.
+        if ($store->hasTransactionHistory()) {
+            return redirect('/customers/')->with(
+                'error',
+                "{$store->storename} cannot be deleted: it still has orders, bad orders, or equipment on file. Pull out the equipment first, or leave the store in place for its history."
+            );
+        }
+
         foreach ($request->input('equipment_ids', []) as $equipmentId) {
             $equipment = Equipment::findOrFail($equipmentId);
             $equipment->status = 'available';

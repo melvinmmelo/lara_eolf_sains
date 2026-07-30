@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Branches;
 use App\Models\Customers;
 use App\Models\Equipment;
+use App\Models\EquipmentStore;
 use App\Models\Inbound;
 use App\Models\NewBadOrder;
 use App\Models\StoreInfo;
@@ -67,13 +68,13 @@ class CustomerDeletionGuardTest extends TestCase
         ]);
     }
 
-    private function makeInbound(Customers $customer): Inbound
+    private function makeInbound(Customers $customer, array $overrides = []): Inbound
     {
         static $orderNo = 0;
         $orderNo++;
 
         // Unguarded: several NOT NULL columns are absent from Inbound::$fillable.
-        return Inbound::unguarded(fn () => Inbound::create([
+        return Inbound::unguarded(fn () => Inbound::create(array_merge([
             'branch_code' => $this->branchCode,
             'customer_id' => $customer->id,
             'customer_name' => $customer->fullName,
@@ -93,7 +94,7 @@ class CustomerDeletionGuardTest extends TestCase
             'vehicle_id' => '1',
             'vehicle_no' => 'ABC-123',
             'products' => json_encode([]),
-        ]));
+        ], $overrides)));
     }
 
     private function makeBadOrder(Customers $customer): NewBadOrder
@@ -211,6 +212,81 @@ class CustomerDeletionGuardTest extends TestCase
         $this->deleteStore($customer, $store, ['equipment_ids' => [$equipment->id]]);
 
         $this->assertSame('available', $equipment->fresh()->status);
+    }
+
+    // ---------------------------------------------------------------------
+    // Stores follow the same rule: not deletable once they own records
+    // ---------------------------------------------------------------------
+
+    public function test_a_store_with_orders_cannot_be_deleted(): void
+    {
+        $customer = $this->makeCustomer();
+        $store = $this->makeStore($customer);
+        $this->makeInbound($customer, ['store_id' => $store->id]);
+
+        $response = $this->deleteStore($customer, $store);
+
+        $response->assertSessionHas('error');
+        $this->assertDatabaseHas('storeinfo', ['id' => $store->id]);
+        $this->assertDatabaseHas('customers', ['id' => $customer->id]);
+    }
+
+    public function test_a_store_with_equipment_cannot_be_deleted(): void
+    {
+        $customer = $this->makeCustomer();
+        $store = $this->makeStore($customer);
+
+        $equipment = Equipment::create([
+            'ownership' => 'company',
+            'type' => 'freezer',
+            'brand' => 'Test Brand',
+            'status' => 'deployed',
+            'branch_code' => $this->branchCode,
+        ]);
+
+        // Unguarded: EquipmentStore::$fillable omits several NOT NULL columns.
+        EquipmentStore::unguarded(fn () => EquipmentStore::create([
+            'customer_id' => $customer->id,
+            'store_id' => $store->id,
+            'equipment_id' => $equipment->id,
+            'type' => 'freezer',
+            'brand' => 'Test Brand',
+            'serial' => 'SN-1',
+            'owned' => 'company',
+            'pull_status' => 'active',
+        ]));
+
+        $response = $this->deleteStore($customer, $store);
+
+        $response->assertSessionHas('error');
+        $this->assertDatabaseHas('storeinfo', ['id' => $store->id]);
+    }
+
+    public function test_a_store_with_no_records_is_still_deletable(): void
+    {
+        $customer = $this->makeCustomer();
+        $store = $this->makeStore($customer);
+
+        $response = $this->deleteStore($customer, $store);
+
+        $response->assertSessionHas('success');
+        $this->assertDatabaseMissing('storeinfo', ['id' => $store->id]);
+    }
+
+    public function test_deleting_a_store_is_recorded_in_the_activity_log(): void
+    {
+        $customer = $this->makeCustomer();
+        $store = $this->makeStore($customer, 'Recoverable Store');
+
+        $this->deleteStore($customer, $store);
+
+        // StoreInfo had no activity logging at all, so the three stores already
+        // hard-deleted on production are unrecoverable. Future ones are not.
+        $this->assertDatabaseHas('activity_log', [
+            'subject_type' => StoreInfo::class,
+            'subject_id' => $store->id,
+            'description' => 'deleted',
+        ]);
     }
 
     public function test_no_view_renders_a_customer_delete_form(): void

@@ -56,12 +56,15 @@ doc it points to. Updated at every phase boundary and session end.
 - **52 orphaned `inbounds.store_id` and 39 orphaned
   `new_temp_bad_orders.new_bad_order_id` on production.** Found by the
   referential-integrity sweep on 2026-07-30 (this schema has no foreign keys
-  anywhere, so nothing prevents them). No known 500 from these today — every
-  view dereference of `->store->` is already `??`-guarded, and the orphaned
-  bad-order line items are only read through their header — but they are the
-  same class of defect as the customer orphans and nobody has audited what
-  else in the schema is dangling. Needs a `data-analyzer` pass; FK constraints
-  are a `db-designer` project (`db/preventive-cleanup-phases` carries a start).
+  anywhere, so nothing prevents them). No 500 results — every view dereference
+  of `->store->` is `??`-guarded and `inbounds.store_name` is denormalized, so
+  all 52 orders still display their store correctly. **No new ones can be
+  created** (the store guard landed in `fix/004`), but these are not
+  retroactively repairable: only 3 distinct stores are missing, and `StoreInfo`
+  had no activity logging, so nothing recorded what they were beyond the name.
+  Deliberately left as-is. The 39 bad-order line items are unexamined. A full
+  audit needs `data-analyzer`; FK constraints are a `db-designer` project
+  (`db/preventive-cleanup-phases` carries a start).
 
 - **`EquipmentStoreController` dereferences `->storeinfo->` unguarded** at
   lines 241 and 339-341. `equipment_store.store_id` currently has 0 orphans so
@@ -128,6 +131,19 @@ doc it points to. Updated at every phase boundary and session end.
   real record when it is an inference. `updated_at` = restore time. `status`
   restored verbatim as `Active` (capital A) — 35 other rows use it and the
   column is `utf8mb4_unicode_ci`, so `scopeActive()` still matches.
+- **2026-07-30 — Stores get a delete guard, NOT soft deletes.** Melvin asked
+  whether stores should be soft-deleted too. Evidence said no: store deletion
+  has happened exactly 3 times ever, all three being the same requests that
+  destroyed customers 246/453/684, and the resulting 52 orphaned orders display
+  correctly anyway because `inbounds.store_name` is denormalized. Soft deletes
+  would have put a global scope on `StoreInfo` — reaching `$customer->stores()`,
+  the `storeinfo()` hasOne, equipment-store screens and every store picker — to
+  solve a problem with zero user-visible failures. Instead: a reference guard
+  (orders / bad orders / equipment) plus `AutoLogsChanges` on `StoreInfo`, which
+  had **no activity logging at all** — the reason those 3 stores are gone for
+  good while customer 453 was recoverable. If a store ever legitimately needs
+  retiring, the answer is a status flag matching `customers.status` and the
+  `scopeActive` idiom used by Delivery/Vehicles/Drivers — not soft deletes.
 - **2026-07-30 — Customers are never deleted.** Melvin: *"customer should not
   be deleted"*. Stop-selling already retires a customer reversibly while
   preserving their orders, so deletion offered nothing it doesn't — and cost a
