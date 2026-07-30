@@ -7,38 +7,38 @@ doc it points to. Updated at every phase boundary and session end.
 
 ## NOW
 
-- **In flight: customer-deletion incident (`/bad-orders` 500 on EFTO-CAG).**
-  Data half is DONE on production; the code half is NOT started and is waiting
-  on Melvin. Detail in PARKED below and the DECISION LOG entry.
+- **Nothing in flight.** Ready for the next issue.
 
-  **Done 2026-07-30:** `customers#453` (LAROSE STORE beside 711) restored on
-  production from `activity_log#154483`'s `old` payload. Prod backup of the
-  `customers` table taken first: `other:/root/db-backups/eolf-customers-before-453-restore-20260730-212017.sql[.gz]`
-  (672 rows, verified). Rollback is `DELETE FROM customers WHERE id = 453;`.
-  Verified after: 0 orphans in `new_bad_orders`, all 28 active EFTO-CAG bad
-  orders resolve a customer, no new errors in prod `laravel.log`.
+- **Last landed: the customer-deletion incident — CLOSED and deployed
+  2026-07-30.** `/bad-orders` had been 500-ing on EFTO-CAG since 2026-06-17 for
+  three staff users. Root cause: `destroyStore()` hard-deleted the customer
+  whenever the store removed was their last, taking `customers#453` (45 paid
+  orders) with it. Traced end-to-end in the activity log: all three of this
+  year's customer deletions came from `DELETE customers/{id}/store/{id}`, and
+  `customer.destroy` never had a controller method at all.
 
-  **Prod data is now fully consistent.** `customers#461` (Jessabel Bacton) and
-  `#467` (Rodolfo Madrid) reconstructed as name-only `STOP SELLING` stubs, so
-  every customer reference in the database resolves: orphans in `inbounds`,
-  `new_bad_orders` and `storeinfo` are all **0**. Backup:
-  `other:/root/db-backups/eolf-customers-before-461-467-stubs-20260730-213327.sql[.gz]`.
+  **Data (production, both backed up first):** `customers#453` restored from
+  `activity_log#154483`'s `old` payload
+  (`other:/root/db-backups/eolf-customers-before-453-restore-20260730-212017.sql[.gz]`,
+  rollback `DELETE FROM customers WHERE id = 453;`); `#461` Jessabel Bacton and
+  `#467` Rodolfo Madrid rebuilt as name-only `STOP SELLING` stubs
+  (`…-before-461-467-stubs-20260730-213327.sql[.gz]`). **Every customer
+  reference in the database now resolves — `inbounds`, `new_bad_orders` and
+  `storeinfo` orphans are all 0.**
 
-  **Code fix is committed but NOT deployed** — branch
-  `fix/003-customer-delete-guard`, 4 commits, unpushed. Prod is still running
-  the unguarded `destroyStore()`. Merging + deploying is Melvin's call, and is
-  entangled with the unresolved "does merge deploy?" question above.
-
-  **Shipped 2026-07-30 21:58 PHT.** `fix/003` + `fix/004` are on `main` and
-  deployed (prod at `a4f6f29`, verified: `customer.destroy` gone from the
+  **Code:** `fix/003` (customers are never deleted; 8 view dereferences
+  guarded; `date_created` null-safe across 14 models) and `fix/004` (stores not
+  deletable once they own records; `AutoLogsChanges` on `StoreInfo`). Merged and
+  deployed — prod at `fe381ad`, verified: `customer.destroy` absent from the
   server's route list, 0 errors logged after the deploy, `/bad-orders`,
-  `/customers`, `/orders`, `/dashboard` all 302-to-login rather than 500).
-  Pushed during a verified-idle window — nobody had touched the app in 30 min.
-  **Note:** the push went straight to `main`, bypassing the repo's "changes
-  must be made through a pull request" rule (Melvin's explicit instruction);
-  #44/#45 went through PRs and future work should too.
+  `/customers`, `/orders` and `/dashboard` all 302-to-login rather than 500.
+  Pushed in a verified-idle window (no request served in 30 min).
 
-- **Last landed:** Issue #32 — Sales by Product Type. PR #44 merged to `main`
+  **Note:** the push went straight to `main`, bypassing the repo's "changes must
+  be made through a pull request" rule (Melvin's explicit instruction). PRs #44
+  and #45 went through the PR flow and future work should too.
+
+- **Previously landed:** Issue #32 — Sales by Product Type. PR #44 merged to `main`
   2026-07-29 (merge commit `d46ec2e`), which auto-deployed to production via
   `.github/workflows/main.yml`; run 30454415206 succeeded and
   `/reports/sales-by-product-type` responds on prod (302 → login, as expected
@@ -62,20 +62,21 @@ doc it points to. Updated at every phase boundary and session end.
 
 ## PARKED
 
-- **The deploy workflow is now failing at `Add host key`** (`ssh-keyscan -H
-  $HOST`, `.github/workflows/main.yml`) — it exits 1 before any deploy step
-  runs. Run 30549392441 (`a4f6f29`, 21:57 PHT) succeeded; run 30549507314
-  (`e07f9c5`, 21:59) failed there and **failed again on re-run**, so it is not a
-  one-off. Not caused by the commit (docs only). Diagnosed so far:
+- **The deploy workflow is INTERMITTENTLY failing at `Add host key`**
+  (`ssh-keyscan -H $HOST`, `.github/workflows/main.yml`) — it exits 1 before any
+  deploy step runs, so a failed run leaves prod on the previous commit. Observed
+  2026-07-30 across four consecutive runs: `a4f6f29` **success**, `e07f9c5`
+  **fail**, its re-run **fail**, `fe381ad` **success**. Diagnosed:
   `ssh-keyscan -H 93.127.185.204` from Melvin's machine works (exit 0, keys
-  served), and `fail2ban-client status sshd` shows one banned IP that is an
-  unrelated attacker, not a runner. So the VPS is reachable and is not banning
-  GitHub broadly — the cause is something between the runner and the host
-  (firewall/rate-limit on repeated connections is the leading guess; the two
-  runs were 2 minutes apart). **Consequence: prod sits at `a4f6f29` while
-  `main` is one docs-only commit ahead — no runtime difference, but the next
-  real deploy will not land until this is fixed.** Do not "fix" it by
-  swallowing the keyscan exit code; that would hide a genuinely broken deploy.
+  served) and `fail2ban-client status sshd` shows only an unrelated attacker
+  banned, so the VPS is reachable and is not banning GitHub broadly. Leading
+  guess is a rate-limit between the runner and the host — the two failures came
+  within ~2 minutes of a successful connection, and the next attempt minutes later
+  worked. **Operational impact: a push can silently not deploy.** Always confirm
+  prod's commit after pushing (`ssh other 'git -C <path> log --oneline -1'`)
+  rather than assuming the push shipped. Do not "fix" this by swallowing the
+  keyscan exit code — that would convert a visible non-deploy into an invisible
+  one.
 
 - **52 orphaned `inbounds.store_id` and 39 orphaned
   `new_temp_bad_orders.new_bad_order_id` on production.** Found by the
