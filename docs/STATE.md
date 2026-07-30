@@ -62,6 +62,21 @@ doc it points to. Updated at every phase boundary and session end.
 
 ## PARKED
 
+- **The deploy workflow is now failing at `Add host key`** (`ssh-keyscan -H
+  $HOST`, `.github/workflows/main.yml`) — it exits 1 before any deploy step
+  runs. Run 30549392441 (`a4f6f29`, 21:57 PHT) succeeded; run 30549507314
+  (`e07f9c5`, 21:59) failed there and **failed again on re-run**, so it is not a
+  one-off. Not caused by the commit (docs only). Diagnosed so far:
+  `ssh-keyscan -H 93.127.185.204` from Melvin's machine works (exit 0, keys
+  served), and `fail2ban-client status sshd` shows one banned IP that is an
+  unrelated attacker, not a runner. So the VPS is reachable and is not banning
+  GitHub broadly — the cause is something between the runner and the host
+  (firewall/rate-limit on repeated connections is the leading guess; the two
+  runs were 2 minutes apart). **Consequence: prod sits at `a4f6f29` while
+  `main` is one docs-only commit ahead — no runtime difference, but the next
+  real deploy will not land until this is fixed.** Do not "fix" it by
+  swallowing the keyscan exit code; that would hide a genuinely broken deploy.
+
 - **52 orphaned `inbounds.store_id` and 39 orphaned
   `new_temp_bad_orders.new_bad_order_id` on production.** Found by the
   referential-integrity sweep on 2026-07-30 (this schema has no foreign keys
