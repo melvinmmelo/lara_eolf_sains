@@ -135,7 +135,7 @@
                                     <option value="0">-- Select Customer --</option>
                                     @foreach ($equipment as $equip)
                                         <option value="{{ $equip->equipmentStore->id }}">
-                                            {{ $equip->code . ' ' . $equip->equipmentStore->customer->fullName }}
+                                            {{ $equip->code . ' ' . ($equip->equipmentStore->customer->fullName ?? '[deleted customer]') }}
                                         </option>
                                     @endforeach
                                 </select>

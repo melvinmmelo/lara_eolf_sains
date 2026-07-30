@@ -26,7 +26,7 @@ class Delivery extends Model
 
     public function getDateCreatedAttribute()
     {
-        return $this->created_at->format('m-d-Y h:i A');
+        return $this->created_at?->format('m-d-Y h:i A');
     }
 
     public function scopeBranch($query, $branchCode)

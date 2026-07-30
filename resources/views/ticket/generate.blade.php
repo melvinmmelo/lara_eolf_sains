@@ -167,7 +167,7 @@
                             'Delivery Person: (ID {{ $ticketdetail->delivery_person_id }}) {{ $ticketdetail->delivery_person }}<br>'
                         );
                         mywindow.document.write(
-                            'Customer: {{ $ticketdetail->customer->fullName }} ({{ $ticketdetail->store->storename }})<br>'
+                            'Customer: {{ $ticketdetail->customer->fullName ?? '[deleted customer]' }} ({{ $ticketdetail->store->storename ?? '' }})<br>'
                         );
                         mywindow.document.write('Encoded By: <br>');
                         mywindow.document.write('<table width="100%">');
@@ -210,7 +210,7 @@
                         mywindow.document.write('<center>CUT FOR SPOON</center><br>');
                         mywindow.document.write('Sequence No: {{ $ticketdetail->ticket_sequence_no }}<br>');
                         mywindow.document.write(
-                            'Customer: <span style="font-size: 16px;">{{ $ticketdetail->customer->fullName }} ({{ $ticketdetail->store->storename }}</span>)<br>'
+                            'Customer: <span style="font-size: 16px;">{{ $ticketdetail->customer->fullName ?? '[deleted customer]' }} ({{ $ticketdetail->store->storename ?? '' }}</span>)<br>'
                         );
                         mywindow.document.write('Total Spoon Count: <span style="font-size: 16px;">' + sp_count + '</span><br>');
                         mywindow.document.write('Spoon Set: <span style="font-size: 16px;">' + sp_set.toFixed(0) + '</span><br><br><br>');

@@ -43,7 +43,7 @@ class pricelevels extends Model
 
     public function getDateCreatedAttribute()
     {
-        return $this->created_at->format('m-d-Y h:i A');
+        return $this->created_at?->format('m-d-Y h:i A');
     }
 
     // get all price levels by branch code that is not bad pricing and is active

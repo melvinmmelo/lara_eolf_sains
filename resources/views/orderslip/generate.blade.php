@@ -88,7 +88,7 @@
                                         <td>{{ $inbound->f_created_at }}</td>
                                         <td>{{ $inbound->code }}</td>
                                         <td>{{ $inbound->equipment->code ?? '' }}</td>
-                                        <td>{{ $inbound->customer->fullName }}</td>
+                                        <td>{{ $inbound->customer->fullName ?? '[deleted customer]' }}</td>
                                         <td>{{ $inbound->delivery_person }}</td>
                                         <td><span class="label label-primary">{{ formatNumber($total) }}</span></td>
                                         <td>{{ formatNumber($total - $inbound->delivered_amount) }}</td>

@@ -55,7 +55,7 @@
                                 $grandTotal[] = $badOrder->amount;
                             @endphp
                             <tr>
-                                <td>{{ $badOrder->degic_code . " " . $badOrder->customer->fullName }}</td>
+                                <td>{{ $badOrder->degic_code . " " . ($badOrder->customer->fullName ?? '[deleted customer]') }}</td>
                                 <td>{{ $badOrder->amount }}</td>
                                 <td>{{ $badOrder->bo_percentage }}</td>
                                 <td>{{ $badOrder->remarks }}</td>
