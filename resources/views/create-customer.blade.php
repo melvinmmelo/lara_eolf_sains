@@ -199,12 +199,8 @@
                             <td>
                                 <a class="btn btn-success btn-sm"
                                     href="{{ route('customer.edit', $customer->id) }}">Edit</a>
-                                <form method="POST" action="{{ route('customer.destroy', $customer->id) }}"
-                                    style="display: inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form>
+                                {{-- No Delete button by design: customers are retired with
+                                     stop-selling, never deleted. See docs/specs/002. --}}
                             </td>
                         </tr>
                     @endforeach

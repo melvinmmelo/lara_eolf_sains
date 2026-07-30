@@ -24,11 +24,6 @@
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
                     let icon = 'success';
-                    @if (session('success') == 'Customer deleted successfully!')
-                        icon = 'error';
-                    @elseif (session('success') == 'Customer updated successfully!')
-                        icon = 'success';
-                    @endif
 
                     Swal.fire({
                         icon: icon,
@@ -78,14 +73,8 @@
                                         data-target="#editCustomerModal"
                                         onclick="setToUpdatecustomer('{{ $customer->id }}','{{ $customer->distributor }}','{{ $customer->lastname }}','{{ $customer->firstname }}','{{ $customer->middlename }}','{{ $customer->contact_no }}','{{ $customer->companyname }}','{{ $customer->tin }}','{{ $customer->longitude }}','{{ $customer->latitude }}','{{ $customer->region }}','{{ $customer->province }}','{{ $customer->city }}','{{ $customer->brgy }}','{{ $customer->subdivision }}')">Edit</button>
                                     <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editCustomerModal" onclick="setToUpdatecustomer('{{ $customer->id }}',{{ $customer->lastname }}','{{ $customer->firstname }}','{{ $customer->middlename }}','{{ $customer->contact_no }}')">Edit</a> -->
-                                    <form method="POST" action="{{ route('customer.destroy', $customer->id) }}"
-                                        style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            onclick="return confirm('Are you sure you want to delete this customer info?')"
-                                            class="btn btn-danger btn-sm">Delete</button>
-                                    </form>
+                                    {{-- No Delete button by design: customers are retired with
+                                         stop-selling, never deleted. See docs/specs/002. --}}
                                 </td>
                             </tr>
                         @endforeach

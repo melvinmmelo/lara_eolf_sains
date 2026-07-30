@@ -221,12 +221,12 @@ class CustomersController extends Controller
 
         $store->delete();
 
-        $customer = Customer::findOrFail($customerId);
-        if ($customer->stores()->count() == 0) {
-            $customer->delete();
-        }
-
-        return redirect('/customers/')->with('success', 'Store and possibly customer deleted successfully, and equipment status updated to available!');
+        // Customers are never deleted (Melvin, 2026-07-30). This method used to
+        // delete the customer whenever the store it removed was their last one,
+        // which on 2026-06-17 silently destroyed a customer with 45 paid orders
+        // and orphaned every one of them. Retiring a customer is stop-selling —
+        // see CustomersController::stopSelling() and reactivate().
+        return redirect('/customers/')->with('success', 'Store deleted and equipment released. The customer was kept — set them to stop-selling if they are no longer trading.');
     }
 
 }

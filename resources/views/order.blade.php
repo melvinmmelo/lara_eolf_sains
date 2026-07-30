@@ -124,7 +124,7 @@
                                         <td>{{ $inbound->f_created_at }}</td>
                                         <td>{{ $inbound->code }}</td>
                                         <td>{{ $inbound->degic_no }}</td>
-                                        <td>{{ $inbound->customer->fullName }}</td>
+                                        <td>{{ $inbound->customer->fullName ?? '[deleted customer]' }}</td>
                                         <td>{{ formatNumber($grandTotal_amount) }}
                                             @if ($inbound->is_with_sf)
                                                 (<span class="label label-warning">+1000</span>)

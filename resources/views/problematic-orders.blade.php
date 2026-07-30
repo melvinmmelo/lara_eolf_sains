@@ -73,7 +73,7 @@
                                     <td>{{ $inbound->f_created_at }}</td>
                                     <td>{{ $inbound->code }}</td>
                                     <td>{{ $inbound->degic_no }}</td>
-                                    <td>{{ $inbound->customer->fullName }}</td>
+                                    <td>{{ $inbound->customer->fullName ?? '[deleted customer]' }}</td>
                                     <td>{{ formatNumber($inbound->grandTotal) }}</td>
                                     <td>{{ formatNumber($inbound->discount) }}</td>
                                     <td>{{ formatNumber($inbound->bo_amount) }}</td>

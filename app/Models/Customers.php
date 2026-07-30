@@ -36,7 +36,10 @@ class Customers extends Model
 
     public function getDateCreatedAttribute()
     {
-        return $this->created_at->format('m-d-Y h:i A');
+        // Nullable in the schema, and this accessor is in $appends — so an
+        // unguarded ->format() fatals on any toJson()/toArray() of a row with
+        // no created_at (e.g. a record restored from the activity log).
+        return $this->created_at?->format('m-d-Y h:i A');
     }
 
 
@@ -58,6 +61,12 @@ class Customers extends Model
     public function badOrders()
     {
         return $this->hasMany(BadOrder::class, 'customer_id');
+    }
+
+    // Sales-side bad orders (the canonical system — see CLAUDE.md).
+    public function newBadOrders()
+    {
+        return $this->hasMany(NewBadOrder::class, 'customer_id');
     }
 
     // The customer's explicitly-assigned price level (nullable).

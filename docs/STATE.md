@@ -3,11 +3,35 @@
 One-page current state. Any fresh session or agent reads this FIRST, then the
 doc it points to. Updated at every phase boundary and session end.
 
-**Last updated:** 2026-07-29
+**Last updated:** 2026-07-30
 
 ## NOW
 
-- **Nothing in flight.** Ready for the next issue.
+- **In flight: customer-deletion incident (`/bad-orders` 500 on EFTO-CAG).**
+  Data half is DONE on production; the code half is NOT started and is waiting
+  on Melvin. Detail in PARKED below and the DECISION LOG entry.
+
+  **Done 2026-07-30:** `customers#453` (LAROSE STORE beside 711) restored on
+  production from `activity_log#154483`'s `old` payload. Prod backup of the
+  `customers` table taken first: `other:/root/db-backups/eolf-customers-before-453-restore-20260730-212017.sql[.gz]`
+  (672 rows, verified). Rollback is `DELETE FROM customers WHERE id = 453;`.
+  Verified after: 0 orphans in `new_bad_orders`, all 28 active EFTO-CAG bad
+  orders resolve a customer, no new errors in prod `laravel.log`.
+
+  **Prod data is now fully consistent.** `customers#461` (Jessabel Bacton) and
+  `#467` (Rodolfo Madrid) reconstructed as name-only `STOP SELLING` stubs, so
+  every customer reference in the database resolves: orphans in `inbounds`,
+  `new_bad_orders` and `storeinfo` are all **0**. Backup:
+  `other:/root/db-backups/eolf-customers-before-461-467-stubs-20260730-213327.sql[.gz]`.
+
+  **Code fix is committed but NOT deployed** — branch
+  `fix/003-customer-delete-guard`, 4 commits, unpushed. Prod is still running
+  the unguarded `destroyStore()`. Merging + deploying is Melvin's call, and is
+  entangled with the unresolved "does merge deploy?" question above.
+
+  **Waiting on Melvin:** deploying `fix/003` to production. Prod still runs the
+  unguarded `destroyStore()`, so the incident can still recur until it ships.
+  Entangled with the unresolved "does merge deploy?" question above.
 
 - **Last landed:** Issue #32 — Sales by Product Type. PR #44 merged to `main`
   2026-07-29 (merge commit `d46ec2e`), which auto-deployed to production via
@@ -28,6 +52,26 @@ doc it points to. Updated at every phase boundary and session end.
 - Nothing blocked.
 
 ## PARKED
+
+- **52 orphaned `inbounds.store_id` and 39 orphaned
+  `new_temp_bad_orders.new_bad_order_id` on production.** Found by the
+  referential-integrity sweep on 2026-07-30 (this schema has no foreign keys
+  anywhere, so nothing prevents them). No known 500 from these today — every
+  view dereference of `->store->` is already `??`-guarded, and the orphaned
+  bad-order line items are only read through their header — but they are the
+  same class of defect as the customer orphans and nobody has audited what
+  else in the schema is dangling. Needs a `data-analyzer` pass; FK constraints
+  are a `db-designer` project (`db/preventive-cleanup-phases` carries a start).
+
+- **`EquipmentStoreController` dereferences `->storeinfo->` unguarded** at
+  lines 241 and 339-341. `equipment_store.store_id` currently has 0 orphans so
+  it is not reachable, but `destroyStore()` deletes a store without cleaning up
+  `equipment_store` rows that point at it, so it can become reachable.
+
+- **`laravel/boost` cannot be installed** — it requires `guzzlehttp/guzzle
+  ^7.9`; this project is locked to `7.8.1`. Needs a guzzle upgrade first, which
+  belongs in `/upgrade`, not bundled into a fix branch. Attempted 2026-07-30;
+  composer.json/lock reverted cleanly.
 
 - **Model factories are missing for everything except `User`.** `InboundControllerTest`
   calls `Product::factory()`, `ProductType::factory()`, `ItemMasterData::factory()`
@@ -72,6 +116,52 @@ doc it points to. Updated at every phase boundary and session end.
 
 ## DECISION LOG
 
+- **2026-07-30 — Restore `customers#453` on production rather than patch the
+  view first.** The customer was deleted by accident (store-delete cascade) six
+  days after their most recent order, so restoring returns the data to truth
+  rather than working around a bug; it also reconnects 45 paid orders across
+  every report, which a view fix would not. Melvin's explicit go, taken during
+  a verified-idle window (no request served in 17 min; 3 sessions logged in but
+  idle 17/33/82 min). `created_at` deliberately left **NULL**: Spatie logged
+  only the fillable attributes, so the original value is unrecoverable, and the
+  ~2024-08-23 estimate bracketed from neighbours `#452`/`#454` would read as a
+  real record when it is an inference. `updated_at` = restore time. `status`
+  restored verbatim as `Active` (capital A) — 35 other rows use it and the
+  column is `utf8mb4_unicode_ci`, so `scopeActive()` still matches.
+- **2026-07-30 — Customers are never deleted.** Melvin: *"customer should not
+  be deleted"*. Stop-selling already retires a customer reversibly while
+  preserving their orders, so deletion offered nothing it doesn't — and cost a
+  six-week production outage. `destroyStore()` no longer touches the customer
+  under any condition; the `customer.destroy` route and the Delete button in
+  three views are gone. This **supersedes** the reference-guard approach taken
+  earlier the same session (~~delete only customers with no history~~) and
+  closes `docs/specs/002` without any soft-delete work — soft deletes would
+  have put a global scope on every `Customers` query in a legacy codebase to
+  make a capability survivable that is better removed. Accepted consequence:
+  mis-keyed customers can only be stop-sold, never removed.
+- **2026-07-30 — `created_at` on 453 set to `2024-08-23`, reversing the NULL
+  decision made an hour earlier.** ~~Left NULL as an honest unknown~~ — NULL
+  turned out to be *unsafe*, not merely honest: `Customers` has
+  `protected $appends = ['date_created']` whose accessor calls
+  `$this->created_at->format()` unguarded, so `GET /customers/{id}/edit`
+  (`response()->json($customer)`, the Edit button) fatals on a row with no
+  `created_at`. The restore therefore introduced a fresh 500 on prod, closed by
+  backfilling the value. `2024-08-23` is bounded evidence, not a guess: ids are
+  sequential and `created_at` monotonic, so `#453` falls between `#452`
+  (2024-08-22 10:52) and `#454` (2024-08-24 08:31). The accessor is now
+  null-safe in code as well (commit `e1d3462`), across 14 models.
+  **Lesson: on a legacy schema, "leave it NULL" is only honest if every reader
+  of that column is null-safe — check the accessors and `$appends` first.**
+- **2026-07-30 — 461/467 reconstructed as `STOP SELLING` stubs rather than left
+  orphaned.** Names come from `inbounds.customer_name`, which the app itself
+  denormalized at order time — recorded data, not invention. `STOP SELLING`
+  keeps them out of every active picker (`scopeActive`) while making their 7
+  paid orders resolve; `created_at` set to each one's first order date, which
+  is the latest they can possibly have existed. Everything else left NULL
+  because nothing else is known.
+- **2026-07-30 — 246 and 684 left deleted.** Both were also deleted by user 2
+  (2026-05-11 Bas Tea, 2026-07-15 IAN DAVE VARIETY STORE) but neither left a
+  single orphaned row, so there is nothing to repair.
 - **2026-07-29 — Spec 001 amount semantics.** Sales-by-product-type reports
   order-LINE revenue (qty × price) only. The ₱1000 service fee, discounts and
   bad-order deductions are order-level and cannot be attributed to a product
