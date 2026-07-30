@@ -29,9 +29,14 @@ doc it points to. Updated at every phase boundary and session end.
   the unguarded `destroyStore()`. Merging + deploying is Melvin's call, and is
   entangled with the unresolved "does merge deploy?" question above.
 
-  **Waiting on Melvin:** deploying `fix/003` to production. Prod still runs the
-  unguarded `destroyStore()`, so the incident can still recur until it ships.
-  Entangled with the unresolved "does merge deploy?" question above.
+  **Shipped 2026-07-30 21:58 PHT.** `fix/003` + `fix/004` are on `main` and
+  deployed (prod at `a4f6f29`, verified: `customer.destroy` gone from the
+  server's route list, 0 errors logged after the deploy, `/bad-orders`,
+  `/customers`, `/orders`, `/dashboard` all 302-to-login rather than 500).
+  Pushed during a verified-idle window — nobody had touched the app in 30 min.
+  **Note:** the push went straight to `main`, bypassing the repo's "changes
+  must be made through a pull request" rule (Melvin's explicit instruction);
+  #44/#45 went through PRs and future work should too.
 
 - **Last landed:** Issue #32 — Sales by Product Type. PR #44 merged to `main`
   2026-07-29 (merge commit `d46ec2e`), which auto-deployed to production via
@@ -39,13 +44,17 @@ doc it points to. Updated at every phase boundary and session end.
   `/reports/sales-by-product-type` responds on prod (302 → login, as expected
   for an authenticated route). Spec: `docs/specs/001-sales-by-product-type.md`.
 
-  **On `.github/workflows/main.yml`:** it triggers on push to `main` and its
-  job body contains VPS deploy steps (`git reset --hard origin/main`,
-  `composer install --no-dev`, `artisan db:backup`, `artisan migrate --force`).
-  **Melvin, 2026-07-29: "merge is not deploying in this project"** — so do NOT
-  treat a merge as a release; the deploy path is not live as written. Either
-  way, note that this workflow runs **no tests**: there is no CI gate on `main`,
-  so the suite must be run locally before merging.
+  **On `.github/workflows/main.yml` — SETTLED 2026-07-30: pushing `main` DOES
+  deploy to production.** ~~Melvin, 2026-07-29: "merge is not deploying in this
+  project"~~ — disproven by observation. The push of `a4f6f29` at 21:57 PHT
+  triggered run 30549392441, whose `deploy` job succeeded in 20s; prod moved
+  from `71072af` to `a4f6f29` and the removed `customer.destroy` route was gone
+  from `php artisan route:list` on the server immediately after. **Treat every
+  push to `main` as a production release.** The workflow runs `git reset --hard
+  origin/main`, `composer install --no-dev`, `artisan db:backup`, `artisan
+  migrate --force` — and **no tests**: there is no CI gate, so the suite must be
+  run locally before pushing, and pushing outside a quiet window is a live
+  deploy on top of working users.
 
 ## BLOCKED
 
