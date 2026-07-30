@@ -36,7 +36,10 @@ class Customers extends Model
 
     public function getDateCreatedAttribute()
     {
-        return $this->created_at->format('m-d-Y h:i A');
+        // Nullable in the schema, and this accessor is in $appends — so an
+        // unguarded ->format() fatals on any toJson()/toArray() of a row with
+        // no created_at (e.g. a record restored from the activity log).
+        return $this->created_at?->format('m-d-Y h:i A');
     }
 
 
@@ -58,6 +61,29 @@ class Customers extends Model
     public function badOrders()
     {
         return $this->hasMany(BadOrder::class, 'customer_id');
+    }
+
+    // Sales-side bad orders (the canonical system — see CLAUDE.md).
+    public function newBadOrders()
+    {
+        return $this->hasMany(NewBadOrder::class, 'customer_id');
+    }
+
+    /**
+     * Does this customer own records that would be orphaned by deleting it?
+     *
+     * There are no foreign keys on this schema, so nothing at the database
+     * level stops a customer from being deleted out from under its orders.
+     * On 2026-06-17 that happened: a customer with 45 paid orders was removed
+     * as a side effect of deleting their last store, which orphaned every one
+     * of those orders and 500-ed /bad-orders for six weeks. Anything that
+     * deletes a customer must consult this first.
+     */
+    public function hasTransactionHistory(): bool
+    {
+        return $this->inbounds()->exists()
+            || $this->newBadOrders()->exists()
+            || $this->badOrders()->exists();
     }
 
     // The customer's explicitly-assigned price level (nullable).

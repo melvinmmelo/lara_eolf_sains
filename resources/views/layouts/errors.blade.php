@@ -14,6 +14,12 @@
     </div>
 @endif
 
+@if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
 {{-- @if (session('updatingDataResults'))
     <div class="alert alert-default">
         @php $results = session('updatingDataResults'); @endphp
