@@ -230,7 +230,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customer.edit');
     Route::get('/customers/create', [CustomersController::class, 'create'])->name('customer.create');
     Route::post('/customers/store', [CustomersController::class, 'store'])->name('customers.store');
-    Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customer.destroy');
+    // No customer-delete route by design (Melvin, 2026-07-30): customers are
+    // retired with stop-selling, never deleted. See docs/specs/002.
     Route::patch('/customers', [CustomersController::class, 'update'])->name('customer.update');
     Route::delete('/customers/{customer}/store/{store}', [CustomersController::class, 'destroyStore'])->name('customer.store.destroy');
 

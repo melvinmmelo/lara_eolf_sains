@@ -1,81 +1,59 @@
-# Spec 002 — Soft-delete customers
+# Spec 002 — Customer deletion
 
-**Status:** Draft — awaiting Melvin's approval, NOT implemented
-**Date:** 2026-07-30
-**Origin:** the 2026-06-17 customer-deletion incident (see `docs/STATE.md`
-DECISION LOG and the `destroyStore` PARKED entry)
+**Status:** Closed by decision, 2026-07-30 — **customers are never deleted.**
+Implemented in `fix/003-customer-delete-guard`; no soft-delete work is needed.
+**Origin:** the 2026-06-17 customer-deletion incident (see `docs/STATE.md`)
 
-## Goal
+## The decision
 
-Make customer deletion recoverable. Today `customers` rows are hard-deleted
-with no audit-safe way back: recovering `customers#453` required reading the
-Spatie activity log's `old` payload and hand-writing an `INSERT`, and that
-only worked because model logging happened to have been added six weeks
-earlier. Customers 461 and 467, deleted before that instrumentation existed,
-are unrecoverable — their names survive only because `inbounds` denormalizes
-`customer_name`.
+Melvin, 2026-07-30: **"customer should not be deleted"**.
 
-`fix/003-customer-delete-guard` already stops the *accidental* deletion path.
-This spec addresses the remaining half: an intentional deletion is still
-irreversible.
+Retiring a customer is what stop-selling is for — it already exists
+(`/customers/stop-selling`, `CustomersController::stopSelling()` +
+`reactivate()`, `customers.status`), it is reversible, and it preserves every
+order the customer ever placed. Deletion offered nothing stop-selling doesn't,
+and cost a six-week production outage to learn it.
 
-## Why this is a spec and not a commit
+## What this replaced
 
-Adding `SoftDeletes` to `Customers` installs a **global scope on every
-existing query against the model**. This is a legacy schema where branch
-filtering is already manual and easy to get wrong (CLAUDE.md), so the blast
-radius is wide and mostly invisible at the call site:
+This spec was originally drafted as "add `SoftDeletes` to `Customers`" — make
+deletion recoverable, since recovering `customers#453` required reading the
+Spatie activity log's `old` payload and hand-writing an `INSERT`, and customers
+461/467 (deleted before model logging existed) were not recoverable at all.
 
-- `Customers::scopeActive()` and the stop-selling list (`/customers/stop-selling`)
-- every customer picker in the order, bad-order, and equipment flows
-- `Inbound::customer()`, `NewBadOrder::customer()`, `EquipmentStore::customer()`
-  and the 13 views that render `->fullName` — a soft-deleted customer would
-  make these relations resolve to `null` again, which is exactly the 500 this
-  branch just fixed, reintroduced by a different mechanism
-- every report that joins or eager-loads customers
+That work is **not needed**. Soft deletes would have added a global scope to
+every existing `Customers` query on a legacy schema — every picker, every
+report, every `->customer->fullName` in 13 views — carrying a real risk of
+re-orphaning historical orders in the UI, which is the exact 500 the incident
+produced. Removing the capability is smaller, safer, and eliminates the failure
+mode rather than making it survivable.
 
-That last point is the trap: **soft-deleting a customer must not re-orphan
-their orders in the UI.** Historical orders must keep resolving their customer.
+## What was implemented instead
 
-## Acceptance criteria
+- `CustomersController::destroyStore()` deletes the store and releases its
+  equipment, and **never touches the customer** — with history or without.
+- `CustomersController::destroy()` does not exist, and neither does the
+  `customer.destroy` route. (The method never existed; the route pointed at
+  nothing, so the Delete button had always 500-ed.)
+- The Delete button is gone from `customers.blade.php`,
+  `edit_customer.blade.php` and `create-customer.blade.php`.
+- `tests/Feature/CustomerDeletionGuardTest.php` locks it in: no delete route,
+  no delete form in any view, and the customer survives every `destroyStore()`
+  path.
 
-- [ ] `customers.deleted_at` exists (nullable timestamp, indexed)
-- [ ] `Customers` uses `SoftDeletes`; `destroy()` and `destroyStore()` soft-delete
-- [ ] A soft-deleted customer disappears from every customer list and picker
-- [ ] A soft-deleted customer's **historical orders, bad orders, order slips,
-      delivery receipts and tickets still render their name** — relations resolve
-      via `withTrashed()`, so no page regresses to `[deleted customer]`
-- [ ] Reports covering a period that includes a soft-deleted customer's orders
-      show the same totals as before the deletion
-- [ ] An admin-only restore path exists (list + restore), mirroring the existing
-      stop-selling reactivate flow at `/customers/stop-selling`
-- [ ] The reference guard from `fix/003` still applies: a customer with history
-      is stop-sold, not deleted — soft-delete does not become the new default
-      way to remove an active customer
-- [ ] Tests cover: list exclusion, historical-order rendering, report totals,
-      restore, and that the guard still refuses
+## Known consequence, accepted
 
-## Migration ladder (expand → backfill → contract)
-
-1. **Expand** — add `deleted_at`, nullable, no behaviour change. Deployable alone.
-2. **Adopt** — add the trait; audit every `Customers::` query and relation, adding
-   `withTrashed()` where history must still resolve. This is the bulk of the work
-   and the part that needs `db-designer` / a careful reuse audit.
-3. **Contract** — none. Nothing is dropped; no data is rewritten.
-
-## Open questions for Melvin
-
-1. **Should customers be deletable at all?** The app already has stop-selling,
-   which is the reversible, business-meaningful way to retire a customer. If the
-   answer is no, this spec collapses to "remove the Delete button" — much smaller
-   and arguably more correct. **This question should be settled before any code.**
-2. Restore UI: fold into the existing stop-selling screen, or a separate
-   `/customers/deleted` list?
-3. Do 461/467 get reconstructed as part of this, or stay as the orphan case?
+A customer created by mistake can no longer be removed through the UI — it can
+only be set to stop-selling, which hides it from active pickers. Over time,
+mis-keyed customers accumulate as stop-sold rows. This was judged the better
+trade against silently destroying a trading customer's history. If cleanup is
+ever wanted, it should be an admin-only, reference-checked tool with its own
+spec — not a Delete button on a list row.
 
 ## Out of scope
 
-Foreign-key constraints on the schema generally. This DB has no FKs anywhere,
-which is why the incident was possible at all; fixing that is a separate,
-larger `db-designer` project (`db/preventive-cleanup-phases` already carries a
-FK commit).
+Foreign-key constraints generally. This DB has no FKs anywhere, which is why
+the incident was possible; `db/preventive-cleanup-phases` carries a start on
+that and it remains a separate `db-designer` project. See the orphan findings
+in `docs/STATE.md` PARKED (52 `inbounds.store_id`, 39
+`new_temp_bad_orders.new_bad_order_id`).

@@ -221,39 +221,12 @@ class CustomersController extends Controller
 
         $store->delete();
 
-        $customer = Customer::findOrFail($customerId);
-
-        if ($customer->stores()->count() > 0) {
-            return redirect('/customers/')->with('success', 'Store deleted and equipment released. The customer still has other stores and was kept.');
-        }
-
-        // That was the customer's last store. Historically the customer was
-        // deleted here with no checks at all, which orphaned their orders —
-        // see Customers::hasTransactionHistory() for the incident.
-        if ($customer->hasTransactionHistory()) {
-            return redirect('/customers/')->with('success', 'Store deleted and equipment released. The customer was kept because they still have orders or bad orders on file.');
-        }
-
-        $customer->delete();
-
-        return redirect('/customers/')->with('success', 'Store and customer deleted, and equipment status updated to available!');
-    }
-
-    public function destroy($id)
-    {
-        $customer = Customer::findOrFail($id);
-
-        if ($customer->hasTransactionHistory()) {
-            return redirect('/customers/')->with(
-                'error',
-                "{$customer->companyname} cannot be deleted: they still have orders or bad orders on file. Set them to stop-selling instead."
-            );
-        }
-
-        $customer->stores()->delete();
-        $customer->delete();
-
-        return redirect('/customers/')->with('success', 'Customer deleted successfully!');
+        // Customers are never deleted (Melvin, 2026-07-30). This method used to
+        // delete the customer whenever the store it removed was their last one,
+        // which on 2026-06-17 silently destroyed a customer with 45 paid orders
+        // and orphaned every one of them. Retiring a customer is stop-selling —
+        // see CustomersController::stopSelling() and reactivate().
+        return redirect('/customers/')->with('success', 'Store deleted and equipment released. The customer was kept — set them to stop-selling if they are no longer trading.');
     }
 
 }

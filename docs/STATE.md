@@ -29,13 +29,9 @@ doc it points to. Updated at every phase boundary and session end.
   the unguarded `destroyStore()`. Merging + deploying is Melvin's call, and is
   entangled with the unresolved "does merge deploy?" question above.
 
-  **Waiting on Melvin:** (1) merge + deploy `fix/003`; (2) approve or reshape
-  `docs/specs/002-soft-delete-customers.md` — its first open question is
-  whether customers should be deletable *at all*, given stop-selling already
-  exists; (3) the `[assumed]` call inside `fix/003` — it implements a
-  `CustomersController::destroy()` that never existed, so the Delete button in
-  three views goes from 500-ing to working (guarded). Say the word and it
-  becomes a route removal instead.
+  **Waiting on Melvin:** deploying `fix/003` to production. Prod still runs the
+  unguarded `destroyStore()`, so the incident can still recur until it ships.
+  Entangled with the unresolved "does merge deploy?" question above.
 
 - **Last landed:** Issue #32 — Sales by Product Type. PR #44 merged to `main`
   2026-07-29 (merge commit `d46ec2e`), which auto-deployed to production via
@@ -132,6 +128,17 @@ doc it points to. Updated at every phase boundary and session end.
   real record when it is an inference. `updated_at` = restore time. `status`
   restored verbatim as `Active` (capital A) — 35 other rows use it and the
   column is `utf8mb4_unicode_ci`, so `scopeActive()` still matches.
+- **2026-07-30 — Customers are never deleted.** Melvin: *"customer should not
+  be deleted"*. Stop-selling already retires a customer reversibly while
+  preserving their orders, so deletion offered nothing it doesn't — and cost a
+  six-week production outage. `destroyStore()` no longer touches the customer
+  under any condition; the `customer.destroy` route and the Delete button in
+  three views are gone. This **supersedes** the reference-guard approach taken
+  earlier the same session (~~delete only customers with no history~~) and
+  closes `docs/specs/002` without any soft-delete work — soft deletes would
+  have put a global scope on every `Customers` query in a legacy codebase to
+  make a capability survivable that is better removed. Accepted consequence:
+  mis-keyed customers can only be stop-sold, never removed.
 - **2026-07-30 — `created_at` on 453 set to `2024-08-23`, reversing the NULL
   decision made an hour earlier.** ~~Left NULL as an honest unknown~~ — NULL
   turned out to be *unsafe*, not merely honest: `Customers` has

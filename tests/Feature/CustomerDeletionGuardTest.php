@@ -117,8 +117,29 @@ class CustomerDeletionGuardTest extends TestCase
     }
 
     // ---------------------------------------------------------------------
-    // destroyStore — the incident path
+    // Customers are never deleted (Melvin, 2026-07-30)
     // ---------------------------------------------------------------------
+
+    public function test_there_is_no_customer_delete_route(): void
+    {
+        $this->assertFalse(
+            \Illuminate\Support\Facades\Route::has('customer.destroy'),
+            'Customers must not be deletable — retire them with stop-selling instead.'
+        );
+    }
+
+    public function test_deleting_the_last_store_keeps_a_customer_with_no_history_at_all(): void
+    {
+        // The case that used to delete the customer even under the reference
+        // guard. Nothing deletes a customer now, history or not.
+        $customer = $this->makeCustomer();
+        $store = $this->makeStore($customer);
+
+        $this->deleteStore($customer, $store);
+
+        $this->assertDatabaseHas('customers', ['id' => $customer->id]);
+        $this->assertDatabaseMissing('storeinfo', ['id' => $store->id]);
+    }
 
     public function test_deleting_the_last_store_does_not_delete_a_customer_with_orders(): void
     {
@@ -161,17 +182,6 @@ class CustomerDeletionGuardTest extends TestCase
         $this->assertStringContainsString('kept', strtolower($message));
     }
 
-    public function test_a_customer_with_no_history_is_still_removed_with_its_last_store(): void
-    {
-        $customer = $this->makeCustomer();
-        $store = $this->makeStore($customer);
-
-        $this->deleteStore($customer, $store);
-
-        $this->assertDatabaseMissing('customers', ['id' => $customer->id]);
-        $this->assertDatabaseMissing('storeinfo', ['id' => $store->id]);
-    }
-
     public function test_a_customer_with_remaining_stores_is_never_deleted(): void
     {
         $customer = $this->makeCustomer();
@@ -203,41 +213,22 @@ class CustomerDeletionGuardTest extends TestCase
         $this->assertSame('available', $equipment->fresh()->status);
     }
 
-    // ---------------------------------------------------------------------
-    // destroy — the Delete button that had no controller method at all
-    // ---------------------------------------------------------------------
-
-    public function test_the_customer_delete_button_refuses_a_customer_with_orders(): void
+    public function test_no_view_renders_a_customer_delete_form(): void
     {
-        $customer = $this->makeCustomer();
-        $this->makeInbound($customer);
+        // Three views used to POST a DELETE to customer.destroy. With the route
+        // gone, any leftover route() call would throw at render time.
+        $views = [
+            resource_path('views/customers.blade.php'),
+            resource_path('views/edit_customer.blade.php'),
+            resource_path('views/create-customer.blade.php'),
+        ];
 
-        $response = $this->actingAs($this->admin)
-            ->delete(route('customer.destroy', $customer->id));
-
-        $response->assertSessionHas('error');
-        $this->assertDatabaseHas('customers', ['id' => $customer->id]);
-    }
-
-    public function test_the_customer_delete_button_removes_a_customer_with_no_history(): void
-    {
-        $customer = $this->makeCustomer();
-
-        $response = $this->actingAs($this->admin)
-            ->delete(route('customer.destroy', $customer->id));
-
-        $response->assertSessionHas('success');
-        $this->assertDatabaseMissing('customers', ['id' => $customer->id]);
-    }
-
-    public function test_deleting_a_customer_also_removes_its_stores(): void
-    {
-        $customer = $this->makeCustomer();
-        $store = $this->makeStore($customer);
-
-        $this->actingAs($this->admin)->delete(route('customer.destroy', $customer->id));
-
-        $this->assertDatabaseMissing('customers', ['id' => $customer->id]);
-        $this->assertDatabaseMissing('storeinfo', ['id' => $store->id]);
+        foreach ($views as $view) {
+            $this->assertStringNotContainsString(
+                'customer.destroy',
+                file_get_contents($view),
+                basename($view).' still references the removed customer.destroy route.'
+            );
+        }
     }
 }
