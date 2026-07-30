@@ -91,7 +91,7 @@
     
                 <tr>
                     <td>Current Address/Location:</td>
-                    <td colspan="4" class="border-b border-black">{{ $customer->storeinfo-> region }}, {{ $customer->storeinfo->province }}, {{ $customer->storeinfo->city }} {{ $customer->storeinfo->brgy }}</td>
+                    <td colspan="4" class="border-b border-black">{{ $customer->storeinfo->region ?? '' }}, {{ $customer->storeinfo->province ?? '' }}, {{ $customer->storeinfo->city ?? '' }} {{ $customer->storeinfo->brgy ?? '' }}</td>
                 </tr>
     
                 <tr>
