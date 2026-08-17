@@ -326,6 +326,17 @@ class ReportGeneratorController extends Controller
         return view('report.productsSummary', compact('products', 'title'));
     }
 
+    /**
+     * Products an order-slip card column holds before spilling into the next one.
+     * Sized so a column runs all the way down to the footer of a legal-landscape
+     * page (~592px of grid height / 12.5px per row, less the card header and the
+     * "Loading Time" line), with headroom for a wrapped customer name and a DC row.
+     */
+    private const ORDER_SLIP_PRODUCTS_PER_COLUMN = 38;
+
+    /** Card columns that fit across one order-slip page. */
+    private const ORDER_SLIP_COLUMNS_PER_PAGE = 9;
+
     public function orderSlip($code)
     {
         $orderSlip = OrderSlip::where('code', $code)->first();
@@ -334,44 +345,44 @@ class ReportGeneratorController extends Controller
 
         $pagesData = $this->distributeInboundsToPages($inbounds);
         $totalPages = count($pagesData);
+        $perColumn = self::ORDER_SLIP_PRODUCTS_PER_COLUMN;
         $grandTotal = $inbounds->sum(function ($inbound) {
             return $inbound->getGrandTotalAttribute();
         });
 
-        return view('report.orderSlip', compact('inbounds', 'code', 'orderSlip', 'grandTotal', 'totalInbounds', 'totalPages', 'pagesData'));
+        return view('report.orderSlip', compact('inbounds', 'code', 'orderSlip', 'grandTotal', 'totalInbounds', 'totalPages', 'pagesData', 'perColumn'));
     }
 
     private function distributeInboundsToPages($inbounds)
     {
         $pagesData = [];
         $currentPage = 1;
-        $currentPageRows = 0;
+        $currentPageColumns = 0;
 
         foreach ($inbounds as $inbound) {
-            $productsCount = count(json_decode($inbound->products, true));
-            $rowsNeeded = $this->calculateRowsNeeded($productsCount);
+            $productsCount = count(json_decode($inbound->products, true) ?: []);
+            $columnsNeeded = $this->calculateRowsNeeded($productsCount);
 
-            if ($currentPageRows + $rowsNeeded > 9) {
+            if ($currentPageColumns + $columnsNeeded > self::ORDER_SLIP_COLUMNS_PER_PAGE) {
                 $currentPage++;
-                $currentPageRows = 0;
+                $currentPageColumns = 0;
             }
 
             $pagesData[$currentPage][] = $inbound;
-            $currentPageRows += $rowsNeeded;
+            $currentPageColumns += $columnsNeeded;
         }
 
         return $pagesData;
     }
 
+    /**
+     * Card columns this order occupies. Must stay in step with the chunking in
+     * report/orderSlip.blade.php, which is driven by the same constant, or the
+     * page budget above drifts from the rendered column span.
+     */
     private function calculateRowsNeeded($productsCount)
     {
-        if ($productsCount <= 23) {
-            return 1;
-        } elseif ($productsCount <= 45) {
-            return 2;
-        } else {
-            return 3;
-        }
+        return max(1, (int) ceil($productsCount / self::ORDER_SLIP_PRODUCTS_PER_COLUMN));
     }
 
     public function availableStocks()
