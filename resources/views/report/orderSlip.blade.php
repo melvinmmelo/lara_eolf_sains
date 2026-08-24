@@ -13,10 +13,10 @@
         tailwind.config = {
             theme: {
                 fontSize: {
-                    'xxs': '8px',
-                    'xs': '9px',
-                    'sm': '10px',
-                    'md': '12px',
+                    'xxs': '9px',
+                    'xs': '10px',
+                    'sm': '11px',
+                    'md': '13px',
                     'lg': '14px',
                     'xl': '18px',
                 },

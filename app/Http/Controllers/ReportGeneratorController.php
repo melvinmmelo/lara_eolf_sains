@@ -338,7 +338,7 @@ class ReportGeneratorController extends Controller
     private const ORDER_SLIP_COLUMNS_PER_PAGE = 9;
 
     /** Customer cards allowed on one order-slip page, regardless of column budget. */
-    private const ORDER_SLIP_CUSTOMERS_PER_PAGE = 8;
+    private const ORDER_SLIP_CUSTOMERS_PER_PAGE = 7;
 
     public function orderSlip(Request $request, $code)
     {
