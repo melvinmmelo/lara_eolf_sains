@@ -337,39 +337,53 @@ class ReportGeneratorController extends Controller
     /** Card columns that fit across one order-slip page. */
     private const ORDER_SLIP_COLUMNS_PER_PAGE = 9;
 
-    public function orderSlip($code)
+    /** Customer cards allowed on one order-slip page, regardless of column budget. */
+    private const ORDER_SLIP_CUSTOMERS_PER_PAGE = 8;
+
+    public function orderSlip(Request $request, $code)
     {
         $orderSlip = OrderSlip::where('code', $code)->first();
         $inbounds = Inbound::whereNotIn('status', ['Cancelled', 'Rejected', 'Deleted'])->where('order_slip_code', $code)->orderBy('order_slip_sno')->get();
         $totalInbounds = $inbounds->count();
 
-        $pagesData = $this->distributeInboundsToPages($inbounds);
+        // User-adjustable customers-per-page; the column budget still caps a page
+        // at ORDER_SLIP_COLUMNS_PER_PAGE columns, so values above it change nothing.
+        $maxCustomers = min(
+            self::ORDER_SLIP_COLUMNS_PER_PAGE,
+            max(1, (int) $request->query('max_customers', self::ORDER_SLIP_CUSTOMERS_PER_PAGE))
+        );
+
+        $pagesData = $this->distributeInboundsToPages($inbounds, $maxCustomers);
         $totalPages = count($pagesData);
         $perColumn = self::ORDER_SLIP_PRODUCTS_PER_COLUMN;
         $grandTotal = $inbounds->sum(function ($inbound) {
             return $inbound->getGrandTotalAttribute();
         });
 
-        return view('report.orderSlip', compact('inbounds', 'code', 'orderSlip', 'grandTotal', 'totalInbounds', 'totalPages', 'pagesData', 'perColumn'));
+        return view('report.orderSlip', compact('inbounds', 'code', 'orderSlip', 'grandTotal', 'totalInbounds', 'totalPages', 'pagesData', 'perColumn', 'maxCustomers'));
     }
 
-    private function distributeInboundsToPages($inbounds)
+    private function distributeInboundsToPages($inbounds, $maxCustomers = self::ORDER_SLIP_CUSTOMERS_PER_PAGE)
     {
         $pagesData = [];
         $currentPage = 1;
         $currentPageColumns = 0;
+        $currentPageCustomers = 0;
 
         foreach ($inbounds as $inbound) {
             $productsCount = count(json_decode($inbound->products, true) ?: []);
             $columnsNeeded = $this->calculateRowsNeeded($productsCount);
 
-            if ($currentPageColumns + $columnsNeeded > self::ORDER_SLIP_COLUMNS_PER_PAGE) {
+            if ($currentPageColumns + $columnsNeeded > self::ORDER_SLIP_COLUMNS_PER_PAGE
+                || $currentPageCustomers >= $maxCustomers) {
                 $currentPage++;
                 $currentPageColumns = 0;
+                $currentPageCustomers = 0;
             }
 
             $pagesData[$currentPage][] = $inbound;
             $currentPageColumns += $columnsNeeded;
+            $currentPageCustomers++;
         }
 
         return $pagesData;

@@ -41,11 +41,21 @@
             /*
              * Legal landscape. Without this Chrome falls back to Letter, scales the
              * 14in-wide page down to fit, and the leftover height pulls the next slip
-             * onto the same sheet.
+             * onto the same sheet. The margin keeps content out of the printer's
+             * non-printable strip at the paper edges (footer was getting clipped).
              */
             @page {
                 size: 14in 8.5in;
-                margin: 0;
+                margin: 0.2in 0.25in;
+            }
+
+            /* size the slip to the printable area, not the full sheet — the screen
+               rule (14in x 8.5in + padding) overflows the sheet and clips the footer */
+            page[size="legal"][layout="landscape"] {
+                width: auto;
+                height: 8.05in;
+                padding: 0;
+                box-sizing: border-box;
             }
 
             /* one slip page per sheet, with no trailing blank sheet */
@@ -64,11 +74,25 @@
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
+
+            /* Tailwind's CDN styles load after papersizes.css, so its .flex
+               (display: flex) beats the stylesheet's .hidePrintBtn — force it */
+            .hidePrintBtn {
+                display: none !important;
+            }
         }
     </style>
 </head>
 
 <body>
+
+    {{-- screen-only control; .hidePrintBtn is display:none under @media print --}}
+    <form method="GET" class="hidePrintBtn fixed top-2 right-2 z-50 bg-white border border-gray-400 rounded shadow px-3 py-2 flex items-center gap-2 text-lg">
+        <label for="max_customers">Max customers per page:</label>
+        <input type="number" id="max_customers" name="max_customers" min="1" max="9"
+            value="{{ $maxCustomers }}" class="w-14 border border-gray-400 rounded px-1 py-[2px] text-center">
+        <button type="submit" class="bg-gray-700 text-white rounded px-2 py-[2px]">Apply</button>
+    </form>
 
     @foreach ($pagesData as $pageNumber => $pageInbounds)
         @php
