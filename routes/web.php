@@ -61,6 +61,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/sales-by-customer/export-detailed', [ReportGeneratorController::class, 'exportSalesReportByCustomerDetailed'])->name('report.sales-by-customer.export-detailed');
     Route::get('/reports/sales-by-product-type', [ReportGeneratorController::class, 'salesByProductType'])->middleware('can:admin')->name('report.sales-by-product-type');
     Route::get('/reports/sales-by-product-type/export', [ReportGeneratorController::class, 'exportSalesByProductType'])->middleware('can:admin')->name('report.sales-by-product-type.export');
+    Route::get('/reports/sales-by-freezer', [ReportGeneratorController::class, 'salesByFreezer'])->middleware('can:admin')->name('report.sales-by-freezer');
+    Route::get('/reports/sales-by-freezer/export', [ReportGeneratorController::class, 'exportSalesByFreezer'])->middleware('can:admin')->name('report.sales-by-freezer.export');
     Route::get('/reports/payments', [ReportGeneratorController::class, 'paymentReport'])->middleware('can:admin')->name('report.payments');
     Route::get('/reports/payments/export', [ReportGeneratorController::class, 'exportPaymentReport'])->middleware('can:admin')->name('report.payments.export');
 

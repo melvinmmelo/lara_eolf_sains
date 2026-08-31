@@ -11,6 +11,7 @@ use App\Models\OrderSlip;
 use App\Models\ProductVariant;
 use App\Models\StoreInfo as Store;
 use App\Services\InboundService;
+use App\Services\SalesByFreezerService;
 use App\Services\SalesByProductTypeService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -258,6 +259,166 @@ class ReportGeneratorController extends Controller
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'Cache-Control' => 'max-age=0',
         ]);
+    }
+
+    /**
+     * Monthly sales per freezer (DEGIC code) for a whole year — one row per
+     * freezer/customer, one column per month (issue: Sales by Freezer report).
+     */
+    public function salesByFreezer(Request $request)
+    {
+        $this->validateFreezerSalesFilter($request);
+
+        $year = (int) $request->get('year', Carbon::now()->year);
+
+        $summary = SalesByFreezerService::summarize(
+            $this->freezerSalesQuery($year)->get()
+        );
+
+        return view('report.sales-by-freezer', [
+            'rows' => $summary['rows'],
+            'totals' => $summary['totals'],
+            'year' => $year,
+            'years' => $this->freezerSalesYears(),
+        ]);
+    }
+
+    public function exportSalesByFreezer(Request $request)
+    {
+        $this->validateFreezerSalesFilter($request);
+
+        $year = (int) $request->get('year', Carbon::now()->year);
+
+        $summary = SalesByFreezerService::summarize(
+            $this->freezerSalesQuery($year)->get()
+        );
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Columns: A customer, B degic, C..N the 12 months, O total.
+        $monthColumns = range('C', 'N');
+
+        $sheet->setCellValue('A1', 'MONTHLY MONITORING OF SALES PER FREEZER (Jan-'.$year.' to Dec-'.$year.')');
+        $sheet->mergeCells('A1:O1');
+        $sheet->getStyle('A1')->getFont()->setBold(true);
+
+        $sheet->setCellValue('A3', 'Customer');
+        $sheet->setCellValue('B3', 'DEGIC Code');
+        foreach ($monthColumns as $index => $col) {
+            $sheet->setCellValue($col.'3', Carbon::create($year, $index + 1, 1)->format('M-Y'));
+        }
+        $sheet->setCellValue('O3', 'Total');
+
+        $sheet->getStyle('A3:O3')->applyFromArray([
+            'font' => ['bold' => true],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
+            'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => 'E2E8F0'],
+            ],
+        ]);
+
+        $row = 4;
+        foreach ($summary['rows'] as $line) {
+            $customer = $line['customer_name'];
+            if ($line['store_name'] !== '') {
+                $customer .= ' ('.$line['store_name'].')';
+            }
+
+            $sheet->setCellValue('A'.$row, $customer);
+            $sheet->setCellValue('B'.$row, $line['degic_no']);
+            foreach ($monthColumns as $index => $col) {
+                $amount = round($line['months'][$index + 1], 2);
+
+                // Months with no sales are left blank and highlighted green,
+                // like the manual monitoring spreadsheet this report replaces.
+                if ($amount == 0.0) {
+                    $sheet->getStyle($col.$row)->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()->setRGB('9E9D24');
+                } else {
+                    $sheet->setCellValue($col.$row, $amount);
+                }
+            }
+            $sheet->setCellValue('O'.$row, round($line['total'], 2));
+            $row++;
+        }
+
+        $sheet->setCellValue('A'.$row, 'Total');
+        $sheet->mergeCells('A'.$row.':B'.$row);
+        foreach ($monthColumns as $index => $col) {
+            $sheet->setCellValue($col.$row, round($summary['totals']['months'][$index + 1], 2));
+        }
+        $sheet->setCellValue('O'.$row, round($summary['totals']['grand'], 2));
+        $sheet->getStyle('A'.$row.':O'.$row)->applyFromArray([
+            'font' => ['bold' => true],
+            'borders' => [
+                'top' => ['borderStyle' => Border::BORDER_THIN],
+                'bottom' => ['borderStyle' => Border::BORDER_DOUBLE],
+            ],
+        ]);
+
+        $sheet->getStyle('C4:O'.$row)->getNumberFormat()->setFormatCode('#,##0.00');
+
+        foreach (array_merge(['A', 'B'], $monthColumns, ['O']) as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        $filename = 'sales_by_freezer_'.$year.'_'.Carbon::now()->format('Y-m-d_His').'.xlsx';
+
+        return response()->streamDownload(function () use ($spreadsheet) {
+            (new Xlsx($spreadsheet))->save('php://output');
+        }, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Cache-Control' => 'max-age=0',
+        ]);
+    }
+
+    /**
+     * Same status/branch semantics as getSalesQuery(), but filtered to one full
+     * year and stripped to the columns the aggregation reads — a year of orders
+     * is the largest result set any report pulls, so don't hydrate relations or
+     * unused columns.
+     */
+    private function freezerSalesQuery(int $year)
+    {
+        $query = Inbound::query();
+
+        if ($branchCode = session('branch_code')) {
+            $query->where('branch_code', $branchCode);
+        }
+
+        return $query->whereYear('order_date', $year)
+            ->whereNull('is_foc')
+            ->whereNotIn('status', ['Cancelled', 'Deleted'])
+            ->select(['id', 'order_date', 'degic_no', 'customer_id', 'customer_name', 'store_name', 'products']);
+    }
+
+    private function validateFreezerSalesFilter(Request $request): void
+    {
+        $request->validate([
+            'year' => 'nullable|integer|min:2000|max:2100',
+        ]);
+    }
+
+    /**
+     * Years selectable in the filter: from the branch's earliest order year up
+     * to the current year (falls back to just the current year on empty data).
+     */
+    private function freezerSalesYears(): array
+    {
+        $query = Inbound::query();
+
+        if ($branchCode = session('branch_code')) {
+            $query->where('branch_code', $branchCode);
+        }
+
+        $earliest = $query->min('order_date');
+        $firstYear = $earliest ? Carbon::parse($earliest)->year : Carbon::now()->year;
+
+        return range(Carbon::now()->year, min($firstYear, Carbon::now()->year));
     }
 
     /**

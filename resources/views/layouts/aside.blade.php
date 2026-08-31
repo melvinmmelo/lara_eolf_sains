@@ -279,7 +279,7 @@
                     </li>
                 @endcan
 
-                <li class="nav-item {{ Route::currentRouteNamed('report.productsSummary') || Route::currentRouteNamed('report.deliveryPurchaseReceiptSummary') || Route::currentRouteNamed('report.availableStocks') || Route::currentRouteNamed('report.sales') || Route::currentRouteNamed('report.sales-by-product-type') || Route::currentRouteNamed('report.payments') ? 'menu-is-opening menu-open' : '' }}">
+                <li class="nav-item {{ Route::currentRouteNamed('report.productsSummary') || Route::currentRouteNamed('report.deliveryPurchaseReceiptSummary') || Route::currentRouteNamed('report.availableStocks') || Route::currentRouteNamed('report.sales') || Route::currentRouteNamed('report.sales-by-product-type') || Route::currentRouteNamed('report.sales-by-freezer') || Route::currentRouteNamed('report.payments') ? 'menu-is-opening menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-folder-open" style="color: #74C0FC;"></i>
                         <p>
@@ -341,6 +341,13 @@
                                 class="nav-link {{ Route::currentRouteNamed('report.sales-by-product-type')  ? 'active' : '' }}">
                                 <i class="fas fa-boxes nav-icon"></i>
                                 <p>Sales by Product Type</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('report.sales-by-freezer') }}"
+                                class="nav-link {{ Route::currentRouteNamed('report.sales-by-freezer')  ? 'active' : '' }}">
+                                <i class="fas fa-snowflake nav-icon"></i>
+                                <p>Sales by Freezer</p>
                             </a>
                         </li>
                         <li>
